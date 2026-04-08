@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Panel de Administración</h2>
+        <button id="logout">Cerrar sesión</button>
+        <hr>
+        <h3>Eventos</h3>
+        <button id="btnNuevoEvento">Nuevo Evento</button>
+        <div id="listaEventos"></div>
+    </div>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        async function fetchAPI(url, options = {}) {
+            const res = await fetch(url, {
+                ...options,
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+            });
+            if (res.status === 401) {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+            return res.json();
+        }
+
+        async function cargarEventos() {
+            const eventos = await fetchAPI('/api/admin/eventos');
+            const container = document.getElementById('listaEventos');
+            container.innerHTML = eventos.map(e => `
+                <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+                    <strong>${e.nombre}</strong> (${e.slug})<br>
+                    ${e.fecha_inicio} al ${e.fecha_fin}<br>
+                    <button onclick="editarEvento(${e.id})">Editar</button>
+                    <button onclick="eliminarEvento(${e.id})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        window.editarEvento = (id) => { alert('Editar próximo'); };
+        window.eliminarEvento = async (id) => {
+            if (confirm('¿Eliminar?')) {
+                await fetchAPI(`/api/admin/eventos/${id}`, { method: 'DELETE' });
+                cargarEventos();
+            }
+        };
+
+        document.getElementById('btnNuevoEvento').onclick = () => { alert('Formulario nuevo evento próximo'); };
+        document.getElementById('logout').onclick = () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        };
+
+        cargarEventos();
+    </script>
+</body>
+</html>

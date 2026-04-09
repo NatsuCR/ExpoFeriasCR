@@ -1,4 +1,18 @@
-// frontend/js/main.js (versión mejorada)
+// frontend/js/main.js
+let idiomaActual = 'es';
+
+function aplicarIdioma() {
+    document.querySelectorAll('[data-es]').forEach(el => {
+        const texto = el.getAttribute(`data-${idiomaActual}`);
+        if (texto) el.innerText = texto;
+    });
+    document.querySelectorAll('[data-es-placeholder]').forEach(el => {
+        const placeholder = el.getAttribute(`data-${idiomaActual}-placeholder`);
+        if (placeholder) el.placeholder = placeholder;
+    });
+    const btn = document.getElementById('btnIdioma');
+    if (btn) btn.innerText = idiomaActual === 'es' ? '🇺🇸 English' : '🇪🇸 Español';
+}
 
 async function cargarEventos(filtro = '') {
     const container = document.getElementById('eventos-grid');
@@ -14,7 +28,8 @@ async function cargarEventos(filtro = '') {
             );
         }
         if (eventosFiltrados.length === 0) {
-            container.innerHTML = '<p>No se encontraron eventos.</p>';
+            container.innerHTML = `<p data-es="No se encontraron eventos." data-en="No events found.">No se encontraron eventos.</p>`;
+            aplicarIdioma();
             return;
         }
         let html = '';
@@ -25,13 +40,15 @@ async function cargarEventos(filtro = '') {
                     <h3>${e.nombre}</h3>
                     <p>${new Date(e.fechaInicio).toLocaleDateString()} - ${new Date(e.fechaFin).toLocaleDateString()}</p>
                     <p>${e.ubicacion}</p>
-                    <a href="evento.html?slug=${e.slug}" class="btn-ver">Ver más</a>
+                    <a href="evento.html?slug=${e.slug}" class="btn-ver" data-es="Ver más" data-en="See more">Ver más</a>
                 </div>
             `;
         });
         container.innerHTML = html;
+        aplicarIdioma(); // para traducir los botones "Ver más"
     } catch (error) {
-        container.innerHTML = '<p>Error al cargar eventos.</p>';
+        container.innerHTML = `<p data-es="Error al cargar eventos." data-en="Error loading events.">Error al cargar eventos.</p>`;
+        aplicarIdioma();
     }
 }
 
@@ -43,17 +60,13 @@ function configurarBuscadores() {
         btnPrincipal.addEventListener('click', buscar);
         inputPrincipal.addEventListener('keypress', (e) => { if (e.key === 'Enter') buscar(); });
     }
-
-    // ===== NUEVO: resetear búsqueda al hacer clic en "Inicio" =====
+    // Botón de inicio (resetear búsqueda)
     const btnInicio = document.getElementById('btnInicio');
     if (btnInicio) {
         btnInicio.addEventListener('click', (e) => {
-            e.preventDefault(); // Evita el salto al ancla '#inicio'
-            // Limpiar el campo de búsqueda
+            e.preventDefault();
             if (inputPrincipal) inputPrincipal.value = '';
-            // Recargar todos los eventos
             cargarEventos();
-            // Opcional: scroll suave al inicio
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
@@ -62,4 +75,14 @@ function configurarBuscadores() {
 document.addEventListener('DOMContentLoaded', () => {
     cargarEventos();
     configurarBuscadores();
+    aplicarIdioma();
+    const btnIdioma = document.getElementById('btnIdioma');
+    if (btnIdioma) {
+        btnIdioma.addEventListener('click', () => {
+            idiomaActual = idiomaActual === 'es' ? 'en' : 'es';
+            aplicarIdioma();
+            // Recargar eventos para actualizar los botones "Ver más" (aunque ya se aplica el idioma en el HTML dinámico)
+            cargarEventos(document.getElementById('buscador-principal')?.value.trim() || '');
+        });
+    }
 });

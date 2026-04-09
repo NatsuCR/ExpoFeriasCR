@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evento - ExpoFeriasCR</title>
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- CSS principal (evento.css con variables dinámicas) -->
     <link rel="stylesheet" href="css/evento.css">
 </head>
 <body>
@@ -21,21 +17,19 @@
                 <span>ExpoFeriasCR</span>
             </div>
             <ul class="nav-links">
-                <li><a href="/">Inicio</a></li>
-                <li><a href="#informacion">Información</a></li>
-                <li><a href="#actividades">Actividades</a></li>
-                <li><a href="#precios">Precios</a></li>
-                <li><a href="#expositores">Expositores</a></li>
-                <li><a href="#ubicacion">Ubicación</a></li>
+                <li><a href="/" data-es="Inicio" data-en="Home">Inicio</a></li>
+                <li><a href="#informacion" data-es="Información" data-en="Information">Información</a></li>
+                <li><a href="#actividades" data-es="Actividades" data-en="Activities">Actividades</a></li>
+                <li><a href="#precios" data-es="Precios" data-en="Prices">Precios</a></li>
+                <li><a href="#expositores" data-es="Expositores" data-en="Exhibitors">Expositores</a></li>
+                <li><a href="#ubicacion" data-es="Ubicación" data-en="Location">Ubicación</a></li>
             </ul>
+            <button id="btnIdioma" class="btn-idioma">🇺🇸 English</button>
         </div>
     </nav>
 
-    <!-- Hero con carrusel de fondo -->
     <div class="hero-carrusel" id="heroCarrusel">
-        <div class="hero-carrusel-slides" id="heroSlides">
-            <!-- Los slides se generan dinámicamente -->
-        </div>
+        <div class="hero-carrusel-slides" id="heroSlides"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <div class="container">
@@ -48,84 +42,77 @@
         <button class="hero-carrusel-btn next" id="heroNextBtn">&#10095;</button>
     </div>
 
-    <!-- Información general -->
     <section id="informacion" class="info">
         <div class="container">
-            <h2>Sobre el evento</h2>
+            <h2 data-es="Sobre el evento" data-en="About the event">Sobre el evento</h2>
             <p id="eventoInfoCompleta"></p>
             <div class="info-grid">
                 <div class="info-card">
                     <i class="fas fa-calendar-alt"></i>
-                    <h3>Fechas</h3>
+                    <h3 data-es="Fechas" data-en="Dates">Fechas</h3>
                     <p id="infoFechas"></p>
                 </div>
                 <div class="info-card">
                     <i class="fas fa-map-marker-alt"></i>
-                    <h3>Ubicación</h3>
+                    <h3 data-es="Ubicación" data-en="Location">Ubicación</h3>
                     <p id="infoUbicacion"></p>
                 </div>
                 <div class="info-card">
                     <i class="fas fa-ticket-alt"></i>
-                    <h3>Entradas</h3>
+                    <h3 data-es="Entradas" data-en="Tickets">Entradas</h3>
                     <p id="entradasTexto">En taquilla del campo ferial</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Horario general (imagen dinámica) -->
     <section class="horario">
         <div class="container">
-            <h2>Horario General</h2>
+            <h2 data-es="Horario General" data-en="General Schedule">Horario General</h2>
             <div id="horarioContainer">Cargando...</div>
         </div>
     </section>
 
-    <!-- Actividades destacadas -->
     <section id="actividades" class="actividades">
         <div class="container">
-            <h2>Actividades Destacadas</h2>
+            <h2 data-es="Actividades Destacadas" data-en="Featured Activities">Actividades Destacadas</h2>
             <div id="actividadesGrid" class="actividades-grid">Cargando...</div>
         </div>
     </section>
 
-    <!-- Precios de entrada -->
     <section id="precios" class="precios">
         <div class="container">
-            <h2>Precios de Entrada</h2>
+            <h2 data-es="Precios de Entrada" data-en="Ticket Prices">Precios de Entrada</h2>
             <div id="tablaPrecios" class="tabla-precios">Cargando...</div>
         </div>
     </section>
 
-    <!-- Expositores -->
     <section id="expositores" class="expositores">
         <div class="container">
-            <h2>Expositores</h2>
+            <h2 data-es="Expositores" data-en="Exhibitors">Expositores</h2>
             <div id="expositoresGrid" class="expositores-grid">Cargando...</div>
         </div>
     </section>
 
-    <!-- Ubicación y mapa -->
     <section id="ubicacion" class="ubicacion">
         <div class="container">
-            <h2>¿Cómo llegar?</h2>
+            <h2 data-es="¿Cómo llegar?" data-en="How to get there?">¿Cómo llegar?</h2>
             <p id="ubicacionTexto"></p>
             <div class="mapa" id="mapaIframe"></div>
         </div>
     </section>
 
-    <!-- Contacto (fijo) -->
     <section id="contacto" class="contacto">
         <div class="container">
-            <h2>Contacto</h2>
-            <p>¿Tienes una feria y quieres aparecer? Escríbenos a <a href="mailto:jaravillaloboscarlos531@gmail.com">jaravillaloboscarlos531@gmail.com</a></p>
-            <p>Síguenos en redes sociales (próximamente)</p>
+            <h2 data-es="Contacto" data-en="Contact">Contacto</h2>
+            <p data-es="¿Tienes una feria y quieres aparecer? Escríbenos a" data-en="Do you have a fair and want to appear? Write to us at">¿Tienes una feria y quieres aparecer? Escríbenos a <a href="mailto:info@expoferiascr.com">info@expoferiascr.com</a></p>
+            <p data-es="Síguenos en redes sociales (próximamente)" data-en="Follow us on social media (coming soon)">Síguenos en redes sociales (próximamente)</p>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p>&copy; 2026 ExpoFeriasCR - Todos los derechos reservados</p>
+            <p data-es="&copy; 2026 ExpoFeriasCR - Todos los derechos reservados" data-en="&copy; 2026 ExpoFeriasCR - All rights reserved">&copy; 2026 ExpoFeriasCR - Todos los derechos reservados</p>
         </div>
     </footer>
 

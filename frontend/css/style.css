@@ -269,3 +269,12 @@ footer {
         font-size: 2rem;
     }
 }
+
+.tabla-precios table,
+.tabla-precios thead,
+.tabla-precios tbody,
+.tabla-precios tr,
+.tabla-precios th,
+.tabla-precios td {
+    display: revert; /* vuelve al comportamiento nativo de tabla */
+}

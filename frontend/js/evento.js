@@ -1,7 +1,21 @@
+// frontend/js/evento.js
 const urlParams = new URLSearchParams(window.location.search);
 const slug = urlParams.get('slug');
 if (!slug) window.location.href = '/';
 
+// ==================== IDIOMA ====================
+let idiomaActual = 'es';
+
+function aplicarIdioma() {
+    document.querySelectorAll('[data-es]').forEach(el => {
+        const texto = el.getAttribute(`data-${idiomaActual}`);
+        if (texto) el.innerText = texto;
+    });
+    const btn = document.getElementById('btnIdioma');
+    if (btn) btn.innerText = idiomaActual === 'es' ? '🇺🇸 English' : '🇪🇸 Español';
+}
+
+// ==================== CARGAR EVENTO ====================
 async function cargarEvento() {
     try {
         const res = await fetch(`/api/eventos/${slug}`);
@@ -70,7 +84,7 @@ async function cargarEvento() {
             }
         }
 
-        // ========== COLORES ESPECÍFICOS DEL HERO (para legibilidad sobre el carrusel) ==========
+        // ========== COLORES ESPECÍFICOS DEL HERO ==========
         const tituloHero = document.getElementById('eventoNombre');
         const descripcionHero = document.getElementById('eventoDescripcion');
         const fechasHero = document.querySelector('.hero-dates');
@@ -96,6 +110,7 @@ async function cargarEvento() {
     }
 }
 
+// ==================== ACTIVIDADES ====================
 async function cargarActividades() {
     const container = document.getElementById('actividadesGrid');
     try {
@@ -125,6 +140,7 @@ async function cargarActividades() {
     }
 }
 
+// ==================== PRECIOS ====================
 async function cargarPrecios() {
     const container = document.getElementById('tablaPrecios');
     try {
@@ -138,20 +154,21 @@ async function cargarPrecios() {
         precios.forEach(p => {
             const fecha = new Date(p.fecha).toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long' });
             const precioFormateado = new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(p.precioNormal);
-            html += `<tr>
-                        <td>${fecha}</td>
-                        <td>${precioFormateado}</td>
-                        <td>${p.promocion || '—'}</td>
-                        <td>${p.descripcionPromocion || '—'}</td>
-                    </tr>`;
+html += `<tr>
+            <td>${fecha}</td>
+            <td>${precioFormateado}</td>
+            <td>${p.promocion || '—'}</td>
+            <td>${p.descripcionPromocion || '—'}</td>
+        </tr>`;
         });
-        html += `</tbody></tr>`;
+        html += `</tbody></table>`;
         container.innerHTML = html;
     } catch (err) {
         container.innerHTML = '<p>Error al cargar precios.</p>';
     }
 }
 
+// ==================== EXPOSITORES ====================
 async function cargarExpositores() {
     const container = document.getElementById('expositoresGrid');
     try {
@@ -233,6 +250,7 @@ function configurarBotonesCarrusel() {
     }
 }
 
+// ==================== INICIALIZACIÓN ====================
 document.addEventListener('DOMContentLoaded', () => {
     cargarEvento();
     cargarActividades();
@@ -240,4 +258,14 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarExpositores();
     cargarCarruselFondo();
     configurarBotonesCarrusel();
+    
+    // Idioma
+    aplicarIdioma();
+    const btnIdioma = document.getElementById('btnIdioma');
+    if (btnIdioma) {
+        btnIdioma.addEventListener('click', () => {
+            idiomaActual = idiomaActual === 'es' ? 'en' : 'es';
+            aplicarIdioma();
+        });
+    }
 });

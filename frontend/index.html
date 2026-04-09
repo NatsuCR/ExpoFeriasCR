@@ -3,138 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExpoFeriasCR | Expo San Carlos Internacional 2026</title>
-    <!-- Google Fonts: tipografía rústica -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (iconos) -->
+    <title>ExpoFeriasCR | Ferias y exposiciones de Costa Rica</title>
+    <meta name="description" content="Descubre las mejores ferias, exposiciones y eventos ganaderos, culturales y comerciales en Costa Rica. Encuentra fechas, ubicaciones, precios y más.">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- CSS principal (estilo vaquero + festivo) -->
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <!-- Barra de navegación -->
+<body class="pagina-principal">
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
             <div class="logo">
-                <!-- Imagen: Logo de Expo San Carlos Internacional -->
-                <img src="assets/images/ExpoSanCarlos2026/ExpoSanCarlosLogo2026.jpeg" alt="Logo Expo San Carlos">
+                <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR">
                 <span>ExpoFeriasCR</span>
             </div>
             <ul class="nav-links">
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#informacion">Información</a></li>
-                <li><a href="#actividades">Actividades</a></li>
-                <li><a href="#precios">Precios</a></li>
-                <li><a href="#expositores">Expositores</a></li>
-                <li><a href="#ubicacion">Ubicación</a></li>
+                <li><a href="#inicio" id="btnInicio">Inicio</a></li>
+                <li><a href="#eventos">Eventos</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero / Banner principal -->
-    <section id="inicio" class="hero">
+    <!-- Hero principal con buscador -->
+    <section id="inicio" class="hero-portal">
         <div class="container">
-            <h1>Expo San Carlos Internacional 2026</h1>
-            <p>La feria ganadera y cultural más importante de la zona norte</p>
-            <div class="hero-dates">15 al 27 de abril, 2026</div>
-            <!-- Imagen de fondo: se define en CSS, pero puedes poner una foto del campo ferial -->
+            <h1>Explora las mejores ferias y exposiciones de Costa Rica</h1>
+            <p>Encuentra eventos ganaderos, culturales, comerciales y mucho más. Todo en un solo lugar.</p>
+            <div class="buscador-hero">
+                <input type="text" id="buscador-principal" placeholder="Buscar por nombre, ubicación o fecha..." class="input-buscar">
+                <button id="btn-buscar-principal" class="btn-buscar"><i class="fas fa-search"></i> Buscar</button>
+            </div>
         </div>
     </section>
 
-    <!-- Información general -->
-    <section id="informacion" class="info">
+    <!-- Sección de eventos destacados (listado dinámico) -->
+    <section id="eventos" class="eventos-destacados">
         <div class="container">
-            <h2>Sobre la Expo</h2>
-            <p>La Expo San Carlos Internacional es el evento más esperado de la región, combinando tradición ganadera, conciertos de talla internacional, rodeos, y actividades para toda la familia. Durante 13 días, el campo ferial se convierte en el punto de encuentro de nacionales y turistas.</p>
-            <!-- Imagen: Foto del campo ferial (si tienes) -->
-            <!-- <img src="assets/images/ExpoSanCarlos2026/campo-ferial.jpg" alt="Campo ferial"> -->
-            <div class="info-grid">
-                <div class="info-card">
+            <h2>Próximos eventos</h2>
+            <div id="eventos-grid" class="eventos-grid">
+                <p>Cargando eventos...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de información adicional -->
+    <section class="info-adicional">
+        <div class="container">
+            <div class="info-cards">
+                <div class="info-card-simple">
                     <i class="fas fa-calendar-alt"></i>
-                    <h3>Fechas</h3>
-                    <p>15 al 27 de abril, 2026</p>
+                    <h3>Actualizado</h3>
+                    <p>Fechas y horarios verificados</p>
                 </div>
-                <div class="info-card">
+                <div class="info-card-simple">
                     <i class="fas fa-map-marker-alt"></i>
-                    <h3>Ubicación</h3>
-                    <p>Cámara de Ganaderos San Carlos, Alajuela</p>
+                    <h3>Ubicaciones</h3>
+                    <p>Mapas y direcciones exactas</p>
                 </div>
-                <div class="info-card">
+                <div class="info-card-simple">
                     <i class="fas fa-ticket-alt"></i>
-                    <h3>Entradas</h3>
-                    <p>En taquilla del campo ferial</p>
+                    <h3>Precios</h3>
+                    <p>Entradas y promociones</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Horario general (imagen) -->
-    <section class="horario">
-        <div class="container">
-            <h2>Horario General</h2>
-            <!-- Imagen: Horario general de la Expo -->
-            <img src="assets/images/ExpoSanCarlos2026/ExpoSanCarlosHorarioGeneral2026.jpeg" alt="Horario Expo San Carlos 2026" class="horario-img">
-        </div>
-    </section>
-
-    <!-- Actividades destacadas (conciertos) -->
-    <section id="actividades" class="actividades">
-        <div class="container">
-            <h2>Actividades Destacadas</h2>
-            <div class="actividades-grid">
-                <div class="actividad-card">
-                    <!-- Imagen: Portada de Kapo -->
-                    <img src="assets/images/ExpoSanCarlos2026/ExpoSanCarlosKapo2026.jpeg" alt="Concierto Kapo">
-                    <h3>Concierto Kapo</h3>
-                    <p><i class="fas fa-calendar-day"></i> Sábado 18 de abril, 6:00 p.m.</p>
-                    <p><i class="fas fa-map-pin"></i> Campo ferial</p>
-                    <p><i class="fas fa-ticket-alt"></i> Entradas en <a href="https://smarticket.net" target="_blank">Smarticket</a> (incluye acceso al campo ferial al finalizar el concierto)</p>
-                    <p><small>+12 años acompañados por encargado legal. No consumo de licor en gramilla VIP de mayores de 12 años.
-                        Prohibida la entrada de menores de 18 años a zonas para mayores de 18 años.
-                    </small></p>
-                </div>
-                <div class="actividad-card">
-                    <!-- Imagen: Portada de Los Karkis -->
-                    <img src="assets/images/ExpoSanCarlos2026/ExpoSanCarlosLosKarkis2026.jpeg" alt="Concierto Los Karkis">
-                    <h3>Concierto Los Karkis</h3>
-                    <p><i class="fas fa-calendar-day"></i> Viernes 25 de abril, 7:00 p.m.</p>
-                    <p><i class="fas fa-map-pin"></i> Campo ferial</p>
-                    <p><i class="fas fa-ticket-alt"></i> Evento gratuito (solo requiere entrada general al campo ferial)</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Precios de entrada (imagen y tabla) -->
-    <section id="precios" class="precios">
-        <div class="container">
-            <h2>Precios de Entrada al Campo Ferial</h2>
-            <!-- Imagen: Precios por día (si la tienes) -->
-            <img src="assets/images/ExpoSanCarlos2026/precios-por-dia.jpg" alt="Precios Expo San Carlos" class="precios-img" style="display:none;"> <!-- Oculta si no tienes la imagen aún -->
-            <div class="tabla-precios" id="tabla-precios">
-                <!-- Aquí se cargarán los precios desde la API con JavaScript -->
-                <p>Cargando precios...</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Expositores -->
-    <section id="expositores" class="expositores">
-        <div class="container">
-            <h2>Expositores</h2>
-            <div class="expositores-grid" id="expositores-grid">
-                <p>Cargando expositores...</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Ubicación y mapa -->
-    <section id="ubicacion" class="ubicacion">
-        <div class="container">
-            <h2>¿Cómo llegar?</h2>
-            <p>Cámara de Ganaderos San Carlos - 35 San Carlos, Provincia de Alajuela</p>
-            <div class="mapa">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4802.499825059502!2d-84.46786892548431!3d10.441835106368261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa07036dc9a7551%3A0x71aae73e035ab310!2sC%C3%A1mara%20de%20Ganaderos%20de%20San%20Carlos!5e1!3m2!1ses-419!2scr!4v1775633280074!5m2!1ses-419!2scr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> 
             </div>
         </div>
     </section>
@@ -143,7 +79,7 @@
     <section id="contacto" class="contacto">
         <div class="container">
             <h2>Contacto</h2>
-            <p>¿Preguntas? Escríbenos a <a href="mailto:info@expoferiascr.com">info@expoferiascr.com</a></p>
+            <p>¿Tienes una feria y quieres aparecer? Escríbenos a <a href="mailto:jaravillaloboscarlos531@gmail.com">jaravillaloboscarlos531@gmail.com</a></p>
             <p>Síguenos en redes sociales (próximamente)</p>
         </div>
     </section>

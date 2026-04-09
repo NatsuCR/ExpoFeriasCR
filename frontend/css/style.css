@@ -1,12 +1,6 @@
-/* frontend/css/style.css */
-:root {
-    --color-piel: #d4a373;
-    --color-cuero: #8b5a2b;
-    --color-vaquero-oscuro: #3e2a1f;
-    --color-arena: #f4e4c1;
-    --color-texto: #2c1a0e;
-    --color-texto-claro: #5c3b1f;
-}
+/* ============================================
+   ExpoFeriasCR - Estilo para Página Principal
+   ============================================ */
 
 * {
     margin: 0;
@@ -16,15 +10,14 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: var(--color-arena);
-    color: var(--color-texto);
+    background: linear-gradient(145deg, #FFF5E6 0%, #FFE8CC 100%);
+    color: #2c1a0e;
     line-height: 1.6;
 }
 
 h1, h2, h3, h4 {
     font-family: 'Playfair Display', serif;
     font-weight: 900;
-    letter-spacing: 1px;
 }
 
 .container {
@@ -35,13 +28,12 @@ h1, h2, h3, h4 {
 
 /* Navbar */
 .navbar {
-    background-color: var(--color-vaquero-oscuro);
-    color: white;
+    background-color: #C8102E;  /* rojo Costa Rica */
     padding: 1rem 0;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .navbar .container {
@@ -63,76 +55,94 @@ h1, h2, h3, h4 {
 }
 
 .logo span {
-    font-family: 'Playfair Display', serif;
     font-size: 1.5rem;
     font-weight: bold;
+    color: white;
 }
 
 .nav-links {
     display: flex;
     list-style: none;
     gap: 1.5rem;
-    flex-wrap: wrap;
 }
 
 .nav-links a {
     color: white;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: bold;
     transition: color 0.3s;
 }
 
 .nav-links a:hover {
-    color: var(--color-piel);
+    color: #F7C600;
 }
 
-/* Hero */
-.hero {
-    background: linear-gradient(rgba(62,42,31,0.7), rgba(62,42,31,0.7)), url('../assets/images/ExpoSanCarlos2026/campo-ferial.jpg');
+/* Hero principal */
+.hero-portal {
+    background: linear-gradient(135deg, rgba(200,16,46,0.85) 0%, rgba(0,51,160,0.85) 100%), url('../assets/images/ExpoSanCarlos2026/campo-ferial.jpg');
     background-size: cover;
     background-position: center;
-    height: 80vh;
-    display: flex;
-    align-items: center;
     text-align: center;
+    color: white;
+    padding: 5rem 0;
+}
+
+.hero-portal h1 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+}
+
+.hero-portal p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.buscador-hero {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.input-buscar {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.btn-buscar {
+    background-color: #F7C600;
+    color: #2c1a0e;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn-buscar:hover {
+    background-color: #0033A0;
     color: white;
 }
 
-/* Si no tienes la imagen de fondo, comenta la línea de background y usa un color sólido */
-/* .hero { background-color: var(--color-vaquero-oscuro); } */
-
-.hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-}
-
-.hero p {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-}
-
-.hero-dates {
-    font-size: 1.5rem;
-    background-color: var(--color-piel);
-    display: inline-block;
-    padding: 0.5rem 1.5rem;
-    border-radius: 30px;
-    color: var(--color-vaquero-oscuro);
-    font-weight: bold;
-}
-
-/* Secciones */
-section {
+/* Sección eventos */
+.eventos-destacados {
     padding: 4rem 0;
+    background-color: #FFF5E6;
 }
 
 h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 2rem;
-    color: var(--color-vaquero-oscuro);
-    border-bottom: 3px solid var(--color-piel);
+    color: #C8102E;
+    border-bottom: 3px solid #F7C600;
     display: inline-block;
     padding-bottom: 0.5rem;
     width: auto;
@@ -140,84 +150,110 @@ h2 {
     margin-right: auto;
 }
 
-.info-grid, .actividades-grid, .expositores-grid {
+.eventos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
 }
 
-.info-card, .actividad-card, .expositor-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
-}
-
-.info-card:hover, .actividad-card:hover, .expositor-card:hover {
-    transform: translateY(-5px);
-}
-
-.info-card i {
-    font-size: 2.5rem;
-    color: var(--color-piel);
-    margin-bottom: 1rem;
-}
-
-.actividad-card img, .expositor-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-.horario-img, .precios-img {
-    max-width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    margin-top: 1rem;
-}
-
-/* Tabla precios */
-.tabla-precios {
-    overflow-x: auto;
-    margin-top: 2rem;
-}
-
-.tabla-precios table {
-    width: 100%;
-    border-collapse: collapse;
+.evento-card {
     background: white;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    border-top: 5px solid #C8102E;
 }
 
-.tabla-precios th, .tabla-precios td {
-    padding: 12px 15px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
+.evento-card:hover {
+    transform: translateY(-5px);
 }
 
-.tabla-precios th {
-    background-color: var(--color-vaquero-oscuro);
+.evento-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.evento-card h3 {
+    padding: 1rem 1rem 0;
+    color: #0033A0;
+}
+
+.evento-card p {
+    padding: 0 1rem;
+    color: #5c3b1f;
+}
+
+.evento-card .btn-ver {
+    display: block;
+    background-color: #0033A0;
     color: white;
+    text-align: center;
+    padding: 10px;
+    margin: 1rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
 }
 
-.tabla-precios tr:hover {
-    background-color: #f5f5f5;
+.evento-card .btn-ver:hover {
+    background-color: #C8102E;
+}
+
+/* Información adicional */
+.info-adicional {
+    background-color: #fff9ef;
+    padding: 3rem 0;
+}
+
+.info-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.info-card-simple {
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+}
+
+.info-card-simple i {
+    font-size: 2.5rem;
+    color: #C8102E;
+    margin-bottom: 1rem;
+}
+
+.info-card-simple h3 {
+    font-family: 'Playfair Display', serif;
+    color: #0033A0;
+    margin-bottom: 0.5rem;
+}
+
+/* Contacto */
+.contacto {
+    background-color: #fff9ef;
+    color: #2c1a0e;
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.contacto a {
+    color: #0033A0;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 /* Footer */
 footer {
-    background-color: var(--color-vaquero-oscuro);
+    background-color: #0033A0;
     color: white;
     text-align: center;
     padding: 1.5rem 0;
-    margin-top: 2rem;
 }
 
 /* Responsive */
@@ -226,7 +262,7 @@ footer {
         flex-direction: column;
         gap: 1rem;
     }
-    .hero h1 {
+    .hero-portal h1 {
         font-size: 2rem;
     }
     h2 {

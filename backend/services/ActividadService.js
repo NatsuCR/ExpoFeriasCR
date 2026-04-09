@@ -1,4 +1,3 @@
-// backend/services/ActividadService.js
 const pool = require('../db');
 const Actividad = require('../models/Actividad');
 
@@ -15,4 +14,5 @@ class ActividadService {
     return result.rows.map(row => Actividad.fromDatabase(row));
   }
 }
+
 module.exports = ActividadService;

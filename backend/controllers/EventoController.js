@@ -1,4 +1,3 @@
-// backend/controllers/EventoController.js
 const EventoService = require('../services/EventoService');
 
 class EventoController {
@@ -6,7 +5,6 @@ class EventoController {
     this.eventoService = new EventoService();
   }
 
-  // GET /api/eventos
   async obtenerTodos(req, res) {
     try {
       const eventos = await this.eventoService.obtenerEventosActivos();
@@ -17,7 +15,6 @@ class EventoController {
     }
   }
 
-  // GET /api/eventos/:slug
   async obtenerPorSlug(req, res) {
     try {
       const { slug } = req.params;

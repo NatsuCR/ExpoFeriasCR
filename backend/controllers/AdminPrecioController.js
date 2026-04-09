@@ -4,13 +4,9 @@ class AdminPrecioController {
   async listarPorEvento(req, res) {
     const { eventoId } = req.params;
     try {
-      const result = await pool.query(
-        'SELECT * FROM precios_entrada WHERE evento_id = $1 ORDER BY fecha',
-        [eventoId]
-      );
+      const result = await pool.query('SELECT * FROM precios_entrada WHERE evento_id = $1 ORDER BY fecha', [eventoId]);
       res.json(result.rows);
     } catch (error) {
-      console.error(error);
       res.status(500).json({ error: 'Error al listar precios' });
     }
   }
@@ -25,7 +21,6 @@ class AdminPrecioController {
       );
       res.status(201).json(result.rows[0]);
     } catch (error) {
-      console.error(error);
       res.status(500).json({ error: 'Error al crear precio' });
     }
   }
@@ -35,15 +30,13 @@ class AdminPrecioController {
     const { fecha, precio_normal, promocion, descripcion_promocion } = req.body;
     try {
       const result = await pool.query(
-        `UPDATE precios_entrada 
-         SET fecha=$1, precio_normal=$2, promocion=$3, descripcion_promocion=$4, updated_at=now()
+        `UPDATE precios_entrada SET fecha=$1, precio_normal=$2, promocion=$3, descripcion_promocion=$4, updated_at=now()
          WHERE id=$5 RETURNING *`,
         [fecha, precio_normal, promocion, descripcion_promocion, id]
       );
       if (result.rows.length === 0) return res.status(404).json({ error: 'Precio no encontrado' });
       res.json(result.rows[0]);
     } catch (error) {
-      console.error(error);
       res.status(500).json({ error: 'Error al actualizar precio' });
     }
   }
@@ -55,7 +48,6 @@ class AdminPrecioController {
       if (result.rows.length === 0) return res.status(404).json({ error: 'Precio no encontrado' });
       res.json({ message: 'Precio eliminado' });
     } catch (error) {
-      console.error(error);
       res.status(500).json({ error: 'Error al eliminar precio' });
     }
   }

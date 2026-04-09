@@ -1,4 +1,3 @@
-// backend/controllers/ActividadController.js
 const ActividadService = require('../services/ActividadService');
 
 class ActividadController {
@@ -17,4 +16,5 @@ class ActividadController {
     }
   }
 }
+
 module.exports = ActividadController;

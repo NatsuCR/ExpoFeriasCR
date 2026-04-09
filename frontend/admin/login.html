@@ -2,21 +2,32 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Login ExpoFeriasCR</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - ExpoFeriasCR</title>
+    <link rel="stylesheet" href="../css/admin.css">
 </head>
-<body style="background: var(--color-crema); display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <div style="background: white; padding: 2rem; border-radius: 20px; width: 300px;">
+<body class="admin-body">
+    <div class="login-container">
         <h2>Acceso Administrador</h2>
-        <input type="email" id="email" placeholder="Email" style="width:100%; padding:8px; margin:10px 0;">
-        <input type="password" id="password" placeholder="Contraseña" style="width:100%; padding:8px; margin:10px 0;">
-        <button id="btnLogin" style="background: var(--color-cuero); color:white; padding:10px; border:none; width:100%;">Ingresar</button>
-        <div id="error" style="color:red; margin-top:10px;"></div>
+        <input type="email" id="email" placeholder="Correo electrónico" autocomplete="off">
+        <input type="password" id="password" placeholder="Contraseña">
+        <button id="btnLogin">Iniciar sesión</button>
+        <div id="errorMsg" class="error"></div>
     </div>
+
     <script>
-        document.getElementById('btnLogin').addEventListener('click', async () => {
-            const email = document.getElementById('email').value;
+        const btn = document.getElementById('btnLogin');
+        const errorDiv = document.getElementById('errorMsg');
+
+        btn.addEventListener('click', async () => {
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                errorDiv.innerText = 'Por favor complete ambos campos.';
+                return;
+            }
+
             try {
                 const res = await fetch('/api/auth/login', {
                     method: 'POST',
@@ -29,10 +40,10 @@
                     localStorage.setItem('user', JSON.stringify(data.user));
                     window.location.href = 'dashboard.html';
                 } else {
-                    document.getElementById('error').innerText = data.error || 'Error de autenticación';
+                    errorDiv.innerText = data.error || 'Credenciales incorrectas';
                 }
             } catch (err) {
-                document.getElementById('error').innerText = 'Error de conexión';
+                errorDiv.innerText = 'Error de conexión con el servidor.';
             }
         });
     </script>

@@ -8,6 +8,7 @@ const expositorRoutes = require('./routes/expositorRoutes');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const actividadRoutes = require('./routes/actividadRoutes');
+const galeriaRoutes = require('./routes/galeriaRoutes');
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/expositores', expositorRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/actividades', actividadRoutes);
+app.use('/api/galeria', galeriaRoutes);
 
 // Ruta de salud (opcional)
 app.get('/api/health', (req, res) => {

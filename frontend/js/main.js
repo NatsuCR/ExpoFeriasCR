@@ -1,95 +1,65 @@
-// frontend/js/main.js
+// frontend/js/main.js (versión mejorada)
 
-// Función para formatear fecha legible
-function formatearFecha(fechaISO) {
-    const fecha = new Date(fechaISO);
-    return fecha.toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long' });
-}
-
-// Cargar precios desde la API
-async function cargarPrecios() {
-    const contenedor = document.getElementById('tabla-precios');
-    if (!contenedor) return;
-
+async function cargarEventos(filtro = '') {
+    const container = document.getElementById('eventos-grid');
+    if (!container) return;
     try {
-        const respuesta = await fetch('/api/precios/expo-san-carlos-2026');
-        if (!respuesta.ok) throw new Error('Error al cargar precios');
-        const precios = await respuesta.json();
-
-        if (precios.length === 0) {
-            contenedor.innerHTML = '<p>No hay precios disponibles aún.</p>';
+        const res = await fetch('/api/eventos');
+        const eventos = await res.json();
+        let eventosFiltrados = eventos;
+        if (filtro) {
+            eventosFiltrados = eventos.filter(e =>
+                e.nombre.toLowerCase().includes(filtro) ||
+                e.ubicacion.toLowerCase().includes(filtro)
+            );
+        }
+        if (eventosFiltrados.length === 0) {
+            container.innerHTML = '<p>No se encontraron eventos.</p>';
             return;
         }
-
-        let html = `
-            <table class="tabla-precios-estilo">
-                <thead>
-                    <tr><th>Fecha</th><th>Precio normal</th><th>Promoción</th><th>Detalle</th></tr>
-                </thead>
-                <tbody>
-        `;
-        precios.forEach(p => {
-            const fechaStr = formatearFecha(p.fecha);
-            // Convertir precioNormal de string a número
-            const precioNum = parseFloat(p.precioNormal);
-            const precioFormateado = new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(precioNum);
-            const promocion = p.promocion || '—';
-            const detalle = p.descripcionPromocion || '—';
-            
-            html += `
-                <tr>
-                    <td>${fechaStr}</td>
-                    <td>${precioFormateado}</td>
-                    <td>${promocion}</td>
-                    <td>${detalle}</td>
-                </tr>
-            `;
-        });
-        html += `</tbody></table>`;
-        contenedor.innerHTML = html;
-    } catch (error) {
-        console.error(error);
-        contenedor.innerHTML = '<p style="color: red;">Error al cargar los precios. Intenta más tarde.</p>';
-    }
-}
-
-// Cargar expositores desde la API
-async function cargarExpositores() {
-    const contenedor = document.getElementById('expositores-grid');
-    if (!contenedor) return;
-
-    try {
-        const respuesta = await fetch('/api/expositores/expo-san-carlos-2026');
-        if (!respuesta.ok) throw new Error('Error al cargar expositores');
-        const expositores = await respuesta.json();
-
-        if (expositores.length === 0) {
-            contenedor.innerHTML = '<p>Pronto anunciaremos la lista de expositores.</p>';
-            return;
-        }
-
         let html = '';
-        expositores.forEach(expo => {
+        eventosFiltrados.forEach(e => {
             html += `
-                <div class="expositor-card">
-                    ${expo.imagenLogo ? `<img src="${expo.imagenLogo}" alt="${expo.nombre}" class="expositor-logo">` : '<div class="expositor-sin-logo"><i class="fas fa-store"></i></div>'}
-                    <h3>${expo.nombre}</h3>
-                    <p><strong>Rubro:</strong> ${expo.rubro}</p>
-                    <p>${expo.descripcion || ''}</p>
-                    <p><strong>Ubicación:</strong> ${expo.ubicacion || 'Por definir'}</p>
-                    ${expo.sitioWeb ? `<a href="${expo.sitioWeb}" target="_blank">Sitio web</a>` : ''}
+                <div class="evento-card">
+                    <img src="${e.imagenPortada || 'assets/images/default-feria.jpg'}" alt="${e.nombre}">
+                    <h3>${e.nombre}</h3>
+                    <p>${new Date(e.fechaInicio).toLocaleDateString()} - ${new Date(e.fechaFin).toLocaleDateString()}</p>
+                    <p>${e.ubicacion}</p>
+                    <a href="evento.html?slug=${e.slug}" class="btn-ver">Ver más</a>
                 </div>
             `;
         });
-        contenedor.innerHTML = html;
+        container.innerHTML = html;
     } catch (error) {
-        console.error(error);
-        contenedor.innerHTML = '<p style="color: red;">Error al cargar los expositores. Intenta más tarde.</p>';
+        container.innerHTML = '<p>Error al cargar eventos.</p>';
     }
 }
 
-// Ejecutar cuando el DOM esté listo
+function configurarBuscadores() {
+    const inputPrincipal = document.getElementById('buscador-principal');
+    const btnPrincipal = document.getElementById('btn-buscar-principal');
+    if (inputPrincipal && btnPrincipal) {
+        const buscar = () => cargarEventos(inputPrincipal.value.toLowerCase().trim());
+        btnPrincipal.addEventListener('click', buscar);
+        inputPrincipal.addEventListener('keypress', (e) => { if (e.key === 'Enter') buscar(); });
+    }
+
+    // ===== NUEVO: resetear búsqueda al hacer clic en "Inicio" =====
+    const btnInicio = document.getElementById('btnInicio');
+    if (btnInicio) {
+        btnInicio.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita el salto al ancla '#inicio'
+            // Limpiar el campo de búsqueda
+            if (inputPrincipal) inputPrincipal.value = '';
+            // Recargar todos los eventos
+            cargarEventos();
+            // Opcional: scroll suave al inicio
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    cargarPrecios();
-    cargarExpositores();
+    cargarEventos();
+    configurarBuscadores();
 });

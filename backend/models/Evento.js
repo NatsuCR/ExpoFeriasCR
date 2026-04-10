@@ -7,6 +7,8 @@ class Evento {
     colorTituloHero, colorDescripcionHero, colorFondoFechas, colorTextoFechas,
     colorTituloSeccion, provincia,
     colorMenuFondo, colorMenuTexto, colorMenuFondoHover, colorMenuTextoHover,
+    colorFondoContacto, colorTextoContacto, colorEnlaceContacto,
+    colorFondoFooter, colorTextoFooter,
     createdAt, updatedAt
   ) {
     this.id = id;
@@ -37,6 +39,11 @@ class Evento {
     this.colorMenuTexto = colorMenuTexto;
     this.colorMenuFondoHover = colorMenuFondoHover;
     this.colorMenuTextoHover = colorMenuTextoHover;
+    this.colorFondoContacto = colorFondoContacto;
+    this.colorTextoContacto = colorTextoContacto;
+    this.colorEnlaceContacto = colorEnlaceContacto;
+    this.colorFondoFooter = colorFondoFooter;
+    this.colorTextoFooter = colorTextoFooter;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -55,6 +62,8 @@ class Evento {
       row.color_titulo_seccion, row.provincia,
       row.color_menu_fondo, row.color_menu_texto,
       row.color_menu_fondo_hover, row.color_menu_texto_hover,
+      row.color_fondo_contacto, row.color_texto_contacto, row.color_enlace_contacto,
+      row.color_fondo_footer, row.color_texto_footer,
       row.created_at, row.updated_at
     );
   }

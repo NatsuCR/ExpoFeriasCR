@@ -1,4 +1,4 @@
-// cargarEvento.js
+// frontend/js/evento/cargarEvento.js
 export async function cargarEvento(slug) {
     try {
         const res = await fetch(`/api/eventos/${slug}`);
@@ -48,10 +48,18 @@ export async function cargarEvento(slug) {
         }
 
         // Colores generales
-        if (evento.colorPrimario) document.documentElement.style.setProperty('--evento-primario', evento.colorPrimario);
-        if (evento.colorSecundario) document.documentElement.style.setProperty('--evento-secundario', evento.colorSecundario);
-        if (evento.colorFondo) document.body.style.backgroundColor = evento.colorFondo;
-        if (evento.colorTexto) document.body.style.color = evento.colorTexto;
+        if (evento.colorPrimario) {
+            document.documentElement.style.setProperty('--evento-primario', evento.colorPrimario);
+        }
+        if (evento.colorSecundario) {
+            document.documentElement.style.setProperty('--evento-secundario', evento.colorSecundario);
+        }
+        if (evento.colorFondo) {
+            document.documentElement.style.setProperty('--evento-fondo', evento.colorFondo);
+        }
+        if (evento.colorTexto) {
+            document.body.style.color = evento.colorTexto;
+        }
         if (evento.colorHeroOverlay) {
             const overlay = document.querySelector('.hero-overlay');
             if (overlay) overlay.style.backgroundColor = evento.colorHeroOverlay;
@@ -74,11 +82,34 @@ export async function cargarEvento(slug) {
             document.querySelectorAll('h2').forEach(h2 => h2.style.color = evento.colorTituloSeccion);
         }
 
-        // Colores botones menú
+        // Colores para botones del menú
         if (evento.colorMenuFondo) document.documentElement.style.setProperty('--color-menu-fondo', evento.colorMenuFondo);
         if (evento.colorMenuTexto) document.documentElement.style.setProperty('--color-menu-texto', evento.colorMenuTexto);
         if (evento.colorMenuFondoHover) document.documentElement.style.setProperty('--color-menu-fondo-hover', evento.colorMenuFondoHover);
         if (evento.colorMenuTextoHover) document.documentElement.style.setProperty('--color-menu-texto-hover', evento.colorMenuTextoHover);
+
+        // ========== NUEVOS COLORES PARA CONTACTO Y FOOTER ==========
+        // Sección contacto
+        const contactoSection = document.querySelector('.contacto');
+        if (contactoSection) {
+            if (evento.colorFondoContacto) contactoSection.style.backgroundColor = evento.colorFondoContacto;
+            if (evento.colorTextoContacto) contactoSection.style.color = evento.colorTextoContacto;
+        }
+        if (evento.colorEnlaceContacto) {
+            document.querySelectorAll('.contacto a').forEach(enlace => {
+                enlace.style.color = evento.colorEnlaceContacto;
+            });
+        }
+
+        // Footer
+        const footer = document.querySelector('footer');
+        if (footer) {
+            if (evento.colorFondoFooter) footer.style.backgroundColor = evento.colorFondoFooter;
+            if (evento.colorTextoFooter) {
+                footer.style.color = evento.colorTextoFooter;
+                footer.querySelectorAll('p').forEach(p => p.style.color = evento.colorTextoFooter);
+            }
+        }
 
     } catch (err) {
         console.error(err);

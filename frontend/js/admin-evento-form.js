@@ -55,6 +55,11 @@ async function cargarDatosEvento() {
     document.getElementById('color_descripcion_hero').value = evento.color_descripcion_hero || '#FFFFFF';
     document.getElementById('color_fondo_fechas').value = evento.color_fondo_fechas || '#d4a373';
     document.getElementById('color_texto_fechas').value = evento.color_texto_fechas || '#8b5a2b';
+    document.getElementById('color_fondo_contacto').value = evento.color_fondo_contacto || '#f4e4c1';
+document.getElementById('color_texto_contacto').value = evento.color_texto_contacto || '#2c1a0e';
+document.getElementById('color_enlace_contacto').value = evento.color_enlace_contacto || '#8b5a2b';
+document.getElementById('color_fondo_footer').value = evento.color_fondo_footer || '#8b5a2b';
+document.getElementById('color_texto_footer').value = evento.color_texto_footer || '#ffffff';
     document.getElementById('activo').checked = evento.activo;
     document.getElementById('formTitle').innerText = `Editando: ${evento.nombre}`;
 }
@@ -87,6 +92,11 @@ async function guardarBasicos() {
         color_descripcion_hero: document.getElementById('color_descripcion_hero').value,
         color_fondo_fechas: document.getElementById('color_fondo_fechas').value,
         color_texto_fechas: document.getElementById('color_texto_fechas').value,
+        color_fondo_contacto: document.getElementById('color_fondo_contacto').value,
+color_texto_contacto: document.getElementById('color_texto_contacto').value,
+color_enlace_contacto: document.getElementById('color_enlace_contacto').value,
+color_fondo_footer: document.getElementById('color_fondo_footer').value,
+color_texto_footer: document.getElementById('color_texto_footer').value,
         activo: document.getElementById('activo').checked
     };
     if (!data.slug || !data.nombre) {

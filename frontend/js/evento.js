@@ -3,18 +3,124 @@ const urlParams = new URLSearchParams(window.location.search);
 const slug = urlParams.get('slug');
 if (!slug) window.location.href = '/';
 
-// ==================== IDIOMA ====================
-let idiomaActual = 'es';
+// ==================== CARRUSEL RESPONSIVE CON AUTO-SLIDE ====================
+function initResponsiveCarousel(containerId, trackId, prevBtnId, nextBtnId, minWidth = 280, autoInterval = 10000) {
+    const container = document.getElementById(containerId);
+    const track = document.getElementById(trackId);
+    let prevBtn = document.getElementById(prevBtnId);
+    let nextBtn = document.getElementById(nextBtnId);
 
-function aplicarIdioma() {
-    document.querySelectorAll('[data-es]').forEach(el => {
-        const texto = el.getAttribute(`data-${idiomaActual}`);
-        if (texto) el.innerText = texto;
+    if (!container || !track) return;
+
+    let items = Array.from(track.children);
+    if (items.length === 0) return;
+
+    let visibleItems = 1;
+    let currentIndex = 0;
+    let itemWidth = 0;
+    let autoTimer = null;
+
+    function stopAuto() {
+        if (autoTimer) clearInterval(autoTimer);
+    }
+
+    function startAuto() {
+        stopAuto();
+        if (items.length > 1) {
+            autoTimer = setInterval(() => {
+                let newIndex = currentIndex + 1;
+                const maxIndex = Math.max(0, items.length - visibleItems);
+                if (newIndex > maxIndex) newIndex = 0;
+                moveTo(newIndex);
+            }, autoInterval);
+        }
+    }
+
+    function moveTo(index) {
+        const maxIndex = Math.max(0, items.length - visibleItems);
+        if (index < 0) index = maxIndex;
+        if (index > maxIndex) index = 0;
+
+        currentIndex = index;
+
+        const offset = -currentIndex * (itemWidth + 24);
+        track.style.transform = `translateX(${offset}px)`;
+
+        if (items.length > 1) {
+            stopAuto();
+            startAuto();
+        }
+    }
+
+    function updateCarousel() {
+        const containerWidth = container.clientWidth;
+
+        visibleItems = Math.floor(containerWidth / minWidth);
+        if (visibleItems < 1) visibleItems = 1;
+        if (visibleItems > 3) visibleItems = 3;
+
+        const gap = 24;
+        itemWidth = (containerWidth - (visibleItems - 1) * gap) / visibleItems;
+
+        items.forEach(slide => {
+            slide.style.flex = `0 0 ${itemWidth}px`;
+            slide.style.marginRight = `${gap}px`;
+        });
+
+        if (items.length) items[items.length - 1].style.marginRight = '0';
+
+        // 🔥 Mostrar/ocultar botones correctamente
+        if (prevBtn && nextBtn) {
+            if (items.length <= 1) {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+                stopAuto();
+            } else {
+                prevBtn.style.display = 'flex';
+                nextBtn.style.display = 'flex';
+                startAuto();
+            }
+        }
+
+        const maxIndex = Math.max(0, items.length - visibleItems);
+        if (currentIndex > maxIndex) currentIndex = maxIndex;
+
+        moveTo(currentIndex);
+    }
+
+    // 🔥 FIX: Clonar botones correctamente
+    if (prevBtn) {
+        const newPrev = prevBtn.cloneNode(true);
+        prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+        prevBtn = newPrev;
+
+        prevBtn.addEventListener('click', () => {
+            let newIndex = currentIndex - 1;
+            if (newIndex < 0) newIndex = Math.max(0, items.length - visibleItems);
+            moveTo(newIndex);
+        });
+    }
+
+    if (nextBtn) {
+        const newNext = nextBtn.cloneNode(true);
+        nextBtn.parentNode.replaceChild(newNext, nextBtn);
+        nextBtn = newNext;
+
+        nextBtn.addEventListener('click', () => {
+            let newIndex = currentIndex + 1;
+            const maxIndex = Math.max(0, items.length - visibleItems);
+            if (newIndex > maxIndex) newIndex = 0;
+            moveTo(newIndex);
+        });
+    }
+
+    window.addEventListener('resize', () => {
+        updateCarousel();
+        moveTo(currentIndex);
     });
-    const btn = document.getElementById('btnIdioma');
-    if (btn) btn.innerText = idiomaActual === 'es' ? '🇺🇸 English' : '🇪🇸 Español';
-}
 
+    updateCarousel();
+}
 
 // ==================== CARGAR INFORMACIÓN DEL EVENTO ====================
 async function cargarEvento() {
@@ -65,7 +171,7 @@ async function cargarEvento() {
             entradasParrafo.innerHTML = textoEntradas;
         }
 
-        // ==================== COLORES GENERALES ====================
+        // Colores generales
         if (evento.colorPrimario) {
             document.documentElement.style.setProperty('--evento-primario', evento.colorPrimario);
         }
@@ -85,7 +191,7 @@ async function cargarEvento() {
             }
         }
 
-        // ==================== COLORES ESPECÍFICOS DEL HERO ====================
+        // Colores específicos del hero
         const tituloHero = document.getElementById('eventoNombre');
         const descripcionHero = document.getElementById('eventoDescripcion');
         const fechasHero = document.querySelector('.hero-dates');
@@ -105,12 +211,26 @@ async function cargarEvento() {
             }
         }
 
-        // ==================== COLOR PARA TÍTULOS DE SECCIÓN (h2) ====================
+        // Color para títulos h2
         if (evento.colorTituloSeccion) {
             const titulosSeccion = document.querySelectorAll('h2');
             titulosSeccion.forEach(h2 => {
                 h2.style.color = evento.colorTituloSeccion;
             });
+        }
+
+        // Colores para botones del menú
+        if (evento.colorMenuFondo) {
+            document.documentElement.style.setProperty('--color-menu-fondo', evento.colorMenuFondo);
+        }
+        if (evento.colorMenuTexto) {
+            document.documentElement.style.setProperty('--color-menu-texto', evento.colorMenuTexto);
+        }
+        if (evento.colorMenuFondoHover) {
+            document.documentElement.style.setProperty('--color-menu-fondo-hover', evento.colorMenuFondoHover);
+        }
+        if (evento.colorMenuTextoHover) {
+            document.documentElement.style.setProperty('--color-menu-texto-hover', evento.colorMenuTextoHover);
         }
 
     } catch (err) {
@@ -121,46 +241,39 @@ async function cargarEvento() {
 
 // ==================== ACTIVIDADES ====================
 async function cargarActividades() {
-    const track = document.getElementById('actividadesGrid');
-    const wrapper = document.getElementById('actividadesWrapper');
-    const btnPrev = document.getElementById('actividadesPrev');
-    const btnNext = document.getElementById('actividadesNext');
+    const container = document.getElementById('actividadesGrid');
+    if (!container) return;
 
     try {
         const res = await fetch(`/api/actividades/${slug}`);
         const actividades = await res.json();
 
         if (actividades.length === 0) {
-            track.innerHTML = '<p>No hay actividades registradas.</p>';
+            container.innerHTML = '<p>No hay actividades registradas.</p>';
             return;
         }
 
-        // Construir cards
         let html = '';
         actividades.forEach(a => {
-            const imagen = a.imagen || a.imagen_url || '';
-            const titulo = a.titulo;
+            const imagen = a.imagen ? `<img src="${a.imagen}" alt="${a.titulo}">` : '';
             const fecha = new Date(a.fecha).toLocaleDateString();
-            const hora = a.hora ? a.hora.slice(0, 5) : '';
+            const hora = a.hora ? a.hora.slice(0,5) : '';
             const lugar = a.lugar || 'Campo ferial';
             const descripcion = a.descripcion || '';
-            const requiereOnline = a.requiere_entrada_online || a.requiereEntradaOnline;
-            const enlaceVenta = a.enlace_venta || a.enlaceVenta;
-            const esGratis = a.es_gratis || a.esGratis;
+            const requiereOnline = a.requiere_entrada_online;
+            const enlaceVenta = a.enlace_venta;
+            const esGratis = a.es_gratis;
 
             let linkHtml = '';
             if (requiereOnline && enlaceVenta) {
                 linkHtml = `<p><i class="fas fa-ticket-alt"></i> <a href="${enlaceVenta}" target="_blank">Comprar entrada</a></p>`;
-            } else if (requiereOnline && !enlaceVenta) {
-                linkHtml = `<p><i class="fas fa-ticket-alt"></i> Entrada online (enlace no disponible)</p>`;
             }
-
-            const gratisHtml = esGratis ? '<p><strong>Evento gratuito</strong></p>' : '';
+            let gratisHtml = esGratis ? '<p><strong>Evento gratuito</strong></p>' : '';
 
             html += `
                 <div class="actividad-card">
-                    ${imagen ? `<img src="${imagen}" alt="${titulo}">` : ''}
-                    <h3>${titulo}</h3>
+                    ${imagen}
+                    <h3>${a.titulo}</h3>
                     <p><i class="fas fa-calendar-day"></i> ${fecha} ${hora}</p>
                     <p><i class="fas fa-map-pin"></i> ${lugar}</p>
                     <p>${descripcion}</p>
@@ -169,43 +282,12 @@ async function cargarActividades() {
                 </div>
             `;
         });
+        container.innerHTML = html;
 
-        track.innerHTML = html;
-
-        // Activar carrusel solo si hay más de 3 actividades
-        const VISIBLE = 3;
-        const total = actividades.length;
-
-        if (total <= VISIBLE) return; // sin carrusel, sin botones
-
-        wrapper.classList.add('con-carrusel');
-
-        let indice = 0;
-
-        function irA(n) {
-            const maxIndice = total - VISIBLE;
-            indice = Math.max(0, Math.min(n, maxIndice));
-            const cards = track.querySelectorAll('.actividad-card');
-            const cardWidth = cards[0].offsetWidth;
-            track.style.transform = `translateX(-${indice * cardWidth}px)`;
-        }
-
-        btnPrev.addEventListener('click', () => {
-            irA(indice - 1 < 0 ? total - VISIBLE : indice - 1);
-        });
-
-        btnNext.addEventListener('click', () => {
-            irA(indice + 1 > total - VISIBLE ? 0 : indice + 1);
-        });
-
-        // Auto-avance cada 10 segundos
-        setInterval(() => {
-            irA(indice + 1 > total - VISIBLE ? 0 : indice + 1);
-        }, 10000);
-
+        initResponsiveCarousel('actividadesWrapper', 'actividadesGrid', 'actividadesPrev', 'actividadesNext', 280, 10000);
     } catch (err) {
         console.error(err);
-        track.innerHTML = '<p>Error al cargar actividades.</p>';
+        container.innerHTML = '<p>Error al cargar actividades.</p>';
     }
 }
 
@@ -226,7 +308,7 @@ async function cargarPrecios() {
             const precioFormateado = isNaN(precioNum) ? '₡0' : new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(precioNum);
             const promocion = p.promocion || '—';
             const detalle = p.descripcion_promocion || '—';
-            html += `<tr>
+            html += `<td>
                         <td>${fecha}</td>
                         <td>${precioFormateado}</td>
                         <td>${promocion}</td>
@@ -240,19 +322,18 @@ async function cargarPrecios() {
         container.innerHTML = '<p>Error al cargar precios.</p>';
     }
 }
-// ==================== CARGAR EXPOSITORES ====================
+
+// ==================== EXPOSITORES ====================
 async function cargarExpositores() {
-    const track = document.getElementById('expositoresGrid');
-    const wrapper = document.getElementById('expositoresWrapper');
-    const btnPrev = document.getElementById('expositoresPrev');
-    const btnNext = document.getElementById('expositoresNext');
+    const container = document.getElementById('expositoresGrid');
+    if (!container) return;
 
     try {
         const res = await fetch(`/api/expositores/${slug}`);
         const expositores = await res.json();
 
         if (expositores.length === 0) {
-            track.innerHTML = '<p>No hay expositores registrados.</p>';
+            container.innerHTML = '<p>No hay expositores registrados.</p>';
             return;
         }
 
@@ -271,42 +352,12 @@ async function cargarExpositores() {
                 </div>
             `;
         });
+        container.innerHTML = html;
 
-        track.innerHTML = html;
-
-        const VISIBLE = 3;
-        const total = expositores.length;
-
-        if (total <= VISIBLE) return;
-
-        wrapper.classList.add('con-carrusel');
-
-        let indice = 0;
-
-        function irA(n) {
-            const maxIndice = total - VISIBLE;
-            indice = Math.max(0, Math.min(n, maxIndice));
-            const cards = track.querySelectorAll('.expositor-card');
-            const cardWidth = cards[0].offsetWidth;
-            track.style.transform = `translateX(-${indice * cardWidth}px)`;
-        }
-
-        btnPrev.addEventListener('click', () => {
-            irA(indice - 1 < 0 ? total - VISIBLE : indice - 1);
-        });
-
-        btnNext.addEventListener('click', () => {
-            irA(indice + 1 > total - VISIBLE ? 0 : indice + 1);
-        });
-
-        // Auto-avance cada 10 segundos
-        setInterval(() => {
-            irA(indice + 1 > total - VISIBLE ? 0 : indice + 1);
-        }, 10000);
-
+        initResponsiveCarousel('expositoresWrapper', 'expositoresGrid', 'expositoresPrev', 'expositoresNext', 280, 10000);
     } catch (err) {
         console.error(err);
-        track.innerHTML = '<p>Error al cargar expositores.</p>';
+        container.innerHTML = '<p>Error al cargar expositores.</p>';
     }
 }
 
@@ -371,13 +422,4 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarExpositores();
     cargarCarruselFondo();
     configurarBotonesCarrusel();
-
-    aplicarIdioma();
-    const btnIdioma = document.getElementById('btnIdioma');
-    if (btnIdioma) {
-        btnIdioma.addEventListener('click', () => {
-            idiomaActual = idiomaActual === 'es' ? 'en' : 'es';
-            aplicarIdioma();
-        });
-    }
 });

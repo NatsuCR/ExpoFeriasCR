@@ -1,0 +1,160 @@
+/* ============================================
+   EVENTO - COMPONENTES
+   ============================================ */
+
+/* Grids */
+.info-grid, .actividades-grid, .expositores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+.info-card, .actividad-card, .expositor-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+.info-card:hover, .actividad-card:hover, .expositor-card:hover {
+    transform: translateY(-5px);
+}
+.info-card i {
+    font-size: 2.5rem;
+    color: var(--evento-secundario);
+    margin-bottom: 1rem;
+}
+.actividad-card img, .expositor-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+.expositor-card video {
+    width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+/* Horario (imagen) */
+.horario-img {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-top: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tabla de precios */
+.tabla-precios {
+    overflow-x: auto;
+    margin-top: 2rem;
+}
+.tabla-precios table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.tabla-precios th, .tabla-precios td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+.tabla-precios th {
+    background-color: var(--evento-primario);
+    color: white;
+}
+.tabla-precios tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Mapa */
+.mapa {
+    margin-top: 2rem;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.mapa iframe {
+    width: 100%;
+    height: 350px;
+    border: 0;
+}
+
+/* Contacto */
+.contacto {
+    text-align: center;
+    background-color: var(--evento-fondo);
+    padding: 2rem 0;
+}
+.contacto a {
+    color: var(--evento-primario);
+    text-decoration: none;
+}
+.contacto a:hover {
+    text-decoration: underline;
+}
+
+/* Botones redondeados del menú (personalizables) */
+.nav-links a {
+    display: inline-block;
+    border-radius: 30px;
+    padding: 0.5rem 1.2rem;
+    transition: all 0.3s ease;
+    background-color: var(--color-menu-fondo);
+    color: var(--color-menu-texto);
+    margin: 0 2px;
+}
+.nav-links a:hover {
+    background-color: var(--color-menu-fondo-hover);
+    color: var(--color-menu-texto-hover);
+    transform: translateY(-2px);
+}
+
+/* Carruseles personalizados de actividades y expositores */
+.actividades-carrusel-wrapper, .expositores-carrusel-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+.actividades-carrusel-track, .expositores-carrusel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+.actividades-carrusel-track .actividad-card,
+.expositores-carrusel-track .expositor-card {
+    min-width: calc(100% / 3);
+    box-sizing: border-box;
+    padding: 1rem;
+}
+.actividades-btn, .expositores-btn {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    z-index: 3;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+.actividades-btn:hover, .expositores-btn:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+.actividades-btn.prev, .expositores-btn.prev { left: 0; }
+.actividades-btn.next, .expositores-btn.next { right: 0; }
+.actividades-carrusel-wrapper.con-carrusel .actividades-btn,
+.expositores-carrusel-wrapper.con-carrusel .expositores-btn {
+    display: block;
+}

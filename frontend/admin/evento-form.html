@@ -5,89 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Evento - Admin</title>
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/admin-form.css">
     <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
-    <style>
-        /* Estilos base */
-        .tabs { display: flex; gap: 0.5rem; border-bottom: 2px solid #ccc; margin-bottom: 1.5rem; flex-wrap: wrap; }
-        .tab-btn { background: none; border: none; padding: 10px 20px; cursor: pointer; font-size: 1rem; border-radius: 4px 4px 0 0; transition: all 0.3s; }
-        .tab-btn.active { background-color: #2c3e50; color: white; }
-        .tab-pane { display: none; animation: fadeIn 0.3s; }
-        .tab-pane.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .form-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
-        .form-group { flex: 1; margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; }
-        .btn-primary { background-color: #3498db; color: white; }
-        .btn-primary:hover { background-color: #2980b9; }
-        .btn-warning { background-color: #f39c12; color: white; }
-        .btn-warning:hover { background-color: #e67e22; }
-        .btn-danger { background-color: #e74c3c; color: white; }
-        .btn-danger:hover { background-color: #c0392b; }
-        .btn-success { background-color: #27ae60; color: white; }
-        .btn-success:hover { background-color: #2ecc71; }
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        .data-table th, .data-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        .data-table th { background-color: #f0f0f0; }
-        .message { padding: 10px; margin-bottom: 1rem; border-radius: 4px; display: none; }
-        .message-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .message-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-        /* Estilos para modales */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 500px;
-            max-width: 90%;
-            max-height: 90%;
-            overflow-y: auto;
-        }
-        .modal-content h3 { margin-top: 0; }
-        .form-control { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
-
-
-
-
-                .admin-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .btn-volver {
-            background-color: #6c757d;
-            color: white;
-        }
-        .btn-volver:hover {
-            background-color: #5a6268;
-        }
-        .btn-guardar-fijo {
-            margin-top: 2rem;
-            text-align: right;
-        }
-    </style>
 </head>
 <body class="admin-body">
     <div class="admin-container">
         <h1 id="formTitle">Crear Nuevo Evento</h1>
-        
         <div id="globalMessage" class="message"></div>
         <a href="dashboard.html" class="btn btn-volver">← Volver al Dashboard</a>
         <div class="tabs">
@@ -97,9 +20,6 @@
             <button class="tab-btn" data-tab="expositores">Expositores</button>
             <button class="tab-btn" data-tab="galeria">Galería</button>
         </div>
-
-
-
 
         <!-- Pestaña Datos Básicos -->
         <div id="basicos" class="tab-pane active">
@@ -114,19 +34,18 @@
                     <div class="form-group"><label>Fecha Fin</label><input type="date" id="fecha_fin"></div>
                 </div>
                 <div class="form-group">
-    <label>Provincia</label>
-    <select id="provincia">
-        <option value="">Seleccione una provincia</option>
-        <option value="San José">San José</option>
-        <option value="Alajuela">Alajuela</option>
-        <option value="Cartago">Cartago</option>
-        <option value="Heredia">Heredia</option>
-        <option value="Guanacaste">Guanacaste</option>
-        <option value="Puntarenas">Puntarenas</option>
-        <option value="Limón">Limón</option>
-    </select>
-</div>
-
+                    <label>Provincia</label>
+                    <select id="provincia">
+                        <option value="">Seleccione una provincia</option>
+                        <option value="San José">San José</option>
+                        <option value="Alajuela">Alajuela</option>
+                        <option value="Cartago">Cartago</option>
+                        <option value="Heredia">Heredia</option>
+                        <option value="Guanacaste">Guanacaste</option>
+                        <option value="Puntarenas">Puntarenas</option>
+                        <option value="Limón">Limón</option>
+                    </select>
+                </div>
                 <div class="form-group"><label>Ubicación</label><input type="text" id="ubicacion"></div>
                 <div class="form-group"><label>Imagen Portada (URL)</label><input type="text" id="imagen_portada" placeholder="/assets/images/..."></div>
                 <div class="form-group"><label>Imagen Horario (URL)</label><input type="text" id="horario_imagen" placeholder="/assets/images/..."></div>
@@ -156,9 +75,12 @@
                     <div class="form-group"><label>Color Descripción Hero</label><input type="color" id="color_descripcion_hero" value="#FFFFFF"></div>
                     <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#d4a373"></div>
                     <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#8b5a2b"></div>
+                    <div class="form-group"><label>Color fondo botones menú</label><input type="color" id="color_menu_fondo" value="#ffffff"></div>
+                    <div class="form-group"><label>Color texto botones menú</label><input type="color" id="color_menu_texto" value="#ffffff"></div>
+                    <div class="form-group"><label>Color fondo hover (opcional)</label><input type="color" id="color_menu_fondo_hover"></div>
+                    <div class="form-group"><label>Color texto hover (opcional)</label><input type="color" id="color_menu_texto_hover"></div>
                 </div>
                 <div class="form-group"><label><input type="checkbox" id="activo" checked> Activo</label></div>
-            
             </form>
         </div>
 
@@ -167,7 +89,9 @@
             <h3>Precios por día</h3>
             <button id="btnAgregarPrecio" class="btn btn-primary">+ Agregar Precio</button>
             <table class="data-table">
-                <thead><tr><th>Fecha</th><th>Precio (₡)</th><th>Promoción</th><th>Descripción</th><th>Acciones</th></tr></thead>
+                <thead>
+                    <tr><th>Fecha</th><th>Precio (₡)</th><th>Promoción</th><th>Descripción</th><th>Acciones</th></tr>
+                </thead>
                 <tbody id="tbodyPrecios"></tbody>
             </table>
         </div>
@@ -177,7 +101,9 @@
             <h3>Actividades</h3>
             <button id="btnAgregarActividad" class="btn btn-primary">+ Agregar Actividad</button>
             <table class="data-table">
-                <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imagen</th><th>Acciones</th></td></thead>
+                <thead>
+                    <tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imagen</th><th>Acciones</th></tr>
+                </thead>
                 <tbody id="tbodyActividades"></tbody>
             </table>
         </div>
@@ -187,32 +113,32 @@
             <h3>Expositores</h3>
             <button id="btnAgregarExpositor" class="btn btn-primary">+ Agregar Expositor</button>
             <table class="data-table">
-                <thead><tr><th>Nombre</th><th>Rubro</th><th>Descripción</th><th>Ubicación</th><th>Logo</th><th>Video</th><th>Acciones</th></tr></thead>
+                <thead>
+                    <tr><th>Nombre</th><th>Rubro</th><th>Descripción</th><th>Ubicación</th><th>Logo</th><th>Video</th><th>Acciones</th></tr>
+                </thead>
                 <tbody id="tbodyExpositores"></tbody>
             </table>
         </div>
 
-                <!-- Pestaña Galería -->
+        <!-- Pestaña Galería -->
         <div id="galeria" class="tab-pane">
             <h3>Imágenes para el carrusel de fondo</h3>
             <button id="btnAgregarImagen" class="btn btn-primary">+ Agregar Imagen</button>
             <table class="data-table">
-                <thead><tr><th>URL Imagen</th><th>Orden</th><th>Acciones</th></tr></thead>
+                <thead>
+                    <tr><th>URL Imagen</th><th>Orden</th><th>Acciones</th></tr>
+                </thead>
                 <tbody id="tbodyGaleria"></tbody>
             </table>
         </div>
 
-        <!-- Botón Guardar Evento (visible en todas las pestañas) -->
+        <!-- Botón Guardar Evento -->
         <div style="text-align: right; margin-top: 2rem;">
             <button type="button" id="guardarBasicos" class="btn btn-success">Guardar Evento</button>
         </div>
+    </div>
 
-    </div> <!-- cierra admin-container -->
-
-    <!-- MODALES (se mantienen igual) -->
-    ...
-
-    <!-- MODALES -->
+    <!-- Modales -->
     <!-- Modal Precio -->
     <div id="modalPrecio" class="modal">
         <div class="modal-content">
@@ -235,9 +161,9 @@
             <h3 id="modalActividadTitulo">Agregar Actividad</h3>
             <input type="hidden" id="actividadId">
             <div class="form-group"><label>Título</label><input type="text" id="actividadTitulo" class="form-control"></div>
-            <div class="form-group"><label>Tipo</label><input type="text" id="actividadTipo" class="form-control" placeholder="concierto, rodeo, etc."></div>
+            <div class="form-group"><label>Tipo</label><input type="text" id="actividadTipo" class="form-control"></div>
             <div class="form-group"><label>Fecha</label><input type="date" id="actividadFecha" class="form-control"></div>
-            <div class="form-group"><label>Hora (HH:MM)</label><input type="time" id="actividadHora" class="form-control"></div>
+            <div class="form-group"><label>Hora</label><input type="time" id="actividadHora" class="form-control"></div>
             <div class="form-group"><label>Lugar</label><input type="text" id="actividadLugar" class="form-control"></div>
             <div class="form-group"><label>Descripción</label><textarea id="actividadDescripcion" class="form-control" rows="2"></textarea></div>
             <div class="form-group"><label>Imagen (URL)</label><input type="text" id="actividadImagen" class="form-control"></div>
@@ -283,455 +209,6 @@
         </div>
     </div>
 
-    <script>
-        const token = localStorage.getItem('token');
-        if (!token) window.location.href = 'login.html';
-
-        let eventoId = null;
-        const urlParams = new URLSearchParams(window.location.search);
-        const idParam = urlParams.get('id');
-        if (idParam) eventoId = parseInt(idParam);
-
-        // ==================== FUNCIONES AUXILIARES ====================
-        async function fetchAPI(url, options = {}) {
-            const res = await fetch(url, {
-                ...options,
-                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-            });
-            if (res.status === 401) { localStorage.clear(); window.location.href = 'login.html'; }
-            return res.json();
-        }
-
-        function mostrarMensaje(texto, tipo, contenedorId = 'globalMessage') {
-            const div = document.getElementById(contenedorId);
-            div.className = `message message-${tipo}`;
-            div.innerText = texto;
-            div.style.display = 'block';
-            setTimeout(() => { div.style.display = 'none'; }, 4000);
-        }
-
-        // ==================== DATOS BÁSICOS ====================
-        async function cargarDatosEvento() {
-            if (!eventoId) return;
-            const evento = await fetchAPI(`/api/admin/eventos/${eventoId}`);
-            document.getElementById('slug').value = evento.slug;
-            document.getElementById('nombre').value = evento.nombre;
-            document.getElementById('descripcion').value = evento.descripcion || '';
-            document.getElementById('fecha_inicio').value = evento.fecha_inicio?.slice(0,10) || '';
-            document.getElementById('fecha_fin').value = evento.fecha_fin?.slice(0,10) || '';
-            document.getElementById('provincia').value = evento.provincia || '';
-            document.getElementById('ubicacion').value = evento.ubicacion || '';
-            document.getElementById('imagen_portada').value = evento.imagen_portada || '';
-            document.getElementById('horario_imagen').value = evento.horario_imagen || '';
-            document.getElementById('mapa_embed').value = evento.mapa_embed || '';
-            document.getElementById('color_primario').value = evento.color_primario || '#8b5a2b';
-            document.getElementById('color_secundario').value = evento.color_secundario || '#d4a373';
-            document.getElementById('color_titulo_seccion').value = evento.color_titulo_seccion || '#2c1a0e';
-            document.getElementById('color_fondo').value = evento.color_fondo || '#f4e4c1';
-            document.getElementById('color_texto').value = evento.color_texto || '#2c1a0e';
-            document.getElementById('color_hero_overlay').value = evento.color_hero_overlay || 'rgba(62,42,31,0.7)';
-            document.getElementById('tipo_venta').value = evento.tipo_venta || 'taquilla';
-            document.getElementById('url_venta_online').value = evento.url_venta_online || '';
-            // Nuevos campos de color
-            document.getElementById('color_titulo_hero').value = evento.color_titulo_hero || '#FFFFFF';
-            document.getElementById('color_descripcion_hero').value = evento.color_descripcion_hero || '#FFFFFF';
-            document.getElementById('color_fondo_fechas').value = evento.color_fondo_fechas || '#d4a373';
-            document.getElementById('color_texto_fechas').value = evento.color_texto_fechas || '#8b5a2b';
-            document.getElementById('activo').checked = evento.activo;
-            document.getElementById('formTitle').innerText = `Editando: ${evento.nombre}`;
-        }
-
-        async function guardarBasicos() {
-            const data = {
-                slug: document.getElementById('slug').value.trim(),
-                nombre: document.getElementById('nombre').value.trim(),
-                descripcion: document.getElementById('descripcion').value,
-                fecha_inicio: document.getElementById('fecha_inicio').value,
-                fecha_fin: document.getElementById('fecha_fin').value,
-                provincia: document.getElementById('provincia').value,
-                ubicacion: document.getElementById('ubicacion').value,
-                imagen_portada: document.getElementById('imagen_portada').value,
-                horario_imagen: document.getElementById('horario_imagen').value,
-                mapa_embed: document.getElementById('mapa_embed').value,
-                color_primario: document.getElementById('color_primario').value,
-                color_secundario: document.getElementById('color_secundario').value,
-                color_fondo: document.getElementById('color_fondo').value,
-                color_titulo_seccion: document.getElementById('color_titulo_seccion').value,
-                color_texto: document.getElementById('color_texto').value,
-                color_hero_overlay: document.getElementById('color_hero_overlay').value,
-                tipo_venta: document.getElementById('tipo_venta').value,
-                url_venta_online: document.getElementById('url_venta_online').value || null,
-                color_titulo_hero: document.getElementById('color_titulo_hero').value,
-                color_descripcion_hero: document.getElementById('color_descripcion_hero').value,
-                color_fondo_fechas: document.getElementById('color_fondo_fechas').value,
-                color_texto_fechas: document.getElementById('color_texto_fechas').value,
-                activo: document.getElementById('activo').checked
-            };
-            if (!data.slug || !data.nombre) {
-                mostrarMensaje('Slug y Nombre son obligatorios', 'error');
-                return;
-            }
-            try {
-                let result;
-                if (eventoId) {
-                    result = await fetchAPI(`/api/admin/eventos/${eventoId}`, { method: 'PUT', body: JSON.stringify(data) });
-                    mostrarMensaje('Evento actualizado correctamente', 'success');
-                } else {
-                    result = await fetchAPI('/api/admin/eventos', { method: 'POST', body: JSON.stringify(data) });
-                    eventoId = result.id;
-                    mostrarMensaje('Evento creado correctamente', 'success');
-                    window.history.pushState({}, '', `evento-form.html?id=${eventoId}`);
-                    document.getElementById('formTitle').innerText = `Editando: ${result.nombre}`;
-                    cargarPrecios();
-                    cargarActividades();
-                    cargarExpositores();
-                    cargarGaleria();
-                }
-            } catch (err) {
-                mostrarMensaje('Error al guardar el evento', 'error');
-            }
-        }
-
-        // ==================== PRECIOS ====================
-        let precioEditandoId = null;
-        function abrirModalPrecio(precio = null) {
-            if (precio) {
-                document.getElementById('modalPrecioTitulo').innerText = 'Editar Precio';
-                document.getElementById('precioId').value = precio.id;
-                document.getElementById('precioFecha').value = precio.fecha.slice(0,10);
-                document.getElementById('precioNormal').value = precio.precio_normal;
-                document.getElementById('precioPromocion').value = precio.promocion || '';
-                document.getElementById('precioDescripcion').value = precio.descripcion_promocion || '';
-            } else {
-                document.getElementById('modalPrecioTitulo').innerText = 'Agregar Precio';
-                document.getElementById('precioId').value = '';
-                document.getElementById('precioFecha').value = '';
-                document.getElementById('precioNormal').value = '';
-                document.getElementById('precioPromocion').value = '';
-                document.getElementById('precioDescripcion').value = '';
-            }
-            document.getElementById('modalPrecio').style.display = 'flex';
-        }
-        function cerrarModalPrecio() { document.getElementById('modalPrecio').style.display = 'none'; }
-        async function guardarPrecioModal() {
-            const id = document.getElementById('precioId').value;
-            const data = {
-                evento_id: eventoId,
-                fecha: document.getElementById('precioFecha').value,
-                precio_normal: parseFloat(document.getElementById('precioNormal').value),
-                promocion: document.getElementById('precioPromocion').value || null,
-                descripcion_promocion: document.getElementById('precioDescripcion').value || null
-            };
-            if (!data.fecha || isNaN(data.precio_normal)) {
-                alert('Fecha y precio normal son obligatorios');
-                return;
-            }
-            if (id) {
-                await fetchAPI(`/api/admin/precios/${id}`, { method: 'PUT', body: JSON.stringify(data) });
-            } else {
-                await fetchAPI('/api/admin/precios', { method: 'POST', body: JSON.stringify(data) });
-            }
-            cerrarModalPrecio();
-            cargarPrecios();
-        }
-        async function cargarPrecios() {
-            if (!eventoId) return;
-            const precios = await fetchAPI(`/api/admin/eventos/${eventoId}/precios`);
-            const tbody = document.getElementById('tbodyPrecios');
-            if (precios.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5">No hay precios registrados.</td></tr>';
-                return;
-            }
-            let html = '';
-            precios.forEach(p => {
-                html += `<tr>
-                    <td>${new Date(p.fecha).toLocaleDateString()}</td>
-                    <td>${p.precio_normal}</td>
-                    <td>${p.promocion || '—'}</td>
-                    <td>${p.descripcion_promocion || '—'}</td>
-                    <td>
-                        <button class="btn btn-warning btn-editar-precio" data-precio='${JSON.stringify(p)}'>Editar</button>
-                        <button class="btn btn-danger btn-eliminar-precio" data-id="${p.id}">Eliminar</button>
-                    </td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
-            document.querySelectorAll('.btn-editar-precio').forEach(btn => {
-                btn.addEventListener('click', () => abrirModalPrecio(JSON.parse(btn.dataset.precio)));
-            });
-            document.querySelectorAll('.btn-eliminar-precio').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    if (confirm('¿Eliminar este precio?')) {
-                        await fetchAPI(`/api/admin/precios/${btn.dataset.id}`, { method: 'DELETE' });
-                        cargarPrecios();
-                    }
-                });
-            });
-        }
-
-        // ==================== ACTIVIDADES ====================
-        let actividadEditandoId = null;
-        function abrirModalActividad(actividad = null) {
-            document.getElementById('modalActividadTitulo').innerText = actividad ? 'Editar Actividad' : 'Agregar Actividad';
-            document.getElementById('actividadId').value = actividad ? actividad.id : '';
-            document.getElementById('actividadTitulo').value = actividad ? actividad.titulo : '';
-            document.getElementById('actividadTipo').value = actividad ? actividad.tipo || '' : '';
-            document.getElementById('actividadFecha').value = actividad ? actividad.fecha.slice(0,10) : '';
-            document.getElementById('actividadHora').value = actividad ? (actividad.hora ? actividad.hora.slice(0,5) : '') : '';
-            document.getElementById('actividadLugar').value = actividad ? actividad.lugar || '' : '';
-            document.getElementById('actividadDescripcion').value = actividad ? actividad.descripcion || '' : '';
-            document.getElementById('actividadImagen').value = actividad ? actividad.imagen || '' : '';
-            document.getElementById('actividadRequiereOnline').checked = actividad ? actividad.requiere_entrada_online : false;
-            document.getElementById('actividadEsGratis').checked = actividad ? actividad.es_gratis : false;
-            document.getElementById('actividadEnlaceVenta').value = actividad ? actividad.enlace_venta || '' : '';
-            document.getElementById('actividadEnlaceGroup').style.display = document.getElementById('actividadRequiereOnline').checked ? 'block' : 'none';
-            document.getElementById('modalActividad').style.display = 'flex';
-        }
-        function cerrarModalActividad() { document.getElementById('modalActividad').style.display = 'none'; }
-        async function guardarActividadModal() {
-            const id = document.getElementById('actividadId').value;
-            const data = {
-                evento_id: eventoId,
-                titulo: document.getElementById('actividadTitulo').value,
-                tipo: document.getElementById('actividadTipo').value || null,
-                fecha: document.getElementById('actividadFecha').value,
-                hora: document.getElementById('actividadHora').value || null,
-                lugar: document.getElementById('actividadLugar').value || null,
-                descripcion: document.getElementById('actividadDescripcion').value || null,
-                imagen: document.getElementById('actividadImagen').value || null,
-                requiere_entrada_online: document.getElementById('actividadRequiereOnline').checked,
-                enlace_venta: document.getElementById('actividadRequiereOnline').checked ? document.getElementById('actividadEnlaceVenta').value : null,
-                es_gratis: document.getElementById('actividadEsGratis').checked
-            };
-            if (!data.titulo || !data.fecha) {
-                alert('Título y fecha son obligatorios');
-                return;
-            }
-            if (id) {
-                await fetchAPI(`/api/admin/actividades/${id}`, { method: 'PUT', body: JSON.stringify(data) });
-            } else {
-                await fetchAPI('/api/admin/actividades', { method: 'POST', body: JSON.stringify(data) });
-            }
-            cerrarModalActividad();
-            cargarActividades();
-        }
-        async function cargarActividades() {
-            if (!eventoId) return;
-            const acts = await fetchAPI(`/api/admin/eventos/${eventoId}/actividades`);
-            const tbody = document.getElementById('tbodyActividades');
-            if (acts.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7">No hay actividades registradas.</td></tr>';
-                return;
-            }
-            let html = '';
-            acts.forEach(a => {
-                html += `<tr>
-                    <td>${a.titulo}</td>
-                    <td>${a.tipo || '—'}</td>
-                    <td>${new Date(a.fecha).toLocaleDateString()}</td>
-                    <td>${a.hora ? a.hora.slice(0,5) : '—'}</td>
-                    <td>${a.lugar || '—'}</td>
-                    <td>${a.imagen ? '✓' : '—'}</td>
-                    <td>
-                        <button class="btn btn-warning btn-editar-actividad" data-actividad='${JSON.stringify(a)}'>Editar</button>
-                        <button class="btn btn-danger btn-eliminar-actividad" data-id="${a.id}">Eliminar</button>
-                    </td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
-            document.querySelectorAll('.btn-editar-actividad').forEach(btn => {
-                btn.addEventListener('click', () => abrirModalActividad(JSON.parse(btn.dataset.actividad)));
-            });
-            document.querySelectorAll('.btn-eliminar-actividad').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    if (confirm('¿Eliminar actividad?')) {
-                        await fetchAPI(`/api/admin/actividades/${btn.dataset.id}`, { method: 'DELETE' });
-                        cargarActividades();
-                    }
-                });
-            });
-        }
-        document.getElementById('actividadRequiereOnline').addEventListener('change', function(e) {
-            document.getElementById('actividadEnlaceGroup').style.display = e.target.checked ? 'block' : 'none';
-        });
-
-        // ==================== EXPOSITORES ====================
-        let expositorEditandoId = null;
-        function abrirModalExpositor(expositor = null) {
-            document.getElementById('modalExpositorTitulo').innerText = expositor ? 'Editar Expositor' : 'Agregar Expositor';
-            document.getElementById('expositorId').value = expositor ? expositor.id : '';
-            document.getElementById('expositorNombre').value = expositor ? expositor.nombre : '';
-            document.getElementById('expositorRubro').value = expositor ? expositor.rubro || '' : '';
-            document.getElementById('expositorDescripcion').value = expositor ? expositor.descripcion || '' : '';
-            document.getElementById('expositorUbicacion').value = expositor ? expositor.ubicacion || '' : '';
-            document.getElementById('expositorLogo').value = expositor ? expositor.imagen_logo || '' : '';
-            document.getElementById('expositorVideo').value = expositor ? expositor.video_url || '' : '';
-            document.getElementById('modalExpositor').style.display = 'flex';
-        }
-        function cerrarModalExpositor() { document.getElementById('modalExpositor').style.display = 'none'; }
-        async function guardarExpositorModal() {
-            const id = document.getElementById('expositorId').value;
-            const data = {
-                evento_id: eventoId,
-                nombre: document.getElementById('expositorNombre').value,
-                rubro: document.getElementById('expositorRubro').value || null,
-                descripcion: document.getElementById('expositorDescripcion').value || null,
-                ubicacion: document.getElementById('expositorUbicacion').value || null,
-                es_pagado: false,
-                imagen_logo: document.getElementById('expositorLogo').value || null,
-                sitio_web: null,
-                video_url: document.getElementById('expositorVideo').value || null
-            };
-            if (!data.nombre) {
-                alert('El nombre del expositor es obligatorio');
-                return;
-            }
-            if (id) {
-                await fetchAPI(`/api/admin/expositores/${id}`, { method: 'PUT', body: JSON.stringify(data) });
-            } else {
-                await fetchAPI('/api/admin/expositores', { method: 'POST', body: JSON.stringify(data) });
-            }
-            cerrarModalExpositor();
-            cargarExpositores();
-        }
-        async function cargarExpositores() {
-            if (!eventoId) return;
-            const expositores = await fetchAPI(`/api/admin/eventos/${eventoId}/expositores`);
-            const tbody = document.getElementById('tbodyExpositores');
-            if (expositores.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7">No hay expositores registrados.</td></tr>';
-                return;
-            }
-            let html = '';
-            expositores.forEach(e => {
-                html += `<tr>
-                    <td>${e.nombre}</td>
-                    <td>${e.rubro || '—'}</td>
-                    <td>${e.descripcion || '—'}</td>
-                    <td>${e.ubicacion || '—'}</td>
-                    <td>${e.imagen_logo ? '✓' : '—'}</td>
-                    <td>${e.video_url ? '✓' : '—'}</td>
-                    <td>
-                        <button class="btn btn-warning btn-editar-expositor" data-expositor='${JSON.stringify(e)}'>Editar</button>
-                        <button class="btn btn-danger btn-eliminar-expositor" data-id="${e.id}">Eliminar</button>
-                    </td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
-            document.querySelectorAll('.btn-editar-expositor').forEach(btn => {
-                btn.addEventListener('click', () => abrirModalExpositor(JSON.parse(btn.dataset.expositor)));
-            });
-            document.querySelectorAll('.btn-eliminar-expositor').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    if (confirm('¿Eliminar expositor?')) {
-                        await fetchAPI(`/api/admin/expositores/${btn.dataset.id}`, { method: 'DELETE' });
-                        cargarExpositores();
-                    }
-                });
-            });
-        }
-
-        // ==================== GALERÍA ====================
-        let galeriaEditandoId = null;
-        function abrirModalGaleria(imagen = null) {
-            document.getElementById('modalGaleriaTitulo').innerText = imagen ? 'Editar Imagen' : 'Agregar Imagen';
-            document.getElementById('galeriaId').value = imagen ? imagen.id : '';
-            document.getElementById('galeriaUrl').value = imagen ? imagen.imagen_url : '';
-            document.getElementById('galeriaOrden').value = imagen ? imagen.orden : 0;
-            document.getElementById('modalGaleria').style.display = 'flex';
-        }
-        function cerrarModalGaleria() { document.getElementById('modalGaleria').style.display = 'none'; }
-        async function guardarGaleriaModal() {
-            const id = document.getElementById('galeriaId').value;
-            const data = {
-                evento_id: eventoId,
-                imagen_url: document.getElementById('galeriaUrl').value,
-                orden: parseInt(document.getElementById('galeriaOrden').value) || 0
-            };
-            if (!data.imagen_url) {
-                alert('La URL de la imagen es obligatoria');
-                return;
-            }
-            if (id) {
-                await fetchAPI(`/api/admin/galeria/${id}`, { method: 'PUT', body: JSON.stringify(data) });
-            } else {
-                await fetchAPI('/api/admin/galeria', { method: 'POST', body: JSON.stringify(data) });
-            }
-            cerrarModalGaleria();
-            cargarGaleria();
-        }
-        async function cargarGaleria() {
-            if (!eventoId) return;
-            const imagenes = await fetchAPI(`/api/admin/eventos/${eventoId}/galeria`);
-            const tbody = document.getElementById('tbodyGaleria');
-            if (imagenes.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3">No hay imágenes en la galería.</td></tr>';
-                return;
-            }
-            let html = '';
-            imagenes.forEach(img => {
-                html += `<tr>
-                    <td>${img.imagen_url}</td>
-                    <td>${img.orden}</td>
-                    <td>
-                        <button class="btn btn-warning btn-editar-galeria" data-imagen='${JSON.stringify(img)}'>Editar</button>
-                        <button class="btn btn-danger btn-eliminar-galeria" data-id="${img.id}">Eliminar</button>
-                    </td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
-            document.querySelectorAll('.btn-editar-galeria').forEach(btn => {
-                btn.addEventListener('click', () => abrirModalGaleria(JSON.parse(btn.dataset.imagen)));
-            });
-            document.querySelectorAll('.btn-eliminar-galeria').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    if (confirm('¿Eliminar esta imagen?')) {
-                        await fetchAPI(`/api/admin/galeria/${btn.dataset.id}`, { method: 'DELETE' });
-                        cargarGaleria();
-                    }
-                });
-            });
-        }
-
-        // ==================== INICIALIZACIÓN ====================
-        function configurarTabs() {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const tabId = btn.dataset.tab;
-                    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-                    document.getElementById(tabId).classList.add('active');
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    if (tabId === 'precios') cargarPrecios();
-                    if (tabId === 'actividades') cargarActividades();
-                    if (tabId === 'expositores') cargarExpositores();
-                    if (tabId === 'galeria') cargarGaleria();
-                });
-            });
-        }
-
-        document.getElementById('guardarBasicos').addEventListener('click', guardarBasicos);
-        document.getElementById('btnAgregarPrecio').addEventListener('click', () => abrirModalPrecio());
-        document.getElementById('guardarPrecioBtn').addEventListener('click', guardarPrecioModal);
-        document.getElementById('cancelarPrecioBtn').addEventListener('click', cerrarModalPrecio);
-        document.getElementById('btnAgregarActividad').addEventListener('click', () => abrirModalActividad());
-        document.getElementById('guardarActividadBtn').addEventListener('click', guardarActividadModal);
-        document.getElementById('cancelarActividadBtn').addEventListener('click', cerrarModalActividad);
-        document.getElementById('btnAgregarExpositor').addEventListener('click', () => abrirModalExpositor());
-        document.getElementById('guardarExpositorBtn').addEventListener('click', guardarExpositorModal);
-        document.getElementById('cancelarExpositorBtn').addEventListener('click', cerrarModalExpositor);
-        document.getElementById('btnAgregarImagen').addEventListener('click', () => abrirModalGaleria());
-        document.getElementById('guardarGaleriaBtn').addEventListener('click', guardarGaleriaModal);
-        document.getElementById('cancelarGaleriaBtn').addEventListener('click', cerrarModalGaleria);
-
-        if (eventoId) {
-            cargarDatosEvento();
-            cargarPrecios();
-            cargarActividades();
-            cargarExpositores();
-            cargarGaleria();
-        }
-        configurarTabs();
-    </script>
+    <script src="../js/admin-evento-form.js"></script>
 </body>
 </html>

@@ -5,7 +5,8 @@ class Evento {
     colorPrimario, colorSecundario, colorFondo, colorTexto, colorHeroOverlay,
     tipoVenta, urlVentaOnline,
     colorTituloHero, colorDescripcionHero, colorFondoFechas, colorTextoFechas,
-    colorTituloSeccion, provincia,  // ← NUEVO
+    colorTituloSeccion, provincia,
+    colorMenuFondo, colorMenuTexto, colorMenuFondoHover, colorMenuTextoHover,
     createdAt, updatedAt
   ) {
     this.id = id;
@@ -30,8 +31,12 @@ class Evento {
     this.colorDescripcionHero = colorDescripcionHero;
     this.colorFondoFechas = colorFondoFechas;
     this.colorTextoFechas = colorTextoFechas;
-    this.colorTituloSeccion = colorTituloSeccion;  // ← NUEVO
-    this.provincia = provincia;  // ← NUEVO
+    this.colorTituloSeccion = colorTituloSeccion;
+    this.provincia = provincia;
+    this.colorMenuFondo = colorMenuFondo;
+    this.colorMenuTexto = colorMenuTexto;
+    this.colorMenuFondoHover = colorMenuFondoHover;
+    this.colorMenuTextoHover = colorMenuTextoHover;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -47,7 +52,9 @@ class Evento {
       row.tipo_venta, row.url_venta_online,
       row.color_titulo_hero, row.color_descripcion_hero,
       row.color_fondo_fechas, row.color_texto_fechas,
-      row.color_titulo_seccion, row.provincia,  // ← NUEVO
+      row.color_titulo_seccion, row.provincia,
+      row.color_menu_fondo, row.color_menu_texto,
+      row.color_menu_fondo_hover, row.color_menu_texto_hover,
       row.created_at, row.updated_at
     );
   }

@@ -30,31 +30,50 @@ async crear(req, res) {
     color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay,
     tipo_venta, url_venta_online,
     color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
-    color_titulo_seccion,
-    provincia   // ← AGREGAR
+    color_titulo_seccion, provincia,
+    color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover
   } = req.body;
 
+  // Asignar valores por defecto si no vienen
+  const values = [
+    slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion,
+    imagen_portada || null,
+    activo === undefined ? 1 : (activo ? 1 : 0),
+    horario_imagen || null,
+    mapa_embed || null,
+    color_primario || '#8b5a2b',
+    color_secundario || '#d4a373',
+    color_fondo || '#f4e4c1',
+    color_texto || '#2c1a0e',
+    color_hero_overlay || 'rgba(62,42,31,0.7)',
+    tipo_venta || 'taquilla',
+    url_venta_online || null,
+    color_titulo_hero || '#ffffff',
+    color_descripcion_hero || '#ffffff',
+    color_fondo_fechas || '#d4a373',
+    color_texto_fechas || '#8b5a2b',
+    color_titulo_seccion || '#2c1a0e',
+    provincia || null,
+    color_menu_fondo || '#ffffff',
+    color_menu_texto || '#ffffff',
+    color_menu_fondo_hover || null,
+    color_menu_texto_hover || null
+  ];
+
+  const query = `
+    INSERT INTO eventos (
+      slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion,
+      imagen_portada, activo, horario_imagen, mapa_embed,
+      color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay,
+      tipo_venta, url_venta_online,
+      color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
+      color_titulo_seccion, provincia,
+      color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover
+    ) VALUES (${values.map(() => '?').join(', ')})
+  `;
+
   try {
-    const [result] = await pool.query(
-      `INSERT INTO eventos (
-        slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion,
-        imagen_portada, activo, horario_imagen, mapa_embed,
-        color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay,
-        tipo_venta, url_venta_online,
-        color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
-        color_titulo_seccion,
-        provincia
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion,
-        imagen_portada, activo, horario_imagen, mapa_embed,
-        color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay,
-        tipo_venta, url_venta_online,
-        color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
-        color_titulo_seccion,
-        provincia
-      ]
-    );
+    const [result] = await pool.query(query, values);
     const [newEvent] = await pool.query('SELECT * FROM eventos WHERE id = ?', [result.insertId]);
     res.status(201).json(newEvent[0]);
   } catch (error) {
@@ -64,48 +83,48 @@ async crear(req, res) {
 }
 
   async actualizar(req, res) {
-  const { id } = req.params;
-  const {
-    slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion,
-    imagen_portada, activo, horario_imagen, mapa_embed,
-    color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay,
-    tipo_venta, url_venta_online,
-    color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
-    color_titulo_seccion,
-    provincia   // ← NUEVO
-  } = req.body;
+    const { id } = req.params;
+    const {
+      slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion,
+      imagen_portada, activo, horario_imagen, mapa_embed,
+      color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay,
+      tipo_venta, url_venta_online,
+      color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
+      color_titulo_seccion, provincia,
+      color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover
+    } = req.body;
 
-  try {
-    const [result] = await pool.query(
-      `UPDATE eventos SET
-        slug=?, nombre=?, descripcion=?, fecha_inicio=?, fecha_fin=?, ubicacion=?,
-        imagen_portada=?, activo=?, horario_imagen=?, mapa_embed=?,
-        color_primario=?, color_secundario=?, color_fondo=?, color_texto=?, color_hero_overlay=?,
-        tipo_venta=?, url_venta_online=?,
-        color_titulo_hero=?, color_descripcion_hero=?, color_fondo_fechas=?, color_texto_fechas=?,
-        color_titulo_seccion=?,
-        provincia=?,   -- ← NUEVO
-        updated_at = NOW()
-      WHERE id = ?`,
-      [
-        slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion,
-        imagen_portada, activo, horario_imagen, mapa_embed,
-        color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay,
-        tipo_venta, url_venta_online,
-        color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
-        color_titulo_seccion,
-        provincia,   // ← NUEVO
-        id
-      ]
-    );
-    if (result.affectedRows === 0) return res.status(404).json({ error: 'Evento no encontrado' });
-    const [updated] = await pool.query('SELECT * FROM eventos WHERE id = ?', [id]);
-    res.json(updated[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al actualizar evento' });
+    try {
+      const [result] = await pool.query(
+        `UPDATE eventos SET
+          slug = ?, nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, ubicacion = ?,
+          imagen_portada = ?, activo = ?, horario_imagen = ?, mapa_embed = ?,
+          color_primario = ?, color_secundario = ?, color_fondo = ?, color_texto = ?, color_hero_overlay = ?,
+          tipo_venta = ?, url_venta_online = ?,
+          color_titulo_hero = ?, color_descripcion_hero = ?, color_fondo_fechas = ?, color_texto_fechas = ?,
+          color_titulo_seccion = ?, provincia = ?,
+          color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
+          updated_at = NOW()
+        WHERE id = ?`,
+        [
+          slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion,
+          imagen_portada, activo, horario_imagen, mapa_embed,
+          color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay,
+          tipo_venta, url_venta_online,
+          color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
+          color_titulo_seccion, provincia,
+          color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
+          id
+        ]
+      );
+      if (result.affectedRows === 0) return res.status(404).json({ error: 'Evento no encontrado' });
+      const [updated] = await pool.query('SELECT * FROM eventos WHERE id = ?', [id]);
+      res.json(updated[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al actualizar evento' });
+    }
   }
-}
 
   async eliminar(req, res) {
     const { id } = req.params;

@@ -1,0 +1,158 @@
+/* ============================================
+   EVENTO - LAYOUT (estructura general)
+   ============================================ */
+
+/* Navbar */
+.navbar {
+    background-color: var(--evento-primario);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.logo img {
+    height: 50px;
+    width: auto;
+}
+.logo span {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* Hero con carrusel de fondo */
+.hero-carrusel {
+    position: relative;
+    height: 80vh;
+    overflow: hidden;
+}
+.hero-carrusel-slides {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+.hero-carrusel-slide {
+    min-width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--evento-overlay);
+    z-index: 1;
+}
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: white;
+}
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 5px black;
+}
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+.hero-dates {
+    font-size: 1.5rem;
+    background-color: var(--evento-secundario);
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border-radius: 30px;
+    color: var(--evento-primario);
+    font-weight: bold;
+}
+.hero-carrusel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    z-index: 3;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+.hero-carrusel-btn:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+.hero-carrusel-btn.prev { left: 20px; }
+.hero-carrusel-btn.next { right: 20px; }
+
+/* Secciones generales */
+section {
+    padding: 4rem 0;
+}
+h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: var(--evento-primario);
+    border-bottom: 3px solid var(--evento-secundario);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Mapa */
+.mapa {
+    margin-top: 2rem;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.mapa iframe {
+    width: 100%;
+    height: 350px;
+    border: 0;
+}
+
+/* Footer */
+footer {
+    background-color: var(--evento-primario);
+    color: white;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 2rem;
+}

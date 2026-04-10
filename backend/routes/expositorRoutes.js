@@ -4,6 +4,6 @@ const ExpositorController = require('../controllers/ExpositorController');
 const router = express.Router();
 const expositorController = new ExpositorController();
 
-router.get('/:slug', expositorController.obtenerExpositoresPorEvento.bind(expositorController));
+router.get('/:slug', expositorController.obtenerPorEvento.bind(expositorController));
 
 module.exports = router;

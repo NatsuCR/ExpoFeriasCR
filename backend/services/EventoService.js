@@ -2,17 +2,62 @@ const pool = require('../db');
 const Evento = require('../models/Evento');
 
 class EventoService {
-  async obtenerEventosActivos() {
-    const query = 'SELECT * FROM eventos WHERE activo = true ORDER BY fecha_inicio';
-    const result = await pool.query(query);
-    return result.rows.map(row => Evento.fromDatabase(row));
+  // Obtiene eventos futuros (próximos)
+  async obtenerEventosActivos(provincia = null) {
+    let query = `SELECT * FROM eventos WHERE activo = true AND fecha_inicio > CURDATE()`;
+    const params = [];
+    if (provincia) {
+      query += ` AND provincia = ?`;
+      params.push(provincia);
+    }
+    query += ` ORDER BY fecha_inicio`;
+    const [rows] = await pool.query(query, params);
+    return rows.map(row => Evento.fromDatabase(row));
+  }
+
+  // Obtiene eventos que comienzan hoy
+  async obtenerEventosHoy(provincia = null) {
+    let query = `SELECT * FROM eventos WHERE activo = true AND DATE(fecha_inicio) = CURDATE()`;
+    const params = [];
+    if (provincia) {
+      query += ` AND provincia = ?`;
+      params.push(provincia);
+    }
+    query += ` ORDER BY fecha_inicio`;
+    const [rows] = await pool.query(query, params);
+    return rows.map(row => Evento.fromDatabase(row));
+  }
+
+  // Obtiene eventos en progreso (vivo)
+  async obtenerEventosEnProgreso(provincia = null) {
+    let query = `SELECT * FROM eventos WHERE activo = true AND fecha_inicio <= CURDATE() AND fecha_fin >= CURDATE()`;
+    const params = [];
+    if (provincia) {
+      query += ` AND provincia = ?`;
+      params.push(provincia);
+    }
+    query += ` ORDER BY fecha_inicio`;
+    const [rows] = await pool.query(query, params);
+    return rows.map(row => Evento.fromDatabase(row));
+  }
+
+  // Obtiene TODOS los eventos activos (sin filtrar por fecha) – para búsqueda
+  async obtenerTodosActivos(provincia = null) {
+    let query = `SELECT * FROM eventos WHERE activo = true`;
+    const params = [];
+    if (provincia) {
+      query += ` AND provincia = ?`;
+      params.push(provincia);
+    }
+    query += ` ORDER BY fecha_inicio`;
+    const [rows] = await pool.query(query, params);
+    return rows.map(row => Evento.fromDatabase(row));
   }
 
   async obtenerEventoPorSlug(slug) {
-    const query = 'SELECT * FROM eventos WHERE slug = $1';
-    const result = await pool.query(query, [slug]);
-    if (result.rows.length === 0) return null;
-    return Evento.fromDatabase(result.rows[0]);
+    const [rows] = await pool.query('SELECT * FROM eventos WHERE slug = ?', [slug]);
+    if (rows.length === 0) return null;
+    return Evento.fromDatabase(rows[0]);
   }
 }
 

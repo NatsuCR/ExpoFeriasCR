@@ -1,4 +1,3 @@
-// backend/controllers/ExpositorController.js
 const ExpositorService = require('../services/ExpositorService');
 
 class ExpositorController {
@@ -6,7 +5,7 @@ class ExpositorController {
     this.expositorService = new ExpositorService();
   }
 
-  async obtenerExpositoresPorEvento(req, res) {
+  async obtenerPorEvento(req, res) {
     try {
       const { slug } = req.params;
       const expositores = await this.expositorService.obtenerExpositoresPorEventoSlug(slug);

@@ -12,7 +12,7 @@ class Actividad {
     this.requiereEntradaOnline = requiereEntradaOnline;
     this.enlaceVenta = enlaceVenta;
     this.esGratis = esGratis;
-    this.imagen = imagen;        // ← nuevo
+    this.imagen = imagen;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -22,8 +22,7 @@ class Actividad {
       row.id, row.evento_id, row.titulo, row.tipo, row.descripcion,
       row.fecha, row.hora, row.lugar, row.precio_extra,
       row.requiere_entrada_online, row.enlace_venta, row.es_gratis,
-      row.imagen,   // ← mapea la columna 'imagen'
-      row.created_at, row.updated_at
+      row.imagen, row.created_at, row.updated_at
     );
   }
 }

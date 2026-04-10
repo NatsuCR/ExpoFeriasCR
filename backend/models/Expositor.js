@@ -16,18 +16,9 @@ class Expositor {
 
   static fromDatabase(row) {
     return new Expositor(
-      row.id,
-      row.evento_id,
-      row.nombre,
-      row.rubro,
-      row.descripcion,
-      row.ubicacion,
-      row.es_pagado,
-      row.imagen_logo,
-      row.sitio_web,
-      row.video_url,        // ← campo nuevo
-      row.created_at,
-      row.updated_at
+      row.id, row.evento_id, row.nombre, row.rubro, row.descripcion,
+      row.ubicacion, row.es_pagado, row.imagen_logo, row.sitio_web,
+      row.video_url, row.created_at, row.updated_at
     );
   }
 }

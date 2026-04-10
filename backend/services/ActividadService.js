@@ -3,15 +3,14 @@ const Actividad = require('../models/Actividad');
 
 class ActividadService {
   async obtenerActividadesPorEventoSlug(slug) {
-    const query = `
+    const [rows] = await pool.query(`
       SELECT a.* 
       FROM actividades a
       JOIN eventos e ON a.evento_id = e.id
-      WHERE e.slug = $1
+      WHERE e.slug = ?
       ORDER BY a.fecha, a.hora
-    `;
-    const result = await pool.query(query, [slug]);
-    return result.rows.map(row => Actividad.fromDatabase(row));
+    `, [slug]);
+    return rows.map(row => Actividad.fromDatabase(row));
   }
 }
 

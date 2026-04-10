@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ExpoFeriasCR | Ferias y exposiciones de Costa Rica</title>
-    <meta name="description" content="Descubre las mejores ferias, exposiciones y eventos ganaderos, culturales y comerciales en Costa Rica. Encuentra fechas, ubicaciones, precios y más.">
+    <meta name="description" content="Descubre las mejores ferias, exposiciones y eventos ganaderos, culturales y comerciales en Costa Rica.">
     <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS en capas -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    
 </head>
-<body class="pagina-principal">
+<body>
     <nav class="navbar">
         <div class="container">
             <div class="logo">
@@ -18,31 +22,78 @@
                 <span>ExpoFeriasCR</span>
             </div>
             <ul class="nav-links">
-                <li><a href="#inicio" id="btnInicio" data-es="Inicio" data-en="Home">Inicio</a></li>
-                <li><a href="#eventos" data-es="Eventos" data-en="Events">Eventos</a></li>
-                <li><a href="#contacto" data-es="Contacto" data-en="Contact">Contacto</a></li>
-                <button id="btnIdioma" class="btn-idioma">🇺🇸 English</button>
+                <li><a href="#inicio" id="btnInicio">Inicio</a></li>
+                <li><a href="#eventos-proximos">Eventos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
             </ul>
-            
         </div>
     </nav>
 
-    <section id="inicio" class="hero-portal">
+    <section class="hero">
         <div class="container">
-            <h1 data-es="Explora las mejores ferias y exposiciones de Costa Rica" data-en="Explore the best fairs and exhibitions in Costa Rica">Explora las mejores ferias y exposiciones de Costa Rica</h1>
-            <p data-es="Encuentra eventos ganaderos, culturales, comerciales y mucho más. Todo en un solo lugar." data-en="Find livestock, cultural, commercial events and more. All in one place.">Encuentra eventos ganaderos, culturales, comerciales y mucho más. Todo en un solo lugar.</p>
-            <div class="buscador-hero">
-                <input type="text" id="buscador-principal" placeholder="Buscar por nombre, ubicación o fecha..." class="input-buscar" data-es-placeholder="Buscar por nombre, ubicación o fecha..." data-en-placeholder="Search by name, location or date...">
-                <button id="btn-buscar-principal" class="btn-buscar"><i class="fas fa-search"></i> <span data-es="Buscar" data-en="Search">Buscar</span></button>
+            <h1>Explora las mejores ferias y exposiciones de Costa Rica</h1>
+            <p>Encuentra eventos ganaderos, culturales, comerciales y mucho más. Todo en un solo lugar.</p>
+            <div class="search-filters">
+                <select id="provincia-select" class="filter-select">
+                    <option value="">Todas las provincias</option>
+                    <option value="San José">San José</option>
+                    <option value="Alajuela">Alajuela</option>
+                    <option value="Cartago">Cartago</option>
+                    <option value="Heredia">Heredia</option>
+                    <option value="Guanacaste">Guanacaste</option>
+                    <option value="Puntarenas">Puntarenas</option>
+                    <option value="Limón">Limón</option>
+                </select>
+                <input type="text" id="buscador-principal" placeholder="Buscar por nombre o ubicación..." class="search-input">
+                <button id="btn-buscar-principal" class="btn-search"><i class="fas fa-search"></i> Buscar</button>
             </div>
         </div>
     </section>
 
-    <section id="eventos" class="eventos-destacados">
+    <!-- Sección Eventos que comienzan hoy (carrusel si >4) -->
+    <section class="section-carousel" id="eventos-hoy">
         <div class="container">
-            <h2 data-es="Próximos eventos" data-en="Upcoming events">Próximos eventos</h2>
-            <div id="eventos-grid" class="eventos-grid">
-                <p data-es="Cargando eventos..." data-en="Loading events...">Cargando eventos...</p>
+            <div class="section-header">
+                <h2>🎉 Eventos que comienzan hoy</h2>
+                <div class="carousel-controls" id="controls-hoy" style="display: none;">
+                    <button class="carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="carousel-container" id="carousel-hoy-container">
+                <div class="carousel-track" id="carousel-hoy-track"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Eventos en progreso (carrusel si >4) -->
+    <section class="section-carousel" id="eventos-vivo">
+        <div class="container">
+            <div class="section-header">
+                <h2>🔴 Eventos en progreso (en vivo)</h2>
+                <div class="carousel-controls" id="controls-vivo" style="display: none;">
+                    <button class="carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="carousel-container" id="carousel-vivo-container">
+                <div class="carousel-track" id="carousel-vivo-track"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Próximos eventos (carrusel si >4) -->
+    <section class="section-carousel" id="eventos-proximos">
+        <div class="container">
+            <div class="section-header">
+                <h2>📅 Próximos eventos</h2>
+                <div class="carousel-controls" id="controls-proximos" style="display: none;">
+                    <button class="carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="carousel-container" id="carousel-proximos-container">
+                <div class="carousel-track" id="carousel-proximos-track"></div>
             </div>
         </div>
     </section>
@@ -50,20 +101,20 @@
     <section class="info-adicional">
         <div class="container">
             <div class="info-cards">
-                <div class="info-card-simple">
+                <div class="info-card">
                     <i class="fas fa-calendar-alt"></i>
-                    <h3 data-es="Actualizado" data-en="Updated">Actualizado</h3>
-                    <p data-es="Fechas y horarios verificados" data-en="Verified dates and times">Fechas y horarios verificados</p>
+                    <h3>Actualizado</h3>
+                    <p>Fechas y horarios verificados</p>
                 </div>
-                <div class="info-card-simple">
+                <div class="info-card">
                     <i class="fas fa-map-marker-alt"></i>
-                    <h3 data-es="Ubicaciones" data-en="Locations">Ubicaciones</h3>
-                    <p data-es="Mapas y direcciones exactas" data-en="Maps and exact addresses">Mapas y direcciones exactas</p>
+                    <h3>Ubicaciones</h3>
+                    <p>Mapas y direcciones exactas</p>
                 </div>
-                <div class="info-card-simple">
+                <div class="info-card">
                     <i class="fas fa-ticket-alt"></i>
-                    <h3 data-es="Precios" data-en="Prices">Precios</h3>
-                    <p data-es="Entradas y promociones" data-en="Tickets and promotions">Entradas y promociones</p>
+                    <h3>Precios</h3>
+                    <p>Entradas y promociones</p>
                 </div>
             </div>
         </div>
@@ -71,15 +122,15 @@
 
     <section id="contacto" class="contacto">
         <div class="container">
-            <h2 data-es="Contacto" data-en="Contact">Contacto</h2>
-            <p data-es="¿Tienes una feria y quieres aparecer? Escríbenos a" data-en="Do you have a fair and want to appear? Write to us at">¿Tienes una feria y quieres aparecer? Escríbenos a <a href="mailto:info@expoferiascr.com">info@expoferiascr.com</a></p>
-            <p data-es="Síguenos en redes sociales (próximamente)" data-en="Follow us on social media (coming soon)">Síguenos en redes sociales (próximamente)</p>
+            <h2>Contacto</h2>
+            <p>¿Tienes una feria y quieres aparecer? Escríbenos a <a href="mailto:jaravillaloboscarlos531@gmail.com">jaravillaloboscarlos531@gmail.com</a></p>
+            <p>Síguenos en redes sociales (próximamente)</p>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p data-es="&copy; 2026 ExpoFeriasCR - Todos los derechos reservados" data-en="&copy; 2026 ExpoFeriasCR - All rights reserved">&copy; 2026 ExpoFeriasCR - Todos los derechos reservados</p>
+            <p>&copy; 2026 ExpoFeriasCR - Todos los derechos reservados</p>
         </div>
     </footer>
 

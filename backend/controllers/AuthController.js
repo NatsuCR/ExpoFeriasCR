@@ -6,11 +6,11 @@ class AuthController {
   async login(req, res) {
     const { email, password } = req.body;
     try {
-      const result = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
-      if (result.rows.length === 0) {
+      const [rows] = await pool.query('SELECT * FROM usuarios WHERE email = ?', [email]);
+      if (rows.length === 0) {
         return res.status(401).json({ error: 'Credenciales inválidas' });
       }
-      const user = result.rows[0];
+      const user = rows[0];
       const valid = await bcrypt.compare(password, user.password_hash);
       if (!valid) {
         return res.status(401).json({ error: 'Credenciales inválidas' });

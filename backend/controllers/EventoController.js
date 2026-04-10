@@ -5,9 +5,11 @@ class EventoController {
     this.eventoService = new EventoService();
   }
 
+  // Próximos eventos
   async obtenerTodos(req, res) {
     try {
-      const eventos = await this.eventoService.obtenerEventosActivos();
+      const { provincia } = req.query;
+      const eventos = await this.eventoService.obtenerEventosActivos(provincia || null);
       res.json(eventos);
     } catch (error) {
       console.error(error);
@@ -15,13 +17,47 @@ class EventoController {
     }
   }
 
+  // Eventos de hoy
+  async obtenerHoy(req, res) {
+    try {
+      const { provincia } = req.query;
+      const eventos = await this.eventoService.obtenerEventosHoy(provincia || null);
+      res.json(eventos);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener eventos de hoy' });
+    }
+  }
+
+  // Eventos en progreso (en vivo)
+  async obtenerEnProgreso(req, res) {
+    try {
+      const { provincia } = req.query;
+      const eventos = await this.eventoService.obtenerEventosEnProgreso(provincia || null);
+      res.json(eventos);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener eventos en progreso' });
+    }
+  }
+
+  // TODOS los eventos activos (para búsqueda)
+  async obtenerTodosActivos(req, res) {
+    try {
+      const { provincia } = req.query;
+      const eventos = await this.eventoService.obtenerTodosActivos(provincia || null);
+      res.json(eventos);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener todos los eventos' });
+    }
+  }
+
   async obtenerPorSlug(req, res) {
     try {
       const { slug } = req.params;
       const evento = await this.eventoService.obtenerEventoPorSlug(slug);
-      if (!evento) {
-        return res.status(404).json({ error: 'Evento no encontrado' });
-      }
+      if (!evento) return res.status(404).json({ error: 'Evento no encontrado' });
       res.json(evento);
     } catch (error) {
       console.error(error);

@@ -1,4 +1,3 @@
-// backend/controllers/PrecioController.js
 const PrecioService = require('../services/PrecioService');
 
 class PrecioController {
@@ -6,7 +5,7 @@ class PrecioController {
     this.precioService = new PrecioService();
   }
 
-  async obtenerPreciosPorEvento(req, res) {
+  async obtenerPorEvento(req, res) {
     try {
       const { slug } = req.params;
       const precios = await this.precioService.obtenerPreciosPorEventoSlug(slug);

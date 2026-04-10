@@ -1,15 +1,18 @@
-// backend/db.js
-const { Pool } = require('pg');
+const mysql = require('mysql2');
 const dotenv = require('dotenv');
 
 dotenv.config();
 
-const pool = new Pool({
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
+const pool = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'expoferiascr',
+    port: process.env.DB_PORT || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-module.exports = pool;
+const promisePool = pool.promise();
+module.exports = promisePool;

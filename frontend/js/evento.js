@@ -15,7 +15,8 @@ function aplicarIdioma() {
     if (btn) btn.innerText = idiomaActual === 'es' ? '🇺🇸 English' : '🇪🇸 Español';
 }
 
-// ==================== CARGAR EVENTO ====================
+
+// ==================== CARGAR INFORMACIÓN DEL EVENTO ====================
 async function cargarEvento() {
     try {
         const res = await fetch(`/api/eventos/${slug}`);
@@ -64,7 +65,7 @@ async function cargarEvento() {
             entradasParrafo.innerHTML = textoEntradas;
         }
 
-        // Colores generales (body, variables CSS, overlay)
+        // ==================== COLORES GENERALES ====================
         if (evento.colorPrimario) {
             document.documentElement.style.setProperty('--evento-primario', evento.colorPrimario);
         }
@@ -84,7 +85,7 @@ async function cargarEvento() {
             }
         }
 
-        // ========== COLORES ESPECÍFICOS DEL HERO ==========
+        // ==================== COLORES ESPECÍFICOS DEL HERO ====================
         const tituloHero = document.getElementById('eventoNombre');
         const descripcionHero = document.getElementById('eventoDescripcion');
         const fechasHero = document.querySelector('.hero-dates');
@@ -104,6 +105,14 @@ async function cargarEvento() {
             }
         }
 
+        // ==================== COLOR PARA TÍTULOS DE SECCIÓN (h2) ====================
+        if (evento.colorTituloSeccion) {
+            const titulosSeccion = document.querySelectorAll('h2');
+            titulosSeccion.forEach(h2 => {
+                h2.style.color = evento.colorTituloSeccion;
+            });
+        }
+
     } catch (err) {
         console.error(err);
         document.body.innerHTML = '<h1>Evento no encontrado</h1><a href="/">Volver</a>';
@@ -112,31 +121,91 @@ async function cargarEvento() {
 
 // ==================== ACTIVIDADES ====================
 async function cargarActividades() {
-    const container = document.getElementById('actividadesGrid');
+    const track = document.getElementById('actividadesGrid');
+    const wrapper = document.getElementById('actividadesWrapper');
+    const btnPrev = document.getElementById('actividadesPrev');
+    const btnNext = document.getElementById('actividadesNext');
+
     try {
         const res = await fetch(`/api/actividades/${slug}`);
         const actividades = await res.json();
+
         if (actividades.length === 0) {
-            container.innerHTML = '<p>No hay actividades registradas.</p>';
+            track.innerHTML = '<p>No hay actividades registradas.</p>';
             return;
         }
+
+        // Construir cards
         let html = '';
         actividades.forEach(a => {
+            const imagen = a.imagen || a.imagen_url || '';
+            const titulo = a.titulo;
+            const fecha = new Date(a.fecha).toLocaleDateString();
+            const hora = a.hora ? a.hora.slice(0, 5) : '';
+            const lugar = a.lugar || 'Campo ferial';
+            const descripcion = a.descripcion || '';
+            const requiereOnline = a.requiere_entrada_online || a.requiereEntradaOnline;
+            const enlaceVenta = a.enlace_venta || a.enlaceVenta;
+            const esGratis = a.es_gratis || a.esGratis;
+
+            let linkHtml = '';
+            if (requiereOnline && enlaceVenta) {
+                linkHtml = `<p><i class="fas fa-ticket-alt"></i> <a href="${enlaceVenta}" target="_blank">Comprar entrada</a></p>`;
+            } else if (requiereOnline && !enlaceVenta) {
+                linkHtml = `<p><i class="fas fa-ticket-alt"></i> Entrada online (enlace no disponible)</p>`;
+            }
+
+            const gratisHtml = esGratis ? '<p><strong>Evento gratuito</strong></p>' : '';
+
             html += `
                 <div class="actividad-card">
-                    ${a.imagen ? `<img src="${a.imagen}" alt="${a.titulo}">` : ''}
-                    <h3>${a.titulo}</h3>
-                    <p><i class="fas fa-calendar-day"></i> ${new Date(a.fecha).toLocaleDateString()} ${a.hora ? a.hora.slice(0,5) : ''}</p>
-                    <p><i class="fas fa-map-pin"></i> ${a.lugar || 'Campo ferial'}</p>
-                    <p>${a.descripcion || ''}</p>
-                    ${a.requiereEntradaOnline ? `<p><i class="fas fa-ticket-alt"></i> <a href="${a.enlaceVenta}" target="_blank">Comprar entrada</a></p>` : ''}
-                    ${a.esGratis ? '<p><strong>Evento gratuito</strong></p>' : ''}
+                    ${imagen ? `<img src="${imagen}" alt="${titulo}">` : ''}
+                    <h3>${titulo}</h3>
+                    <p><i class="fas fa-calendar-day"></i> ${fecha} ${hora}</p>
+                    <p><i class="fas fa-map-pin"></i> ${lugar}</p>
+                    <p>${descripcion}</p>
+                    ${linkHtml}
+                    ${gratisHtml}
                 </div>
             `;
         });
-        container.innerHTML = html;
+
+        track.innerHTML = html;
+
+        // Activar carrusel solo si hay más de 3 actividades
+        const VISIBLE = 3;
+        const total = actividades.length;
+
+        if (total <= VISIBLE) return; // sin carrusel, sin botones
+
+        wrapper.classList.add('con-carrusel');
+
+        let indice = 0;
+
+        function irA(n) {
+            const maxIndice = total - VISIBLE;
+            indice = Math.max(0, Math.min(n, maxIndice));
+            const cards = track.querySelectorAll('.actividad-card');
+            const cardWidth = cards[0].offsetWidth;
+            track.style.transform = `translateX(-${indice * cardWidth}px)`;
+        }
+
+        btnPrev.addEventListener('click', () => {
+            irA(indice - 1 < 0 ? total - VISIBLE : indice - 1);
+        });
+
+        btnNext.addEventListener('click', () => {
+            irA(indice + 1 > total - VISIBLE ? 0 : indice + 1);
+        });
+
+        // Auto-avance cada 10 segundos
+        setInterval(() => {
+            irA(indice + 1 > total - VISIBLE ? 0 : indice + 1);
+        }, 10000);
+
     } catch (err) {
-        container.innerHTML = '<p>Error al cargar actividades.</p>';
+        console.error(err);
+        track.innerHTML = '<p>Error al cargar actividades.</p>';
     }
 }
 
@@ -153,47 +222,91 @@ async function cargarPrecios() {
         let html = `<table class="tabla-precios-estilo"><thead><tr><th>Fecha</th><th>Precio normal</th><th>Promoción</th><th>Detalle</th></tr></thead><tbody>`;
         precios.forEach(p => {
             const fecha = new Date(p.fecha).toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long' });
-            const precioFormateado = new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(p.precioNormal);
-html += `<tr>
-            <td>${fecha}</td>
-            <td>${precioFormateado}</td>
-            <td>${p.promocion || '—'}</td>
-            <td>${p.descripcionPromocion || '—'}</td>
-        </tr>`;
+            const precioNum = parseFloat(p.precio_normal);
+            const precioFormateado = isNaN(precioNum) ? '₡0' : new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(precioNum);
+            const promocion = p.promocion || '—';
+            const detalle = p.descripcion_promocion || '—';
+            html += `<tr>
+                        <td>${fecha}</td>
+                        <td>${precioFormateado}</td>
+                        <td>${promocion}</td>
+                        <td>${detalle}</td>
+                    </tr>`;
         });
         html += `</tbody></table>`;
         container.innerHTML = html;
     } catch (err) {
+        console.error(err);
         container.innerHTML = '<p>Error al cargar precios.</p>';
     }
 }
-
-// ==================== EXPOSITORES ====================
+// ==================== CARGAR EXPOSITORES ====================
 async function cargarExpositores() {
-    const container = document.getElementById('expositoresGrid');
+    const track = document.getElementById('expositoresGrid');
+    const wrapper = document.getElementById('expositoresWrapper');
+    const btnPrev = document.getElementById('expositoresPrev');
+    const btnNext = document.getElementById('expositoresNext');
+
     try {
         const res = await fetch(`/api/expositores/${slug}`);
         const expositores = await res.json();
+
         if (expositores.length === 0) {
-            container.innerHTML = '<p>No hay expositores registrados.</p>';
+            track.innerHTML = '<p>No hay expositores registrados.</p>';
             return;
         }
+
         let html = '';
         expositores.forEach(e => {
+            const imagenHtml = e.imagenLogo ? `<img src="${e.imagenLogo}" alt="${e.nombre}">` : '';
+            const videoHtml = e.videoUrl ? `<video controls src="${e.videoUrl}" style="width:100%; max-height:200px; margin-top:1rem;"></video>` : '';
             html += `
                 <div class="expositor-card">
-                    ${e.imagenLogo ? `<img src="${e.imagenLogo}" alt="${e.nombre}">` : ''}
+                    ${imagenHtml}
                     <h3>${e.nombre}</h3>
                     <p><strong>Rubro:</strong> ${e.rubro}</p>
                     <p>${e.descripcion || ''}</p>
                     <p><strong>Ubicación:</strong> ${e.ubicacion || 'Por definir'}</p>
-                    ${e.videoUrl ? `<video controls src="${e.videoUrl}" style="width:100%; max-height:200px; margin-top:1rem;"></video>` : ''}
+                    ${videoHtml}
                 </div>
             `;
         });
-        container.innerHTML = html;
+
+        track.innerHTML = html;
+
+        const VISIBLE = 3;
+        const total = expositores.length;
+
+        if (total <= VISIBLE) return;
+
+        wrapper.classList.add('con-carrusel');
+
+        let indice = 0;
+
+        function irA(n) {
+            const maxIndice = total - VISIBLE;
+            indice = Math.max(0, Math.min(n, maxIndice));
+            const cards = track.querySelectorAll('.expositor-card');
+            const cardWidth = cards[0].offsetWidth;
+            track.style.transform = `translateX(-${indice * cardWidth}px)`;
+        }
+
+        btnPrev.addEventListener('click', () => {
+            irA(indice - 1 < 0 ? total - VISIBLE : indice - 1);
+        });
+
+        btnNext.addEventListener('click', () => {
+            irA(indice + 1 > total - VISIBLE ? 0 : indice + 1);
+        });
+
+        // Auto-avance cada 10 segundos
+        setInterval(() => {
+            irA(indice + 1 > total - VISIBLE ? 0 : indice + 1);
+        }, 10000);
+
     } catch (err) {
-        container.innerHTML = '<p>Error al cargar expositores.</p>';
+        console.error(err);
+        track.innerHTML = '<p>Error al cargar expositores.</p>';
     }
 }
 
@@ -258,8 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarExpositores();
     cargarCarruselFondo();
     configurarBotonesCarrusel();
-    
-    // Idioma
+
     aplicarIdioma();
     const btnIdioma = document.getElementById('btnIdioma');
     if (btnIdioma) {

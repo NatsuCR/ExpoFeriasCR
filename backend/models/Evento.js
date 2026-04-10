@@ -5,6 +5,7 @@ class Evento {
     colorPrimario, colorSecundario, colorFondo, colorTexto, colorHeroOverlay,
     tipoVenta, urlVentaOnline,
     colorTituloHero, colorDescripcionHero, colorFondoFechas, colorTextoFechas,
+    colorTituloSeccion, provincia,  // ← NUEVO
     createdAt, updatedAt
   ) {
     this.id = id;
@@ -29,6 +30,8 @@ class Evento {
     this.colorDescripcionHero = colorDescripcionHero;
     this.colorFondoFechas = colorFondoFechas;
     this.colorTextoFechas = colorTextoFechas;
+    this.colorTituloSeccion = colorTituloSeccion;  // ← NUEVO
+    this.provincia = provincia;  // ← NUEVO
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -44,6 +47,7 @@ class Evento {
       row.tipo_venta, row.url_venta_online,
       row.color_titulo_hero, row.color_descripcion_hero,
       row.color_fondo_fechas, row.color_texto_fechas,
+      row.color_titulo_seccion, row.provincia,  // ← NUEVO
       row.created_at, row.updated_at
     );
   }

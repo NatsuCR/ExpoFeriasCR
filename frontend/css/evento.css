@@ -132,7 +132,7 @@ h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 2rem;
-    color: var(--evento-primario);
+    
     border-bottom: 3px solid var(--evento-secundario);
     display: inline-block;
     padding-bottom: 0.5rem;
@@ -367,4 +367,104 @@ footer {
 }
 .contacto a:hover {
     text-decoration: underline;
+}
+
+/* Carrusel de actividades */
+.actividades-carrusel-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.actividades-carrusel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.actividades-carrusel-track .actividad-card {
+    min-width: calc(100% / 3);
+    box-sizing: border-box;
+    padding: 1rem;
+}
+
+.actividades-btn {
+    display: none; /* oculto por defecto */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    z-index: 3;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.actividades-btn:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.actividades-btn.prev { left: 0; }
+.actividades-btn.next { right: 0; }
+
+.actividades-carrusel-wrapper.con-carrusel .actividades-btn {
+    display: block; /* solo visible si hay más de 3 actividades */
+}
+
+@media (max-width: 768px) {
+    .actividades-carrusel-track .actividad-card {
+        min-width: 100%;
+    }
+}
+
+/* Carrusel de expositores */
+.expositores-carrusel-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.expositores-carrusel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.expositores-carrusel-track .expositor-card {
+    min-width: calc(100% / 3);
+    box-sizing: border-box;
+    padding: 1rem;
+}
+
+.expositores-btn {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    z-index: 3;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.expositores-btn:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.expositores-btn.prev { left: 0; }
+.expositores-btn.next { right: 0; }
+
+.expositores-carrusel-wrapper.con-carrusel .expositores-btn {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .expositores-carrusel-track .expositor-card {
+        min-width: 100%;
+    }
 }

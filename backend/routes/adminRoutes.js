@@ -5,10 +5,7 @@ const AdminPrecioController = require('../controllers/AdminPrecioController');
 const AdminActividadController = require('../controllers/AdminActividadController');
 const AdminExpositorController = require('../controllers/AdminExpositorController');
 const AdminGaleriaController = require('../controllers/AdminGaleriaController');
-
 const AdminUsuarioController = require('../controllers/AdminUsuarioController');
-const adminUsuario = new AdminUsuarioController();
-
 
 const router = express.Router();
 const adminEvento = new AdminEventoController();
@@ -16,12 +13,13 @@ const adminPrecio = new AdminPrecioController();
 const adminActividad = new AdminActividadController();
 const adminExpositor = new AdminExpositorController();
 const adminGaleria = new AdminGaleriaController();
+const adminUsuario = new AdminUsuarioController();
 
 router.use(authMiddleware);
 
 // Eventos
 router.get('/eventos', adminEvento.listar.bind(adminEvento));
-router.get('/eventos/:id', adminEvento.obtenerPorId.bind(adminEvento));  // ← nueva línea
+router.get('/eventos/:id', adminEvento.obtenerPorId.bind(adminEvento));
 router.post('/eventos', adminEvento.crear.bind(adminEvento));
 router.put('/eventos/:id', adminEvento.actualizar.bind(adminEvento));
 router.delete('/eventos/:id', adminEvento.eliminar.bind(adminEvento));
@@ -54,6 +52,5 @@ router.delete('/galeria/:id', adminGaleria.eliminar.bind(adminGaleria));
 router.get('/usuarios', adminUsuario.listar.bind(adminUsuario));
 router.post('/usuarios', adminUsuario.crear.bind(adminUsuario));
 router.delete('/usuarios/:id', adminUsuario.eliminar.bind(adminUsuario));
-
 
 module.exports = router;

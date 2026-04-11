@@ -1,5 +1,4 @@
-/* ========== COMPONENTS ========== */
-/* Botones y filtros */
+/* ========== FILTROS DE BÚSQUEDA ========== */
 .search-filters {
     display: flex;
     justify-content: center;
@@ -35,7 +34,7 @@
     color: white;
 }
 
-/* Tarjeta de evento */
+/* ========== EVENTO CARD ========== */
 .evento-card {
     background: var(--color-bg-card);
     border-radius: 12px;
@@ -88,7 +87,7 @@
     background-color: var(--color-primary);
 }
 
-/* Badge EN VIVO */
+/* ========== BADGE EN VIVO ========== */
 .live-badge {
     position: absolute;
     top: 10px;
@@ -105,11 +104,11 @@
 }
 
 @keyframes pulse {
-    0% { opacity: 0.7; transform: scale(0.9);}
-    100% { opacity: 1; transform: scale(1);}
+    0% { opacity: 0.7; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
-/* Carrusel */
+/* ========== CARRUSEL ========== */
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -148,37 +147,23 @@
 .carousel-container {
     overflow: hidden;
     position: relative;
+    width: 100%;
 }
 
 .carousel-track {
     display: flex;
     gap: 1.5rem;
     transition: transform 0.3s ease;
+    will-change: transform;
+    width: 100%; /* AGREGAR ESTO */
 }
 
 .carousel-slide {
-    flex: 0 0 calc(25% - 1.125rem); /* 4 items por defecto */
+    flex: 0 0 calc(25% - 1.125rem);
     min-width: 0;
 }
 
-/* Responsive carousel */
-@media (max-width: 1024px) {
-    .carousel-slide {
-        flex: 0 0 calc(33.333% - 1rem);
-    }
-}
-@media (max-width: 768px) {
-    .carousel-slide {
-        flex: 0 0 calc(50% - 0.75rem);
-    }
-}
-@media (max-width: 480px) {
-    .carousel-slide {
-        flex: 0 0 100%;
-    }
-}
-
-/* Info cards */
+/* ========== INFO CARDS ========== */
 .info-cards {
     display: flex;
     justify-content: space-around;
@@ -204,25 +189,26 @@
     margin-bottom: 0.5rem;
 }
 
-/* Contacto */
+/* ========== CONTACTO ========== */
 .contacto a {
     color: var(--color-secondary);
     text-decoration: none;
     font-weight: bold;
 }
 
-/* Estilo de botón redondeado para el menú en index.html */
-.nav-links a {
-    display: inline-block;
-    border-radius: 30px;
-    padding: 0.5rem 1.2rem;
-    transition: all 0.3s ease;
-    background-color: rgba(255, 255, 255, 0.15);
-    color: white;
-    margin: 0 2px;
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+    .carousel-slide {
+        flex: 0 0 calc(33.333% - 1rem);
+    }
 }
-.nav-links a:hover {
-    background-color: #F7C600;  /* color amarillo festivo */
-    color: #2c1a0e;
-    transform: translateY(-2px);
+
+@media (max-width: 768px) {
+    .carousel-track {
+        gap: 0;
+    }
+
+    .carousel-slide {
+        flex: 0 0 100%;
+    }
 }

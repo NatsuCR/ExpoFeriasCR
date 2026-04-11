@@ -42,43 +42,120 @@ function initCarousel(trackId, items, controlsId, itemsPerView = 4) {
     items.forEach(item => track.appendChild(item));
 
     const totalItems = items.length;
-    if (totalItems <= itemsPerView) {
-        if (controls) controls.style.display = 'none';
+    if (totalItems === 0) return;
+
+    let isMobile = window.innerWidth <= 768;
+    const showButtons = isMobile ? totalItems > 1 : totalItems > itemsPerView;
+
+    if (controls) {
+        controls.style.display = showButtons ? 'flex' : 'none';
+    }
+
+    if (!showButtons) {
         track.style.transform = 'translateX(0)';
         return;
     }
-    if (controls) controls.style.display = 'flex';
 
     let currentIndex = 0;
-    const getSlideWidth = () => (track.children[0]?.offsetWidth || 0) + 24;
-    let slideWidth = getSlideWidth();
-    const maxIndex = Math.max(0, totalItems - itemsPerView);
+    let maxOffset = 0;
+    let step = 0;
+    let containerWidth = 0;
 
-    const prevBtn = controls.querySelector('.carousel-prev');
-    const nextBtn = controls.querySelector('.carousel-next');
+    function updateDimensions() {
+        isMobile = window.innerWidth <= 768;
+        const container = track.parentElement;
+        containerWidth = container.clientWidth;
 
-    const updateCarousel = () => {
-        track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-    };
-    const goNext = () => {
-        if (currentIndex < maxIndex) { currentIndex++; updateCarousel(); }
-    };
-    const goPrev = () => {
-        if (currentIndex > 0) { currentIndex--; updateCarousel(); }
-    };
+        if (isMobile) {
+            step = containerWidth;
 
-    const newPrev = prevBtn.cloneNode(true);
-    const newNext = nextBtn.cloneNode(true);
-    prevBtn.parentNode.replaceChild(newPrev, prevBtn);
-    nextBtn.parentNode.replaceChild(newNext, nextBtn);
-    newPrev.addEventListener('click', goPrev);
-    newNext.addEventListener('click', goNext);
+            Array.from(track.children).forEach(card => {
+                card.style.minWidth = `${containerWidth}px`;
+                card.style.maxWidth = `${containerWidth}px`;
+                card.style.marginRight = '0px';
+            });
+
+            maxOffset = -(totalItems - 1) * step;
+
+        } else {
+            // Limpiar estilos inline del modo móvil
+            Array.from(track.children).forEach(card => {
+                card.style.minWidth = '';
+                card.style.maxWidth = '';
+                card.style.marginRight = '';
+            });
+
+            const firstCard = track.children[0];
+            const secondCard = track.children[1];
+
+            if (firstCard && secondCard) {
+                // offsetLeft es fiable porque width:100% en el track
+                // hace que el % de las cards se calcule correctamente
+                step = secondCard.offsetLeft - firstCard.offsetLeft;
+            } else if (firstCard) {
+                step = firstCard.offsetWidth;
+            }
+
+            const trackWidth = track.scrollWidth;
+            maxOffset = Math.min(0, containerWidth - trackWidth);
+        }
+
+        const maxIndex = isMobile
+            ? totalItems - 1
+            : Math.max(0, totalItems - itemsPerView);
+
+        if (currentIndex > maxIndex) currentIndex = maxIndex;
+
+        updateTransform();
+    }
+
+    function updateTransform() {
+        if (isMobile) {
+            track.style.transform = `translateX(${-(currentIndex * step)}px)`;
+        } else {
+            let finalOffset = Math.max(-(currentIndex * step), maxOffset);
+            finalOffset = Math.min(finalOffset, 0);
+            track.style.transform = `translateX(${finalOffset}px)`;
+        }
+    }
+
+    function goNext() {
+        const maxIndex = isMobile
+            ? totalItems - 1
+            : Math.max(0, totalItems - itemsPerView);
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateTransform();
+        }
+    }
+
+    function goPrev() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateTransform();
+        }
+    }
+
+    const prevBtn = controls?.querySelector('.carousel-prev');
+    const nextBtn = controls?.querySelector('.carousel-next');
+
+    if (prevBtn) {
+        const newPrev = prevBtn.cloneNode(true);
+        prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+        newPrev.addEventListener('click', goPrev);
+    }
+
+    if (nextBtn) {
+        const newNext = nextBtn.cloneNode(true);
+        nextBtn.parentNode.replaceChild(newNext, nextBtn);
+        newNext.addEventListener('click', goNext);
+    }
 
     window.addEventListener('resize', () => {
-        slideWidth = getSlideWidth();
-        updateCarousel();
+        updateDimensions();
     });
-    updateCarousel();
+
+    updateDimensions();
 }
 
 async function cargarSeccion(endpoint, trackId, controlsId, isLive, provincia, termino = '') {
@@ -133,7 +210,6 @@ async function cargarProximos(provincia = '', termino = '') {
     if (!track) return;
 
     if (eventos.length === 0) {
-        // Mostrar mensaje de no resultados dentro de la sección (sin ocultarla)
         track.innerHTML = '';
         const emptyMsg = document.createElement('div');
         emptyMsg.className = 'carousel-slide';
@@ -148,6 +224,7 @@ async function cargarProximos(provincia = '', termino = '') {
         if (sectionProximos) sectionProximos.style.display = 'block';
         return;
     }
+
     if (sectionProximos) sectionProximos.style.display = 'block';
     const cards = eventos.map(e => createEventoCard(e, false));
     initCarousel('carousel-proximos-track', cards, 'controls-proximos', 4);

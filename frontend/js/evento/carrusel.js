@@ -1,123 +1,192 @@
-export function initResponsiveCarousel(
-    containerId,
-    trackId,
-    prevBtnId,
-    nextBtnId,
-    minWidth = 280,
-    autoInterval = 10000
-) {
-    const container = document.getElementById(containerId);
+// carrusel.js
+
+// Carrusel principal (página de inicio) - recibe items como nodos DOM
+export function initCarousel(trackId, items, controlsId, itemsPerView = 4) {
     const track = document.getElementById(trackId);
-    let prevBtn = document.getElementById(prevBtnId);
-    let nextBtn = document.getElementById(nextBtnId);
+    const controls = document.getElementById(controlsId);
+    if (!track) return;
 
-    if (!container || !track) return;
+    track.innerHTML = '';
+    items.forEach(item => track.appendChild(item));
 
-    let items = Array.from(track.children);
-    if (items.length === 0) return;
+    const totalItems = items.length;
+    if (totalItems === 0) return;
 
-    let visibleItems = 1;
+    let isMobile = window.innerWidth <= 768;
+    const showButtons = isMobile ? totalItems > 1 : totalItems > itemsPerView;
+
+    if (controls) {
+        controls.style.display = showButtons ? 'flex' : 'none';
+    }
+
+    if (!showButtons) {
+        track.style.transform = 'translateX(0)';
+        return;
+    }
+
     let currentIndex = 0;
-    let autoTimer = null;
+    let maxOffset = 0;
+    let step = 0;
+    let containerWidth = 0;
 
-    function stopAuto() {
-        if (autoTimer) clearInterval(autoTimer);
-    }
+    function updateDimensions() {
+        isMobile = window.innerWidth <= 768;
+        const container = track.parentElement;
+        containerWidth = container.clientWidth;
 
-    function startAuto() {
-        stopAuto();
-        if (items.length > 1) {
-            autoTimer = setInterval(() => {
-                let newIndex = currentIndex + 1;
-                const maxIndex = Math.max(0, items.length - visibleItems);
-                if (newIndex > maxIndex) newIndex = 0;
-                moveTo(newIndex);
-            }, autoInterval);
-        }
-    }
+        if (isMobile) {
+            step = containerWidth;
+            Array.from(track.children).forEach(card => {
+                card.style.minWidth = `${containerWidth}px`;
+                card.style.maxWidth = `${containerWidth}px`;
+                card.style.marginRight = '0px';
+            });
+            maxOffset = -(totalItems - 1) * step;
+        } else {
+            Array.from(track.children).forEach(card => {
+                card.style.minWidth = '';
+                card.style.maxWidth = '';
+                card.style.marginRight = '';
+            });
 
-    // 🔥 AQUÍ ESTÁ LA MAGIA (SOLUCIÓN REAL)
-    function moveTo(index) {
-        const maxIndex = Math.max(0, items.length - visibleItems);
-
-        if (index < 0) index = maxIndex;
-        if (index > maxIndex) index = 0;
-
-        currentIndex = index;
-
-        const offset = items[currentIndex].offsetLeft;
-
-        track.style.transform = `translateX(-${offset}px)`;
-
-        if (items.length > 1) {
-            stopAuto();
-            startAuto();
-        }
-    }
-
-    function updateCarousel() {
-        const containerWidth = container.clientWidth;
-
-        visibleItems = Math.floor(containerWidth / minWidth);
-        if (visibleItems < 1) visibleItems = 1;
-        if (visibleItems > 3) visibleItems = 3;
-
-        const gap = 24;
-
-        const itemWidth = (containerWidth - (visibleItems - 1) * gap) / visibleItems;
-
-        items.forEach(slide => {
-            slide.style.flex = `0 0 ${itemWidth}px`;
-        });
-
-        // Mostrar/ocultar botones
-        if (prevBtn && nextBtn) {
-            if (items.length <= 1) {
-                prevBtn.style.display = 'none';
-                nextBtn.style.display = 'none';
-                stopAuto();
-            } else {
-                prevBtn.style.display = 'flex';
-                nextBtn.style.display = 'flex';
-                startAuto();
+            const firstCard = track.children[0];
+            const secondCard = track.children[1];
+            if (firstCard && secondCard) {
+                step = secondCard.offsetLeft - firstCard.offsetLeft;
+            } else if (firstCard) {
+                step = firstCard.offsetWidth;
             }
+
+            const trackWidth = track.scrollWidth;
+            maxOffset = Math.min(0, containerWidth - trackWidth);
         }
 
-        const maxIndex = Math.max(0, items.length - visibleItems);
+        const maxIndex = isMobile
+            ? totalItems - 1
+            : Math.max(0, totalItems - itemsPerView);
         if (currentIndex > maxIndex) currentIndex = maxIndex;
 
-        moveTo(currentIndex);
+        updateTransform();
     }
 
-    // 🔥 FIX botones
+    function updateTransform() {
+        if (isMobile) {
+            track.style.transform = `translateX(${-(currentIndex * step)}px)`;
+        } else {
+            let finalOffset = Math.max(-(currentIndex * step), maxOffset);
+            finalOffset = Math.min(finalOffset, 0);
+            track.style.transform = `translateX(${finalOffset}px)`;
+        }
+    }
+
+    function goNext() {
+        const maxIndex = isMobile
+            ? totalItems - 1
+            : Math.max(0, totalItems - itemsPerView);
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateTransform();
+        }
+    }
+
+    function goPrev() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateTransform();
+        }
+    }
+
+    const prevBtn = controls?.querySelector('.carousel-prev');
+    const nextBtn = controls?.querySelector('.carousel-next');
+
     if (prevBtn) {
         const newPrev = prevBtn.cloneNode(true);
         prevBtn.parentNode.replaceChild(newPrev, prevBtn);
-        prevBtn = newPrev;
-
-        prevBtn.addEventListener('click', () => {
-            let newIndex = currentIndex - 1;
-            if (newIndex < 0) newIndex = Math.max(0, items.length - visibleItems);
-            moveTo(newIndex);
-        });
+        newPrev.addEventListener('click', goPrev);
     }
-
     if (nextBtn) {
         const newNext = nextBtn.cloneNode(true);
         nextBtn.parentNode.replaceChild(newNext, nextBtn);
-        nextBtn = newNext;
-
-        nextBtn.addEventListener('click', () => {
-            let newIndex = currentIndex + 1;
-            const maxIndex = Math.max(0, items.length - visibleItems);
-            if (newIndex > maxIndex) newIndex = 0;
-            moveTo(newIndex);
-        });
+        newNext.addEventListener('click', goNext);
     }
 
-    window.addEventListener('resize', () => {
-        updateCarousel();
-    });
+    window.addEventListener('resize', updateDimensions);
+    updateDimensions();
+}
 
-    updateCarousel();
+// Carrusel responsive para actividades/expositores - opera sobre HTML ya renderizado
+export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId, cardWidth = 280, autoPlayMs = 0) {
+    const wrapper = document.getElementById(wrapperId);
+    const track = document.getElementById(trackId);
+    const prevBtn = document.getElementById(prevBtnId);
+    const nextBtn = document.getElementById(nextBtnId);
+    if (!track || !wrapper) return;
+
+    const totalItems = track.children.length;
+    if (totalItems === 0) return;
+
+    let currentIndex = 0;
+    let itemsVisible = 1;
+    let step = 0;
+    let maxIndex = 0;
+
+    function updateDimensions() {
+        const viewportWidth = wrapper.clientWidth;
+
+        // Cuántas cards caben en el viewport
+        itemsVisible = Math.max(1, Math.floor(viewportWidth / cardWidth));
+
+        // Con items visibles calculados, el step es el ancho de una card
+        const firstCard = track.children[0];
+        if (!firstCard) return;
+
+        const trackStyle = window.getComputedStyle(track);
+        const gap = parseFloat(trackStyle.gap || trackStyle.columnGap) || 0;
+        step = firstCard.offsetWidth + gap;
+
+        maxIndex = Math.max(0, totalItems - itemsVisible);
+        if (currentIndex > maxIndex) currentIndex = maxIndex;
+
+        // Mostrar/ocultar botones
+        if (prevBtn) prevBtn.style.display = totalItems > itemsVisible ? 'flex' : 'none';
+        if (nextBtn) nextBtn.style.display = totalItems > itemsVisible ? 'flex' : 'none';
+
+        updateTransform();
+    }
+
+    function updateTransform() {
+        track.style.transform = `translateX(${-(currentIndex * step)}px)`;
+    }
+
+    function goNext() {
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateTransform();
+        }
+    }
+
+    function goPrev() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateTransform();
+        }
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', goPrev);
+    if (nextBtn) nextBtn.addEventListener('click', goNext);
+
+    window.addEventListener('resize', updateDimensions);
+    updateDimensions();
+
+    // Autoplay opcional
+    if (autoPlayMs > 0) {
+        setInterval(() => {
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            updateTransform();
+        }, autoPlayMs);
+    }
 }

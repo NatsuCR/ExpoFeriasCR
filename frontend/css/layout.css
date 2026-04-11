@@ -1,3 +1,48 @@
+/* ========== VARIABLES ========== */
+:root {
+    --color-primary: #C8102E;
+    --color-secondary: #0033A0;
+    --color-accent: #F7C600;
+    --color-bg-light: #FFF5E6;
+    --color-bg-card: #FFFFFF;
+    --color-text-dark: #2c1a0e;
+    --color-text-muted: #5c3b1f;
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Roboto', sans-serif;
+    --shadow-sm: 0 5px 15px rgba(0,0,0,0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--evento-fondo, linear-gradient(145deg, #FFF5E6 0%, #FFE8CC 100%));
+    color: var(--color-text-dark);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 900;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ========== NAVBAR ========== */
 .navbar {
     background-color: var(--color-primary);
     padding: 1rem 0;
@@ -6,41 +51,56 @@
     z-index: 1000;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
+
 .navbar .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
 }
+
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
 .logo img {
     height: 50px;
     width: auto;
 }
+
 .logo span {
     font-size: 1.5rem;
     font-weight: bold;
     color: white;
 }
+
 .nav-links {
     display: flex;
     list-style: none;
     gap: 1.5rem;
 }
+
 .nav-links a {
+    display: inline-block;
+    border-radius: 30px;
+    padding: 0.5rem 1.2rem;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.15);
     color: white;
     text-decoration: none;
     font-weight: bold;
-    transition: var(--transition);
-}
-.nav-links a:hover {
-    color: var(--color-accent);
+    margin: 0 2px;
 }
 
+.nav-links a:hover {
+    background-color: #F7C600;
+    color: #2c1a0e;
+    transform: translateY(-2px);
+}
+
+/* ========== HERO ========== */
 .hero {
     background: linear-gradient(135deg, rgba(200,16,46,0.85) 0%, rgba(0,51,160,0.85) 100%), url('../assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasHEROCR1.png');
     background-size: cover;
@@ -49,21 +109,24 @@
     color: white;
     padding: 5rem 0;
 }
+
 .hero h1 {
     font-size: 2.8rem;
     margin-bottom: 1rem;
 }
+
 .hero p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
 }
 
-/* Secciones de carrusel con fondo semitransparente para que se vea el gradiente del body */
+/* ========== SECTIONS ========== */
 .section-carousel {
     padding: 3rem 0;
     background-color: rgba(255, 245, 230, 0.9);
     backdrop-filter: blur(1px);
 }
+
 .section-carousel:nth-child(even) {
     background-color: rgba(255, 249, 239, 0.9);
 }
@@ -72,11 +135,13 @@
     background-color: rgba(255, 249, 239, 0.95);
     padding: 3rem 0;
 }
+
 .contacto {
     background-color: rgba(255, 249, 239, 0.95);
     text-align: center;
     padding: 3rem 0;
 }
+
 footer {
     background-color: var(--color-secondary);
     color: white;
@@ -84,14 +149,17 @@ footer {
     padding: 1.5rem 0;
 }
 
+/* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
     .navbar .container {
         flex-direction: column;
         gap: 1rem;
     }
+
     .hero h1 {
         font-size: 2rem;
     }
+
     .hero p {
         font-size: 1rem;
     }

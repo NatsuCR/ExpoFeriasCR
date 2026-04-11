@@ -16,19 +16,22 @@ export async function cargarExpositores(slug) {
 
         let html = '';
         expositores.forEach(e => {
-            const imagenHtml = e.imagenLogo ? `<img src="${e.imagenLogo}" alt="${e.nombre}">` : '';
-            const videoHtml = e.videoUrl ? `<video controls src="${e.videoUrl}" style="width:100%; max-height:200px; margin-top:1rem;"></video>` : '';
-            html += `
-                <div class="expositor-card">
-                    ${imagenHtml}
-                    <h3>${e.nombre}</h3>
-                    <p><strong>Rubro:</strong> ${e.rubro}</p>
-                    <p>${e.descripcion || ''}</p>
-                    <p><strong>Ubicación:</strong> ${e.ubicacion || 'Por definir'}</p>
-                    ${videoHtml}
-                </div>
-            `;
-        });
+    const imagenHtml = e.imagenLogo ? `<img src="${e.imagenLogo}" alt="${e.nombre}">` : '';
+    const videoHtml = e.videoUrl ? `<video controls src="${e.videoUrl}" style="width:100%; max-height:200px; margin-top:1rem;"></video>` : '';
+    const descripcion = e.descripcion || '';
+
+    html += `
+        <div class="expositor-card">
+            ${imagenHtml}
+            <h3>${e.nombre}</h3>
+            <p><strong>Rubro:</strong> ${e.rubro}</p>
+            <p class="descripcion-texto">${descripcion}</p>
+            ${descripcion.length > 150 ? `<button class="btn-ver-mas" onclick="this.closest('.expositor-card').classList.toggle('expandida'); this.textContent = this.closest('.expositor-card').classList.contains('expandida') ? 'Ver menos ▲' : 'Ver más ▼'">Ver más ▼</button>` : ''}
+            <p><strong>Ubicación:</strong> ${e.ubicacion || 'Por definir'}</p>
+            ${videoHtml}
+        </div>
+    `;
+});
         container.innerHTML = html;
 
         initResponsiveCarousel('expositoresWrapper', 'expositoresGrid', 'expositoresPrev', 'expositoresNext', 280, 10000);

@@ -42,17 +42,18 @@ export async function cargarActividades(slug) {
                 gratisHtml = '<p><strong>Evento gratuito</strong></p>';
             }
 
-            html += `
-                <div class="actividad-card">
-                    ${imagen}
-                    <h3>${a.titulo}</h3>
-                    <p><i class="fas fa-calendar-day"></i> ${fecha} ${hora}</p>
-                    <p><i class="fas fa-map-pin"></i> ${lugar}</p>
-                    <p>${descripcion}</p>
-                    ${linkHtml}
-                    ${gratisHtml}
-                </div>
-            `;
+html += `
+    <div class="actividad-card">
+        ${imagen}
+        <h3>${a.titulo}</h3>
+        <p><i class="fas fa-calendar-day"></i> ${fecha} ${hora}</p>
+        <p><i class="fas fa-map-pin"></i> ${lugar}</p>
+        <p class="descripcion-texto">${descripcion}</p>
+        ${descripcion.length > 150 ? `<button class="btn-ver-mas" onclick="this.closest('.actividad-card').classList.toggle('expandida'); this.textContent = this.closest('.actividad-card').classList.contains('expandida') ? 'Ver menos ▲' : 'Ver más ▼'">Ver más ▼</button>` : ''}
+        ${linkHtml}
+        ${gratisHtml}
+    </div>
+`;
         });
         container.innerHTML = html;
 

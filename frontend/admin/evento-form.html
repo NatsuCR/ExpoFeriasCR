@@ -21,7 +21,7 @@
             <button class="tab-btn" data-tab="galeria">Galería</button>
         </div>
 
-        <!-- Pestaña Datos Básicos -->
+        <!-- ==================== PESTAÑA DATOS BÁSICOS ==================== -->
         <div id="basicos" class="tab-pane active">
             <form id="formBasicos">
                 <div class="form-row">
@@ -48,7 +48,7 @@
                 </div>
                 <div class="form-group"><label>Ubicación</label><input type="text" id="ubicacion"></div>
 
-                <!-- Imagen Portada con botón de carga -->
+                <!-- Imagen Portada -->
                 <div class="form-group">
                     <label>Imagen Portada (URL)</label>
                     <div style="display: flex; gap: 0.5rem;">
@@ -57,7 +57,7 @@
                     </div>
                 </div>
 
-                <!-- Imagen Horario con botón de carga -->
+                <!-- Imagen Horario -->
                 <div class="form-group">
                     <label>Imagen Horario (URL)</label>
                     <div style="display: flex; gap: 0.5rem;">
@@ -116,53 +116,61 @@
             </form>
         </div>
 
-        <!-- Pestaña Precios -->
+        <!-- ==================== PESTAÑA PRECIOS ==================== -->
         <div id="precios" class="tab-pane">
             <h3>Precios por día</h3>
             <button id="btnAgregarPrecio" class="btn btn-primary">+ Agregar Precio</button>
             <table class="data-table">
-                <thead><tr><th>Fecha</th><th>Precio (₡)</th><th>Promoción</th><th>Descripción</th><th>Acciones</th></tr></thead>
+                <thead>
+                    <tr><th>Fecha</th><th>Precio (₡)</th><th>Promoción</th><th>Descripción</th><th>Acciones</th></tr>
+                </thead>
                 <tbody id="tbodyPrecios"></tbody>
             </table>
         </div>
 
-        <!-- Pestaña Actividades -->
+        <!-- ==================== PESTAÑA ACTIVIDADES ==================== -->
         <div id="actividades" class="tab-pane">
             <h3>Actividades</h3>
             <button id="btnAgregarActividad" class="btn btn-primary">+ Agregar Actividad</button>
             <table class="data-table">
-                <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imagen</th><th>Acciones</th><tr></thead>
+                <thead>
+                    <tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imagen</th><th>Acciones</th></tr>
+                </thead>
                 <tbody id="tbodyActividades"></tbody>
             </table>
         </div>
 
-        <!-- Pestaña Expositores -->
+        <!-- ==================== PESTAÑA EXPOSITORES ==================== -->
         <div id="expositores" class="tab-pane">
             <h3>Expositores</h3>
             <button id="btnAgregarExpositor" class="btn btn-primary">+ Agregar Expositor</button>
             <table class="data-table">
-                <thead><tr><th>Nombre</th><th>Rubro</th><th>Descripción</th><th>Ubicación</th><th>Logo</th><th>Video</th><th>Acciones</th></tr></thead>
+                <thead>
+                    <tr><th>Nombre</th><th>Rubro</th><th>Descripción</th><th>Ubicación</th><th>Logo</th><th>Video</th><th>Acciones</th></tr>
+                </thead>
                 <tbody id="tbodyExpositores"></tbody>
-            <tr>
+            </table>
         </div>
 
-        <!-- Pestaña Galería -->
+        <!-- ==================== PESTAÑA GALERÍA ==================== -->
         <div id="galeria" class="tab-pane">
             <h3>Imágenes para el carrusel de fondo</h3>
             <button id="btnAgregarImagen" class="btn btn-primary">+ Agregar Imagen</button>
             <table class="data-table">
-                <thead><tr><th>URL Imagen</th><th>Orden</th><th>Acciones</th></tr></thead>
+                <thead>
+                    <tr><th>URL Imagen</th><th>Orden</th><th>Acciones</th></tr>
+                </thead>
                 <tbody id="tbodyGaleria"></tbody>
             </table>
         </div>
 
-        <!-- Botón Guardar Evento -->
+        <!-- Botón Guardar Evento (visible en todas las pestañas) -->
         <div style="text-align: right; margin-top: 2rem;">
             <button type="button" id="guardarBasicos" class="btn btn-success">Guardar Evento</button>
         </div>
     </div>
 
-    <!-- MODALES -->
+    <!-- ==================== MODALES ==================== -->
     <!-- Modal Precio -->
     <div id="modalPrecio" class="modal">
         <div class="modal-content">
@@ -251,7 +259,7 @@
         </div>
     </div>
 
-    <!-- Scripts modulares (7 archivos) -->
+    <!-- Scripts modulares -->
     <script src="../js/admin-common.js"></script>
     <script src="../js/admin-eventos-basicos.js"></script>
     <script src="../js/admin-precios.js"></script>

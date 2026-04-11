@@ -13,7 +13,9 @@ function abrirModalExpositor(expositor = null) {
     document.getElementById('modalExpositor').style.display = 'flex';
 }
 
-function cerrarModalExpositor() { document.getElementById('modalExpositor').style.display = 'none'; }
+function cerrarModalExpositor() {
+    document.getElementById('modalExpositor').style.display = 'none';
+}
 
 async function guardarExpositorModal() {
     const id = document.getElementById('expositorId').value;
@@ -44,9 +46,10 @@ async function guardarExpositorModal() {
 async function cargarExpositores() {
     if (!eventoId) return;
     const expositores = await fetchAPI(`/api/admin/eventos/${eventoId}/expositores`);
-    const tbody = document.getElementById('tbodyExpositores');
+    const tbody = document.getElementById('tbodyExpositores'); // ← ID correcto
+    if (!tbody) return;
     if (expositores.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7">No hay expositores registrados.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7">No hay expositores registrados.学ﬂ学ﬂ';
         return;
     }
     let html = '';

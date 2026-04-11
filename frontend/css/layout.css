@@ -42,7 +42,7 @@
 }
 
 .hero {
-    background: linear-gradient(135deg, rgba(200,16,46,0.85) 0%, rgba(0,51,160,0.85) 100%), url('../assets/images/ExpoSanCarlos2026/campo-ferial.jpg');
+    background: linear-gradient(135deg, rgba(200,16,46,0.85) 0%, rgba(0,51,160,0.85) 100%), url('../assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasHEROCR1.png');
     background-size: cover;
     background-position: center;
     text-align: center;

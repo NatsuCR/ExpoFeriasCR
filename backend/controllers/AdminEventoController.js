@@ -33,7 +33,8 @@ class AdminEventoController {
       color_titulo_seccion, provincia,
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
-      color_fondo_footer, color_texto_footer
+      color_fondo_footer, color_texto_footer,
+      color_titulo_h3
     } = req.body;
 
     const values = [
@@ -63,7 +64,8 @@ class AdminEventoController {
       color_texto_contacto || '#2c1a0e',
       color_enlace_contacto || '#8b5a2b',
       color_fondo_footer || '#8b5a2b',
-      color_texto_footer || '#ffffff'
+      color_texto_footer || '#ffffff',
+      color_titulo_h3 || '#2c1a0e'
     ];
 
     const query = `
@@ -76,7 +78,8 @@ class AdminEventoController {
         color_titulo_seccion, provincia,
         color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
         color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
-        color_fondo_footer, color_texto_footer
+        color_fondo_footer, color_texto_footer,
+        color_titulo_h3
       ) VALUES (${values.map(() => '?').join(', ')})
     `;
 
@@ -101,7 +104,8 @@ class AdminEventoController {
       color_titulo_seccion, provincia,
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
-      color_fondo_footer, color_texto_footer
+      color_fondo_footer, color_texto_footer,
+      color_titulo_h3
     } = req.body;
 
     try {
@@ -116,6 +120,7 @@ class AdminEventoController {
           color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
           color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
           color_fondo_footer = ?, color_texto_footer = ?,
+          color_titulo_h3 = ?,
           updated_at = NOW()
         WHERE id = ?`,
         [
@@ -128,6 +133,7 @@ class AdminEventoController {
           color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
           color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
           color_fondo_footer, color_texto_footer,
+          color_titulo_h3,
           id
         ]
       );

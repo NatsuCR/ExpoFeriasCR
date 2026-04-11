@@ -9,6 +9,7 @@ class Evento {
     colorMenuFondo, colorMenuTexto, colorMenuFondoHover, colorMenuTextoHover,
     colorFondoContacto, colorTextoContacto, colorEnlaceContacto,
     colorFondoFooter, colorTextoFooter,
+    colorTituloH3,
     createdAt, updatedAt
   ) {
     this.id = id;
@@ -44,6 +45,7 @@ class Evento {
     this.colorEnlaceContacto = colorEnlaceContacto;
     this.colorFondoFooter = colorFondoFooter;
     this.colorTextoFooter = colorTextoFooter;
+    this.colorTituloH3 = colorTituloH3;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -64,6 +66,7 @@ class Evento {
       row.color_menu_fondo_hover, row.color_menu_texto_hover,
       row.color_fondo_contacto, row.color_texto_contacto, row.color_enlace_contacto,
       row.color_fondo_footer, row.color_texto_footer,
+      row.color_titulo_h3,
       row.created_at, row.updated_at
     );
   }

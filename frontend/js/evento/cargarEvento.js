@@ -88,20 +88,15 @@ export async function cargarEvento(slug) {
         if (evento.colorMenuFondoHover) document.documentElement.style.setProperty('--color-menu-fondo-hover', evento.colorMenuFondoHover);
         if (evento.colorMenuTextoHover) document.documentElement.style.setProperty('--color-menu-texto-hover', evento.colorMenuTextoHover);
 
-        // ========== NUEVOS COLORES PARA CONTACTO Y FOOTER ==========
-        // Sección contacto
+        // Colores para contacto y footer (ya los tenías)
         const contactoSection = document.querySelector('.contacto');
         if (contactoSection) {
             if (evento.colorFondoContacto) contactoSection.style.backgroundColor = evento.colorFondoContacto;
             if (evento.colorTextoContacto) contactoSection.style.color = evento.colorTextoContacto;
         }
         if (evento.colorEnlaceContacto) {
-            document.querySelectorAll('.contacto a').forEach(enlace => {
-                enlace.style.color = evento.colorEnlaceContacto;
-            });
+            document.querySelectorAll('.contacto a').forEach(enlace => enlace.style.color = evento.colorEnlaceContacto);
         }
-
-        // Footer
         const footer = document.querySelector('footer');
         if (footer) {
             if (evento.colorFondoFooter) footer.style.backgroundColor = evento.colorFondoFooter;
@@ -109,6 +104,13 @@ export async function cargarEvento(slug) {
                 footer.style.color = evento.colorTextoFooter;
                 footer.querySelectorAll('p').forEach(p => p.style.color = evento.colorTextoFooter);
             }
+        }
+
+        // ========== NUEVO: Color para los títulos h3 (dentro de .info-card, .actividad-card, .expositor-card) ==========
+        if (evento.colorTituloH3) {
+            document.querySelectorAll('.info-card h3, .actividad-card h3, .expositor-card h3').forEach(h3 => {
+                h3.style.color = evento.colorTituloH3;
+            });
         }
 
     } catch (err) {

@@ -62,39 +62,40 @@
                     <label>URL para compra en línea</label>
                     <input type="url" id="url_venta_online" placeholder="https://...">
                 </div>
+
+                <!-- Sección de colores (organizada en filas) -->
                 <div class="form-row">
                     <div class="form-group"><label>Color Primario</label><input type="color" id="color_primario" value="#8b5a2b"></div>
                     <div class="form-group"><label>Color Secundario</label><input type="color" id="color_secundario" value="#d4a373"></div>
                     <div class="form-group"><label>Color Fondo</label><input type="color" id="color_fondo" value="#f4e4c1"></div>
                     <div class="form-group"><label>Color Texto</label><input type="color" id="color_texto" value="#2c1a0e"></div>
                     <div class="form-group"><label>Overlay Hero (rgba)</label><input type="text" id="color_hero_overlay" placeholder="rgba(62,42,31,0.7)"></div>
-                    <div class="form-group"><label>Color Título Sección (h2)</label><input type="color" id="color_titulo_seccion" value="#2c1a0e"></div>
                 </div>
                 <div class="form-row">
+                    <div class="form-group"><label>Color Título Sección (h2)</label><input type="color" id="color_titulo_seccion" value="#2c1a0e"></div>
                     <div class="form-group"><label>Color Título Hero</label><input type="color" id="color_titulo_hero" value="#FFFFFF"></div>
                     <div class="form-group"><label>Color Descripción Hero</label><input type="color" id="color_descripcion_hero" value="#FFFFFF"></div>
                     <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#d4a373"></div>
                     <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#8b5a2b"></div>
+                </div>
+                <div class="form-row">
                     <div class="form-group"><label>Color fondo botones menú</label><input type="color" id="color_menu_fondo" value="#ffffff"></div>
                     <div class="form-group"><label>Color texto botones menú</label><input type="color" id="color_menu_texto" value="#ffffff"></div>
                     <div class="form-group"><label>Color fondo hover (opcional)</label><input type="color" id="color_menu_fondo_hover"></div>
                     <div class="form-group"><label>Color texto hover (opcional)</label><input type="color" id="color_menu_texto_hover"></div>
-                    <div class="form-row">
+                    <div class="form-group"><label>Color Título H3 (tarjetas info)</label><input type="color" id="color_titulo_h3" value="#2c1a0e"></div>
+                </div>
+                <div class="form-row">
                     <div class="form-group"><label>Color fondo contacto</label><input type="color" id="color_fondo_contacto" value="#f4e4c1"></div>
                     <div class="form-group"><label>Color texto contacto</label><input type="color" id="color_texto_contacto" value="#2c1a0e"></div>
                     <div class="form-group"><label>Color enlace contacto</label><input type="color" id="color_enlace_contacto" value="#8b5a2b"></div>
-                     
-<div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
-    <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
-<div class="form-group"><label><input type="checkbox" id="activo" checked> Activo</label></div>       
-                </div>              
-
-    
-                    
+                    <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
+                    <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
                 </div>
-                
+                <div class="form-group">
+                    <label><input type="checkbox" id="activo" checked> Activo</label>
+                </div>
             </form>
-            
         </div>
 
         <!-- Pestaña Precios -->
@@ -102,9 +103,7 @@
             <h3>Precios por día</h3>
             <button id="btnAgregarPrecio" class="btn btn-primary">+ Agregar Precio</button>
             <table class="data-table">
-                <thead>
-                    <tr><th>Fecha</th><th>Precio (₡)</th><th>Promoción</th><th>Descripción</th><th>Acciones</th></tr>
-                </thead>
+                <thead><tr><th>Fecha</th><th>Precio (₡)</th><th>Promoción</th><th>Descripción</th><th>Acciones</th></tr></thead>
                 <tbody id="tbodyPrecios"></tbody>
             </table>
         </div>
@@ -114,9 +113,7 @@
             <h3>Actividades</h3>
             <button id="btnAgregarActividad" class="btn btn-primary">+ Agregar Actividad</button>
             <table class="data-table">
-                <thead>
-                    <tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imagen</th><th>Acciones</th></tr>
-                </thead>
+                <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imagen</th><th>Acciones</th></tr></thead>
                 <tbody id="tbodyActividades"></tbody>
             </table>
         </div>
@@ -126,9 +123,7 @@
             <h3>Expositores</h3>
             <button id="btnAgregarExpositor" class="btn btn-primary">+ Agregar Expositor</button>
             <table class="data-table">
-                <thead>
-                    <tr><th>Nombre</th><th>Rubro</th><th>Descripción</th><th>Ubicación</th><th>Logo</th><th>Video</th><th>Acciones</th></tr>
-                </thead>
+                <thead><tr><th>Nombre</th><th>Rubro</th><th>Descripción</th><th>Ubicación</th><th>Logo</th><th>Video</th><th>Acciones</th></tr></thead>
                 <tbody id="tbodyExpositores"></tbody>
             </table>
         </div>
@@ -138,20 +133,18 @@
             <h3>Imágenes para el carrusel de fondo</h3>
             <button id="btnAgregarImagen" class="btn btn-primary">+ Agregar Imagen</button>
             <table class="data-table">
-                <thead>
-                    <tr><th>URL Imagen</th><th>Orden</th><th>Acciones</th></tr>
-                </thead>
+                <thead><tr><th>URL Imagen</th><th>Orden</th><th>Acciones</th></tr></thead>
                 <tbody id="tbodyGaleria"></tbody>
             </table>
         </div>
 
-        <!-- Botón Guardar Evento -->
+        <!-- Botón Guardar Evento (visible en todas las pestañas) -->
         <div style="text-align: right; margin-top: 2rem;">
             <button type="button" id="guardarBasicos" class="btn btn-success">Guardar Evento</button>
         </div>
     </div>
 
-    <!-- Modales -->
+    <!-- Modales (idénticos a los que ya tenías, pero los incluyo por completitud) -->
     <!-- Modal Precio -->
     <div id="modalPrecio" class="modal">
         <div class="modal-content">

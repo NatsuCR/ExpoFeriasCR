@@ -13,8 +13,9 @@
     <div class="admin-container">
         <div class="dashboard-header">
             <h1>Panel de Administración</h1>
-            <div>
+            <div class="header-buttons">
                 <a href="usuarios.html" class="btn btn-secondary">Gestionar Usuarios</a>
+                <a href="stats.html" class="btn btn-primary">📊 Estadísticas</a>
                 <button id="btnLogout" class="btn-logout">Cerrar Sesión</button>
             </div>
         </div>
@@ -25,12 +26,12 @@
         </div>
 
         <div class="filtro-fechas">
-            <h3>Eliminar eventos por fecha</h3>
+            <h3>Eliminar eventos por rango de fechas</h3>
             <div class="date-range">
                 <input type="date" id="fecha_inicio_eliminar" placeholder="Fecha inicio">
-                <span>a</span>
+                <span>—</span>
                 <input type="date" id="fecha_fin_eliminar" placeholder="Fecha fin">
-                <button id="btnEliminarPorFecha" class="btn btn-warning">Eliminar eventos en rango</button>
+                <button id="btnEliminarPorFecha" class="btn btn-warning">Eliminar en rango</button>
             </div>
         </div>
 

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/admin-form.css">
     <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
-    <link rel="stylesheet" href="../css/admin-responsive.css">
 </head>
 <body class="admin-body">
     <div class="admin-container">
@@ -48,8 +47,25 @@
                     </select>
                 </div>
                 <div class="form-group"><label>Ubicación</label><input type="text" id="ubicacion"></div>
-                <div class="form-group"><label>Imagen Portada (URL)</label><input type="text" id="imagen_portada" placeholder="/assets/images/..."></div>
-                <div class="form-group"><label>Imagen Horario (URL)</label><input type="text" id="horario_imagen" placeholder="/assets/images/..."></div>
+
+                <!-- Imagen Portada con botón de carga -->
+                <div class="form-group">
+                    <label>Imagen Portada (URL)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="imagen_portada" placeholder="/assets/images/..." style="flex:1;">
+                        <button type="button" class="btn btn-secondary btn-upload" data-target="imagen_portada">📁 Subir</button>
+                    </div>
+                </div>
+
+                <!-- Imagen Horario con botón de carga -->
+                <div class="form-group">
+                    <label>Imagen Horario (URL)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="horario_imagen" placeholder="/assets/images/..." style="flex:1;">
+                        <button type="button" class="btn btn-secondary btn-upload" data-target="horario_imagen">📁 Subir</button>
+                    </div>
+                </div>
+
                 <div class="form-group"><label>Mapa Embed (código iframe)</label><textarea id="mapa_embed" rows="3"></textarea></div>
                 <div class="form-group">
                     <label>Tipo de venta de entradas</label>
@@ -64,7 +80,7 @@
                     <input type="url" id="url_venta_online" placeholder="https://...">
                 </div>
 
-                <!-- Sección de colores (organizada en filas) -->
+                <!-- Sección de colores -->
                 <div class="form-row">
                     <div class="form-group"><label>Color Primario</label><input type="color" id="color_primario" value="#8b5a2b"></div>
                     <div class="form-group"><label>Color Secundario</label><input type="color" id="color_secundario" value="#d4a373"></div>
@@ -93,6 +109,7 @@
                     <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
                     <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
                 </div>
+
                 <div class="form-group">
                     <label><input type="checkbox" id="activo" checked> Activo</label>
                 </div>
@@ -114,7 +131,7 @@
             <h3>Actividades</h3>
             <button id="btnAgregarActividad" class="btn btn-primary">+ Agregar Actividad</button>
             <table class="data-table">
-                <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imagen</th><th>Acciones</th></tr></thead>
+                <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imagen</th><th>Acciones</th><tr></thead>
                 <tbody id="tbodyActividades"></tbody>
             </table>
         </div>
@@ -126,7 +143,7 @@
             <table class="data-table">
                 <thead><tr><th>Nombre</th><th>Rubro</th><th>Descripción</th><th>Ubicación</th><th>Logo</th><th>Video</th><th>Acciones</th></tr></thead>
                 <tbody id="tbodyExpositores"></tbody>
-            </table>
+            <tr>
         </div>
 
         <!-- Pestaña Galería -->
@@ -139,13 +156,13 @@
             </table>
         </div>
 
-        <!-- Botón Guardar Evento (visible en todas las pestañas) -->
+        <!-- Botón Guardar Evento -->
         <div style="text-align: right; margin-top: 2rem;">
             <button type="button" id="guardarBasicos" class="btn btn-success">Guardar Evento</button>
         </div>
     </div>
 
-    <!-- Modales (idénticos a los que ya tenías, pero los incluyo por completitud) -->
+    <!-- MODALES -->
     <!-- Modal Precio -->
     <div id="modalPrecio" class="modal">
         <div class="modal-content">
@@ -173,7 +190,13 @@
             <div class="form-group"><label>Hora</label><input type="time" id="actividadHora" class="form-control"></div>
             <div class="form-group"><label>Lugar</label><input type="text" id="actividadLugar" class="form-control"></div>
             <div class="form-group"><label>Descripción</label><textarea id="actividadDescripcion" class="form-control" rows="2"></textarea></div>
-            <div class="form-group"><label>Imagen (URL)</label><input type="text" id="actividadImagen" class="form-control"></div>
+            <div class="form-group">
+                <label>Imagen (URL)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="actividadImagen" class="form-control" style="flex:1;">
+                    <button type="button" class="btn btn-secondary btn-upload" data-target="actividadImagen">📁 Subir</button>
+                </div>
+            </div>
             <div class="form-group"><label><input type="checkbox" id="actividadRequiereOnline"> Requiere entrada online</label></div>
             <div class="form-group" id="actividadEnlaceGroup" style="display:none;"><label>Enlace de venta</label><input type="url" id="actividadEnlaceVenta" class="form-control"></div>
             <div class="form-group"><label><input type="checkbox" id="actividadEsGratis"> Es gratuito</label></div>
@@ -193,7 +216,13 @@
             <div class="form-group"><label>Rubro</label><input type="text" id="expositorRubro" class="form-control"></div>
             <div class="form-group"><label>Descripción</label><textarea id="expositorDescripcion" class="form-control" rows="2"></textarea></div>
             <div class="form-group"><label>Ubicación (stand, toldo)</label><input type="text" id="expositorUbicacion" class="form-control"></div>
-            <div class="form-group"><label>Logo URL</label><input type="text" id="expositorLogo" class="form-control"></div>
+            <div class="form-group">
+                <label>Logo URL</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="expositorLogo" class="form-control" style="flex:1;">
+                    <button type="button" class="btn btn-secondary btn-upload" data-target="expositorLogo">📁 Subir</button>
+                </div>
+            </div>
             <div class="form-group"><label>Video URL (opcional)</label><input type="text" id="expositorVideo" class="form-control"></div>
             <div class="modal-buttons">
                 <button id="guardarExpositorBtn" class="btn btn-success">Guardar</button>
@@ -207,7 +236,13 @@
         <div class="modal-content">
             <h3 id="modalGaleriaTitulo">Agregar Imagen</h3>
             <input type="hidden" id="galeriaId">
-            <div class="form-group"><label>URL de la imagen</label><input type="text" id="galeriaUrl" class="form-control"></div>
+            <div class="form-group">
+                <label>URL de la imagen</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="galeriaUrl" class="form-control" style="flex:1;">
+                    <button type="button" class="btn btn-secondary btn-upload" data-target="galeriaUrl">📁 Subir</button>
+                </div>
+            </div>
             <div class="form-group"><label>Orden</label><input type="number" id="galeriaOrden" class="form-control" value="0"></div>
             <div class="modal-buttons">
                 <button id="guardarGaleriaBtn" class="btn btn-success">Guardar</button>
@@ -216,7 +251,13 @@
         </div>
     </div>
 
-    <script src="../js/admin-evento-form.js"></script>
-    <script src="../js/admin-inactivity.js"></script>
+    <!-- Scripts modulares (7 archivos) -->
+    <script src="../js/admin-common.js"></script>
+    <script src="../js/admin-eventos-basicos.js"></script>
+    <script src="../js/admin-precios.js"></script>
+    <script src="../js/admin-actividades.js"></script>
+    <script src="../js/admin-expositores.js"></script>
+    <script src="../js/admin-galeria.js"></script>
+    <script src="../js/admin-init.js"></script>
 </body>
 </html>

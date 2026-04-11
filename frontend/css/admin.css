@@ -284,3 +284,16 @@ body.admin-body {
     border-radius: 4px;
     cursor: pointer;
 }
+
+.btn-volver {
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+}
+.btn-volver:hover {
+    background-color: #5a6268;
+}

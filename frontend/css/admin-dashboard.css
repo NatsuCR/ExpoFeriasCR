@@ -91,3 +91,23 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+/* admin-dashboard.css (añadir al final) */
+.btn-logout {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+.btn-logout:hover {
+    background-color: #c82333;
+}
+.header-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}

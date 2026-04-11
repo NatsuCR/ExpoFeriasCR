@@ -68,3 +68,61 @@
         padding: 4px;
     }
 }
+
+
+/* ============================================
+   Responsive para botones < > (carruseles)
+   ============================================ */
+
+/* Botones del carrusel del hero */
+@media (max-width: 768px) {
+    .hero-carrusel-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+        padding: 0.2rem;
+    }
+    .hero-carrusel-btn.prev {
+        left: 10px;
+    }
+    .hero-carrusel-btn.next {
+        right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-carrusel-btn {
+        width: 25px;
+        height: 25px;
+        font-size: 1rem;
+    }
+}
+
+/* Botones de actividades y expositores */
+@media (max-width: 768px) {
+    .actividades-btn,
+    .expositores-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+        padding: 0;
+        background-color: rgba(0,0,0,0.6);
+    }
+    .actividades-btn.prev,
+    .expositores-btn.prev {
+        left: 5px;
+    }
+    .actividades-btn.next,
+    .expositores-btn.next {
+        right: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .actividades-btn,
+    .expositores-btn {
+        width: 25px;
+        height: 25px;
+        font-size: 1rem;
+    }
+}

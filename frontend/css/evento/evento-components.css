@@ -127,14 +127,17 @@
 .actividades-carrusel-track, .expositores-carrusel-track {
     display: flex;
     transition: transform 0.5s ease-in-out;
+    gap: 1rem;
 }
 
 .actividades-carrusel-track .actividad-card,
 .expositores-carrusel-track .expositor-card {
-    min-width: calc(100% / 3);
+    min-width: calc(100% - 2rem) / 3;
     box-sizing: border-box;
     padding: 1rem;
 }
+
+
 .actividades-btn, .expositores-btn {
     display: none;
     position: absolute;

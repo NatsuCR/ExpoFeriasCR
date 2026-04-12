@@ -211,18 +211,18 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: left;
-    word-break: break-word; /* evita que texto largo se desborde */
-    width: 100%; /* forzar que use el ancho de la card */
+    text-align: center;
+    word-break: break-word;
+    width: 100%;
 }
 
 .actividad-card.expandida .descripcion-texto,
 .expositor-card.expandida .descripcion-texto {
-    display: block; /* cambiar de -webkit-box a block al expandir */
+    display: block;
     -webkit-line-clamp: unset;
     line-clamp: unset;
     overflow: visible;
-    text-align: left;
+    text-align: center;
     word-break: break-word;
 }
 

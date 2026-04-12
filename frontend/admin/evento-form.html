@@ -12,7 +12,13 @@
     <div class="admin-container">
         <h1 id="formTitle">Crear Nuevo Evento</h1>
         <div id="globalMessage" class="message"></div>
-        <a href="dashboard.html" class="btn btn-volver">← Volver al Dashboard</a>
+        <div class="topbar">
+            <a href="dashboard.html" class="btn btn-volver">← Volver al Dashboard</a>
+            <button id="btnTogglePreview">👁 Vista previa</button>
+        </div>
+
+        <div id="formLayout">
+        <div id="formColumna">
         <div class="tabs">
             <button class="tab-btn active" data-tab="basicos">Datos Básicos</button>
             <button class="tab-btn" data-tab="precios">Precios</button>
@@ -164,13 +170,47 @@
             </table>
         </div>
 
-        <!-- Botón Guardar Evento (visible en todas las pestañas) -->
-        <div style="text-align: right; margin-top: 2rem;">
-            <button type="button" id="guardarBasicos" class="btn btn-success">Guardar Evento</button>
+        <!-- Barra de acciones -->
+        <div class="acciones-bar">
+            <span id="badgeEstadoEvento" class="badge-estado badge-borrador">🔴 No publicado</span>
+            <div class="acciones-botones">
+                <button type="button" id="guardarBasicos" class="btn btn-guardar-preview">
+                    💾 Guardar vista previa
+                </button>
+                <button type="button" id="btnPublicar" class="btn btn-publicar">
+                    🚀 Publicar evento
+                </button>
+            </div>
         </div>
+        </div><!-- /formColumna -->
+
+        <!-- ==================== PANEL VISTA PREVIA ==================== -->
+        <div id="previewPanel">
+            <div class="preview-header">
+                <span><div class="preview-dot"></div> Vista Previa</span>
+                <div class="preview-url-bar" id="previewUrlBar">Guarda el evento para ver la preview</div>
+                <button class="preview-reload-btn" id="btnReloadPreview" title="Recargar">↺</button>
+            </div>
+            <iframe id="previewIframe" src="about:blank"></iframe>
+        </div>
+
+        </div><!-- /formLayout -->
     </div>
 
     <!-- ==================== MODALES ==================== -->
+    <!-- Modal Confirmación Publicar -->
+    <div id="modalConfirmarPublicar" class="modal">
+        <div class="modal-content modal-confirmar">
+            <div class="confirmar-icon">🚀</div>
+            <h3>¿Publicar este evento?</h3>
+            <p>El evento quedará <strong>visible al público</strong> en ExpoFeriasCR. Asegúrate de que la vista previa luce exactamente como quieres.</p>
+            <div class="modal-buttons">
+                <button id="btnConfirmarPublicar" class="btn btn-publicar">✅ Sí, publicar ahora</button>
+                <button id="btnCancelarPublicar" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Precio -->
     <div id="modalPrecio" class="modal">
         <div class="modal-content">
@@ -269,5 +309,41 @@
     <script src="../js/admin-expositores.js"></script>
     <script src="../js/admin-galeria.js"></script>
     <script src="../js/admin-init.js"></script>
+    <script type="module">
+        import { initPreview, refrescarPreview } from '../js/admin-preview.js';
+        initPreview();
+        const btnGuardar = document.getElementById('guardarBasicos');
+        if (btnGuardar) {
+            btnGuardar.addEventListener('click', () => {
+                setTimeout(refrescarPreview, 1200);
+            });
+        }
+        document.getElementById('btnReloadPreview')?.addEventListener('click', refrescarPreview);
+    </script>
+
+    <script>
+        // Sincronizar color-preview y hex en tiempo real
+        document.querySelectorAll('.color-card').forEach(card => {
+            const input   = card.querySelector('.color-input');
+            const preview = card.querySelector('.color-preview');
+            const hexEl   = card.querySelector('.color-hex');
+            if (!input) return;
+
+            function sync() {
+                const val = input.value;
+                if (preview) preview.style.backgroundColor = val;
+                if (hexEl)   hexEl.textContent = val.toLowerCase();
+            }
+
+            // Hacer clic en la tarjeta abre el picker
+            card.addEventListener('click', (e) => {
+                if (e.target !== input) input.click();
+            });
+
+            input.addEventListener('input', sync);
+            input.addEventListener('change', sync);
+            sync(); // estado inicial
+        });
+    </script>
 </body>
 </html>

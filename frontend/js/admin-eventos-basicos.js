@@ -36,10 +36,25 @@ async function cargarDatosEvento() {
     document.getElementById('color_titulo_h3').value = evento.color_titulo_h3 || '#2c1a0e';
     document.getElementById('activo').checked = evento.activo;
     document.getElementById('formTitle').innerText = `Editando: ${evento.nombre}`;
+
+    // Actualizar badge de estado
+    actualizarBadgeEstado(evento.activo);
 }
 
-async function guardarBasicos() {
-    const data = {
+function actualizarBadgeEstado(activo) {
+    const badge = document.getElementById('badgeEstadoEvento');
+    if (!badge) return;
+    if (activo) {
+        badge.textContent = '🟢 Publicado';
+        badge.className = 'badge-estado badge-publicado';
+    } else {
+        badge.textContent = '🔴 No publicado';
+        badge.className = 'badge-estado badge-borrador';
+    }
+}
+
+function construirData(activoValue) {
+    return {
         slug: document.getElementById('slug').value.trim(),
         nombre: document.getElementById('nombre').value.trim(),
         descripcion: document.getElementById('descripcion').value,
@@ -72,8 +87,13 @@ async function guardarBasicos() {
         color_fondo_footer: document.getElementById('color_fondo_footer').value,
         color_texto_footer: document.getElementById('color_texto_footer').value,
         color_titulo_h3: document.getElementById('color_titulo_h3').value,
-        activo: document.getElementById('activo').checked
+        activo: activoValue
     };
+}
+
+// Guardar en borrador (activo: false) — para vista previa
+async function guardarBasicos() {
+    const data = construirData(false);
     if (!data.slug || !data.nombre) {
         mostrarMensaje('Slug y Nombre son obligatorios', 'error');
         return;
@@ -82,11 +102,11 @@ async function guardarBasicos() {
         let result;
         if (eventoId) {
             result = await fetchAPI(`/api/admin/eventos/${eventoId}`, { method: 'PUT', body: JSON.stringify(data) });
-            mostrarMensaje('Evento actualizado correctamente', 'success');
+            mostrarMensaje('Vista previa guardada. El evento sigue inactivo.', 'success');
         } else {
             result = await fetchAPI('/api/admin/eventos', { method: 'POST', body: JSON.stringify(data) });
             eventoId = result.id;
-            mostrarMensaje('Evento creado correctamente', 'success');
+            mostrarMensaje('Evento creado en borrador. Revisa la vista previa y luego publícalo.', 'success');
             window.history.pushState({}, '', `evento-form.html?id=${eventoId}`);
             document.getElementById('formTitle').innerText = `Editando: ${result.nombre}`;
             if (typeof cargarPrecios === 'function') cargarPrecios();
@@ -94,7 +114,33 @@ async function guardarBasicos() {
             if (typeof cargarExpositores === 'function') cargarExpositores();
             if (typeof cargarGaleria === 'function') cargarGaleria();
         }
+        actualizarBadgeEstado(false);
+        return true;
     } catch (err) {
         mostrarMensaje('Error al guardar el evento', 'error');
+        return false;
+    }
+}
+
+// Publicar evento (activo: true) — con confirmación
+async function publicarEvento() {
+    if (!eventoId) {
+        mostrarMensaje('Primero guarda la vista previa antes de publicar.', 'error');
+        return;
+    }
+    // Mostrar modal de confirmación
+    document.getElementById('modalConfirmarPublicar').style.display = 'flex';
+}
+
+async function confirmarPublicar() {
+    document.getElementById('modalConfirmarPublicar').style.display = 'none';
+    const data = construirData(true);
+    try {
+        await fetchAPI(`/api/admin/eventos/${eventoId}`, { method: 'PUT', body: JSON.stringify(data) });
+        actualizarBadgeEstado(true);
+        document.getElementById('activo').checked = true;
+        mostrarMensaje('✅ ¡Evento publicado correctamente! Ya es visible al público.', 'success');
+    } catch (err) {
+        mostrarMensaje('Error al publicar el evento', 'error');
     }
 }

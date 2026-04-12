@@ -17,6 +17,11 @@ function configurarTabs() {
 
 // Asignar eventos de los botones principales
 document.getElementById('guardarBasicos').addEventListener('click', guardarBasicos);
+document.getElementById('btnPublicar').addEventListener('click', publicarEvento);
+document.getElementById('btnConfirmarPublicar').addEventListener('click', confirmarPublicar);
+document.getElementById('btnCancelarPublicar').addEventListener('click', () => {
+    document.getElementById('modalConfirmarPublicar').style.display = 'none';
+});
 document.getElementById('btnAgregarPrecio').addEventListener('click', () => abrirModalPrecio());
 document.getElementById('guardarPrecioBtn').addEventListener('click', guardarPrecioModal);
 document.getElementById('cancelarPrecioBtn').addEventListener('click', cerrarModalPrecio);

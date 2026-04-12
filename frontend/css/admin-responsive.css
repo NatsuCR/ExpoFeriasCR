@@ -138,3 +138,12 @@
         font-size: 0.75rem;
     }
 }
+/* ── Responsive: secciones de resumen del dashboard ── */
+@media (max-width: 768px) {
+    .dashboard-sections {
+        grid-template-columns: 1fr;
+    }
+    .section-body {
+        max-height: 260px;
+    }
+}

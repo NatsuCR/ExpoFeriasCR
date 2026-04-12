@@ -53,6 +53,18 @@ class EventoController {
     }
   }
 
+  // Eventos finalizados
+  async obtenerFinalizados(req, res) {
+    try {
+      const { provincia } = req.query;
+      const eventos = await this.eventoService.obtenerEventosFinalizados(provincia || null);
+      res.json(eventos);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener eventos finalizados' });
+    }
+  }
+
   async obtenerPorSlug(req, res) {
     try {
       const { slug } = req.params;

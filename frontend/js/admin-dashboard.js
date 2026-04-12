@@ -5,13 +5,14 @@ if (!token) window.location.href = 'login.html';
 let eventosGlobal = [];
 
 // Elementos del DOM
-const btnLogout = document.getElementById('btnLogout');
-const btnCrearEvento = document.getElementById('btnCrearEvento');
-const btnEliminarSeleccionados = document.getElementById('btnEliminarSeleccionados');
-const btnEliminarPorFecha = document.getElementById('btnEliminarPorFecha');
-const listaEventosDiv = document.getElementById('listaEventos');
+const btnLogout                 = document.getElementById('btnLogout');
+const btnCrearEvento            = document.getElementById('btnCrearEvento');
+const btnEliminarSeleccionados  = document.getElementById('btnEliminarSeleccionados');
+const btnEliminarPorFecha       = document.getElementById('btnEliminarPorFecha');
+const listaEventosDiv           = document.getElementById('listaEventos');
 
-// Funciones auxiliares
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
 async function fetchAPI(url, options = {}) {
     const res = await fetch(url, {
         ...options,
@@ -24,51 +25,148 @@ async function fetchAPI(url, options = {}) {
     return res.json();
 }
 
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+}
+
+function formatFecha(isoStr) {
+    return new Date(isoStr).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function estadoEvento(e) {
+    const hoy   = new Date();
+    const ini   = new Date(e.fecha_inicio);
+    const fin   = new Date(e.fecha_fin);
+    if (hoy >= ini && hoy <= fin) return { label: 'En curso', cls: 'estado-activo' };
+    if (hoy < ini)                return { label: 'Próximo',  cls: 'estado-proximo' };
+    return                               { label: 'Finalizado', cls: 'estado-pasado' };
+}
+
+// ── Secciones de resumen ──────────────────────────────────────────────────────
+
+function renderRecientes(eventos) {
+    const contenedor = document.getElementById('listaRecientes');
+    const badge      = document.getElementById('badgeRecientes');
+
+    // Los más recientes = los últimos creados → ordenar por id desc y tomar 5
+    const recientes = [...eventos]
+        .sort((a, b) => b.id - a.id)
+        .slice(0, 5);
+
+    badge.textContent = recientes.length;
+
+    if (recientes.length === 0) {
+        contenedor.innerHTML = '<p class="section-empty">Sin eventos registrados.</p>';
+        return;
+    }
+
+    contenedor.innerHTML = recientes.map(e => {
+        const estado = estadoEvento(e);
+        return `
+        <div class="mini-evento">
+            <div class="reciente-dot"></div>
+            <div class="mini-evento-info">
+                <strong title="${escapeHtml(e.nombre)}">${escapeHtml(e.nombre)}
+                    <span class="estado-tag ${estado.cls}">${estado.label}</span>
+                </strong>
+                <span>${formatFecha(e.fecha_inicio)} → ${formatFecha(e.fecha_fin)}</span>
+            </div>
+            <button class="mini-edit-btn" onclick="editarEvento(${e.id})">Editar</button>
+        </div>`;
+    }).join('');
+}
+
+function renderCronologico(eventos) {
+    const contenedor = document.getElementById('listaCronologico');
+    const badge      = document.getElementById('badgeCronologico');
+
+    // Ordenar por fecha_inicio asc; si empatan, por fecha_fin asc
+    const ordenados = [...eventos].sort((a, b) => {
+        const diffIni = new Date(a.fecha_inicio) - new Date(b.fecha_inicio);
+        if (diffIni !== 0) return diffIni;
+        return new Date(a.fecha_fin) - new Date(b.fecha_fin);
+    });
+
+    badge.textContent = ordenados.length;
+
+    if (ordenados.length === 0) {
+        contenedor.innerHTML = '<p class="section-empty">Sin eventos registrados.</p>';
+        return;
+    }
+
+    contenedor.innerHTML = ordenados.map((e, i) => {
+        const estado = estadoEvento(e);
+        return `
+        <div class="mini-evento">
+            <div class="orden-badge">${i + 1}</div>
+            <div class="mini-evento-info">
+                <strong title="${escapeHtml(e.nombre)}">${escapeHtml(e.nombre)}
+                    <span class="estado-tag ${estado.cls}">${estado.label}</span>
+                </strong>
+                <span>${formatFecha(e.fecha_inicio)} → ${formatFecha(e.fecha_fin)}</span>
+            </div>
+            <button class="mini-edit-btn" onclick="editarEvento(${e.id})">Editar</button>
+        </div>`;
+    }).join('');
+}
+
+// ── Lista completa ────────────────────────────────────────────────────────────
+
 async function cargarEventos() {
     const eventos = await fetchAPI('/api/admin/eventos');
     eventosGlobal = eventos;
+
+    // Render de secciones de resumen
+    renderRecientes(eventos);
+    renderCronologico(eventos);
+
+    // Render de lista completa
     if (eventos.length === 0) {
         listaEventosDiv.innerHTML = '<p>No hay eventos registrados.</p>';
         return;
     }
+
     let html = '';
     eventos.forEach(e => {
+        const estado = estadoEvento(e);
         html += `
-            <div class="evento-item" data-id="${e.id}">
-                <div class="evento-info">
-                    <input type="checkbox" class="evento-check" data-id="${e.id}">
-                    <div class="evento-details">
-                        <strong>${escapeHtml(e.nombre)}</strong> (${e.slug})<br>
-                        ${new Date(e.fecha_inicio).toLocaleDateString()} al ${new Date(e.fecha_fin).toLocaleDateString()}<br>
-                        ${e.ubicacion}
-                    </div>
-                </div>
-                <div class="evento-actions">
-                    <button class="btn btn-warning btn-editar" data-id="${e.id}">Editar</button>
-                    <button class="btn btn-danger btn-eliminar" data-id="${e.id}">Eliminar</button>
+        <div class="evento-item" data-id="${e.id}">
+            <div class="evento-info">
+                <input type="checkbox" class="evento-check" data-id="${e.id}">
+                <div class="evento-details">
+                    <strong>${escapeHtml(e.nombre)}</strong>
+                    <span class="estado-tag ${estado.cls}">${estado.label}</span>
+                    <small style="color:#999"> (${e.slug})</small><br>
+                    ${formatFecha(e.fecha_inicio)} → ${formatFecha(e.fecha_fin)}<br>
+                    ${escapeHtml(e.ubicacion)}
                 </div>
             </div>
-        `;
+            <div class="evento-actions">
+                <button class="btn btn-warning btn-editar" data-id="${e.id}">Editar</button>
+                <button class="btn btn-danger btn-eliminar" data-id="${e.id}">Eliminar</button>
+            </div>
+        </div>`;
     });
     listaEventosDiv.innerHTML = html;
 
-    // Eventos de checkboxes
-    document.querySelectorAll('.evento-check').forEach(cb => {
-        cb.addEventListener('change', actualizarBotonEliminarSeleccionados);
-    });
-    // Botones editar/eliminar individuales
-    document.querySelectorAll('.btn-editar').forEach(btn => {
-        btn.addEventListener('click', () => editarEvento(btn.dataset.id));
-    });
-    document.querySelectorAll('.btn-eliminar').forEach(btn => {
-        btn.addEventListener('click', () => eliminarEvento(btn.dataset.id));
-    });
+    document.querySelectorAll('.evento-check').forEach(cb =>
+        cb.addEventListener('change', actualizarBotonEliminarSeleccionados)
+    );
+    document.querySelectorAll('.btn-editar').forEach(btn =>
+        btn.addEventListener('click', () => editarEvento(btn.dataset.id))
+    );
+    document.querySelectorAll('.btn-eliminar').forEach(btn =>
+        btn.addEventListener('click', () => eliminarEvento(btn.dataset.id))
+    );
     actualizarBotonEliminarSeleccionados();
 }
 
+// ── Acciones ─────────────────────────────────────────────────────────────────
+
 function actualizarBotonEliminarSeleccionados() {
-    const checkboxes = document.querySelectorAll('.evento-check:checked');
-    btnEliminarSeleccionados.disabled = checkboxes.length === 0;
+    const checks = document.querySelectorAll('.evento-check:checked');
+    btnEliminarSeleccionados.disabled = checks.length === 0;
 }
 
 async function eliminarEvento(id) {
@@ -79,70 +177,50 @@ async function eliminarEvento(id) {
 }
 
 async function eliminarSeleccionados() {
-    const checkboxes = document.querySelectorAll('.evento-check:checked');
-    const ids = Array.from(checkboxes).map(cb => cb.dataset.id);
+    const checks = document.querySelectorAll('.evento-check:checked');
+    const ids = Array.from(checks).map(cb => cb.dataset.id);
     if (ids.length === 0) return;
     if (confirm(`¿Eliminar ${ids.length} evento(s) seleccionados? Esta acción es irreversible.`)) {
-        for (const id of ids) {
-            await fetchAPI(`/api/admin/eventos/${id}`, { method: 'DELETE' });
-        }
+        for (const id of ids) await fetchAPI(`/api/admin/eventos/${id}`, { method: 'DELETE' });
         cargarEventos();
     }
 }
 
 async function eliminarPorFecha() {
     const fechaInicio = document.getElementById('fecha_inicio_eliminar').value;
-    const fechaFin = document.getElementById('fecha_fin_eliminar').value;
-    if (!fechaInicio || !fechaFin) {
-        alert('Seleccione ambas fechas (inicio y fin).');
-        return;
-    }
+    const fechaFin    = document.getElementById('fecha_fin_eliminar').value;
+    if (!fechaInicio || !fechaFin) { alert('Seleccione ambas fechas.'); return; }
+
     const eventosAEliminar = eventosGlobal.filter(e => {
-        const inicio = new Date(e.fecha_inicio);
+        const ini = new Date(e.fecha_inicio);
         const fin = new Date(e.fecha_fin);
-        const rangoInicio = new Date(fechaInicio);
-        const rangoFin = new Date(fechaFin);
-        return inicio >= rangoInicio && fin <= rangoFin;
+        return ini >= new Date(fechaInicio) && fin <= new Date(fechaFin);
     });
-    if (eventosAEliminar.length === 0) {
-        alert('No hay eventos en el rango de fechas seleccionado.');
-        return;
-    }
-    const confirmar = confirm(`Se eliminarán ${eventosAEliminar.length} evento(s) con fechas entre ${fechaInicio} y ${fechaFin}. ¿Continuar?`);
-    if (!confirmar) return;
-    for (const e of eventosAEliminar) {
+
+    if (eventosAEliminar.length === 0) { alert('No hay eventos en ese rango de fechas.'); return; }
+    if (!confirm(`Se eliminarán ${eventosAEliminar.length} evento(s). ¿Continuar?`)) return;
+
+    for (const e of eventosAEliminar)
         await fetchAPI(`/api/admin/eventos/${e.id}`, { method: 'DELETE' });
-    }
+
     cargarEventos();
     document.getElementById('fecha_inicio_eliminar').value = '';
-    document.getElementById('fecha_fin_eliminar').value = '';
+    document.getElementById('fecha_fin_eliminar').value    = '';
 }
 
 function editarEvento(id) {
     window.location.href = `evento-form.html?id=${id}`;
 }
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
+// ── Event listeners ───────────────────────────────────────────────────────────
 
-// Event listeners
 btnLogout.addEventListener('click', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     window.location.href = 'login.html';
 });
-btnCrearEvento.addEventListener('click', () => {
-    window.location.href = 'evento-form.html';
-});
+btnCrearEvento.addEventListener('click', () => { window.location.href = 'evento-form.html'; });
 btnEliminarSeleccionados.addEventListener('click', eliminarSeleccionados);
 btnEliminarPorFecha.addEventListener('click', eliminarPorFecha);
 
-// Cargar eventos al inicio
 cargarEventos();

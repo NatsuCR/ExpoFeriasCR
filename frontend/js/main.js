@@ -230,6 +230,35 @@ async function cargarProximos(provincia = '', termino = '') {
     initCarousel('carousel-proximos-track', cards, 'controls-proximos', 4);
 }
 
+async function cargarFinalizados(provincia = '', termino = '') {
+    let url = '/api/eventos/finalizados';
+    if (provincia) url += `?provincia=${encodeURIComponent(provincia)}`;
+    let eventos = await fetchData(url);
+
+    if (termino) {
+        const termLower = termino.toLowerCase();
+        eventos = eventos.filter(e => {
+            const enNombre    = e.nombre.toLowerCase().includes(termLower);
+            const enUbicacion = e.ubicacion.toLowerCase().includes(termLower);
+            const anioInicio  = new Date(e.fechaInicio).getFullYear().toString();
+            const enAnio      = anioInicio.includes(termLower);
+            return enNombre || enUbicacion || enAnio;
+        });
+    }
+
+    const track          = document.getElementById('carousel-finalizados-track');
+    const sectionElement = document.getElementById('eventos-finalizados');
+    if (!track) return;
+
+    if (eventos.length === 0) {
+        if (sectionElement) sectionElement.style.display = 'none';
+        return;
+    }
+    if (sectionElement) sectionElement.style.display = 'block';
+    const cards = eventos.map(e => createEventoCard(e, false));
+    initCarousel('carousel-finalizados-track', cards, 'controls-finalizados', 4);
+}
+
 async function realizarBusqueda() {
     const select = document.getElementById('provincia-select');
     const input = document.getElementById('buscador-principal');
@@ -242,6 +271,7 @@ async function realizarBusqueda() {
     await cargarSeccion('/api/eventos/hoy', 'carousel-hoy-track', 'controls-hoy', false, provincia, termino);
     await cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, provincia, termino);
     await cargarProximos(provincia, termino);
+    await cargarFinalizados(provincia, termino);
 }
 
 function configurarBuscadores() {
@@ -260,6 +290,7 @@ function configurarBuscadores() {
         cargarSeccion('/api/eventos/hoy', 'carousel-hoy-track', 'controls-hoy', false, '', '');
         cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, '', '');
         cargarProximos('', '');
+        cargarFinalizados('', '');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -276,6 +307,7 @@ function configurarBuscadores() {
                 cargarSeccion('/api/eventos/hoy', 'carousel-hoy-track', 'controls-hoy', false, provincia, '');
                 cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, provincia, '');
                 cargarProximos(provincia, '');
+                cargarFinalizados(provincia, '');
             }
         });
     }
@@ -291,5 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarSeccion('/api/eventos/hoy', 'carousel-hoy-track', 'controls-hoy', false, '', '');
     cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, '', '');
     cargarProximos('', '');
+    cargarFinalizados('', '');
     configurarBuscadores();
 });

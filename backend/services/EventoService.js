@@ -54,6 +54,19 @@ class EventoService {
     return rows.map(row => Evento.fromDatabase(row));
   }
 
+  // Obtiene eventos finalizados (fecha_fin anterior a hoy)
+  async obtenerEventosFinalizados(provincia = null) {
+    let query = `SELECT * FROM eventos WHERE activo = true AND fecha_fin < CURDATE()`;
+    const params = [];
+    if (provincia) {
+      query += ` AND provincia = ?`;
+      params.push(provincia);
+    }
+    query += ` ORDER BY fecha_fin DESC`;
+    const [rows] = await pool.query(query, params);
+    return rows.map(row => Evento.fromDatabase(row));
+  }
+
   async obtenerEventoPorSlug(slug) {
     const [rows] = await pool.query('SELECT * FROM eventos WHERE slug = ?', [slug]);
     if (rows.length === 0) return null;

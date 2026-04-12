@@ -120,23 +120,23 @@ export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId,
     const track = document.getElementById(trackId);
     const prevBtn = document.getElementById(prevBtnId);
     const nextBtn = document.getElementById(nextBtnId);
-    if (!track || !wrapper) return;
+    if (!track || !wrapper) return { detener: () => {}, reanudar: () => {} };
 
     const totalItems = track.children.length;
-    if (totalItems === 0) return;
+    if (totalItems === 0) return { detener: () => {}, reanudar: () => {} };
 
     let currentIndex = 0;
     let itemsVisible = 1;
     let step = 0;
     let maxIndex = 0;
+    let intervalo = null;
+    const autoPlayEnabled = autoPlayMs > 0;
 
     function updateDimensions() {
         const viewportWidth = wrapper.clientWidth;
 
-        // Cuántas cards caben en el viewport
         itemsVisible = Math.max(1, Math.floor(viewportWidth / cardWidth));
 
-        // Con items visibles calculados, el step es el ancho de una card
         const firstCard = track.children[0];
         if (!firstCard) return;
 
@@ -147,7 +147,6 @@ export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId,
         maxIndex = Math.max(0, totalItems - itemsVisible);
         if (currentIndex > maxIndex) currentIndex = maxIndex;
 
-        // Mostrar/ocultar botones
         if (prevBtn) prevBtn.style.display = totalItems > itemsVisible ? 'flex' : 'none';
         if (nextBtn) nextBtn.style.display = totalItems > itemsVisible ? 'flex' : 'none';
 
@@ -178,9 +177,10 @@ export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId,
     window.addEventListener('resize', updateDimensions);
     updateDimensions();
 
-    // Autoplay opcional
-    if (autoPlayMs > 0) {
-        setInterval(() => {
+    function iniciarAutoplay() {
+        if (!autoPlayEnabled) return;
+        if (intervalo) clearInterval(intervalo);
+        intervalo = setInterval(() => {
             if (currentIndex < maxIndex) {
                 currentIndex++;
             } else {
@@ -189,4 +189,26 @@ export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId,
             updateTransform();
         }, autoPlayMs);
     }
+
+    function detenerAutoplay() {
+        if (intervalo) {
+            clearInterval(intervalo);
+            intervalo = null;
+        }
+    }
+
+    function reanudarAutoplay() {
+        if (!intervalo && autoPlayEnabled) {
+            iniciarAutoplay();
+        }
+    }
+
+    if (autoPlayEnabled) {
+        iniciarAutoplay();
+    }
+
+    return {
+        detener: detenerAutoplay,
+        reanudar: reanudarAutoplay
+    };
 }

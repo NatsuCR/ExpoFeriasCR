@@ -1,5 +1,46 @@
 // admin-expositores.js
-let expositorEditandoId = null;
+
+// ── Helpers de multi-imagen (compartidos con actividades) ──────────────────
+
+function parseImagenes(valor) {
+    if (!valor) return [];
+    try {
+        const parsed = JSON.parse(valor);
+        if (Array.isArray(parsed)) return parsed.filter(Boolean);
+    } catch (_) {}
+    return valor.trim() ? [valor.trim()] : [];
+}
+
+function serializarImagenes(listaId) {
+    const items = document.querySelectorAll(`#${listaId} .imagen-item input`);
+    const urls = Array.from(items).map(i => i.value.trim()).filter(Boolean);
+    return urls.length ? JSON.stringify(urls) : null;
+}
+
+function agregarFilaImagen(listaId, url = '') {
+    const lista = document.getElementById(listaId);
+    const item = document.createElement('div');
+    item.className = 'imagen-item';
+    item.innerHTML = `
+        <input type="text" placeholder="URL de imagen..." value="${url}">
+        <button type="button" class="btn-quitar-imagen" title="Quitar">✕</button>
+    `;
+    item.querySelector('.btn-quitar-imagen').addEventListener('click', () => item.remove());
+    lista.appendChild(item);
+}
+
+function poblarImagenesLista(listaId, valor) {
+    const lista = document.getElementById(listaId);
+    lista.innerHTML = '';
+    const urls = parseImagenes(valor);
+    if (urls.length === 0) {
+        agregarFilaImagen(listaId);
+    } else {
+        urls.forEach(url => agregarFilaImagen(listaId, url));
+    }
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────
 
 function abrirModalExpositor(expositor = null) {
     document.getElementById('modalExpositorTitulo').innerText = expositor ? 'Editar Expositor' : 'Agregar Expositor';
@@ -8,8 +49,9 @@ function abrirModalExpositor(expositor = null) {
     document.getElementById('expositorRubro').value = expositor ? expositor.rubro || '' : '';
     document.getElementById('expositorDescripcion').value = expositor ? expositor.descripcion || '' : '';
     document.getElementById('expositorUbicacion').value = expositor ? expositor.ubicacion || '' : '';
-    document.getElementById('expositorLogo').value = expositor ? expositor.imagen_logo || '' : '';
     document.getElementById('expositorVideo').value = expositor ? expositor.video_url || '' : '';
+
+    poblarImagenesLista('expositorImagenesLista', expositor ? expositor.imagen_logo : null);
     document.getElementById('modalExpositor').style.display = 'flex';
 }
 
@@ -26,7 +68,7 @@ async function guardarExpositorModal() {
         descripcion: document.getElementById('expositorDescripcion').value || null,
         ubicacion: document.getElementById('expositorUbicacion').value || null,
         es_pagado: false,
-        imagen_logo: document.getElementById('expositorLogo').value || null,
+        imagen_logo: serializarImagenes('expositorImagenesLista'),
         sitio_web: null,
         video_url: document.getElementById('expositorVideo').value || null
     };
@@ -43,23 +85,27 @@ async function guardarExpositorModal() {
     cargarExpositores();
 }
 
+// ── Lista ─────────────────────────────────────────────────────────────────
+
 async function cargarExpositores() {
     if (!eventoId) return;
     const expositores = await fetchAPI(`/api/admin/eventos/${eventoId}/expositores`);
-    const tbody = document.getElementById('tbodyExpositores'); // ← ID correcto
+    const tbody = document.getElementById('tbodyExpositores');
     if (!tbody) return;
     if (expositores.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7">No hay expositores registrados.学ﬂ学ﬂ';
+        tbody.innerHTML = '<tr><td colspan="7">No hay expositores registrados.</td></tr>';
         return;
     }
     let html = '';
     expositores.forEach(e => {
+        const imgs = parseImagenes(e.imagen_logo);
+        const imgBadge = imgs.length > 1 ? `${imgs.length} imgs` : (imgs.length === 1 ? '✓' : '—');
         html += `<tr>
             <td>${e.nombre}</td>
             <td>${e.rubro || '—'}</td>
             <td>${e.descripcion || '—'}</td>
             <td>${e.ubicacion || '—'}</td>
-            <td>${e.imagen_logo ? '✓' : '—'}</td>
+            <td>${imgBadge}</td>
             <td>${e.video_url ? '✓' : '—'}</td>
             <td>
                 <button class="btn btn-warning btn-editar-expositor" data-expositor='${JSON.stringify(e)}'>Editar</button>
@@ -80,3 +126,9 @@ async function cargarExpositores() {
         });
     });
 }
+
+// ── Eventos del modal ─────────────────────────────────────────────────────
+
+document.getElementById('btnAgregarImagenExpositor').addEventListener('click', () => {
+    agregarFilaImagen('expositorImagenesLista');
+});

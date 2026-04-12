@@ -61,3 +61,39 @@ function configurarUploads() {
         });
     });
 }
+async function uploadImageToLista(fileInput, listaId) {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+        const response = await fetch('/api/admin/upload', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            agregarFilaImagen(listaId, data.url);
+            mostrarMensaje('Imagen subida correctamente', 'success');
+        } else {
+            mostrarMensaje('Error al subir imagen', 'error');
+        }
+    } catch (err) {
+        console.error(err);
+        mostrarMensaje('Error de conexión', 'error');
+    }
+}
+
+function configurarUploadsMulti() {
+    document.querySelectorAll('.btn-upload-multi').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const listaId = btn.dataset.lista;
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.onchange = (e) => uploadImageToLista(e.target, listaId);
+            fileInput.click();
+        });
+    });
+}

@@ -199,10 +199,11 @@
             <div class="form-group"><label>Lugar</label><input type="text" id="actividadLugar" class="form-control"></div>
             <div class="form-group"><label>Descripción</label><textarea id="actividadDescripcion" class="form-control" rows="2"></textarea></div>
             <div class="form-group">
-                <label>Imagen (URL)</label>
-                <div style="display: flex; gap: 0.5rem;">
-                    <input type="text" id="actividadImagen" class="form-control" style="flex:1;">
-                    <button type="button" class="btn btn-secondary btn-upload" data-target="actividadImagen">📁 Subir</button>
+                <label>Imágenes</label>
+                <div id="actividadImagenesLista" class="imagenes-lista"></div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.4rem;">
+                    <button type="button" class="btn btn-secondary" id="btnAgregarImagenActividad">+ Agregar imagen</button>
+                    <button type="button" class="btn btn-secondary btn-upload-multi" data-lista="actividadImagenesLista">📁 Subir</button>
                 </div>
             </div>
             <div class="form-group"><label><input type="checkbox" id="actividadRequiereOnline"> Requiere entrada online</label></div>
@@ -225,10 +226,11 @@
             <div class="form-group"><label>Descripción</label><textarea id="expositorDescripcion" class="form-control" rows="2"></textarea></div>
             <div class="form-group"><label>Ubicación (stand, toldo)</label><input type="text" id="expositorUbicacion" class="form-control"></div>
             <div class="form-group">
-                <label>Logo URL</label>
-                <div style="display: flex; gap: 0.5rem;">
-                    <input type="text" id="expositorLogo" class="form-control" style="flex:1;">
-                    <button type="button" class="btn btn-secondary btn-upload" data-target="expositorLogo">📁 Subir</button>
+                <label>Imágenes</label>
+                <div id="expositorImagenesLista" class="imagenes-lista"></div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.4rem;">
+                    <button type="button" class="btn btn-secondary" id="btnAgregarImagenExpositor">+ Agregar imagen</button>
+                    <button type="button" class="btn btn-secondary btn-upload-multi" data-lista="expositorImagenesLista">📁 Subir</button>
                 </div>
             </div>
             <div class="form-group"><label>Video URL (opcional)</label><input type="text" id="expositorVideo" class="form-control"></div>

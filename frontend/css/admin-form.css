@@ -315,3 +315,37 @@
 .btn-upload:hover {
     background-color: #5a6268;
 }
+/* ── Gestor de múltiples imágenes en modales ── */
+.imagenes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 0.2rem;
+}
+.imagen-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+}
+.imagen-item input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 0.85rem;
+    color: #333;
+    outline: none;
+}
+.imagen-item .btn-quitar-imagen {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+.imagen-item .btn-quitar-imagen:hover { color: #a71d2a; }

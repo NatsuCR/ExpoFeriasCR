@@ -1,5 +1,47 @@
 // admin-actividades.js
-let actividadEditandoId = null;
+
+// ── Helpers de multi-imagen ────────────────────────────────────────────────
+
+function parseImagenes(valor) {
+    if (!valor) return [];
+    try {
+        const parsed = JSON.parse(valor);
+        if (Array.isArray(parsed)) return parsed.filter(Boolean);
+    } catch (_) {}
+    // si es una URL simple (legado), la envuelvo en array
+    return valor.trim() ? [valor.trim()] : [];
+}
+
+function serializarImagenes(listaId) {
+    const items = document.querySelectorAll(`#${listaId} .imagen-item input`);
+    const urls = Array.from(items).map(i => i.value.trim()).filter(Boolean);
+    return urls.length ? JSON.stringify(urls) : null;
+}
+
+function agregarFilaImagen(listaId, url = '') {
+    const lista = document.getElementById(listaId);
+    const item = document.createElement('div');
+    item.className = 'imagen-item';
+    item.innerHTML = `
+        <input type="text" placeholder="URL de imagen..." value="${url}">
+        <button type="button" class="btn-quitar-imagen" title="Quitar">✕</button>
+    `;
+    item.querySelector('.btn-quitar-imagen').addEventListener('click', () => item.remove());
+    lista.appendChild(item);
+}
+
+function poblarImagenesLista(listaId, valor) {
+    const lista = document.getElementById(listaId);
+    lista.innerHTML = '';
+    const urls = parseImagenes(valor);
+    if (urls.length === 0) {
+        agregarFilaImagen(listaId); // al menos una fila vacía
+    } else {
+        urls.forEach(url => agregarFilaImagen(listaId, url));
+    }
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────
 
 function abrirModalActividad(actividad = null) {
     document.getElementById('modalActividadTitulo').innerText = actividad ? 'Editar Actividad' : 'Agregar Actividad';
@@ -10,11 +52,13 @@ function abrirModalActividad(actividad = null) {
     document.getElementById('actividadHora').value = actividad ? (actividad.hora ? actividad.hora.slice(0,5) : '') : '';
     document.getElementById('actividadLugar').value = actividad ? actividad.lugar || '' : '';
     document.getElementById('actividadDescripcion').value = actividad ? actividad.descripcion || '' : '';
-    document.getElementById('actividadImagen').value = actividad ? actividad.imagen || '' : '';
     document.getElementById('actividadRequiereOnline').checked = actividad ? actividad.requiere_entrada_online : false;
     document.getElementById('actividadEsGratis').checked = actividad ? actividad.es_gratis : false;
     document.getElementById('actividadEnlaceVenta').value = actividad ? actividad.enlace_venta || '' : '';
-    document.getElementById('actividadEnlaceGroup').style.display = document.getElementById('actividadRequiereOnline').checked ? 'block' : 'none';
+    document.getElementById('actividadEnlaceGroup').style.display =
+        document.getElementById('actividadRequiereOnline').checked ? 'block' : 'none';
+
+    poblarImagenesLista('actividadImagenesLista', actividad ? actividad.imagen : null);
     document.getElementById('modalActividad').style.display = 'flex';
 }
 
@@ -30,9 +74,10 @@ async function guardarActividadModal() {
         hora: document.getElementById('actividadHora').value || null,
         lugar: document.getElementById('actividadLugar').value || null,
         descripcion: document.getElementById('actividadDescripcion').value || null,
-        imagen: document.getElementById('actividadImagen').value || null,
+        imagen: serializarImagenes('actividadImagenesLista'),
         requiere_entrada_online: document.getElementById('actividadRequiereOnline').checked,
-        enlace_venta: document.getElementById('actividadRequiereOnline').checked ? document.getElementById('actividadEnlaceVenta').value : null,
+        enlace_venta: document.getElementById('actividadRequiereOnline').checked
+            ? document.getElementById('actividadEnlaceVenta').value : null,
         es_gratis: document.getElementById('actividadEsGratis').checked
     };
     if (!data.titulo || !data.fecha) {
@@ -48,6 +93,8 @@ async function guardarActividadModal() {
     cargarActividades();
 }
 
+// ── Lista ─────────────────────────────────────────────────────────────────
+
 async function cargarActividades() {
     if (!eventoId) return;
     const acts = await fetchAPI(`/api/admin/eventos/${eventoId}/actividades`);
@@ -58,13 +105,15 @@ async function cargarActividades() {
     }
     let html = '';
     acts.forEach(a => {
+        const imgs = parseImagenes(a.imagen);
+        const imgBadge = imgs.length > 1 ? `${imgs.length} imgs` : (imgs.length === 1 ? '✓' : '—');
         html += `<tr>
             <td>${a.titulo}</td>
             <td>${a.tipo || '—'}</td>
             <td>${new Date(a.fecha).toLocaleDateString()}</td>
             <td>${a.hora ? a.hora.slice(0,5) : '—'}</td>
             <td>${a.lugar || '—'}</td>
-            <td>${a.imagen ? '✓' : '—'}</td>
+            <td>${imgBadge}</td>
             <td>
                 <button class="btn btn-warning btn-editar-actividad" data-actividad='${JSON.stringify(a)}'>Editar</button>
                 <button class="btn btn-danger btn-eliminar-actividad" data-id="${a.id}">Eliminar</button>
@@ -85,6 +134,12 @@ async function cargarActividades() {
     });
 }
 
+// ── Eventos del modal ─────────────────────────────────────────────────────
+
 document.getElementById('actividadRequiereOnline').addEventListener('change', function(e) {
     document.getElementById('actividadEnlaceGroup').style.display = e.target.checked ? 'block' : 'none';
+});
+
+document.getElementById('btnAgregarImagenActividad').addEventListener('click', () => {
+    agregarFilaImagen('actividadImagenesLista');
 });

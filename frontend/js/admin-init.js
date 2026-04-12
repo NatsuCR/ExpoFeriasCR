@@ -40,3 +40,4 @@ if (eventoId) {
 }
 configurarTabs();
 configurarUploads();
+configurarUploadsMulti();

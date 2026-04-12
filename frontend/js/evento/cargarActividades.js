@@ -1,5 +1,65 @@
 // cargarActividades.js
 import { initResponsiveCarousel } from './carrusel.js';
+import { initLightbox, abrirLightbox } from './lightbox.js';
+
+function parseImagenes(valor) {
+    if (!valor) return [];
+    try {
+        const parsed = JSON.parse(valor);
+        if (Array.isArray(parsed)) return parsed.filter(Boolean);
+    } catch (_) {}
+    return valor.trim() ? [valor.trim()] : [];
+}
+
+function buildMiniCarrusel(imagenes, altText) {
+    if (imagenes.length === 0) return '';
+    if (imagenes.length === 1) {
+        return `<img src="${imagenes[0]}" alt="${altText}" class="card-img-principal">`;
+    }
+    const slides = imagenes.map((url, i) =>
+        `<div class="mini-slide${i === 0 ? ' activa' : ''}">
+            <img src="${url}" alt="${altText} ${i + 1}">
+        </div>`
+    ).join('');
+    return `
+        <div class="mini-carrusel">
+            <div class="mini-carrusel-track">${slides}</div>
+            <button class="mini-btn mini-prev" aria-label="Anterior">&#8249;</button>
+            <button class="mini-btn mini-next" aria-label="Siguiente">&#8250;</button>
+            <div class="mini-dots">
+                ${imagenes.map((_, i) => `<span class="mini-dot${i === 0 ? ' activo' : ''}"></span>`).join('')}
+            </div>
+        </div>`;
+}
+
+function initMiniCarruseles() {
+    document.querySelectorAll('.mini-carrusel').forEach(carrusel => {
+        const slides = carrusel.querySelectorAll('.mini-slide');
+        const dots   = carrusel.querySelectorAll('.mini-dot');
+        let idx = 0;
+
+        function ir(n) {
+            slides[idx].classList.remove('activa');
+            dots[idx].classList.remove('activo');
+            idx = (n + slides.length) % slides.length;
+            slides[idx].classList.add('activa');
+            dots[idx].classList.add('activo');
+        }
+
+        carrusel.querySelector('.mini-prev').addEventListener('click', (e) => {
+            e.stopPropagation();
+            ir(idx - 1);
+        });
+        carrusel.querySelector('.mini-next').addEventListener('click', (e) => {
+            e.stopPropagation();
+            ir(idx + 1);
+        });
+        dots.forEach((dot, i) => dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            ir(i);
+        }));
+    });
+}
 
 export async function cargarActividades(slug) {
     const container = document.getElementById('actividadesGrid');
@@ -16,19 +76,17 @@ export async function cargarActividades(slug) {
 
         let html = '';
         actividades.forEach(a => {
-            // Corregir rutas de imagen (reemplazar \ por /)
-            let imagenUrl = a.imagen ? a.imagen.replace(/\\/g, '/') : '';
-            const imagen = imagenUrl ? `<img src="${imagenUrl}" alt="${a.titulo}">` : '';
+            const imagenes = parseImagenes(a.imagen);
+            const imagenesLimpias = imagenes.map(u => u.replace(/\\/g, '/'));
 
-            const fecha = new Date(a.fecha).toLocaleDateString();
-            const hora = a.hora ? a.hora.slice(0,5) : '';
-            const lugar = a.lugar || 'Campo ferial';
+            const fecha       = new Date(a.fecha).toLocaleDateString();
+            const hora        = a.hora ? a.hora.slice(0, 5) : '';
+            const lugar       = a.lugar || 'Campo ferial';
             const descripcion = a.descripcion || '';
 
-            // ✅ Usar camelCase (como viene de la API)
             const requiereOnline = a.requiereEntradaOnline === 1 || a.requiereEntradaOnline === true;
-            const enlaceVenta = a.enlaceVenta;
-            const esGratis = a.esGratis === 1 || a.esGratis === true;
+            const enlaceVenta    = a.enlaceVenta;
+            const esGratis       = a.esGratis === 1 || a.esGratis === true;
 
             let linkHtml = '';
             if (requiereOnline && enlaceVenta) {
@@ -37,27 +95,59 @@ export async function cargarActividades(slug) {
                 linkHtml = `<p><i class="fas fa-ticket-alt"></i> Entrada online (enlace no disponible)</p>`;
             }
 
-            let gratisHtml = '';
-            if (esGratis) {
-                gratisHtml = '<p><strong>Evento gratuito</strong></p>';
-            }
+            const gratisHtml = esGratis ? '<p><strong>Evento gratuito</strong></p>' : '';
 
-html += `
+            html += `
     <div class="actividad-card">
-        ${imagen}
+        ${buildMiniCarrusel(imagenesLimpias, a.titulo)}
         <h3>${a.titulo}</h3>
         <p><i class="fas fa-calendar-day"></i> ${fecha} ${hora}</p>
         <p><i class="fas fa-map-pin"></i> ${lugar}</p>
         <p class="descripcion-texto">${descripcion}</p>
-        ${descripcion.length > 150 ? `<button class="btn-ver-mas" onclick="this.closest('.actividad-card').classList.toggle('expandida'); this.textContent = this.closest('.actividad-card').classList.contains('expandida') ? 'Ver menos ▲' : 'Ver más ▼'">Ver más ▼</button>` : ''}
+        ${descripcion.length > 150
+            ? `<button class="btn-ver-mas" onclick="this.closest('.actividad-card').classList.toggle('expandida'); this.textContent = this.closest('.actividad-card').classList.contains('expandida') ? 'Ver menos ▲' : 'Ver más ▼'">Ver más ▼</button>`
+            : ''}
         ${linkHtml}
         ${gratisHtml}
-    </div>
-`;
+    </div>`;
         });
-        container.innerHTML = html;
 
-        initResponsiveCarousel('actividadesWrapper', 'actividadesGrid', 'actividadesPrev', 'actividadesNext', 280, 10000);
+        container.innerHTML = html;
+        initLightbox();
+        initMiniCarruseles();
+
+        // Clic en imágenes → lightbox
+        container.querySelectorAll('.card-img-principal').forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                abrirLightbox(img.src, img.alt);
+            });
+        });
+        container.querySelectorAll('.mini-carrusel').forEach(carrusel => {
+            carrusel.addEventListener('click', (e) => {
+                if (e.target.closest('.mini-btn') || e.target.closest('.mini-dots')) return;
+                const slideActiva = carrusel.querySelector('.mini-slide.activa img');
+                if (slideActiva) {
+                    e.stopPropagation();
+                    abrirLightbox(slideActiva.src, slideActiva.alt);
+                }
+            });
+        });
+
+        const carruselControl = initResponsiveCarousel('actividadesWrapper', 'actividadesGrid', 'actividadesPrev', 'actividadesNext', 280, 10000);
+
+        container.querySelectorAll('.btn-ver-mas').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const card = btn.closest('.actividad-card');
+                setTimeout(() => {
+                    if (card.classList.contains('expandida')) {
+                        carruselControl.detener();
+                    } else {
+                        carruselControl.reanudar();
+                    }
+                }, 0);
+            });
+        });
     } catch (err) {
         console.error(err);
         container.innerHTML = '<p>Error al cargar actividades.</p>';

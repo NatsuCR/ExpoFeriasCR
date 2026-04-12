@@ -210,5 +210,17 @@
 
     .carousel-slide {
         flex: 0 0 100%;
+        min-width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .evento-card {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .evento-card img {
+        height: 160px;
     }
 }

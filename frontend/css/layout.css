@@ -153,14 +153,62 @@ footer {
 @media (max-width: 768px) {
     .navbar .container {
         flex-direction: column;
-        gap: 1rem;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 16px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.4rem;
+        width: 100%;
+    }
+
+    .nav-links li {
+        flex: 0 0 auto;
+    }
+
+    .nav-links a {
+        padding: 0.35rem 0.9rem;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+    .logo span {
+        font-size: 1.2rem;
+    }
+
+    .logo img {
+        height: 38px;
+    }
+
+    .hero {
+        padding: 3rem 0;
     }
 
     .hero h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 
     .hero p {
-        font-size: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .search-filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 0 1rem;
+    }
+
+    .filter-select,
+    .search-input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .btn-search {
+        width: 100%;
     }
 }

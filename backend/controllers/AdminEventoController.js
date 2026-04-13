@@ -157,6 +157,100 @@ class AdminEventoController {
       res.status(500).json({ error: 'Error al eliminar evento' });
     }
   }
+
+  /**
+   * Listar eventos aprobados que fueron editados y están esperando re-revisión
+   * GET /api/admin/eventos-edicion-pendiente
+   */
+  async eventosEdicionPendiente(req, res) {
+    try {
+      const [eventos] = await pool.query(
+        `SELECT e.*, u.nombre as usuario_nombre, u.email as usuario_email,
+                DATE_FORMAT(e.fecha_envio_revision, '%Y-%m-%d %H:%i') as fecha_envio
+         FROM eventos e
+         LEFT JOIN usuarios u ON e.usuario_id = u.id
+         WHERE e.estado = 'edicion_pendiente'
+         ORDER BY e.fecha_envio_revision ASC`
+      );
+      
+      res.json(eventos);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener eventos pendientes de edición' });
+    }
+  }
+
+  /**
+   * Aprobar cambios de evento editado
+   * POST /api/admin/eventos-edicion-pendiente/:id/aprobar
+   */
+  async aprobarEdicionEvento(req, res) {
+    const { id } = req.params;
+    const { notas } = req.body || {};
+
+    try {
+      const [eventos] = await pool.query(
+        'SELECT * FROM eventos WHERE id = ? AND estado = ?',
+        [id, 'edicion_pendiente']
+      );
+
+      if (eventos.length === 0) {
+        return res.status(404).json({ error: 'Evento no encontrado o no está pendiente de edición' });
+      }
+
+      // Cambiar estado a aprobado (vuelve a estado anterior)
+      await pool.query(
+        'UPDATE eventos SET estado = ?, razon_rechazo = NULL WHERE id = ?',
+        ['aprobado', id]
+      );
+
+      res.json({
+        message: 'Cambios del evento aprobados exitosamente',
+        evento: { id, estado: 'aprobado' }
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al aprobar evento' });
+    }
+  }
+
+  /**
+   * Rechazar cambios de evento editado
+   * POST /api/admin/eventos-edicion-pendiente/:id/rechazar
+   */
+  async rechazarEdicionEvento(req, res) {
+    const { id } = req.params;
+    const { razon } = req.body;
+
+    try {
+      const [eventos] = await pool.query(
+        'SELECT * FROM eventos WHERE id = ? AND estado = ?',
+        [id, 'edicion_pendiente']
+      );
+
+      if (eventos.length === 0) {
+        return res.status(404).json({ error: 'Evento no encontrado o no está pendiente de edición' });
+      }
+
+      if (!razon) {
+        return res.status(400).json({ error: 'Debes proporcionar una razón del rechazo' });
+      }
+
+      // Cambiar estado a aprobado nuevamente (rechaza cambios, pero el evento ya aprobado se mantiene)
+      await pool.query(
+        'UPDATE eventos SET estado = ?, razon_rechazo = ? WHERE id = ?',
+        ['aprobado', razon, id]
+      );
+
+      res.json({
+        message: 'Cambios rechazados. El evento se mantiene en su estado anterior.',
+        evento: { id, estado: 'aprobado', razon_rechazo: razon }
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al rechazar evento' });
+    }
+  }
 }
 
 module.exports = AdminEventoController;

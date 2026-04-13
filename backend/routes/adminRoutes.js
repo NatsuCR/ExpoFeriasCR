@@ -1,6 +1,7 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 const AdminEventoController = require('../controllers/AdminEventoController');
+const AdminEventosPendientesController = require('../controllers/AdminEventosPendientesController');
 const AdminPrecioController = require('../controllers/AdminPrecioController');
 const AdminActividadController = require('../controllers/AdminActividadController');
 const AdminExpositorController = require('../controllers/AdminExpositorController');
@@ -14,6 +15,7 @@ const UploadController = require('../controllers/UploadController');
 const router = express.Router();
 const uploadController = new UploadController();
 const adminEvento = new AdminEventoController();
+const adminEventosPendientes = new AdminEventosPendientesController();
 const adminPrecio = new AdminPrecioController();
 const adminActividad = new AdminActividadController();
 const adminExpositor = new AdminExpositorController();
@@ -34,6 +36,18 @@ router.get('/eventos/:id', adminEvento.obtenerPorId.bind(adminEvento));
 router.post('/eventos', adminEvento.crear.bind(adminEvento));
 router.put('/eventos/:id', adminEvento.actualizar.bind(adminEvento));
 router.delete('/eventos/:id', adminEvento.eliminar.bind(adminEvento));
+
+// ========== Rutas para Eventos Pendientes (de Usuarios) ==========
+router.get('/eventos-pendientes-stats', adminEventosPendientes.obtenerEstadisticas.bind(adminEventosPendientes));
+router.get('/eventos-pendientes', adminEventosPendientes.listarPendientes.bind(adminEventosPendientes));
+router.get('/eventos-pendientes/:id', adminEventosPendientes.obtenerPendiente.bind(adminEventosPendientes));
+router.put('/eventos-pendientes/:id/aprobar', adminEventosPendientes.aprobarEvento.bind(adminEventosPendientes));
+router.put('/eventos-pendientes/:id/rechazar', adminEventosPendientes.rechazarEvento.bind(adminEventosPendientes));
+
+// ========== Rutas para Eventos Pendientes de Edición (Re-revisión) ==========
+router.get('/eventos-edicion-pendiente', adminEvento.eventosEdicionPendiente.bind(adminEvento));
+router.post('/eventos-edicion-pendiente/:id/aprobar', adminEvento.aprobarEdicionEvento.bind(adminEvento));
+router.post('/eventos-edicion-pendiente/:id/rechazar', adminEvento.rechazarEdicionEvento.bind(adminEvento));
 
 // ========== Rutas para Precios ==========
 router.get('/eventos/:eventoId/precios', adminPrecio.listarPorEvento.bind(adminPrecio));

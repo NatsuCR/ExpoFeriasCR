@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/navbar-auth.css">
     
 </head>
 <body>
@@ -27,6 +28,14 @@
                 <li><a href="#eventos-finalizados">Finalizados</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
+            <div class="nav-auth" id="nav-auth">
+                <button id="btn-crear-evento-navbar" class="btn-navbar-auth" title="Crea un evento y comparte con la comunidad">
+                    <i class="fas fa-plus-circle"></i> Crear Evento
+                </button>
+                <button id="btn-login-navbar" class="btn-navbar-auth">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -151,6 +160,11 @@
         </div>
     </footer>
 
+    <!-- Modal de Autenticación -->
+    <div id="modal-auth-container"></div>
+
+    <script src="js/modal-auth.js"></script>
+    <script src="js/main-auth.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

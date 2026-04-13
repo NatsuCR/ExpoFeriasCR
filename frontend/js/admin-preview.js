@@ -17,8 +17,73 @@ function recargarPreview() {
     const slug = getSlug();
     if (!slug) return;
     const iframe = getIframe();
-    const nueva = `/evento.html?slug=${encodeURIComponent(slug)}`;
-    // solo recargar si la URL cambió
+
+    // Construir datos de preview desde el formulario admin
+    const get = id => document.getElementById(id)?.value || '';
+    const datos = {
+        nombre: get('nombre'),
+        descripcion: get('descripcion'),
+        fecha_inicio: get('fecha_inicio'),
+        fecha_fin: get('fecha_fin'),
+        ubicacion: get('ubicacion'),
+        provincia: get('provincia'),
+        imagen_portada: get('imagen_portada'),
+        horario_imagen: get('horario_imagen'),
+        mapa_embed: get('mapa_embed'),
+        tipo_venta: get('tipo_venta'),
+        url_venta_online: get('url_venta_online'),
+        color_primario: get('color_primario') || '#8b5a2b',
+        color_secundario: get('color_secundario') || '#d4a373',
+        color_fondo: get('color_fondo') || '#f4e4c1',
+        color_titulo_hero: get('color_titulo_hero') || '#ffffff',
+        color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
+        color_titulo_seccion: get('color_titulo_seccion') || '#2c1a0e',
+        color_fondo_fechas: get('color_fondo_fechas') || '#d4a373',
+        color_texto_fechas: get('color_texto_fechas') || '#8b5a2b',
+        color_menu_fondo: get('color_menu_fondo') || '#ffffff',
+        color_menu_texto: get('color_menu_texto') || '#ffffff',
+        color_fondo_footer: get('color_fondo_footer') || '#8b5a2b',
+        color_texto_footer: get('color_texto_footer') || '#ffffff'
+    };
+
+    // Precios desde la tabla admin (tbodyPrecios)
+    datos.precios = Array.from(document.querySelectorAll('#tbodyPrecios tr')).map(row => ({
+        fecha: row.querySelector('.precio-fecha')?.value || row.querySelector('td')?.dataset.fecha || '',
+        precio_normal: row.querySelector('.precio-normal')?.textContent || row.querySelector('.precio-monto')?.value || row.dataset.precio || 0,
+        promocion: row.querySelector('.precio-promocion')?.textContent || '',
+        descripcion_promocion: row.querySelector('.precio-descripcion')?.textContent || ''
+    })).filter(p => p.fecha);
+
+    // Actividades
+    datos.actividades = Array.from(document.querySelectorAll('#tbodyActividades tr')).map(row => ({
+        titulo: row.querySelector('.actividad-titulo')?.textContent || row.querySelector('td')?.dataset.titulo || '',
+        tipo: row.querySelector('.actividad-tipo')?.textContent || '',
+        fecha: row.querySelector('.actividad-fecha')?.textContent || row.dataset.fecha || '',
+        hora: row.querySelector('.actividad-hora')?.textContent || '',
+        lugar: row.querySelector('.actividad-lugar')?.textContent || '',
+        descripcion: row.querySelector('.actividad-descripcion')?.textContent || '',
+        imagen: row.querySelector('.actividad-imagen')?.getAttribute('data-src') || row.querySelector('img')?.src || ''
+    })).filter(a => a.titulo);
+
+    // Expositores
+    datos.expositores = Array.from(document.querySelectorAll('#tbodyExpositores tr')).map(row => ({
+        nombre: row.querySelector('.expositor-nombre')?.textContent || row.querySelector('td')?.dataset.nombre || '',
+        rubro: row.querySelector('.expositor-rubro')?.textContent || '',
+        ubicacion: row.querySelector('.expositor-ubicacion')?.textContent || '',
+        descripcion: row.querySelector('.expositor-descripcion')?.textContent || '',
+        logo: row.querySelector('.expositor-logo')?.getAttribute('data-src') || row.querySelector('img')?.src || ''
+    })).filter(e => e.nombre);
+
+    // Galería
+    datos.galeria = Array.from(document.querySelectorAll('#tbodyGaleria tr')).map(row => ({
+        imagen_url: row.querySelector('.galeria-url')?.value || row.querySelector('img')?.src || '',
+        orden: parseInt(row.querySelector('.galeria-orden')?.value) || 0
+    })).filter(g => g.imagen_url);
+
+    // Guardar en localStorage y abrir iframe en modo preview
+    const key = 'preview_admin_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
+    localStorage.setItem(key, JSON.stringify(datos));
+    const nueva = `/evento.html?preview=1&dataKey=${encodeURIComponent(key)}`;
     try {
         const actual = new URL(iframe.contentWindow.location.href);
         if (actual.pathname + actual.search === nueva) return;

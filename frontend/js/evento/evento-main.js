@@ -396,6 +396,7 @@ function cargarEventoDesdePreview(datos) {
                         <p class="rubro" style="color:#666;font-size:14px;margin-bottom:5px;"><strong>Rubro:</strong> ${exp.rubro}</p>
                         <p class="ubicacion" style="color:#666;font-size:14px;margin-bottom:10px;"><strong>Stand:</strong> ${exp.ubicacion}</p>
                         ${exp.descripcion ? window.formatDescription(exp.descripcion) : ''}
+                        <p><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(exp.nombre + ' Costa Rica')}" target="_blank" class="enlace-localidades" style="color: var(--evento-secundario, #0033A0); font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-top: 5px;"><i class="fas fa-map-marker-alt"></i> Localidades</a></p>
                     </div>
                 `;
                 expositoresGrid.appendChild(card);

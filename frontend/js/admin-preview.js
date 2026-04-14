@@ -357,6 +357,7 @@ function renderizarSeccionesEnIframe(doc) {
                         <p class="rubro"><strong>Rubro:</strong> ${exp.rubro}</p>
                         <p class="ubicacion"><strong>Ubicación:</strong> ${exp.ubicacion}</p>
                         ${descHtml}
+                        <p><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(exp.nombre + ' Costa Rica')}" target="_blank" class="enlace-localidades" style="color: var(--evento-secundario, #0033A0); font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-top: 5px;"><i class="fas fa-map-marker-alt"></i> Localidades</a></p>
                     </div>
                 </div>`;
             });

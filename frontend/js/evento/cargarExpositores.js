@@ -90,6 +90,7 @@ export async function cargarExpositores(slug) {
             <p><strong>Rubro:</strong> ${e.rubro}</p>
             ${typeof window.formatDescription === 'function' ? window.formatDescription(descripcion) : `<p class="descripcion-texto">${descripcion}</p>`}
             <p><strong>Ubicación:</strong> ${e.ubicacion || 'Por definir'}</p>
+            <p><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.nombre + ' Costa Rica')}" target="_blank" class="enlace-localidades" style="color: var(--evento-secundario, #0033A0); font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-top: 5px;"><i class="fas fa-map-marker-alt"></i> Localidades</a></p>
             ${videoHtml}
         </div>`;
         });

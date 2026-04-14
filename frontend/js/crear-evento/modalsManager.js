@@ -1,4 +1,4 @@
-/**
+﻿/**
  * modalsManager.js
  * Gestiona todos los modales (Precio, Actividad, Expositor, Galería)
  */
@@ -8,6 +8,11 @@ import { programarActualizacion } from './previewManager.js';
 
 // Variable global para rastrear si estamos editando una fila
 let filaEnEdicion = null;
+
+// Callback que se llama cuando el usuario confirma cualquier modal (agregar o editar)
+let _onModalConfirmado = null;
+export function registrarOnModalConfirmado(fn) { _onModalConfirmado = fn; }
+const notificarConfirmacion = () => { if (_onModalConfirmado) _onModalConfirmado(); };
 
 // ─── PRECIO ───
 export function abrirModalPrecio() {
@@ -40,8 +45,10 @@ export function agregarPrecioDelModal() {
       <td><input type="text"   value="${promocion}" class="precio-promocion"></td>
       <td><input type="text"   value="${descripcion}" class="precio-descripcion"></td>
       <td>
-        <button type="button" class="btn-warning btn-editar" style="margin-right: 5px;">Editar</button>
-        <button type="button" class="btn-danger btn-eliminar">Eliminar</button>
+        <div class="acciones-tabla">
+          <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
+          <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
+        </div>
       </td>
     `;
     row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
@@ -50,6 +57,7 @@ export function agregarPrecioDelModal() {
   }
   
   programarActualizacion();
+  notificarConfirmacion();
   cerrarModalPrecio();
 }
 
@@ -117,8 +125,10 @@ export function agregarActividadDelModal() {
           <span class="act-gratis" data-value="${esGratis}">${esGratis ? '✅' : '❌'}</span>
       </td>
       <td>
-        <button type="button" class="btn-warning btn-editar" style="margin-right: 5px;">Editar</button>
-        <button type="button" class="btn-danger btn-eliminar">Eliminar</button>
+        <div class="acciones-tabla">
+          <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
+          <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
+        </div>
       </td>
       <td style="display:none;"><input type="text" value="${descripcion}" class="act-descripcion"></td>
       <td style="display:none;"><input type="text" value='${JSON.stringify(imagenes)}' class="act-imagenes"></td>
@@ -131,6 +141,7 @@ export function agregarActividadDelModal() {
   }
   
   programarActualizacion();
+  notificarConfirmacion();
   cerrarModalActividad();
 }
 
@@ -251,9 +262,9 @@ export function agregarExpositorDelModal() {
       <td style="text-align:center;">${imgBadge}</td>
       <td style="text-align:center;">${videoBadge}</td>
       <td>
-        <div style="display:flex; gap:5px;">
-          <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-edit"></i></button>
-          <button type="button" class="btn-danger btn-eliminar"><i class="fas fa-trash"></i></button>
+        <div class="acciones-tabla">
+          <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
+          <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
         </div>
       </td>
       <td style="display:none;"><input type="text" value="${descripcion}" class="exp-descripcion"></td>
@@ -266,6 +277,7 @@ export function agregarExpositorDelModal() {
   }
   
   programarActualizacion();
+  notificarConfirmacion();
   cerrarModalExpositor();
 }
 
@@ -355,8 +367,10 @@ export function agregarImagenDelModal() {
       <td><input type="text"   value="${url}"   class="gal-url"   style="width:100%;max-width:220px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
       <td><input type="number" value="${orden}" class="gal-orden" style="width:60px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
       <td>
-        <button type="button" class="btn-warning btn-editar" style="margin-right: 5px;">Editar</button>
-        <button type="button" class="btn-danger btn-eliminar">Eliminar</button>
+        <div class="acciones-tabla">
+          <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
+          <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
+        </div>
       </td>
     `;
     row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
@@ -368,6 +382,7 @@ export function agregarImagenDelModal() {
   }
   
   programarActualizacion();
+  notificarConfirmacion();
   cerrarModalImagen();
 }
 
@@ -385,3 +400,4 @@ export function editarImagen(row) {
 
   document.getElementById('modal-imagen').style.display = 'flex';
 }
+

@@ -193,16 +193,22 @@ class AdminEventosPendientes {
     const iconos = {
       pendiente: '⏳',
       aprobado: '✓',
-      rechazado: '✕'
+      rechazado: '✕',
+      edicion_pendiente: '⏳',
+      finalizado: '✓'
     };
 
     const textos = {
       pendiente: 'Pendiente',
       aprobado: 'Aprobado',
-      rechazado: 'Rechazado'
+      rechazado: 'Rechazado',
+      edicion_pendiente: 'Edición en revisión',
+      finalizado: 'Finalizado'
     };
 
-    return `<span class="estado-badge ${estado}">${iconos[estado]} ${textos[estado]}</span>`;
+    const icono = iconos[estado] || '❓';
+    const texto = textos[estado] || estado;
+    return `<span class="estado-badge ${estado}">${icono} ${texto}</span>`;
   }
 
   async verEvento(eventoId) {
@@ -348,9 +354,10 @@ class AdminEventosPendientes {
 
       document.getElementById('evento-preview-contenido').innerHTML = html;
 
-      // Mostrar/ocultar botones según estado
-      document.getElementById('btn-modal-aprobar').style.display = evento.estado === 'pendiente' ? 'block' : 'none';
-      document.getElementById('btn-modal-rechazar').style.display = evento.estado === 'pendiente' ? 'block' : 'none';
+      // Mostrar/ocultar botones según estado (pendiente o edicion_pendiente pueden aprobarse/rechazarse)
+      const puedeAccion = ['pendiente', 'edicion_pendiente'].includes(evento.estado);
+      document.getElementById('btn-modal-aprobar').style.display = puedeAccion ? 'block' : 'none';
+      document.getElementById('btn-modal-rechazar').style.display = puedeAccion ? 'block' : 'none';
 
       document.getElementById('modal-evento-preview').style.display = 'flex';
     } catch (error) {

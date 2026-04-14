@@ -517,6 +517,9 @@
   max-width: 450px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.3s ease;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes slideUp {
@@ -570,6 +573,7 @@
   flex-direction: column;
   gap: 15px;
   padding: 20px;
+  overflow-y: auto;
 }
 
 .modal-form .form-group {
@@ -1140,7 +1144,7 @@
     #formLayout { padding: 0 12px 40px; }
 }
 /* ============================================================
-   SISTEMA DE AYUDA Y GU�A (UI ASISTIDA)
+   SISTEMA DE AYUDA Y GU�A (UI ASISTIDA)
    ============================================================ */
 
 .help-box {
@@ -1220,4 +1224,53 @@
 
 .btn-help-icon:hover {
   color: #e67e22;
+}
+
+/* ── Botones de accion en tablas (Editar / Eliminar) ── */
+.btn-warning,
+.btn-editar {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  box-shadow: 0 2px 6px rgba(230,126,34,0.35);
+  flex-shrink: 0;
+  padding: 0;
+}
+.btn-warning:hover,
+.btn-editar:hover {
+  filter: brightness(1.12);
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 4px 12px rgba(230,126,34,0.5);
+}
+.btn-danger.btn-eliminar {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(231,76,60,0.35);
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  flex-shrink: 0;
+}
+.btn-danger.btn-eliminar:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 4px 12px rgba(231,76,60,0.5);
+}
+.acciones-tabla {
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }

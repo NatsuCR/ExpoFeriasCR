@@ -50,20 +50,9 @@ function setupBotonesNavbar() {
         window.location.href = '/crear-evento.html';
       });
     } else {
-      // No autenticado: abrir modal de login
+      // No autenticado: abrir modal de login (como Iniciar Sesión)
       btnCrearEvento.addEventListener('click', () => {
-        if (window.abrirModalAuth) {
-          window.abrirModalAuth();
-          // Cambiar a tab de login/registro
-          const tabBtns = document.querySelectorAll('.modal-auth-tab-btn');
-          const tabContents = document.querySelectorAll('.modal-auth-tab-content');
-          if (tabBtns.length > 1) {
-            tabBtns.forEach(btn => btn.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-            tabBtns[1].classList.add('active');
-            tabContents[1].classList.add('active');
-          }
-        }
+        window.abrirModalAuth && window.abrirModalAuth();
       });
     }
   }

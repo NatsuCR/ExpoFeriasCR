@@ -160,17 +160,33 @@ class MiCuenta {
     const card = document.createElement('div');
     card.className = 'evento-card';
 
-    const statusClass = evento.estado === 'pendiente' ? 'pendiente' : evento.estado === 'aprobado' ? 'aprobado' : 'rechazado';
+    const formatFecha = (iso) => {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
+    };
+
+    const statusClass = {
+      pendiente: 'pendiente',
+      aprobado: 'aprobado',
+      rechazado: 'rechazado',
+      edicion_pendiente: 'pendiente',
+      finalizado: 'aprobado'
+    }[evento.estado] || 'pendiente';
+
     const statusIcons = {
       pendiente: '⏳',
       aprobado: '✓',
-      rechazado: '✕'
+      rechazado: '✕',
+      edicion_pendiente: '⏳',
+      finalizado: '✓'
     };
 
     const estadoTexto = {
       pendiente: 'En revisión',
       aprobado: 'Aprobado',
-      rechazado: 'Rechazado'
+      rechazado: 'Rechazado',
+      edicion_pendiente: 'Cambios en revisión',
+      finalizado: 'Finalizado'
     };
 
     let contenidoRazon = '';
@@ -189,7 +205,7 @@ class MiCuenta {
         <h3 class="evento-card-titulo" style="padding-right:25px;">${this.escapeHtml(evento.nombre)}</h3>
         <div class="evento-card-fecha">
           <i class="fas fa-calendar"></i>
-          ${evento.fecha_inicio}
+          ${formatFecha(evento.fecha_inicio)}
         </div>
       </div>
       <div class="evento-card-body">
@@ -199,14 +215,27 @@ class MiCuenta {
         </div>
         ${contenidoRazon}
       </div>
+      <div class="evento-card-acciones">
+        <button type="button" class="btn-card-ver" data-id="${evento.id}" title="Ver detalles / Editar">
+          <i class="fas fa-pen-to-square"></i>
+          <span>Ver / Editar</span>
+        </button>
+      </div>
     `;
 
+    // Botón de acción en la card
+    card.querySelector('.btn-card-ver').addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.mostrarDetallesEvento(evento);
+    });
+
     card.addEventListener('click', (e) => {
-      // Ignorar click en el checkbox
+      // Ignorar click en el checkbox o en el botón de acción
       if(e.target.type === 'checkbox') {
           this.verificarSeleccionados();
           return;
       }
+
       this.mostrarDetallesEvento(evento);
     });
 
@@ -235,15 +264,32 @@ class MiCuenta {
 
     titulo.textContent = evento.nombre;
 
-    // Mostrar/ocultar botones según estado
-    // Permitir editar si está en pendiente, aprobado, finalizado o rechazado (envía edición a revisión si corresponde)
-    btnEditar.style.display = (evento.estado === 'pendiente' || evento.estado === 'aprobado' || evento.estado === 'finalizado' || evento.estado === 'rechazado') ? 'block' : 'none';
+    // Permitir editar todos los estados manejables
+    btnEditar.style.display = ['pendiente','aprobado','finalizado','rechazado','edicion_pendiente'].includes(evento.estado) ? 'block' : 'none';
     // Solo permitir eliminar si está pendiente
     btnEliminar.style.display = evento.estado === 'pendiente' ? 'block' : 'none';
 
     // Contenido detallado
-    let estadoColor = evento.estado === 'aprobado' ? '#27ae60' : evento.estado === 'pendiente' ? '#f39c12' : '#e74c3c';
-    let estadoTexto = evento.estado === 'aprobado' ? 'Aprobado ✓' : evento.estado === 'pendiente' ? 'En revisión ⏳' : 'Rechazado ✕';
+    const formatFecha = (iso) => {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('es-CR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    };
+
+    let estadoColor = {
+      aprobado: '#27ae60',
+      pendiente: '#f39c12',
+      rechazado: '#e74c3c',
+      edicion_pendiente: '#e67e22',
+      finalizado: '#2980b9'
+    }[evento.estado] || '#95a5a6';
+
+    let estadoTexto = {
+      aprobado: 'Aprobado ✓',
+      pendiente: 'En revisión ⏳',
+      rechazado: 'Rechazado ✕',
+      edicion_pendiente: 'Cambios en revisión ⏳',
+      finalizado: 'Finalizado'
+    }[evento.estado] || evento.estado;
 
     let razonHtml = '';
     if (evento.razon_rechazo) {
@@ -278,17 +324,17 @@ class MiCuenta {
 
         <div style="margin-bottom: 15px;">
           <strong>Fecha:</strong><br>
-          ${evento.fecha_inicio} al ${evento.fecha_fin}
+          ${formatFecha(evento.fecha_inicio)} al ${formatFecha(evento.fecha_fin)}
         </div>
 
         <div style="margin-bottom: 15px;">
           <strong>Ubicación:</strong><br>
-          ${this.escapeHtml(evento.ubicacion)}
+          ${this.escapeHtml(evento.ubicacion || '—')}
         </div>
 
         <div style="margin-bottom: 15px;">
-          <strong>Descipción:</strong><br>
-          ${this.escapeHtml(evento.descripcion)}
+          <strong>Descripción:</strong><br>
+          ${this.escapeHtml(evento.descripcion || '—')}
         </div>
 
         ${razonHtml}
@@ -298,8 +344,6 @@ class MiCuenta {
 
     // Event listeners para botones de acción
     btnEditar.onclick = () => {
-      alert('Redirigiendo a edición...');
-      // TODO: Implementar edición de evento
       window.location.href = `/crear-evento.html?id=${evento.id}`;
     };
 

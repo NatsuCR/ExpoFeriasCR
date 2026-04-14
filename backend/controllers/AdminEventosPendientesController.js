@@ -7,7 +7,7 @@ class AdminEventosPendientesController {
    * GET /api/admin/eventos-pendientes
    */
   async listarPendientes(req, res) {
-    const { estado = 'pendiente', pagina = 1, limite = 10 } = req.query;
+    const { estado, pagina = 1, limite = 10 } = req.query;
 
     try {
       const offset = (pagina - 1) * limite;
@@ -19,8 +19,8 @@ class AdminEventosPendientesController {
         consulta += ' WHERE e.estado = ?';
         params.push(estado);
       } else {
-        consulta += ' WHERE e.estado IN (?, ?, ?, ?)';
-        params.push('pendiente', 'edicion_pendiente', 'aprobado', 'rechazado');
+        // Por defecto mostrar pendientes y ediciones pendientes
+        consulta += ` WHERE e.estado IN ('pendiente', 'edicion_pendiente')`;
       }
 
       consulta += ' ORDER BY e.created_at DESC LIMIT ? OFFSET ?';
@@ -29,9 +29,9 @@ class AdminEventosPendientesController {
       const [eventos] = await pool.query(consulta, params);
 
       // Obtener total para paginación
-      let consultaTotal = 'SELECT COUNT(*) as total FROM eventos WHERE usuario_id IS NOT NULL';
+      let consultaTotal = `SELECT COUNT(*) as total FROM eventos WHERE usuario_id IS NOT NULL AND estado IN ('pendiente', 'edicion_pendiente')`;
       if (estado) {
-        consultaTotal += ' AND estado = ?';
+        consultaTotal = 'SELECT COUNT(*) as total FROM eventos WHERE usuario_id IS NOT NULL AND estado = ?';
       }
       const [countResult] = await pool.query(consultaTotal, estado ? [estado] : []);
       const total = countResult[0].total;
@@ -69,9 +69,9 @@ class AdminEventosPendientesController {
         return res.status(404).json({ error: 'Evento no encontrado' });
       }
 
-      const evento = eventos[0];
+      let evento = eventos[0];
 
-      // Obtener datos relacionados
+      // Obtener datos relacionados (live)
       const [actividades] = await pool.query(
         'SELECT * FROM actividades WHERE evento_id = ? ORDER BY fecha, hora',
         [eventoId]
@@ -92,13 +92,29 @@ class AdminEventosPendientesController {
         [eventoId]
       );
 
-      res.json({
-        evento,
-        actividades,
-        precios,
-        expositores,
-        galeria
-      });
+      // Si hay borrador, el admin debe ver los cambios propuestos
+      let borradorData = null;
+      if (evento.borrador_cambios) {
+        try {
+          borradorData = typeof evento.borrador_cambios === 'string'
+            ? JSON.parse(evento.borrador_cambios)
+            : evento.borrador_cambios;
+        } catch (_) { borradorData = null; }
+      }
+
+      if (borradorData) {
+        const eventoConBorrador = { ...evento, ...borradorData };
+        res.json({
+          evento: eventoConBorrador,
+          actividades: borradorData.actividades || actividades,
+          precios: borradorData.precios || precios,
+          expositores: borradorData.expositores || expositores,
+          galeria: borradorData.galeria || galeria,
+          tiene_borrador: true
+        });
+      } else {
+        res.json({ evento, actividades, precios, expositores, galeria });
+      }
     } catch (error) {
       console.error('Error al obtener evento pendiente:', error);
       res.status(500).json({ error: 'Error al obtener evento' });
@@ -113,10 +129,10 @@ class AdminEventosPendientesController {
     const eventoId = req.params.id;
 
     try {
-      // Obtener evento
+      // Obtener evento (pendiente o edicion_pendiente)
       const [eventos] = await pool.query(
-        'SELECT * FROM eventos WHERE id = ? AND estado = ? AND usuario_id IS NOT NULL',
-        [eventoId, 'pendiente']
+        `SELECT * FROM eventos WHERE id = ? AND estado IN ('pendiente', 'edicion_pendiente') AND usuario_id IS NOT NULL`,
+        [eventoId]
       );
 
       if (eventos.length === 0) {
@@ -137,11 +153,88 @@ class AdminEventosPendientesController {
 
       const usuario = usuarios[0];
 
-      // Actualizar estado a aprobado y activo
-      await pool.query(
-        'UPDATE eventos SET estado = ?, activo = 1, razon_rechazo = NULL WHERE id = ?',
-        ['aprobado', eventoId]
-      );
+      // Si tiene borrador, promoverlo a datos live antes de aprobar
+      if (evento.estado === 'edicion_pendiente' && evento.borrador_cambios) {
+        let borrador;
+        try {
+          borrador = typeof evento.borrador_cambios === 'string'
+            ? JSON.parse(evento.borrador_cambios)
+            : evento.borrador_cambios;
+        } catch (_) { borrador = null; }
+
+        if (borrador) {
+          const b = borrador;
+          // Actualizar columnas principales del evento con datos del borrador
+          await pool.query(
+            `UPDATE eventos SET
+              slug = ?, nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, ubicacion = ?, provincia = ?,
+              imagen_portada = ?, horario_imagen = ?, mapa_embed = ?, tipo_venta = ?, url_venta_online = ?,
+              color_primario = ?, color_secundario = ?, color_fondo = ?, color_texto = ?,
+              color_hero_overlay = ?, color_titulo_seccion = ?,
+              color_titulo_hero = ?, color_descripcion_hero = ?, color_fondo_fechas = ?, color_texto_fechas = ?,
+              color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
+              color_titulo_h3 = ?,
+              color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
+              color_fondo_footer = ?, color_texto_footer = ?,
+              estado = 'aprobado', activo = 1, razon_rechazo = NULL, borrador_cambios = NULL
+             WHERE id = ?`,
+            [
+              b.slug || evento.slug, b.nombre || evento.nombre, b.descripcion, b.fecha_inicio, b.fecha_fin,
+              b.ubicacion, b.provincia,
+              b.imagen_portada, b.horario_imagen, b.mapa_embed, b.tipo_venta, b.url_venta_online,
+              b.color_primario || '#8b5a2b', b.color_secundario || '#d4a373', b.color_fondo || '#f4e4c1', b.color_texto || '#2c1a0e',
+              b.color_hero_overlay || 'rgba(62,42,31,0.7)', b.color_titulo_seccion || '#2c1a0e',
+              b.color_titulo_hero || '#ffffff', b.color_descripcion_hero || '#ffffff', b.color_fondo_fechas || '#d4a373', b.color_texto_fechas || '#8b5a2b',
+              b.color_menu_fondo || '#ffffff', b.color_menu_texto || '#ffffff', b.color_menu_fondo_hover || '', b.color_menu_texto_hover || '',
+              b.color_titulo_h3 || '#2c1a0e',
+              b.color_fondo_contacto || '#f4e4c1', b.color_texto_contacto || '#2c1a0e', b.color_enlace_contacto || '#8b5a2b',
+              b.color_fondo_footer || '#8b5a2b', b.color_texto_footer || '#ffffff',
+              eventoId
+            ]
+          );
+
+          // Promover precios
+          if (b.precios && Array.isArray(b.precios)) {
+            await pool.query('DELETE FROM precios_entrada WHERE evento_id = ?', [eventoId]);
+            for (const p of b.precios) {
+              if (p.fecha) await pool.query('INSERT INTO precios_entrada (evento_id, fecha, precio_normal, promocion, descripcion_promocion) VALUES (?, ?, ?, ?, ?)',
+                [eventoId, p.fecha, p.precio_normal || 0, p.promocion || null, p.descripcion_promocion || null]);
+            }
+          }
+          // Promover actividades
+          if (b.actividades && Array.isArray(b.actividades)) {
+            await pool.query('DELETE FROM actividades WHERE evento_id = ?', [eventoId]);
+            for (const a of b.actividades) {
+              if (a.titulo) await pool.query('INSERT INTO actividades (evento_id, titulo, tipo, fecha, hora, lugar, descripcion, imagen, es_gratis, requiere_entrada_online, enlace_venta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [eventoId, a.titulo, a.tipo || null, a.fecha || null, a.hora || null, a.lugar || null, a.descripcion || null,
+                 Array.isArray(a.imagen) ? JSON.stringify(a.imagen) : a.imagen || null,
+                 a.es_gratis || 0, a.requiere_entrada_online || 0, a.enlace_venta || null]);
+            }
+          }
+          // Promover expositores
+          if (b.expositores && Array.isArray(b.expositores)) {
+            await pool.query('DELETE FROM expositores WHERE evento_id = ?', [eventoId]);
+            for (const e of b.expositores) {
+              if (e.nombre) await pool.query('INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [eventoId, e.nombre, e.rubro || null, e.ubicacion || null, e.descripcion || null, e.logo || null, e.video || null]);
+            }
+          }
+          // Promover galería
+          if (b.galeria && Array.isArray(b.galeria)) {
+            await pool.query('DELETE FROM evento_galeria WHERE evento_id = ?', [eventoId]);
+            for (const g of b.galeria) {
+              if (g.imagen_url) await pool.query('INSERT INTO evento_galeria (evento_id, imagen_url, orden) VALUES (?, ?, ?)',
+                [eventoId, g.imagen_url, g.orden || 0]);
+            }
+          }
+        }
+      } else {
+        // Aprobación simple (pendiente sin borrador)
+        await pool.query(
+          'UPDATE eventos SET estado = ?, activo = 1, razon_rechazo = NULL, borrador_cambios = NULL WHERE id = ?',
+          ['aprobado', eventoId]
+        );
+      }
 
       // Enviar email al usuario
       await emailService.notificarAprobacion(
@@ -154,10 +247,7 @@ class AdminEventosPendientesController {
 
       res.json({
         message: 'Evento aprobado exitosamente',
-        evento: {
-          id: eventoId,
-          estado: 'aprobado'
-        }
+        evento: { id: eventoId, estado: 'aprobado' }
       });
     } catch (error) {
       console.error('Error al aprobar evento:', error);

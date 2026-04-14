@@ -1,4 +1,4 @@
-/**
+﻿/**
  * crearEventoMain.js
  * Clase principal para gestionar la creación de eventos
  */
@@ -13,7 +13,7 @@ import {
   abrirModalActividad, cerrarModalActividad, agregarActividadDelModal, addActividadImageRow, editarActividad,
   abrirModalExpositor, cerrarModalExpositor, agregarExpositorDelModal, editarExpositor,
   abrirModalImagen, cerrarModalImagen, agregarImagenDelModal, editarImagen,
-  editarPrecio
+  editarPrecio, registrarOnModalConfirmado
 } from './modalsManager.js';
 
 export class CrearEvento {
@@ -33,6 +33,7 @@ export class CrearEvento {
 
     // Detectar modo edición
     this.eventoEstado = null;
+    this.formDirty = false; // true solo si el usuario tocó algo en el formulario
     if (this.eventoId) {
       this.cargarEventoParaEdicion(this.eventoId);
     }
@@ -62,11 +63,29 @@ verificarAutenticacion() {
     const esAdmin = usuario.rol === 'admin';
     const endpoint = esAdmin ? `/api/admin/eventos/${id}` : `/api/eventos/mi-evento/${id}`;
     const res = await fetch(endpoint, { headers: { 'Authorization': `Bearer ${token}` } });
-    if (!res.ok) return;
+
+    if (res.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('user');
+      alert('Tu sesión expiró. Por favor inicia sesión nuevamente.');
+      window.location.href = '/index.html';
+      return;
+    }
+    if (res.status === 404) {
+      this.mostrarMensaje('❌ Evento no encontrado o no tienes permiso para editarlo.', 'error');
+      return;
+    }
+    if (!res.ok) {
+      this.mostrarMensaje('❌ Error al cargar el evento. Intenta de nuevo.', 'error');
+      return;
+    }
+
     const data = await res.json();
     const evento = data.evento || data;
     if (!evento) return;
     this.eventoEstado = evento.estado;
+
 
     const camposBasicos = [
       'slug', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin',
@@ -111,8 +130,7 @@ verificarAutenticacion() {
               <td><input type="text" class="precio-promocion" value="${p.promocion || ''}"></td>
               <td><input type="text" class="precio-descripcion" value="${p.descripcion_promocion || ''}"></td>
               <td>
-                <button type="button" class="btn-warning btn-editar" style="margin-right:5px;"><i class="fas fa-edit"></i></button>
-                <button type="button" class="btn-danger btn-eliminar"><i class="fas fa-trash"></i></button>
+                <div class="acciones-tabla"><button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button><button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button></div>
               </td>
             `;
           tr.querySelector('.btn-eliminar').addEventListener('click', () => tr.remove());
@@ -144,8 +162,7 @@ verificarAutenticacion() {
                 <span class="act-gratis" data-value="${a.es_gratis ? 'true' : 'false'}">${a.es_gratis ? '✅' : '❌'}</span>
               </td>
               <td>
-                <button type="button" class="btn-warning btn-editar" style="margin-right:5px;"><i class="fas fa-edit"></i></button>
-                <button type="button" class="btn-danger btn-eliminar"><i class="fas fa-trash"></i></button>
+                <div class="acciones-tabla"><button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button><button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button></div>
               </td>
               <td style="display:none;"><input type="text" class="act-descripcion" value="${a.descripcion || ''}"></td>
               <td style="display:none;"><input type="text" class="act-imagenes" value='${JSON.stringify(imagenes)}'></td>
@@ -185,10 +202,7 @@ verificarAutenticacion() {
               <td style="text-align:center;">${imgBadge}</td>
               <td style="text-align:center;">${videoBadge}</td>
               <td>
-                <div style="display:flex; gap:5px;">
-                  <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-edit"></i></button>
-                  <button type="button" class="btn-danger btn-eliminar"><i class="fas fa-trash"></i></button>
-                </div>
+                <div class="acciones-tabla"><button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button><button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button></div>
               </td>
               <td style="display:none;"><input type="text" class="exp-descripcion" value="${e.descripcion || ''}"></td>
               <td style="display:none;"><input type="text" class="exp-imagenes" value='${JSON.stringify(imagenes)}'></td>
@@ -213,8 +227,7 @@ verificarAutenticacion() {
               <td><input type="text" class="gal-url" value="${g.imagen_url}"></td>
               <td><input type="number" class="gal-orden" value="${g.orden || 0}"></td>
               <td>
-                <button type="button" class="btn-warning btn-editar" style="margin-right:5px;"><i class="fas fa-edit"></i></button>
-                <button type="button" class="btn-danger btn-eliminar"><i class="fas fa-trash"></i></button>
+                <div class="acciones-tabla"><button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button><button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button></div>
               </td>
             `;
           tr.querySelector('.btn-eliminar').addEventListener('click', () => tr.remove());
@@ -226,8 +239,16 @@ verificarAutenticacion() {
 
     programarActualizacion();
 
+    // El DOM ya está completamente poblado aquí (las tablas se llenaron sincrónicamente)
+    // Activar el watcher de cambios DESPUÉS de cargar para que no se marque dirty al cargar
+    this.formDirty = false;
+    this._iniciarWatcherCambios();
+
     if (evento.estado === 'aprobado') {
       this.mostrarMensaje('📝 Editando evento aprobado. Los cambios serán revisados por un admin antes de publicarse.', 'info');
+    }
+    if (evento.estado === 'edicion_pendiente') {
+      this.mostrarMensaje('⏳ Tienes cambios en revisión. Puedes actualizarlos y volver a enviar.', 'info');
     }
   } catch (err) {
     console.error('Error cargando evento para edición', err);
@@ -310,6 +331,39 @@ actualizarBotonSubmit() {
       btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar a Revisión';
     }
   }
+}
+
+/**
+ * Activa listeners en todos los campos del formulario para detectar cambios reales.
+ * Se llama DESPUÉS de que el formulario se llena con los datos cargados.
+ * Solo marca el flag cuando el USUARIO interactúa (no cuando se llena programáticamente).
+ */
+_iniciarWatcherCambios() {
+  const marcarDirty = () => { this.formDirty = true; };
+
+  // Adjuntar a todos los inputs/selects/textareas del formulario
+  // IMPORTANTE: el id del form es "form-crear-evento" (con guión al inicio)
+  document.querySelectorAll(
+    '#form-crear-evento input, #form-crear-evento select, #form-crear-evento textarea'
+  ).forEach(el => {
+    // Solo escuchar eventos de USUARIO (no los disparados programáticamente al cargar)
+    el.addEventListener('input', marcarDirty);
+    el.addEventListener('change', marcarDirty);
+  });
+
+  // Observar SOLO adición/eliminación de filas en las tablas dinámicas
+  // (Cuando se agrega una fila nueva desde el modal)
+  const tablas = ['#precios-rows', '#actividades-rows', '#expositores-rows', '#galeria-rows'];
+  tablas.forEach(selector => {
+    const el = document.querySelector(selector);
+    if (!el) return;
+    const obs = new MutationObserver(marcarDirty);
+    obs.observe(el, { childList: true }); // solo filas añadidas/eliminadas
+  });
+
+  // Detectar cuando el usuario CONFIRMA una edición en cualquier modal
+  // (tanto agregar nuevo como editar fila existente)
+  registrarOnModalConfirmado(marcarDirty);
 }
 
 initPreviewListeners() {
@@ -612,11 +666,27 @@ simularPortada() {
     const token = localStorage.getItem('token');
     if (!token) throw new Error('No hay sesión activa. Por favor inicia sesión.');
 
+    // ── Verificar si hubo cambios (aplica a CUALQUIER rol cuando edita un evento aprobado) ──
+    if (this.eventoId && this.eventoEstado) {
+      const esAprobadoOEnRevision = ['aprobado', 'edicion_pendiente'].includes(this.eventoEstado);
+      if (esAprobadoOEnRevision && !this.formDirty) {
+        if (btn) { this.actualizarBotonSubmit(); btn.disabled = false; }
+        this.mostrarMensaje('ℹ️ No has hecho ningún cambio. Modifica algún campo antes de enviar a revisión.', 'info');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+    }
+
     const usuario = this.getUsuarioStorage() || {};
     const esAdmin = usuario.rol === 'admin';
 
+    // Determinar si aunque el usuario sea admin, el evento pertenece a la sesión de usuario normal
+    // (detectado porque venimos de mi-cuenta.html donde solo el usuario puede editar sus propios eventos)
+    const uNormal = JSON.parse(localStorage.getItem('usuario') || 'null');
+    const esEdicionUsuario = this.eventoId && uNormal && uNormal.rol !== 'admin';
+
     let response;
-    if (esAdmin) {
+    if (esAdmin && !esEdicionUsuario) {
       if (this.eventoId) {
         response = await fetch(`/api/admin/eventos/${this.eventoId}`, {
           method: 'PUT',
@@ -632,6 +702,12 @@ simularPortada() {
       }
     } else {
       if (this.eventoId) {
+        // Bloquear si el estado no se cargó
+        if (!this.eventoEstado) {
+          if (btn) { this.actualizarBotonSubmit(); btn.disabled = false; }
+          this.mostrarMensaje('❌ No se pudo cargar el estado del evento. Recarga la página e intenta de nuevo.', 'error');
+          return;
+        }
         response = await fetch(`/api/eventos/${this.eventoId}/editar-aprobado`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -667,16 +743,21 @@ simularPortada() {
 }
 
 mostrarModalExito(mensaje) {
+  const esAdmin = this.getUsuarioStorage()?.rol === 'admin';
+  if (esAdmin) {
+    this.mostrarMensaje('Datos guardados correctamente', 'success');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
   const modal = document.getElementById('modal-exito');
   if (modal) {
     const msgEl = modal.querySelector('.modal-mensaje');
-    const esAdmin = this.getUsuarioStorage()?.rol === 'admin';
     if (msgEl) {
-      msgEl.innerHTML = mensaje || (esAdmin ? 'El evento ha sido guardado correctamente.' : 'Tu evento ha sido enviado correctamente a revisión.<br>Nuestro equipo lo revisará en un plazo de <strong>24 a 72 horas</strong>.');
+      msgEl.innerHTML = mensaje || 'Tu evento ha sido enviado correctamente a revisión.<br>Nuestro equipo lo revisará en un plazo de <strong>24 a 72 horas</strong>.';
     }
     modal.style.display = 'flex';
     document.getElementById('btn-ir-cuenta')?.addEventListener('click', () => {
-      window.location.href = esAdmin ? '/admin/dashboard.html' : '/mi-cuenta.html';
+      window.location.href = '/mi-cuenta.html';
     });
   }
 }
@@ -691,3 +772,4 @@ mostrarMensaje(texto, tipo) {
   }
 }
 }
+

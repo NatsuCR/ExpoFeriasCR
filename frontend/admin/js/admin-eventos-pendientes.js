@@ -76,7 +76,7 @@ class AdminEventosPendientes {
       const coincideEstado = !estado || evento.estado === estado;
       const coincideBusqueda = !buscar ||
         evento.nombre.toLowerCase().includes(buscar) ||
-        (evento.usuario?.nombre || '').toLowerCase().includes(buscar);
+        (evento.usuario_nombre || '').toLowerCase().includes(buscar);
 
       return coincideEstado && coincideBusqueda;
     });
@@ -114,12 +114,12 @@ class AdminEventosPendientes {
 
     eventosPagina.forEach(evento => {
       const row = document.createElement('tr');
-      const usuarioNombre = evento.usuario?.nombre || 'Sin usuario';
+      const usuarioNombre = evento.usuario_nombre || 'Sin usuario';
       const estadoBadge = this.getEstadoBadge(evento.estado);
       const fechaCreacion = new Date(evento.created_at).toLocaleDateString('es-CR');
 
       row.innerHTML = `
-        <td><strong>${this.escapeHtml(usuarioNombre)}</strong><br><small style="color: #999;">${this.escapeHtml(evento.usuario?.email || '')}</small></td>
+        <td><strong>${this.escapeHtml(usuarioNombre)}</strong><br><small style="color: #999;">${this.escapeHtml(evento.usuario_email || '')}</small></td>
         <td>${this.escapeHtml(evento.nombre)}</td>
         <td>${fechaCreacion}</td>
         <td>${estadoBadge}</td>
@@ -179,7 +179,16 @@ class AdminEventosPendientes {
         return;
       }
 
-      this.eventoActualModal = evento;
+      // Fetch full event info to show everything including carousels and images
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/admin/eventos-pendientes/${eventoId}`, {
+         headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if(res.ok) {
+          const fullData = await res.json();
+          // Combinar datos basicos con las colecciones y extras
+          Object.assign(evento, fullData);
+      }
 
       // Guardar datos del evento en localStorage con una clave única
       const datosPreview = {
@@ -206,26 +215,70 @@ class AdminEventosPendientes {
         color_fondo_footer: evento.color_fondo_footer || '',
         color_texto_footer: evento.color_texto_footer || '',
         color_fondo_contacto: evento.color_fondo_contacto || '',
-        color_texto_contacto: evento.color_texto_contacto || ''
+        color_texto_contacto: evento.color_texto_contacto || '',
+        precios: evento.precios || [],
+        actividades: evento.actividades || [],
+        expositores: evento.expositores || [],
+        galeria: evento.galeria || []
       };
       
       const dataKey = 'preview_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       localStorage.setItem(dataKey, JSON.stringify(datosPreview));
 
+      const formatDate = (dateStr) => {
+        if (!dateStr) return '';
+        const d = new Date(dateStr + 'T12:00:00');
+        return d.toLocaleDateString();
+      };
+
+      const buildCard = (isLive) => {
+        const liveBadge = isLive ? `<div class="live-badge" style="position:absolute; top:10px; right:10px; background:#e74c3c; color:white; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; z-index:10;">🔴 EN VIVO</div>` : '';
+        return `
+          <div style="position:relative; width:280px; border:1px solid #ddd; border-radius:8px; overflow:hidden; background:white; text-align:left;">
+            ${liveBadge}
+            <img src="${evento.imagen_portada || '/assets/images/default-feria.jpg'}" alt="${this.escapeHtml(evento.nombre)}" style="width:100%; height:180px; object-fit:cover; border-bottom:1px solid #eee;">
+            <div style="padding:15px;">
+              <h3 style="margin:0 0 10px; font-size:18px; color:#333;">${this.escapeHtml(evento.nombre)}</h3>
+              <p style="margin:5px 0; color:#666; font-size:14px;">${formatDate(evento.fecha_inicio)} - ${formatDate(evento.fecha_fin)}</p>
+              <p style="margin:5px 0 15px; color:#666; font-size:14px;">${this.escapeHtml(evento.ubicacion)}</p>
+              <button type="button" class="btn-primary" style="width:100%; padding:8px; border:none; background:#0033A0; color:white; border-radius:4px; font-size:14px; cursor:pointer;">Ver más</button>
+            </div>
+          </div>
+        `;
+      };
+
       // Mostrar iframe con evento.html en modo preview
       const html = `
-        <div class="evento-preview-container">
-          <div class="evento-preview-info">
+        <div style="display:flex; gap: 20px; flex-wrap: wrap;">
+          <div class="evento-preview-info" style="flex:1; min-width:300px;">
             <div class="preview-usuario-info">
               <h4>Información del Usuario</h4>
-              <p><strong>Nombre:</strong> ${this.escapeHtml(evento.usuario?.nombre || 'N/A')}</p>
-              <p><strong>Email:</strong> ${this.escapeHtml(evento.usuario?.email || 'N/A')}</p>
+              <p><strong>Nombre:</strong> ${this.escapeHtml(evento.usuario_nombre || 'N/A')}</p>
+              <p><strong>Email:</strong> ${this.escapeHtml(evento.usuario_email || 'N/A')}</p>
               <p><strong>Fecha Creación:</strong> ${new Date(evento.created_at).toLocaleDateString('es-CR')}</p>
               <p><strong>Estado:</strong> ${this.getEstadoBadge(evento.estado)}</p>
               ${evento.razon_rechazo ? `<div style="background: #fadbd8; padding: 12px; border-radius: 6px; margin-top: 12px;"><strong style="color: #721c24;">Razón del Rechazo:</strong><p style="color: #721c24;">${this.escapeHtml(evento.razon_rechazo)}</p></div>` : ''}
             </div>
+
+            <div style="margin-top:20px;">
+              <h4>Simulación Portada (Index)</h4>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+                <div style="flex:1;">
+                   <h5 style="margin-bottom:5px;">Normal / Hoy</h5>
+                   ${buildCard(false)}
+                </div>
+                <div style="flex:1;">
+                   <h5 style="margin-bottom:5px;">En Vivo</h5>
+                   ${buildCard(true)}
+                </div>
+                <div style="flex:1;">
+                   <h5 style="margin-bottom:5px;">Próximos Eventos</h5>
+                   ${buildCard(false)}
+                </div>
+              </div>
+            </div>
           </div>
-          <iframe src="/evento.html?preview=1&dataKey=${dataKey}" class="evento-preview-iframe" allowfullscreen></iframe>
+          <iframe src="/evento.html?preview=1&dataKey=${dataKey}" class="evento-preview-iframe" allowfullscreen style="flex:2; min-width:360px;"></iframe>
         </div>
       `;
 
@@ -274,7 +327,7 @@ class AdminEventosPendientes {
   }
 
   abrirRechazar(eventoId) {
-    this.eventosAprobar = eventoId;
+    this.eventosAprobar = eventoId || (this.eventoActualModal ? this.eventoActualModal.id : null);
     document.getElementById('razon-rechazo').value = '';
     document.getElementById('modal-evento-preview').style.display = 'none';
     document.getElementById('modal-rechazar').style.display = 'flex';
@@ -296,7 +349,7 @@ class AdminEventosPendientes {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ razon_rechazo: razon })
+        body: JSON.stringify({ razonRechazo: razon })
       });
 
       if (!response.ok) {

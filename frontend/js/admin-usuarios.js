@@ -33,45 +33,62 @@ function mostrarMensaje(texto, tipo) {
 async function cargarUsuarios() {
     const usuarios = await fetchAPI('/api/admin/usuarios');
     usuariosGlobal = usuarios;
+    
+    const divAdmins = document.getElementById('listaAdmins');
+    const divRegulares = document.getElementById('listaRegulares');
+
     if (usuarios.length === 0) {
-        listaUsuariosDiv.innerHTML = '<p>No hay usuarios registrados.</p>';
+        if(divAdmins) divAdmins.innerHTML = '<p>No hay usuarios registrados.</p>';
+        if(divRegulares) divRegulares.innerHTML = '<p>No hay usuarios registrados.</p>';
         return;
     }
-    let html = `
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th class="checkbox-col"><input type="checkbox" id="selectAllCheckbox"></th>
-                    <th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Activo</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-    usuarios.forEach(u => {
-        html += `
-            <tr data-id="${u.id}">
-                <td class="checkbox-col"><input type="checkbox" class="user-check" data-id="${u.id}"></td>
-                <td>${u.id}</td>
-                <td>${escapeHtml(u.nombre)}</td>
-                <td>${escapeHtml(u.email)}</td>
-                <td>${u.rol}</td>
-                <td>${u.activo ? 'Sí' : 'No'}</td>
-            </tr>
+
+    const admins = usuarios.filter(u => u.rol === 'admin');
+    const regulares = usuarios.filter(u => u.rol !== 'admin');
+
+    const generateTable = (usersList) => {
+        if (usersList.length === 0) return '<p>No hay usuarios en esta categoría.</p>';
+        let html = `
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="checkbox-col"><input type="checkbox" class="selectAllCheckbox"></th>
+                        <th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Activo</th>
+                    </tr>
+                </thead>
+                <tbody>
         `;
-    });
-    html += `</tbody></table>`;
-    listaUsuariosDiv.innerHTML = html;
+        usersList.forEach(u => {
+            html += `
+                <tr data-id="${u.id}">
+                    <td class="checkbox-col"><input type="checkbox" class="user-check" data-id="${u.id}"></td>
+                    <td>${u.id}</td>
+                    <td>${escapeHtml(u.nombre)}</td>
+                    <td>${escapeHtml(u.email)}</td>
+                    <td>${u.rol}</td>
+                    <td>${u.activo ? 'Sí' : 'No'}</td>
+                </tr>
+            `;
+        });
+        html += `</tbody></table>`;
+        return html;
+    };
+
+    if(divAdmins) divAdmins.innerHTML = generateTable(admins);
+    if(divRegulares) divRegulares.innerHTML = generateTable(regulares);
 
     // Evento para "Seleccionar todos"
-    const selectAll = document.getElementById('selectAllCheckbox');
-    if (selectAll) {
+    document.querySelectorAll('.selectAllCheckbox').forEach(selectAll => {
         selectAll.addEventListener('change', (e) => {
-            document.querySelectorAll('.user-check').forEach(cb => {
-                cb.checked = e.target.checked;
-            });
+            const table = e.target.closest('table');
+            if(table) {
+                table.querySelectorAll('.user-check').forEach(cb => {
+                    cb.checked = e.target.checked;
+                });
+            }
             actualizarBotonEliminar();
         });
-    }
+    });
 
     // Evento para cada checkbox individual
     document.querySelectorAll('.user-check').forEach(cb => {

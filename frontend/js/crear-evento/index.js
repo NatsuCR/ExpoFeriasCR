@@ -9,7 +9,7 @@ import { subirImagen, bindUpload } from './uploadManager.js';
 import {
   abrirModalPrecio, cerrarModalPrecio, agregarPrecioDelModal,
   abrirModalActividad, cerrarModalActividad, agregarActividadDelModal, addActividadImageRow,
-  abrirModalExpositor, cerrarModalExpositor, agregarExpositorDelModal,
+  abrirModalExpositor, cerrarModalExpositor, agregarExpositorDelModal, addExpositorImageRow,
   abrirModalImagen, cerrarModalImagen, agregarImagenDelModal
 } from './modalsManager.js';
 import {
@@ -33,6 +33,7 @@ window.addActividadImageRow = addActividadImageRow;
 window.abrirModalExpositor = abrirModalExpositor;
 window.cerrarModalExpositor = cerrarModalExpositor;
 window.agregarExpositorDelModal = agregarExpositorDelModal;
+window.addExpositorImageRow = addExpositorImageRow;
 
 window.abrirModalImagen = abrirModalImagen;
 window.cerrarModalImagen = cerrarModalImagen;

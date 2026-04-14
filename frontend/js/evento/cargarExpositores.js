@@ -88,10 +88,7 @@ export async function cargarExpositores(slug) {
             ${buildMiniCarrusel(imagenesLimpias, e.nombre)}
             <h3>${e.nombre}</h3>
             <p><strong>Rubro:</strong> ${e.rubro}</p>
-            <p class="descripcion-texto">${descripcion}</p>
-            ${descripcion.length > 150
-                ? `<button class="btn-ver-mas" onclick="this.closest('.expositor-card').classList.toggle('expandida'); this.textContent = this.closest('.expositor-card').classList.contains('expandida') ? 'Ver menos ▲' : 'Ver más ▼'">Ver más ▼</button>`
-                : ''}
+            ${typeof window.formatDescription === 'function' ? window.formatDescription(descripcion) : `<p class="descripcion-texto">${descripcion}</p>`}
             <p><strong>Ubicación:</strong> ${e.ubicacion || 'Por definir'}</p>
             ${videoHtml}
         </div>`;
@@ -121,11 +118,11 @@ export async function cargarExpositores(slug) {
 
         const carruselControl = initResponsiveCarousel('expositoresWrapper', 'expositoresGrid', 'expositoresPrev', 'expositoresNext', 280, 10000);
 
-        container.querySelectorAll('.btn-ver-mas').forEach(btn => {
+        container.querySelectorAll('.btn-ver-mas, .btn-ver-menos').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const card = btn.closest('.expositor-card');
                 setTimeout(() => {
-                    if (card.classList.contains('expandida')) {
+                    if (card && card.querySelector('.desc-full').style.display === 'block') {
                         carruselControl.detener();
                     } else {
                         carruselControl.reanudar();

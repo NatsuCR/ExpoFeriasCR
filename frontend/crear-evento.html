@@ -32,12 +32,20 @@
 
             <!-- ══════════════ COLUMNA FORMULARIO ══════════════ -->
             <div id="formColumna">
-                <div class="crear-evento-header">
+                <div class="crear-evento-header" style="text-align:center;">
                     <h1>🎉 Crea tu Evento</h1>
                     <p>Completa todos los detalles. Una vez enviado, nuestro equipo lo revisará en 24-72 horas.</p>
-                    <button type="button" id="btnTogglePreview" class="btn-toggle-preview">
-                        <i class="fas fa-eye"></i> Vista previa
-                    </button>
+                    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:15px;">
+                        <button type="button" id="btnEliminarEvento" class="btn-danger" style="display:none; padding:8px 16px; border:none; border-radius:6px; cursor:pointer;" onclick="if(confirm('¿Seguro que deseas eliminar este evento permanentemente?')) { this.dispatchEvent(new CustomEvent('eliminar-evento', {bubbles:true})); }">
+                            <i class="fas fa-trash"></i> Eliminar Evento
+                        </button>
+                        <button type="button" id="btnTogglePreview" class="btn-toggle-preview" style="padding:8px 16px;">
+                            <i class="fas fa-eye"></i> Vista previa (Evento)
+                        </button>
+                        <button type="button" id="btn-preview-portada" class="btn-primary" style="background:#0033A0; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                            <i class="fas fa-image"></i> Vista previa (Portada Index)
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Mensaje de estado (éxito / error) -->
@@ -203,9 +211,6 @@
                             </div>
                             <div class="form-navigation">
                                 <button type="button" class="btn-secondary" disabled>← Anterior</button>
-                            <button type="button" class="btn btn-guardar-preview btn-guardar-tab-usuario">
-                                💾 Guardar vista previa
-                            </button>
                                 <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
                             </div>
                         </div>
@@ -222,9 +227,6 @@
                             </div>
                             <div class="form-navigation">
                                 <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
-                            <button type="button" class="btn btn-guardar-preview btn-guardar-tab-usuario">
-                                💾 Guardar vista previa
-                            </button>
                                 <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
                             </div>
                         </div>
@@ -241,9 +243,6 @@
                             </div>
                             <div class="form-navigation">
                                 <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
-                            <button type="button" class="btn btn-guardar-preview btn-guardar-tab-usuario">
-                                💾 Guardar vista previa
-                            </button>
                                 <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
                             </div>
                         </div>
@@ -260,9 +259,6 @@
                             </div>
                             <div class="form-navigation">
                                 <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
-                            <button type="button" class="btn btn-guardar-preview btn-guardar-tab-usuario">
-                                💾 Guardar vista previa
-                            </button>
                                 <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
                             </div>
                         </div>
@@ -279,9 +275,6 @@
                             </div>
                             <div class="form-navigation">
                                 <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
-                            <button type="button" class="btn btn-guardar-preview btn-guardar-tab-usuario">
-                                💾 Guardar vista previa
-                            </button>
                                 <button type="button" id="btn-enviar-revision" class="btn-success">
                                     <i class="fas fa-paper-plane"></i> Enviar a Revisión
                                 </button>
@@ -418,15 +411,15 @@
                 </div>
                 <div class="form-group"><label>Ubicación / Stand *</label><input type="text" id="expositor-ubicacion" placeholder="ej: Stand 5, Toldo A" required></div>
                 <div class="form-group">
-                    <label>Logo</label>
-                    <div style="display:flex;gap:10px;">
-                        <input type="text" id="expositor-logo" placeholder="URL del logo" style="flex:1;">
-                        <button type="button" class="btn-subir-archivo" id="btn-subir-logo">
-                            <i class="fas fa-cloud-upload-alt"></i> Subir
-                        </button>
+                    <label>Imágenes / Logos</label>
+                    <div id="expositorImagenesLista" style="display:flex;flex-direction:column;gap:8px;margin-bottom:6px;">
+                        <!-- filas de imagenes añadidas dinámicamente -->
                     </div>
-                    <input type="file" id="archivo-logo" accept="image/*" style="display:none;">
-                    <div id="feedback-logo" class="upload-feedback"></div>
+                    <div style="display:flex;gap:8px;margin-bottom:6px;">
+                        <button type="button" id="btnAgregarImagenExpositor" class="btn-secondary">+ Agregar imagen</button>
+                        <button type="button" class="btn-subir-archivo" id="btn-subir-expositor-multi">📁 Subir</button>
+                    </div>
+                    <div id="feedback-expositor-img" class="upload-feedback"></div>
                 </div>
                 <div class="form-group"><label>Video URL (YouTube/Vimeo)</label><input type="text" id="expositor-video" placeholder="https://youtube.com/..."></div>
             </form>
@@ -475,6 +468,33 @@
             <p>&copy; 2026 ExpoFeriasCR - Todos los derechos reservados</p>
         </div>
     </footer>
+
+    <!-- Modal Preview Portada -->
+    <div id="modal-preview-portada" class="modal-overlay" style="display:none; z-index:9999;">
+        <div class="modal-contenedor" style="width: 900px; max-width: 95%;">
+            <div class="modal-header">
+                <h3>Vista Previa - Tarjetas Index</h3>
+                <button type="button" class="btn-cerrar-modal" onclick="document.getElementById('modal-preview-portada').style.display='none'"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="padding:20px; text-align:center; overflow-y:auto; max-height:80vh;">
+                <p style="margin-bottom:20px; color:#666;">Así es como se verá tu evento resumido en las distintas secciones de la página principal (Index)</p>
+                <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+                    <div style="text-align:left;">
+                        <h4 style="margin-bottom:10px; color:#8b5a2b;">Normal / Hoy</h4>
+                        <div id="card-simulada-hoy"></div>
+                    </div>
+                    <div style="text-align:left;">
+                        <h4 style="margin-bottom:10px; color:#8b5a2b;">En Vivo</h4>
+                        <div id="card-simulada-vivo"></div>
+                    </div>
+                    <div style="text-align:left;">
+                        <h4 style="margin-bottom:10px; color:#8b5a2b;">Próximos Eventos</h4>
+                        <div id="card-simulada-proximo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="js/crear-evento/index.js"></script>
 </body>

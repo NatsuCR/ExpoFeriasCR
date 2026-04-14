@@ -333,8 +333,8 @@ class UsuarioEventsController {
 
       const evento = eventos[0];
 
-      // Permitir edición si estado es pendiente, aprobado o finalizado
-      if (!['pendiente','aprobado','finalizado'].includes(evento.estado)) {
+      // Permitir edición si estado es pendiente, aprobado, finalizado o rechazado
+      if (!['pendiente','aprobado','finalizado','rechazado'].includes(evento.estado)) {
         return res.status(403).json({ error: 'No puedes editar este evento en su estado actual: ' + evento.estado });
       }
 
@@ -510,6 +510,43 @@ class UsuarioEventsController {
     } catch (error) {
       console.error('Error al obtener eventos rechazados:', error);
       res.status(500).json({ error: 'Error al obtener eventos rechazados' });
+    }
+  }
+
+  /**
+   * Eliminar evento
+   * DELETE /api/eventos/:id
+   */
+  async eliminarEvento(req, res) {
+    const eventoId = req.params.id;
+    const usuarioId = req.user.id;
+
+    try {
+      const [rows] = await pool.query('SELECT usuario_id FROM eventos WHERE id = ?', [eventoId]);
+      if (rows.length === 0) {
+        return res.status(404).json({ error: 'Evento no encontrado' });
+      }
+
+      if (rows[0].usuario_id !== usuarioId) {
+        // En caso de que se añada soporte de rol administrador en este endpoint en el futuro
+        if (req.user.rol !== 'admin') {
+           return res.status(403).json({ error: 'No tienes permiso para eliminar este evento' });
+        }
+      }
+
+      // Eliminar relaciones para no dejar datos huérfanos
+      await pool.query('DELETE FROM precios_entrada WHERE evento_id = ?', [eventoId]);
+      await pool.query('DELETE FROM actividades WHERE evento_id = ?', [eventoId]);
+      await pool.query('DELETE FROM expositores WHERE evento_id = ?', [eventoId]);
+      await pool.query('DELETE FROM evento_galeria WHERE evento_id = ?', [eventoId]);
+
+      // Eliminar evento principal
+      await pool.query('DELETE FROM eventos WHERE id = ?', [eventoId]);
+
+      res.json({ message: 'Evento eliminado correctamente' });
+    } catch (error) {
+      console.error('Error al eliminar evento:', error);
+      res.status(500).json({ error: 'Error interno del servidor al eliminar evento' });
     }
   }
 }

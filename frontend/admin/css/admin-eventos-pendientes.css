@@ -339,7 +339,13 @@
 }
 
 .modal-grande {
-  max-width: 700px;
+  max-width: 1000px;
+  width: 95%;
+}
+
+.modal-grande .modal-body {
+  max-height: calc(100vh - 160px);
+  height: 100%;
 }
 
 @keyframes slideUp {
@@ -635,6 +641,17 @@
     flex-direction: column;
   }
 
+  #btn-limpiar-filtros {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .paginacion-container {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
 /* Vista previa evento con iframe */
 .evento-preview-container {
   display: flex;
@@ -667,7 +684,7 @@
   flex: 1;
   border: 1px solid #ddd;
   border-radius: 8px;
-  min-height: 400px;
+  min-height: 60vh;
   width: 100%;
 }
 
@@ -702,13 +719,4 @@
 #btn-limpiar-filtros::before {
   content: '✕';
   font-weight: bold;
-}
-    width: 100%;
-    justify-content: center;
-  }
-
-  .paginacion-container {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
 }

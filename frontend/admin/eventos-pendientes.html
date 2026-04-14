@@ -102,10 +102,10 @@
                 <div id="evento-preview-contenido"></div>
             </div>
             <div class="modal-footer">
-                <button id="btn-modal-rechazar" class="btn-danger" onclick="abrirModalRechazo()">
+                <button id="btn-modal-rechazar" class="btn-danger" onclick="admin.abrirRechazar()">
                     <i class="fas fa-times"></i> Rechazar
                 </button>
-                <button id="btn-modal-aprobar" class="btn-success" onclick="aprobarEventoModal()">
+                <button id="btn-modal-aprobar" class="btn-success" onclick="admin.aprobarEventoModal()">
                     <i class="fas fa-check"></i> Aprobar
                 </button>
                 <button type="button" class="btn-secondary" onclick="cerrarModalPreview()">Cerrar</button>
@@ -133,7 +133,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="cerrarModalRechazo()">Cancelar</button>
-                <button type="button" class="btn-danger" onclick="confirmarRechazo()">
+                <button type="button" class="btn-danger" onclick="admin.confirmarRechazo()">
                     <i class="fas fa-trash"></i> Rechazar Definitivamente
                 </button>
             </div>

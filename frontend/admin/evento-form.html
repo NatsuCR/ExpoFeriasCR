@@ -3,362 +3,503 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Evento - Admin</title>
-    <link rel="stylesheet" href="../css/admin.css">
-    <link rel="stylesheet" href="../css/admin-form.css">
+    <title>Crear Evento | ExpoFeriasCR</title>
     <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/navbar-auth.css">
+    <link rel="stylesheet" href="../css/crear-evento.css">
 </head>
-<body class="admin-body">
-    <div class="admin-container">
-        <h1 id="formTitle">Crear Nuevo Evento</h1>
-        <div id="globalMessage" class="message"></div>
-        <div class="topbar">
-            <a href="dashboard.html" class="btn btn-volver">← Volver al Dashboard</a>
-            <button id="btnTogglePreview">👁 Vista previa</button>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <img src="../assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR">
+                <span>ExpoFeriasCR (Admin)</span>
+            </div>
+            <button id="btn-volver-crear" class="btn-navbar-back">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
         </div>
+    </nav>
 
+    <!-- Layout dividido: formulario | vista previa -->
+    <div class="container crear-evento-container">
         <div id="formLayout">
-        <div id="formColumna">
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="basicos">Datos Básicos</button>
-            <button class="tab-btn" data-tab="precios">Precios</button>
-            <button class="tab-btn" data-tab="actividades">Actividades</button>
-            <button class="tab-btn" data-tab="expositores">Expositores</button>
-            <button class="tab-btn" data-tab="galeria">Galería</button>
-        </div>
 
-        <!-- ==================== PESTAÑA DATOS BÁSICOS ==================== -->
-        <div id="basicos" class="tab-pane active">
-            <form id="formBasicos">
-                <div class="form-row">
-                    <div class="form-group"><label>Slug (único)</label><input type="text" id="slug" required></div>
-                    <div class="form-group"><label>Nombre del Evento</label><input type="text" id="nombre" required></div>
-                </div>
-                <div class="form-group"><label>Descripción</label><textarea id="descripcion" rows="3"></textarea></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Fecha Inicio</label><input type="date" id="fecha_inicio"></div>
-                    <div class="form-group"><label>Fecha Fin</label><input type="date" id="fecha_fin"></div>
-                </div>
-                <div class="form-group">
-                    <label>Provincia</label>
-                    <select id="provincia">
-                        <option value="">Seleccione una provincia</option>
-                        <option value="San José">San José</option>
-                        <option value="Alajuela">Alajuela</option>
-                        <option value="Cartago">Cartago</option>
-                        <option value="Heredia">Heredia</option>
-                        <option value="Guanacaste">Guanacaste</option>
-                        <option value="Puntarenas">Puntarenas</option>
-                        <option value="Limón">Limón</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>Ubicación</label><input type="text" id="ubicacion"></div>
-
-                <!-- Imagen Portada -->
-                <div class="form-group">
-                    <label>Imagen Portada (URL)</label>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <input type="text" id="imagen_portada" placeholder="/assets/images/..." style="flex:1;">
-                        <button type="button" class="btn btn-secondary btn-upload" data-target="imagen_portada">📁 Subir</button>
+            <!-- ══════════════ COLUMNA FORMULARIO ══════════════ -->
+            <div id="formColumna">
+                <div class="crear-evento-header" style="text-align:center;">
+                    <h1>🎉 Crea tu Evento</h1>
+                    <p>Completa todos los detalles. Una vez enviado, nuestro equipo lo revisará en 24-72 horas.</p>
+                    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:15px;">
+                        <button type="button" id="btnEliminarEvento" class="btn-danger" style="display:none; padding:8px 16px; border:none; border-radius:6px; cursor:pointer;" onclick="if(confirm('¿Seguro que deseas eliminar este evento permanentemente?')) { this.dispatchEvent(new CustomEvent('eliminar-evento', {bubbles:true})); }">
+                            <i class="fas fa-trash"></i> Eliminar Evento
+                        </button>
+                        <button type="button" id="btnTogglePreview" class="btn-toggle-preview" style="padding:8px 16px;">
+                            <i class="fas fa-eye"></i> Vista previa (Evento)
+                        </button>
+                        <button type="button" id="btn-preview-portada" class="btn-primary" style="background:#0033A0; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                            <i class="fas fa-image"></i> Vista previa (Portada Index)
+                        </button>
                     </div>
                 </div>
 
-                <!-- Imagen Horario -->
-                <div class="form-group">
-                    <label>Imagen Horario (URL)</label>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <input type="text" id="horario_imagen" placeholder="/assets/images/..." style="flex:1;">
-                        <button type="button" class="btn btn-secondary btn-upload" data-target="horario_imagen">📁 Subir</button>
-                    </div>
+                <!-- Mensaje de estado (éxito / error) -->
+                <div id="mensaje-estado" class="mensaje-estado" style="display:none;"></div>
+
+                <form id="form-crear-evento" class="crear-evento-form" novalidate>
+                    <div class="tabs-container">
+                        <div class="tabs-nav">
+                            <button type="button" class="tab-btn active" data-tab="basicos">
+                                <i class="fas fa-info-circle"></i><span>Datos Básicos</span>
+                            </button>
+                            <button type="button" class="tab-btn" data-tab="precios">
+                                <i class="fas fa-dollar-sign"></i><span>Precios</span>
+                            </button>
+                            <button type="button" class="tab-btn" data-tab="actividades">
+                                <i class="fas fa-calendar-check"></i><span>Actividades</span>
+                            </button>
+                            <button type="button" class="tab-btn" data-tab="expositores">
+                                <i class="fas fa-users"></i><span>Expositores</span>
+                            </button>
+                            <button type="button" class="tab-btn" data-tab="galeria">
+                                <i class="fas fa-images"></i><span>Galería</span>
+                            </button>
+                        </div>
+
+                        <!-- ══ TAB 1: DATOS BÁSICOS ══ -->
+                        <div id="tab-basicos" class="tab-content active">
+                            <div class="tab-header">
+                                <h2>Información del Evento</h2>
+                                <p>Los campos con * son obligatorios.</p>
+                            </div>
+                            <div class="form-section">
+                                <div class="form-group">
+                                    <label for="slug">🔗 Identificador (URL) *</label>
+                                    <input type="text" id="slug" name="slug" placeholder="mi-evento-2026" required>
+                                    <small>Sin espacios, solo letras, números y guiones. Ej: expo-san-carlos-2026</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nombre">📝 Nombre del Evento *</label>
+                                    <input type="text" id="nombre" name="nombre" placeholder="Ej: Expo San Carlos 2026" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="descripcion">📖 Descripción</label>
+                                    <textarea id="descripcion" name="descripcion" placeholder="Describe tu evento..." rows="4"></textarea>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="fecha_inicio">📅 Fecha de Inicio *</label>
+                                        <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fecha_fin">📅 Fecha de Finalización *</label>
+                                        <input type="date" id="fecha_fin" name="fecha_fin" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ubicacion">📍 Ubicación *</label>
+                                    <input type="text" id="ubicacion" name="ubicacion" placeholder="Ej: Cámara de Ganaderos San Carlos, Alajuela" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="provincia">🗺️ Provincia *</label>
+                                    <select id="provincia" name="provincia" required>
+                                        <option value="">Selecciona una provincia</option>
+                                        <option value="San José">San José</option>
+                                        <option value="Alajuela">Alajuela</option>
+                                        <option value="Cartago">Cartago</option>
+                                        <option value="Heredia">Heredia</option>
+                                        <option value="Guanacaste">Guanacaste</option>
+                                        <option value="Puntarenas">Puntarenas</option>
+                                        <option value="Limón">Limón</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="padding: 10px; border-radius: 8px; border: 1px solid #d4a373; display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="activo" checked style="width: 20px; height: 20px; accent-color: #8b5a2b; margin: 0;"> 
+                                    <label for="activo" style="margin: 0; font-weight: bold; font-size: 1.1rem; cursor: pointer;">Evento Activo (Visible al público)</label>
+                                </div>
+
+                                <!-- Imagen portada: type="text" para evitar validación URL del browser -->
+                                <div class="form-group">
+                                    <label for="imagen_portada">🖼️ Portada para página principal (Index)</label>
+                                    <small style="display:block; color:#666; margin-bottom:8px;">Esta imagen aparecerá en el carrusel de la página principal, NO en el evento</small>
+                                    <div style="display:flex; gap:10px; margin-bottom:6px;">
+                                        <input type="text" id="imagen_portada" name="imagen_portada"
+                                               placeholder="URL o sube una imagen" style="flex:1;">
+                                        <button type="button" id="btn-subir-portada" class="btn-subir-archivo">
+                                            <i class="fas fa-cloud-upload-alt"></i> Subir
+                                        </button>
+                                    </div>
+                                    <input type="file" id="archivo-portada" accept="image/*" style="display:none;">
+                                    <div id="feedback-portada" class="upload-feedback"></div>
+                                    <small>Pega una URL o haz clic en "Subir" para cargar desde tu equipo</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="horario_imagen">⏰ Imagen de Horario</label>
+                                    <div style="display:flex; gap:10px; margin-bottom:6px;">
+                                        <input type="text" id="horario_imagen" name="horario_imagen"
+                                               placeholder="URL o sube una imagen" style="flex:1;">
+                                        <button type="button" id="btn-subir-horario" class="btn-subir-archivo">
+                                            <i class="fas fa-cloud-upload-alt"></i> Subir
+                                        </button>
+                                    </div>
+                                    <input type="file" id="archivo-horario" accept="image/*" style="display:none;">
+                                    <div id="feedback-horario" class="upload-feedback"></div>
+                                    <small>Imagen del horario del evento</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mapa_embed">🗺️ Mapa (código iframe de Google Maps)</label>
+                                    <textarea id="mapa_embed" name="mapa_embed" placeholder='<iframe src="..."></iframe>' rows="3"></textarea>
+                                    <small><a href="https://www.google.com/maps" target="_blank">¿Necesitas ayuda? →</a></small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tipo_venta">🎟️ Tipo de Venta de Entradas</label>
+                                    <select id="tipo_venta" name="tipo_venta">
+                                        <option value="taquilla">Solo en taquilla (campo ferial)</option>
+                                        <option value="online">Solo en línea</option>
+                                        <option value="ambos">Ambos (taquilla y en línea)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" id="urlVentaGroup" style="display:none;">
+                                    <label for="url_venta_online">🔗 URL para Compra en Línea</label>
+                                    <input type="url" id="url_venta_online" name="url_venta_online" placeholder="https://ejemplo.com/entradas">
+                                </div>
+
+                                <hr>
+                                <h3>🎨 Colores del Evento</h3>
+                                <p style="color:#666;font-size:13px;margin-bottom:16px;">Personaliza todos los aspectos del diseño de tu evento.</p>
+
+                                <!-- Colores Principales -->
+                                <div class="form-row">
+                                    <div class="form-group"><label>Color Primario</label><input type="color" id="color_primario" value="#8b5a2b"></div>
+                                    <div class="form-group"><label>Color Secundario</label><input type="color" id="color_secundario" value="#d4a373"></div>
+                                    <div class="form-group"><label>Color Fondo</label><input type="color" id="color_fondo" value="#f4e4c1"></div>
+                                    <div class="form-group"><label>Color Texto</label><input type="color" id="color_texto" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Overlay Hero</label><input type="text" id="color_hero_overlay" placeholder="rgba(62,42,31,0.7)"></div>
+                                </div>
+
+                                <!-- Colores de Títulos -->
+                                <div class="form-row">
+                                    <div class="form-group"><label>Color Título Sección (h2)</label><input type="color" id="color_titulo_seccion" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Color Título Hero</label><input type="color" id="color_titulo_hero" value="#FFFFFF"></div>
+                                    <div class="form-group"><label>Color Descripción Hero</label><input type="color" id="color_descripcion_hero" value="#FFFFFF"></div>
+                                    <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#d4a373"></div>
+                                    <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#8b5a2b"></div>
+                                </div>
+
+                                <!-- Colores del Menú -->
+                                <div class="form-row">
+                                    <div class="form-group"><label>Color fondo menú</label><input type="color" id="color_menu_fondo" value="#ffffff"></div>
+                                    <div class="form-group"><label>Color texto menú</label><input type="color" id="color_menu_texto" value="#ffffff"></div>
+                                    <div class="form-group"><label>Color fondo hover (opcional)</label><input type="color" id="color_menu_fondo_hover"></div>
+                                    <div class="form-group"><label>Color texto hover (opcional)</label><input type="color" id="color_menu_texto_hover"></div>
+                                    <div class="form-group"><label>Color Título H3 (tarjetas info)</label><input type="color" id="color_titulo_h3" value="#2c1a0e"></div>
+                                </div>
+
+                                <!-- Colores de Contacto y Footer -->
+                                <div class="form-row">
+                                    <div class="form-group"><label>Color fondo contacto</label><input type="color" id="color_fondo_contacto" value="#f4e4c1"></div>
+                                    <div class="form-group"><label>Color texto contacto</label><input type="color" id="color_texto_contacto" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Color enlace contacto</label><input type="color" id="color_enlace_contacto" value="#8b5a2b"></div>
+                                    <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
+                                    <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
+                                </div>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-secondary" disabled>← Anterior</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
+                            </div>
+                        </div>
+
+                        <!-- ══ TAB 2: PRECIOS ══ -->
+                        <div id="tab-precios" class="tab-content">
+                            <div class="tab-header"><h2>Precios de Entrada</h2><p>Define los precios para cada día de tu evento</p></div>
+                            <div class="form-section">
+                                <table id="tabla-precios" class="tabla-eventos">
+                                    <thead><tr><th>Fecha</th><th>Precio Normal (₡)</th><th>Promoción</th><th>Descripción</th><th>Acción</th></tr></thead>
+                                    <tbody id="precios-rows"></tbody>
+                                </table>
+                                <button type="button" id="btn-agregar-precio" class="btn-secondary">+ Agregar Precio</button>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
+                            </div>
+                        </div>
+
+                        <!-- ══ TAB 3: ACTIVIDADES ══ -->
+                        <div id="tab-actividades" class="tab-content">
+                            <div class="tab-header"><h2>Actividades del Evento</h2><p>Agrega todas las actividades que habrá durante tu evento</p></div>
+                            <div class="form-section">
+                                <table id="tabla-actividades" class="tabla-eventos">
+                                    <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Gratuito</th><th>Acción</th></tr></thead>
+                                    <tbody id="actividades-rows"></tbody>
+                                </table>
+                                <button type="button" id="btn-agregar-actividad" class="btn-secondary">+ Agregar Actividad</button>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
+                            </div>
+                        </div>
+
+                        <!-- ══ TAB 4: EXPOSITORES ══ -->
+                        <div id="tab-expositores" class="tab-content">
+                            <div class="tab-header"><h2>Expositores</h2><p>Agrega los expositores o patrocinadores de tu evento</p></div>
+                            <div class="form-section">
+                                <table id="tabla-expositores" class="tabla-eventos">
+                                    <thead><tr><th>Nombre</th><th>Rubro</th><th>Ubicación</th><th>Acción</th></tr></thead>
+                                    <tbody id="expositores-rows"></tbody>
+                                </table>
+                                <button type="button" id="btn-agregar-expositor" class="btn-secondary">+ Agregar Expositor</button>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
+                            </div>
+                        </div>
+
+                        <!-- ══ TAB 5: GALERÍA ══ -->
+                        <div id="tab-galeria" class="tab-content">
+                            <div class="tab-header"><h2>Galería de Imágenes</h2><p>Agrega imágenes que se mostrarán en el carrusel de tu evento</p></div>
+                            <div class="form-section">
+                                <table id="tabla-galeria" class="tabla-eventos">
+                                    <thead><tr><th>Vista</th><th>URL de Imagen</th><th>Orden</th><th>Acción</th></tr></thead>
+                                    <tbody id="galeria-rows"></tbody>
+                                </table>
+                                <button type="button" id="btn-agregar-imagen" class="btn-secondary">+ Agregar Imagen</button>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
+                                <button type="button" id="btn-enviar-revision" class="btn-success">
+                                    <i class="fas fa-paper-plane"></i> Enviar a Revisión
+                                </button>
+                            </div>
+                        </div>
+
+                    </div><!-- /tabs-container -->
+                </form>
+            </div><!-- /formColumna -->
+
+            <!-- ══════════════ COLUMNA VISTA PREVIA (iframe igual al admin) ══════════════ -->
+            <div id="previewPanel">
+                <div class="preview-header">
+                    <span><div class="preview-dot"></div> Vista Previa en Vivo</span>
+                    <div class="preview-url-bar" id="previewUrlBar">Completa el slug y los datos básicos</div>
+                    <button class="preview-reload-btn" id="btnReloadPreview" title="Recargar">↺</button>
                 </div>
-
-                <div class="form-group"><label>Mapa Embed (código iframe)</label><textarea id="mapa_embed" rows="3"></textarea></div>
-                <div class="form-group">
-                    <label>Tipo de venta de entradas</label>
-                    <select id="tipo_venta">
-                        <option value="taquilla">Solo en taquilla (campo ferial)</option>
-                        <option value="online">Solo en línea</option>
-                        <option value="ambos">Ambos (taquilla y en línea)</option>
-                    </select>
-                </div>
-                <div class="form-group" id="urlVentaGroup" style="display:none;">
-                    <label>URL para compra en línea</label>
-                    <input type="url" id="url_venta_online" placeholder="https://...">
-                </div>
-
-                <!-- Sección de colores -->
-                <div class="form-row">
-                    <div class="form-group"><label>Color Primario</label><input type="color" id="color_primario" value="#8b5a2b"></div>
-                    <div class="form-group"><label>Color Secundario</label><input type="color" id="color_secundario" value="#d4a373"></div>
-                    <div class="form-group"><label>Color Fondo</label><input type="color" id="color_fondo" value="#f4e4c1"></div>
-                    <div class="form-group"><label>Color Texto</label><input type="color" id="color_texto" value="#2c1a0e"></div>
-                    <div class="form-group"><label>Overlay Hero (rgba)</label><input type="text" id="color_hero_overlay" placeholder="rgba(62,42,31,0.7)"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Color Título Sección (h2)</label><input type="color" id="color_titulo_seccion" value="#2c1a0e"></div>
-                    <div class="form-group"><label>Color Título Hero</label><input type="color" id="color_titulo_hero" value="#FFFFFF"></div>
-                    <div class="form-group"><label>Color Descripción Hero</label><input type="color" id="color_descripcion_hero" value="#FFFFFF"></div>
-                    <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#d4a373"></div>
-                    <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#8b5a2b"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Color fondo botones menú</label><input type="color" id="color_menu_fondo" value="#ffffff"></div>
-                    <div class="form-group"><label>Color texto botones menú</label><input type="color" id="color_menu_texto" value="#ffffff"></div>
-                    <div class="form-group"><label>Color fondo hover (opcional)</label><input type="color" id="color_menu_fondo_hover"></div>
-                    <div class="form-group"><label>Color texto hover (opcional)</label><input type="color" id="color_menu_texto_hover"></div>
-                    <div class="form-group"><label>Color Título H3 (tarjetas info)</label><input type="color" id="color_titulo_h3" value="#2c1a0e"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Color fondo contacto</label><input type="color" id="color_fondo_contacto" value="#f4e4c1"></div>
-                    <div class="form-group"><label>Color texto contacto</label><input type="color" id="color_texto_contacto" value="#2c1a0e"></div>
-                    <div class="form-group"><label>Color enlace contacto</label><input type="color" id="color_enlace_contacto" value="#8b5a2b"></div>
-                    <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
-                    <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
-                </div>
-
-                <div class="form-group">
-                    <label><input type="checkbox" id="activo" checked> Activo</label>
-                </div>
-            </form>
-        </div>
-
-        <!-- ==================== PESTAÑA PRECIOS ==================== -->
-        <div id="precios" class="tab-pane">
-            <h3>Precios por día</h3>
-            <button id="btnAgregarPrecio" class="btn btn-primary">+ Agregar Precio</button>
-            <table class="data-table">
-                <thead>
-                    <tr><th>Fecha</th><th>Precio (₡)</th><th>Promoción</th><th>Descripción</th><th>Acciones</th></tr>
-                </thead>
-                <tbody id="tbodyPrecios"></tbody>
-            </table>
-        </div>
-
-
- 
-        <!-- ==================== PESTAÑA ACTIVIDADES ==================== -->
-        <div id="actividades" class="tab-pane">
-            <h3>Actividades</h3>
-            <button id="btnAgregarActividad" class="btn btn-primary">+ Agregar Actividad</button>
-            <table class="data-table">
-                <thead>
-                    <tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imagen</th><th>Acciones</th></tr>
-                </thead>
-                <tbody id="tbodyActividades"></tbody>
-            </table>
-        </div>
-
-
-
-        <!-- ==================== PESTAÑA EXPOSITORES ==================== -->
-        <div id="expositores" class="tab-pane">
-            <h3>Expositores</h3>
-            <button id="btnAgregarExpositor" class="btn btn-primary">+ Agregar Expositor</button>
-            <table class="data-table">
-                <thead>
-                    <tr><th>Nombre</th><th>Rubro</th><th>Descripción</th><th>Ubicación</th><th>Logo</th><th>Video</th><th>Acciones</th></tr>
-                </thead>
-                <tbody id="tbodyExpositores"></tbody>
-            </table>
-        </div>
-
-
-  
-        <!-- ==================== PESTAÑA GALERÍA ==================== -->
-        <div id="galeria" class="tab-pane">
-            <h3>Imágenes para el carrusel de fondo</h3>
-            <button id="btnAgregarImagen" class="btn btn-primary">+ Agregar Imagen</button>
-            <table class="data-table">
-                <thead>
-                    <tr><th>URL Imagen</th><th>Orden</th><th>Acciones</th></tr>
-                </thead>
-                <tbody id="tbodyGaleria"></tbody>
-            </table>
-        </div>
-
-
-
-        <!-- Barra de acciones -->
-        <div class="acciones-bar">
-            <span id="badgeEstadoEvento" class="badge-estado badge-borrador">🔴 No publicado</span>
-            <div class="acciones-botones">
-                <button type="button" id="guardarBasicos" class="btn btn-guardar-preview">
-                    💾 Guardar vista previa
-                </button>
-                <button type="button" id="btnPublicar" class="btn btn-publicar">
-                    🚀 Publicar evento
-                </button>
+                <iframe id="previewIframe" src="about:blank"></iframe>
             </div>
-        </div>
-        </div><!-- /formColumna -->
-
-        <!-- ==================== PANEL VISTA PREVIA ==================== -->
-        <div id="previewPanel">
-            <div class="preview-header">
-                <span><div class="preview-dot"></div> Vista Previa</span>
-                <div class="preview-url-bar" id="previewUrlBar">Guarda el evento para ver la preview</div>
-                <button class="preview-reload-btn" id="btnReloadPreview" title="Recargar">↺</button>
-            </div>
-            <iframe id="previewIframe" src="about:blank"></iframe>
-        </div>
 
         </div><!-- /formLayout -->
-    </div>
+    </div><!-- /container -->
 
-    <!-- ==================== MODALES ==================== -->
-    <!-- Modal Confirmación Publicar -->
-    <div id="modalConfirmarPublicar" class="modal">
-        <div class="modal-content modal-confirmar">
-            <div class="confirmar-icon">🚀</div>
-            <h3>¿Publicar este evento?</h3>
-            <p>El evento quedará <strong>visible al público</strong> en ExpoFeriasCR. Asegúrate de que la vista previa luce exactamente como quieres.</p>
-            <div class="modal-buttons">
-                <button id="btnConfirmarPublicar" class="btn btn-publicar">✅ Sí, publicar ahora</button>
-                <button id="btnCancelarPublicar" class="btn btn-secondary">Cancelar</button>
+    <!-- ══════════════════════════════════════
+         MODAL: ÉXITO AL ENVIAR
+    ══════════════════════════════════════ -->
+    <div id="modal-exito" class="modal-overlay" style="display:none;">
+        <div class="modal-contenedor" style="max-width:480px; text-align:center;">
+            <div style="padding:40px 30px;">
+                <div style="font-size:64px; margin-bottom:16px;">🎉</div>
+                <h2 style="color:#2c1a0e; margin-bottom:12px;">¡Evento enviado!</h2>
+                <p style="color:#555; font-size:15px; line-height:1.6; margin-bottom:24px;">
+                    Tu evento ha sido enviado correctamente a revisión.<br>
+                    Nuestro equipo lo revisará en un plazo de <strong>24 a 72 horas</strong>.<br>
+                    Te notificaremos por correo electrónico con el resultado.
+                </p>
+                <div style="background:#f4e4c1; border-radius:8px; padding:14px; margin-bottom:24px; font-size:13px; color:#8b5a2b;">
+                    <i class="fas fa-clock"></i> Tiempo de revisión: 24-72 horas hábiles
+                </div>
+                <button type="button" id="btn-ir-cuenta" class="btn-primary" style="width:100%; justify-content:center;">
+                    <i class="fas fa-user"></i> Ver mis eventos
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- ══════════════════════════════════════
+         MODALES: FORMULARIOS
+    ══════════════════════════════════════ -->
 
     <!-- Modal Precio -->
-    <div id="modalPrecio" class="modal">
-        <div class="modal-content">
-            <h3 id="modalPrecioTitulo">Agregar Precio</h3>
-            <input type="hidden" id="precioId">
-            <div class="form-group"><label>Fecha</label><input type="date" id="precioFecha" class="form-control"></div>
-            <div class="form-group"><label>Precio Normal (₡)</label><input type="number" id="precioNormal" class="form-control"></div>
-            <div class="form-group"><label>Promoción (ej: 3x1)</label><input type="text" id="precioPromocion" class="form-control"></div>
-            <div class="form-group"><label>Descripción</label><textarea id="precioDescripcion" class="form-control" rows="2"></textarea></div>
-            <div class="modal-buttons">
-                <button id="guardarPrecioBtn" class="btn btn-success">Guardar</button>
-                <button id="cancelarPrecioBtn" class="btn btn-secondary">Cancelar</button>
+    <div id="modal-precio" class="modal-overlay" style="display:none;">
+        <div class="modal-contenedor">
+            <div class="modal-header">
+                <h3>Agregar Precio</h3>
+                <button type="button" class="btn-cerrar-modal" onclick="cerrarModalPrecio()"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="form-precio" class="modal-form" onsubmit="return false;">
+                <div class="form-group"><label>Fecha *</label><input type="date" id="precio-fecha" required></div>
+                <div class="form-group"><label>Precio Normal (₡) *</label><input type="number" id="precio-monto" placeholder="3500" min="0" required></div>
+                <div class="form-group"><label>Promoción</label><input type="text" id="precio-promocion" placeholder="ej: 30% descuento"></div>
+                <div class="form-group"><label>Descripción de la Promoción</label><input type="text" id="precio-descripcion" placeholder="Detalle"></div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarModalPrecio()">Cancelar</button>
+                <button type="button" class="btn-primary" onclick="agregarPrecioDelModal()">Agregar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Actividad -->
-    <div id="modalActividad" class="modal">
-        <div class="modal-content">
-            <h3 id="modalActividadTitulo">Agregar Actividad</h3>
-            <input type="hidden" id="actividadId">
-            <div class="form-group"><label>Título</label><input type="text" id="actividadTitulo" class="form-control"></div>
-            <div class="form-group"><label>Tipo</label><input type="text" id="actividadTipo" class="form-control"></div>
-            <div class="form-group"><label>Fecha</label><input type="date" id="actividadFecha" class="form-control"></div>
-            <div class="form-group"><label>Hora</label><input type="time" id="actividadHora" class="form-control"></div>
-            <div class="form-group"><label>Lugar</label><input type="text" id="actividadLugar" class="form-control"></div>
-            <div class="form-group"><label>Descripción</label><textarea id="actividadDescripcion" class="form-control" rows="2"></textarea></div>
-            <div class="form-group">
-                <label>Imágenes</label>
-                <div id="actividadImagenesLista" class="imagenes-lista"></div>
-                <div style="display: flex; gap: 0.5rem; margin-top: 0.4rem;">
-                    <button type="button" class="btn btn-secondary" id="btnAgregarImagenActividad">+ Agregar imagen</button>
-                    <button type="button" class="btn btn-secondary btn-upload-multi" data-lista="actividadImagenesLista">📁 Subir</button>
-                </div>
+    <!-- Modal Actividad (campos completos igual al admin) -->
+    <div id="modal-actividad" class="modal-overlay" style="display:none;">
+        <div class="modal-contenedor" style="max-width:520px;">
+            <div class="modal-header">
+                <h3>Agregar Actividad</h3>
+                <button type="button" class="btn-cerrar-modal" onclick="cerrarModalActividad()"><i class="fas fa-times"></i></button>
             </div>
-            <div class="form-group"><label><input type="checkbox" id="actividadRequiereOnline"> Requiere entrada online</label></div>
-            <div class="form-group" id="actividadEnlaceGroup" style="display:none;"><label>Enlace de venta</label><input type="url" id="actividadEnlaceVenta" class="form-control"></div>
-            <div class="form-group"><label><input type="checkbox" id="actividadEsGratis"> Es gratuito</label></div>
-            <div class="modal-buttons">
-                <button id="guardarActividadBtn" class="btn btn-success">Guardar</button>
-                <button id="cancelarActividadBtn" class="btn btn-secondary">Cancelar</button>
+            <form id="form-actividad" class="modal-form" onsubmit="return false;" style="max-height:72vh; overflow-y:auto;">
+                <div class="form-group"><label>Título *</label><input type="text" id="actividad-titulo" placeholder="ej: Gran Rodeo Nocturno" required></div>
+                <div class="form-group"><label>Tipo *</label><input type="text" id="actividad-tipo" placeholder="ej: Rodeo, Concierto, Taller" required></div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="actividad-descripcion" placeholder="Describe la actividad..." rows="3"
+                        style="padding:10px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;width:100%;font-family:inherit;resize:vertical;"></textarea>
+                </div>
+                <div class="form-group"><label>Fecha *</label><input type="date" id="actividad-fecha" required></div>
+                <div class="form-group"><label>Hora de Inicio</label><input type="time" id="actividad-hora"></div>
+                <div class="form-group"><label>Lugar / Escenario</label><input type="text" id="actividad-lugar" placeholder="ej: Ruedo principal, Escenario Norte"></div>
+                <div class="form-group">
+                    <label>Imagen de la Actividad</label>
+                    <div id="actividadImagenesLista" style="display:flex;flex-direction:column;gap:8px;margin-bottom:6px;">
+                        <!-- filas de imagenes añadidas dinámicamente -->
+                    </div>
+                    <div style="display:flex;gap:8px;margin-bottom:6px;">
+                        <button type="button" id="btnAgregarImagenActividad" class="btn-secondary">+ Agregar imagen</button>
+                        <button type="button" class="btn-subir-archivo" id="btn-subir-actividad-multi">📁 Subir</button>
+                    </div>
+                    <div id="feedback-actividad-img" class="upload-feedback"></div>
+                </div>
+                <div class="form-group" style="display:flex;gap:20px;flex-wrap:wrap;">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal;">
+                        <input type="checkbox" id="actividad-es-gratis" checked> Actividad gratuita
+                    </label>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal;">
+                        <input type="checkbox" id="actividad-requiere-online"> Requiere entrada online
+                    </label>
+                </div>
+                <div class="form-group" id="actividad-enlace-group" style="display:none;">
+                    <label>Enlace de venta online</label>
+                    <input type="text" id="actividad-enlace" placeholder="https://...">
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarModalActividad()">Cancelar</button>
+                <button type="button" class="btn-primary" onclick="agregarActividadDelModal()">Agregar</button>
             </div>
         </div>
     </div>
 
     <!-- Modal Expositor -->
-    <div id="modalExpositor" class="modal">
-        <div class="modal-content">
-            <h3 id="modalExpositorTitulo">Agregar Expositor</h3>
-            <input type="hidden" id="expositorId">
-            <div class="form-group"><label>Nombre</label><input type="text" id="expositorNombre" class="form-control"></div>
-            <div class="form-group"><label>Rubro</label><input type="text" id="expositorRubro" class="form-control"></div>
-            <div class="form-group"><label>Descripción</label><textarea id="expositorDescripcion" class="form-control" rows="2"></textarea></div>
-            <div class="form-group"><label>Ubicación (stand, toldo)</label><input type="text" id="expositorUbicacion" class="form-control"></div>
-            <div class="form-group">
-                <label>Imágenes</label>
-                <div id="expositorImagenesLista" class="imagenes-lista"></div>
-                <div style="display: flex; gap: 0.5rem; margin-top: 0.4rem;">
-                    <button type="button" class="btn btn-secondary" id="btnAgregarImagenExpositor">+ Agregar imagen</button>
-                    <button type="button" class="btn btn-secondary btn-upload-multi" data-lista="expositorImagenesLista">📁 Subir</button>
-                </div>
+    <div id="modal-expositor" class="modal-overlay" style="display:none;">
+        <div class="modal-contenedor">
+            <div class="modal-header">
+                <h3>Agregar Expositor</h3>
+                <button type="button" class="btn-cerrar-modal" onclick="cerrarModalExpositor()"><i class="fas fa-times"></i></button>
             </div>
-            <div class="form-group"><label>Video URL (opcional)</label><input type="text" id="expositorVideo" class="form-control"></div>
-            <div class="modal-buttons">
-                <button id="guardarExpositorBtn" class="btn btn-success">Guardar</button>
-                <button id="cancelarExpositorBtn" class="btn btn-secondary">Cancelar</button>
+            <form id="form-expositor" class="modal-form" onsubmit="return false;">
+                <div class="form-group"><label>Nombre *</label><input type="text" id="expositor-nombre" placeholder="ej: TechCorp" required></div>
+                <div class="form-group"><label>Rubro / Categoría *</label><input type="text" id="expositor-rubro" placeholder="ej: Tecnología" required></div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="expositor-descripcion" placeholder="Detalle del expositor" rows="3"
+                        style="padding:10px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;width:100%;font-family:inherit;"></textarea>
+                </div>
+                <div class="form-group"><label>Ubicación / Stand *</label><input type="text" id="expositor-ubicacion" placeholder="ej: Stand 5, Toldo A" required></div>
+                <div class="form-group">
+                    <label>Imágenes / Logos</label>
+                    <div id="expositorImagenesLista" style="display:flex;flex-direction:column;gap:8px;margin-bottom:6px;">
+                        <!-- filas de imagenes añadidas dinámicamente -->
+                    </div>
+                    <div style="display:flex;gap:8px;margin-bottom:6px;">
+                        <button type="button" id="btnAgregarImagenExpositor" class="btn-secondary">+ Agregar imagen</button>
+                        <button type="button" class="btn-subir-archivo" id="btn-subir-expositor-multi">📁 Subir</button>
+                    </div>
+                    <div id="feedback-expositor-img" class="upload-feedback"></div>
+                </div>
+                <div class="form-group"><label>Video URL (YouTube/Vimeo)</label><input type="text" id="expositor-video" placeholder="https://youtube.com/..."></div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarModalExpositor()">Cancelar</button>
+                <button type="button" class="btn-primary" onclick="agregarExpositorDelModal()">Agregar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Galería -->
-    <div id="modalGaleria" class="modal">
-        <div class="modal-content">
-            <h3 id="modalGaleriaTitulo">Agregar Imagen</h3>
-            <input type="hidden" id="galeriaId">
-            <div class="form-group">
-                <label>URL de la imagen</label>
-                <div style="display: flex; gap: 0.5rem;">
-                    <input type="text" id="galeriaUrl" class="form-control" style="flex:1;">
-                    <button type="button" class="btn btn-secondary btn-upload" data-target="galeriaUrl">📁 Subir</button>
-                </div>
+    <!-- Modal Imagen Galería -->
+    <div id="modal-imagen" class="modal-overlay" style="display:none;">
+        <div class="modal-contenedor">
+            <div class="modal-header">
+                <h3>Agregar Imagen a la Galería</h3>
+                <button type="button" class="btn-cerrar-modal" onclick="cerrarModalImagen()"><i class="fas fa-times"></i></button>
             </div>
-            <div class="form-group"><label>Orden</label><input type="number" id="galeriaOrden" class="form-control" value="0"></div>
-            <div class="modal-buttons">
-                <button id="guardarGaleriaBtn" class="btn btn-success">Guardar</button>
-                <button id="cancelarGaleriaBtn" class="btn btn-secondary">Cancelar</button>
+            <form id="form-imagen" class="modal-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label>Imagen *</label>
+                    <div style="display:flex;gap:10px;margin-bottom:6px;">
+                        <input type="text" id="imagen-url" placeholder="URL o sube una imagen" style="flex:1;">
+                        <button type="button" class="btn-subir-archivo" id="btn-subir-galeria">
+                            <i class="fas fa-cloud-upload-alt"></i> Subir
+                        </button>
+                    </div>
+                    <input type="file" id="archivo-imagen-galeria" accept="image/*" style="display:none;">
+                    <div id="feedback-galeria" class="upload-feedback"></div>
+                    <small>Pega una URL o sube una imagen desde tu equipo</small>
+                </div>
+                <div id="preview-galeria-img-wrap" style="display:none; margin-top:8px;">
+                    <img id="preview-galeria-img" src="" alt="Vista previa"
+                         style="max-width:100%;max-height:160px;border-radius:8px;object-fit:cover;border:1px solid #eee;">
+                </div>
+                <div class="form-group"><label>Orden</label><input type="number" id="imagen-orden" placeholder="1" value="0" min="0"></div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarModalImagen()">Cancelar</button>
+                <button type="button" class="btn-primary" onclick="agregarImagenDelModal()">Agregar</button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts modulares -->
-    <script src="../js/admin-common.js"></script>
-    <script src="../js/admin-eventos-basicos.js"></script>
-    <script src="../js/admin-precios.js"></script>
-    <script src="../js/admin-actividades.js"></script>
-    <script src="../js/admin-expositores.js"></script>
-    <script src="../js/admin-galeria.js"></script>
-    <script src="../js/admin-init.js"></script>
-    <script type="module">
-        import { initPreview, refrescarPreview } from '../js/admin-preview.js';
-        initPreview();
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 ExpoFeriasCR - Todos los derechos reservados</p>
+        </div>
+    </footer>
 
-        // Botón principal guardar básicos → guarda + recarga preview
-        document.getElementById('guardarBasicos')?.addEventListener('click', async () => {
-            const ok = await guardarBasicos();
-            if (ok !== false) setTimeout(refrescarPreview, 800);
-        });
+    <!-- Modal Preview Portada -->
+    <div id="modal-preview-portada" class="modal-overlay" style="display:none; z-index:9999;">
+        <div class="modal-contenedor" style="width: 900px; max-width: 95%;">
+            <div class="modal-header">
+                <h3>Vista Previa - Tarjetas Index</h3>
+                <button type="button" class="btn-cerrar-modal" onclick="document.getElementById('modal-preview-portada').style.display='none'"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="padding:20px; text-align:center; overflow-y:auto; max-height:80vh;">
+                <p style="margin-bottom:20px; color:#666;">Así es como se verá tu evento resumido en las distintas secciones de la página principal (Index)</p>
+                <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+                    <div style="text-align:left;">
+                        <h4 style="margin-bottom:10px; color:#8b5a2b;">Normal / Hoy</h4>
+                        <div id="card-simulada-hoy"></div>
+                    </div>
+                    <div style="text-align:left;">
+                        <h4 style="margin-bottom:10px; color:#8b5a2b;">En Vivo</h4>
+                        <div id="card-simulada-vivo"></div>
+                    </div>
+                    <div style="text-align:left;">
+                        <h4 style="margin-bottom:10px; color:#8b5a2b;">Próximos Eventos</h4>
+                        <div id="card-simulada-proximo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // Botones "Guardar vista previa" en tabs (precios, actividades, expositores, galería)
-        document.querySelectorAll('.btn-guardar-tab').forEach(btn => {
-            btn.addEventListener('click', () => refrescarPreview());
-        });
-
-        // Botón recargar del panel
-        document.getElementById('btnReloadPreview')?.addEventListener('click', refrescarPreview);
-    </script>
-
-    <script>
-        // Sincronizar color-preview y hex en tiempo real
-        document.querySelectorAll('.color-card').forEach(card => {
-            const input   = card.querySelector('.color-input');
-            const preview = card.querySelector('.color-preview');
-            const hexEl   = card.querySelector('.color-hex');
-            if (!input) return;
-
-            function sync() {
-                const val = input.value;
-                if (preview) preview.style.backgroundColor = val;
-                if (hexEl)   hexEl.textContent = val.toLowerCase();
-            }
-
-            // Hacer clic en la tarjeta abre el picker
-            card.addEventListener('click', (e) => {
-                if (e.target !== input) input.click();
-            });
-
-            input.addEventListener('input', sync);
-            input.addEventListener('change', sync);
-            sync(); // estado inicial
-        });
-    </script>
+    <script type="module" src="../js/crear-evento/index.js"></script>
 </body>
 </html>

@@ -17,6 +17,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Registrar tiempo de inicio del servidor para forzar re-login al reiniciar
+const SERVER_BOOT_TIME = Date.now().toString();
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,7 +40,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.get('/api/health', (req, res) => {
-  res.json({ message: 'Servidor funcionando correctamente', timestamp: new Date() });
+  res.json({ 
+    message: 'Servidor funcionando correctamente', 
+    timestamp: new Date(),
+    bootTime: SERVER_BOOT_TIME
+  });
 });
 
 app.listen(PORT, () => {

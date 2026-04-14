@@ -103,10 +103,7 @@ export async function cargarActividades(slug) {
         <h3>${a.titulo}</h3>
         <p><i class="fas fa-calendar-day"></i> ${fecha} ${hora}</p>
         <p><i class="fas fa-map-pin"></i> ${lugar}</p>
-        <p class="descripcion-texto">${descripcion}</p>
-        ${descripcion.length > 150
-            ? `<button class="btn-ver-mas" onclick="this.closest('.actividad-card').classList.toggle('expandida'); this.textContent = this.closest('.actividad-card').classList.contains('expandida') ? 'Ver menos ▲' : 'Ver más ▼'">Ver más ▼</button>`
-            : ''}
+        ${typeof window.formatDescription === 'function' ? window.formatDescription(descripcion) : `<p class="descripcion-texto">${descripcion}</p>`}
         ${linkHtml}
         ${gratisHtml}
     </div>`;
@@ -136,11 +133,11 @@ export async function cargarActividades(slug) {
 
         const carruselControl = initResponsiveCarousel('actividadesWrapper', 'actividadesGrid', 'actividadesPrev', 'actividadesNext', 280, 10000);
 
-        container.querySelectorAll('.btn-ver-mas').forEach(btn => {
+        container.querySelectorAll('.btn-ver-mas, .btn-ver-menos').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const card = btn.closest('.actividad-card');
                 setTimeout(() => {
-                    if (card.classList.contains('expandida')) {
+                    if (card && card.querySelector('.desc-full').style.display === 'block') {
                         carruselControl.detener();
                     } else {
                         carruselControl.reanudar();

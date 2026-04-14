@@ -64,6 +64,39 @@ class MiCuenta {
       document.getElementById('modal-evento-detalles').style.display = 'none';
     });
 
+    // Listeners Panel Checkbox Múltiple
+    document.getElementById('seleccionar-todos-eventos')?.addEventListener('change', (e) => {
+        document.querySelectorAll('.cb-evento-bulk').forEach(cb => { cb.checked = e.target.checked; });
+        this.verificarSeleccionados();
+    });
+
+    document.getElementById('btn-eliminar-seleccionados')?.addEventListener('click', async () => {
+        const cbs = document.querySelectorAll('.cb-evento-bulk:checked');
+        const count = cbs.length;
+        if(count === 0) return;
+        
+        if(!confirm(`¿Estás seguro de que deseas eliminar ${count} evento(s)? Esta acción es permanente.`)) return;
+
+        const btnOrig = document.getElementById('btn-eliminar-seleccionados').innerHTML;
+        document.getElementById('btn-eliminar-seleccionados').innerHTML = 'Borrando...';
+        
+        let borrados = 0;
+        for (const cb of cbs) {
+            const id = cb.dataset.id;
+            try {
+                const token = localStorage.getItem('token');
+                await fetch(`/api/eventos/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                borrados++;
+            } catch(e) { console.error('Error al borrar', id); }
+        }
+        
+        document.getElementById('btn-eliminar-seleccionados').innerHTML = btnOrig;
+        this.cargarEventos();
+    });
+
     // Cerrar modales al hacer clic fuera
     window.addEventListener('click', (e) => {
       const modalPassword = document.getElementById('modal-cambiar-password');
@@ -151,8 +184,9 @@ class MiCuenta {
     }
 
     card.innerHTML = `
-      <div class="evento-card-header">
-        <h3 class="evento-card-titulo">${this.escapeHtml(evento.nombre)}</h3>
+      <div class="evento-card-header" style="position:relative;">
+        <input type="checkbox" class="cb-evento-bulk" data-id="${evento.id}" style="position:absolute; right:10px; top:10px; transform:scale(1.3); cursor:pointer;">
+        <h3 class="evento-card-titulo" style="padding-right:25px;">${this.escapeHtml(evento.nombre)}</h3>
         <div class="evento-card-fecha">
           <i class="fas fa-calendar"></i>
           ${evento.fecha_inicio}
@@ -167,11 +201,29 @@ class MiCuenta {
       </div>
     `;
 
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
+      // Ignorar click en el checkbox
+      if(e.target.type === 'checkbox') {
+          this.verificarSeleccionados();
+          return;
+      }
       this.mostrarDetallesEvento(evento);
     });
 
     return card;
+  }
+
+  verificarSeleccionados() {
+    const checkboxes = document.querySelectorAll('.cb-evento-bulk:checked');
+    const btnEliminarPanel = document.getElementById('btn-eliminar-seleccionados');
+    if(checkboxes.length > 0) {
+        btnEliminarPanel.style.opacity = '1';
+        btnEliminarPanel.style.pointerEvents = 'auto';
+    } else {
+        btnEliminarPanel.style.opacity = '0.5';
+        btnEliminarPanel.style.pointerEvents = 'none';
+        document.getElementById('seleccionar-todos-eventos').checked = false;
+    }
   }
 
   async mostrarDetallesEvento(evento) {
@@ -184,8 +236,8 @@ class MiCuenta {
     titulo.textContent = evento.nombre;
 
     // Mostrar/ocultar botones según estado
-    // Permitir editar si está en pendiente, aprobado o finalizado (envía edición a revisión si corresponde)
-    btnEditar.style.display = (evento.estado === 'pendiente' || evento.estado === 'aprobado' || evento.estado === 'finalizado') ? 'block' : 'none';
+    // Permitir editar si está en pendiente, aprobado, finalizado o rechazado (envía edición a revisión si corresponde)
+    btnEditar.style.display = (evento.estado === 'pendiente' || evento.estado === 'aprobado' || evento.estado === 'finalizado' || evento.estado === 'rechazado') ? 'block' : 'none';
     // Solo permitir eliminar si está pendiente
     btnEliminar.style.display = evento.estado === 'pendiente' ? 'block' : 'none';
 

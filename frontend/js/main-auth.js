@@ -17,6 +17,27 @@ async function cargarModalAuth() {
   }
 }
 
+async function verificarReinicioServidor() {
+  try {
+    const res = await fetch('/api/health');
+    if (!res.ok) return;
+    const data = await res.json();
+    
+    const lastBoot = localStorage.getItem('serverBootTime');
+    if (lastBoot && lastBoot !== data.bootTime) {
+      // El servidor se reinició, limpiar sesión
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      localStorage.setItem('serverBootTime', data.bootTime);
+      window.location.reload();
+    } else if (!lastBoot) {
+      localStorage.setItem('serverBootTime', data.bootTime);
+    }
+  } catch (error) {
+    console.warn('No se pudo verificar el estado del servidor', error);
+  }
+}
+
 function setupBotonesNavbar() {
   const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
   const btnCrearEvento = document.getElementById('btn-crear-evento-navbar');
@@ -113,6 +134,9 @@ function actualizarNavbarAuth() {
 
 // Inicializar cuando DOM esté listo
 document.addEventListener('DOMContentLoaded', async () => {
+  // Verificar si hubo reinicio para desloguear (cerrar sesión)
+  await verificarReinicioServidor();
+
   // Cargar modal
   await cargarModalAuth();
 

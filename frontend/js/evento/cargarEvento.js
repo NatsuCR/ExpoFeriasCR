@@ -8,7 +8,7 @@ export async function cargarEvento(slug) {
         document.getElementById('eventoNombre').innerText = evento.nombre;
         document.getElementById('eventoDescripcion').innerText = evento.descripcion;
         document.getElementById('eventoFechas').innerHTML = `${new Date(evento.fechaInicio).toLocaleDateString()} al ${new Date(evento.fechaFin).toLocaleDateString()}`;
-        document.getElementById('eventoInfoCompleta').innerHTML = evento.descripcion;
+        document.getElementById('eventoInfoCompleta').innerHTML = typeof window.formatDescription === 'function' ? window.formatDescription(evento.descripcion) : evento.descripcion;
         document.getElementById('infoFechas').innerHTML = `${new Date(evento.fechaInicio).toLocaleDateString()} - ${new Date(evento.fechaFin).toLocaleDateString()}`;
         document.getElementById('infoUbicacion').innerHTML = evento.ubicacion;
         document.getElementById('ubicacionTexto').innerHTML = evento.ubicacion;

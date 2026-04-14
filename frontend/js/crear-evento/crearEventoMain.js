@@ -4,9 +4,9 @@
  */
 
 import { bindUpload } from './uploadManager.js';
-import { 
-  togglePreview, programarActualizacion, guardarDatosPreview, getIframe, getSlug, 
-  actualizarUrlBar 
+import {
+  togglePreview, programarActualizacion, guardarDatosPreview, getIframe, getSlug,
+  actualizarUrlBar
 } from './previewManager.js';
 import {
   abrirModalPrecio, cerrarModalPrecio, agregarPrecioDelModal,
@@ -18,9 +18,9 @@ import {
 export class CrearEvento {
   constructor() {
     this.verificarAutenticacion();
-    this.tabBtns     = document.querySelectorAll('.tab-btn');
+    this.tabBtns = document.querySelectorAll('.tab-btn');
     this.tabContents = document.querySelectorAll('.tab-content');
-    this.mensajeDiv  = document.getElementById('mensaje-estado');
+    this.mensajeDiv = document.getElementById('mensaje-estado');
     this.init();
     this.initUploads();
     this.initPreviewListeners();
@@ -34,10 +34,19 @@ export class CrearEvento {
     }
   }
 
+  getUsuarioStorage() {
+    let uAdmin = JSON.parse(localStorage.getItem('user') || 'null');
+    let uNormal = JSON.parse(localStorage.getItem('usuario') || 'null');
+    if (window.location.pathname.includes('/admin/')) {
+        return uAdmin || uNormal;
+    }
+    return uNormal || uAdmin;
+  }
+
   verificarAutenticacion() {
-    const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+    const usuario = this.getUsuarioStorage();
     if (!usuario) {
-      alert('Debes iniciar sesión para crear un evento');
+      alert('Debes iniciar sesión para poder acceder.');
       window.location.href = '/index.html';
     }
   }
@@ -45,7 +54,10 @@ export class CrearEvento {
   async cargarEventoParaEdicion(id) {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/eventos/mi-evento/${id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const usuario = this.getUsuarioStorage() || {};
+      const esAdmin = usuario.rol === 'admin';
+      const endpoint = esAdmin ? `/api/admin/eventos/${id}` : `/api/eventos/mi-evento/${id}`;
+      const res = await fetch(endpoint, { headers: { 'Authorization': `Bearer ${token}` } });
       if (!res.ok) return;
       const data = await res.json();
       const evento = data.evento || data;
@@ -53,8 +65,8 @@ export class CrearEvento {
       this.eventoEstado = evento.estado;
 
       const camposBasicos = [
-        'slug', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin', 
-        'ubicacion', 'provincia', 'imagen_portada', 'horario_imagen', 
+        'slug', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin',
+        'ubicacion', 'provincia', 'imagen_portada', 'horario_imagen',
         'mapa_embed', 'tipo_venta', 'url_venta_online',
         'color_primario', 'color_secundario', 'color_fondo', 'color_texto',
         'color_hero_overlay', 'color_titulo_seccion',
@@ -64,11 +76,16 @@ export class CrearEvento {
         'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
         'color_fondo_footer', 'color_texto_footer'
       ];
-      
+
       camposBasicos.forEach(k => {
         const el = document.getElementById(k);
         if (el && evento[k] !== undefined && evento[k] !== null) el.value = evento[k];
       });
+
+      if (evento.activo !== undefined && evento.activo !== null) {
+        const checkActivo = document.getElementById('activo');
+        if (checkActivo) checkActivo.checked = Boolean(evento.activo);
+      }
 
       // Poblar precios
       if (data.precios && data.precios.length > 0) {
@@ -98,9 +115,9 @@ export class CrearEvento {
           data.actividades.forEach(a => {
             let imagenes = [];
             if (a.imagen) {
-              try { imagenes = JSON.parse(a.imagen); } catch(e) { imagenes = [a.imagen]; }
+              try { imagenes = JSON.parse(a.imagen); } catch (e) { imagenes = [a.imagen]; }
             }
-            
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
               <td><input type="text" class="act-titulo" value="${a.titulo || ''}"></td>
@@ -179,7 +196,34 @@ export class CrearEvento {
     document.querySelectorAll('.tab-next-btn').forEach(b => b.addEventListener('click', e => { e.preventDefault(); this.irSiguienteTab(); }));
     document.querySelectorAll('.tab-prev-btn').forEach(b => b.addEventListener('click', e => { e.preventDefault(); this.irTabAnterior(); }));
 
-    document.getElementById('btn-volver-crear')?.addEventListener('click', () => { window.location.href = '/mi-cuenta.html'; });
+    const esAdminStr = window.location.pathname.includes('/admin/') ? true : false;
+    document.getElementById('btn-volver-crear')?.addEventListener('click', () => { window.location.href = esAdminStr ? '/admin/dashboard.html' : '/mi-cuenta.html'; });
+
+    if (esAdminStr && this.eventoId) {
+      const btnEliminar = document.getElementById('btnEliminarEvento');
+      if (btnEliminar) {
+        btnEliminar.style.display = 'inline-flex';
+        btnEliminar.addEventListener('click', async () => {
+          if (confirm('¿Estás seguro de que deseas eliminar este evento permanentemente? Esta acción no se puede deshacer.')) {
+            try {
+              btnEliminar.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px;margin:0;"></span>';
+              const token = localStorage.getItem('token');
+              const res = await fetch(`/api/admin/eventos/${this.eventoId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+              });
+              if (!res.ok) throw new Error('Error al eliminar evento');
+              alert('Evento eliminado correctamente');
+              window.location.href = '/admin/dashboard.html';
+            } catch (err) {
+              console.error(err);
+              alert('Error al eliminar evento. Revisa la consola.');
+              btnEliminar.innerHTML = '<i class="fas fa-trash"></i> Eliminar Evento';
+            }
+          }
+        });
+      }
+    }
 
     document.getElementById('btnTogglePreview')?.addEventListener('click', togglePreview);
     document.getElementById('btnReloadPreview')?.addEventListener('click', () => {
@@ -191,6 +235,13 @@ export class CrearEvento {
     });
 
     getIframe()?.addEventListener('load', () => { setTimeout(programarActualizacion, 150); });
+
+    document.getElementById('btn-preview-portada')?.addEventListener('click', () => {
+      this.simularPortada();
+    });
+    document.getElementById('btn-cerrar-preview-portada')?.addEventListener('click', () => {
+      document.getElementById('modal-preview-portada').style.display = 'none';
+    });
 
     document.getElementById('btn-agregar-precio')?.addEventListener('click', abrirModalPrecio);
     document.getElementById('btn-agregar-actividad')?.addEventListener('click', abrirModalActividad);
@@ -220,7 +271,7 @@ export class CrearEvento {
     camposWatch.forEach(id => {
       const el = document.getElementById(id);
       if (el) {
-        el.addEventListener('input',  () => {
+        el.addEventListener('input', () => {
           console.log(`[Event] Input changed: ${id} = ${el.value}`);
           programarActualizacion();
         });
@@ -285,17 +336,37 @@ export class CrearEvento {
       fileInput.click();
     });
 
-    bindUpload('btn-subir-logo', 'archivo-logo', 'expositor-logo', 'feedback-logo');
+    document.getElementById('btnAgregarImagenExpositor')?.addEventListener('click', () => {
+      import('./modalsManager.js').then(m => m.addExpositorImageRow(''));
+    });
+    document.getElementById('btn-subir-expositor-multi')?.addEventListener('click', async () => {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.style.display = 'none';
+      document.body.appendChild(fileInput);
+      fileInput.addEventListener('change', async (e) => {
+        const f = e.target.files[0]; if (!f) { fileInput.remove(); return; }
+        const { subirImagen } = await import('./uploadManager.js');
+        const url = await subirImagen(f, 'feedback-expositor-img', null);
+        if (url) {
+          const { addExpositorImageRow } = await import('./modalsManager.js');
+          addExpositorImageRow(url);
+        }
+        fileInput.remove();
+      });
+      fileInput.click();
+    });
 
     bindUpload('btn-subir-galeria', 'archivo-imagen-galeria', 'imagen-url', 'feedback-galeria', (url) => {
-      const img  = document.getElementById('preview-galeria-img');
+      const img = document.getElementById('preview-galeria-img');
       const wrap = document.getElementById('preview-galeria-img-wrap');
       if (img && wrap) { img.src = url; wrap.style.display = 'block'; }
     });
 
     document.getElementById('imagen-url')?.addEventListener('input', (e) => {
-      const url  = e.target.value.trim();
-      const img  = document.getElementById('preview-galeria-img');
+      const url = e.target.value.trim();
+      const img = document.getElementById('preview-galeria-img');
       const wrap = document.getElementById('preview-galeria-img-wrap');
       if (img && wrap) {
         if (url) { img.src = url; wrap.style.display = 'block'; }
@@ -330,15 +401,48 @@ export class CrearEvento {
     return true;
   }
 
+  simularPortada() {
+    const nombre = document.getElementById('nombre').value || 'Nombre del Evento';
+    const ubicacion = document.getElementById('ubicacion').value || 'Ubicación';
+    const fecha_inicio = document.getElementById('fecha_inicio').value || new Date().toISOString().split('T')[0];
+    const fecha_fin = document.getElementById('fecha_fin').value || new Date().toISOString().split('T')[0];
+    const imagen_portada = document.getElementById('imagen_portada').value || '/assets/images/default-feria.jpg';
+
+    const formatDate = (dateStr) => {
+      const d = new Date(dateStr + 'T12:00:00');
+      return d.toLocaleDateString();
+    };
+
+    const buildCard = (isLive) => {
+      const liveBadge = isLive ? `<div class="live-badge" style="position:absolute; top:10px; right:10px; background:#e74c3c; color:white; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; z-index:10;">🔴 EN VIVO</div>` : '';
+      return `
+        ${liveBadge}
+        <img src="${imagen_portada}" alt="${nombre}" style="width:100%; height:180px; object-fit:cover; border-bottom:1px solid #eee;">
+        <div style="padding:15px;">
+          <h3 style="margin:0 0 10px; font-size:18px; color:#333;">${nombre}</h3>
+          <p style="margin:5px 0; color:#666; font-size:14px;">${formatDate(fecha_inicio)} - ${formatDate(fecha_fin)}</p>
+          <p style="margin:5px 0 15px; color:#666; font-size:14px;">${ubicacion}</p>
+          <button type="button" class="btn-primary" style="width:100%; padding:8px; border:none; background:#0033A0; color:white; border-radius:4px; font-size:14px; cursor:pointer;">Ver más</button>
+        </div>
+      `;
+    };
+
+    document.getElementById('card-simulada-proximo').innerHTML = buildCard(false);
+    document.getElementById('card-simulada-hoy').innerHTML = buildCard(false);
+    document.getElementById('card-simulada-vivo').innerHTML = buildCard(true);
+
+    document.getElementById('modal-preview-portada').style.display = 'flex';
+  }
+
   async handleSubmit() {
     const btn = document.getElementById('btn-enviar-revision');
 
-    const slug        = document.getElementById('slug')?.value.trim();
-    const nombre      = document.getElementById('nombre')?.value.trim();
+    const slug = document.getElementById('slug')?.value.trim();
+    const nombre = document.getElementById('nombre')?.value.trim();
     const fechaInicio = document.getElementById('fecha_inicio')?.value;
-    const fechaFin    = document.getElementById('fecha_fin')?.value;
-    const ubicacion   = document.getElementById('ubicacion')?.value.trim();
-    const provincia   = document.getElementById('provincia')?.value;
+    const fechaFin = document.getElementById('fecha_fin')?.value;
+    const ubicacion = document.getElementById('ubicacion')?.value.trim();
+    const provincia = document.getElementById('provincia')?.value;
 
     if (!slug || !nombre || !fechaInicio || !fechaFin || !ubicacion || !provincia) {
       this.mostrarMensaje('⚠️ Completa todos los campos obligatorios en "Datos Básicos"', 'error');
@@ -356,35 +460,36 @@ export class CrearEvento {
 
     const datosBasicos = {
       slug, nombre,
-      descripcion:  get('descripcion') || '',
+      descripcion: get('descripcion') || '',
       fecha_inicio: fechaInicio,
-      fecha_fin:    fechaFin,
+      fecha_fin: fechaFin,
       ubicacion, provincia,
-      imagen_portada:        get('imagen_portada')        || null,
-      horario_imagen:        get('horario_imagen')        || null,
-      mapa_embed:            get('mapa_embed')            || null,
-      tipo_venta:            get('tipo_venta')            || 'taquilla',
-      url_venta_online:      get('url_venta_online')      || null,
-      color_primario:        get('color_primario')        || '#8b5a2b',
-      color_secundario:      get('color_secundario')      || '#d4a373',
-      color_fondo:           get('color_fondo')           || '#f4e4c1',
-      color_texto:           get('color_texto')           || '#2c1a0e',
-      color_hero_overlay:    get('color_hero_overlay')    || 'rgba(62,42,31,0.7)',
-      color_titulo_seccion:  get('color_titulo_seccion')  || '#2c1a0e',
-      color_titulo_hero:     get('color_titulo_hero')     || '#ffffff',
-      color_descripcion_hero:get('color_descripcion_hero')|| '#ffffff',
-      color_fondo_fechas:    get('color_fondo_fechas')    || '#d4a373',
-      color_texto_fechas:    get('color_texto_fechas')    || '#8b5a2b',
-      color_menu_fondo:      get('color_menu_fondo')      || '#ffffff',
-      color_menu_texto:      get('color_menu_texto')      || '#ffffff',
-      color_menu_fondo_hover:get('color_menu_fondo_hover')|| '',
-      color_menu_texto_hover:get('color_menu_texto_hover')|| '',
-      color_titulo_h3:       get('color_titulo_h3')       || '#2c1a0e',
-      color_fondo_contacto:  get('color_fondo_contacto')  || '#f4e4c1',
-      color_texto_contacto:  get('color_texto_contacto')  || '#2c1a0e',
+      imagen_portada: get('imagen_portada') || null,
+      horario_imagen: get('horario_imagen') || null,
+      mapa_embed: get('mapa_embed') || null,
+      tipo_venta: get('tipo_venta') || 'taquilla',
+      url_venta_online: get('url_venta_online') || null,
+      color_primario: get('color_primario') || '#8b5a2b',
+      color_secundario: get('color_secundario') || '#d4a373',
+      color_fondo: get('color_fondo') || '#f4e4c1',
+      color_texto: get('color_texto') || '#2c1a0e',
+      color_hero_overlay: get('color_hero_overlay') || 'rgba(62,42,31,0.7)',
+      color_titulo_seccion: get('color_titulo_seccion') || '#2c1a0e',
+      color_titulo_hero: get('color_titulo_hero') || '#ffffff',
+      color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
+      color_fondo_fechas: get('color_fondo_fechas') || '#d4a373',
+      color_texto_fechas: get('color_texto_fechas') || '#8b5a2b',
+      color_menu_fondo: get('color_menu_fondo') || '#ffffff',
+      color_menu_texto: get('color_menu_texto') || '#ffffff',
+      color_menu_fondo_hover: get('color_menu_fondo_hover') || '',
+      color_menu_texto_hover: get('color_menu_texto_hover') || '',
+      color_titulo_h3: get('color_titulo_h3') || '#2c1a0e',
+      color_fondo_contacto: get('color_fondo_contacto') || '#f4e4c1',
+      color_texto_contacto: get('color_texto_contacto') || '#2c1a0e',
       color_enlace_contacto: get('color_enlace_contacto') || '#8b5a2b',
-      color_fondo_footer:    get('color_fondo_footer')    || '#8b5a2b',
-      color_texto_footer:    get('color_texto_footer')    || '#ffffff'
+      color_fondo_footer: get('color_fondo_footer') || '#8b5a2b',
+      color_texto_footer: get('color_texto_footer') || '#ffffff',
+      activo: document.getElementById('activo')?.checked ? 1 : 0
     };
 
     const recolectarTabla = (selector, campos) => {
@@ -395,7 +500,7 @@ export class CrearEvento {
           if (!el) return;
           if (key === 'precio_normal' || key === 'orden') obj[key] = parseInt(el.value) || 0;
           else if (key === 'imagen') {
-            try { obj[key] = JSON.parse(el.value || '[]'); } catch(e) { obj[key] = []; }
+            try { obj[key] = JSON.parse(el.value || '[]'); } catch (e) { obj[key] = []; }
           } else if (key === 'es_gratis' || key === 'requiere_entrada_online') {
             obj[key] = el.dataset?.value === 'true' ? 1 : 0;
           } else obj[key] = el.value || '';
@@ -429,7 +534,7 @@ export class CrearEvento {
       rubro: '.exp-rubro',
       ubicacion: '.exp-ubicacion',
       descripcion: '.exp-descripcion',
-      logo: '.exp-logo',
+      logo: '.exp-imagenes',
       video: '.exp-video'
     }).filter(e => e.nombre);
 
@@ -444,25 +549,38 @@ export class CrearEvento {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No hay sesión activa. Por favor inicia sesión.');
 
+      const usuario = this.getUsuarioStorage() || {};
+      const esAdmin = usuario.rol === 'admin';
+
       let response;
-      if (this.eventoId) {
-        response = await fetch(`/api/eventos/${this.eventoId}/editar-aprobado`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
-        });
+      if (esAdmin) {
+        if (this.eventoId) {
+          response = await fetch(`/api/admin/eventos/${this.eventoId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
+          });
+        } else {
+          response = await fetch('/api/admin/eventos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
+          });
+        }
       } else {
-        response = await fetch('/api/eventos/crear', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
-        });
+        if (this.eventoId) {
+          response = await fetch(`/api/eventos/${this.eventoId}/editar-aprobado`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
+          });
+        } else {
+          response = await fetch('/api/eventos/crear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
+          });
+        }
       }
 
       const data = await response.json();
@@ -489,12 +607,13 @@ export class CrearEvento {
     const modal = document.getElementById('modal-exito');
     if (modal) {
       const msgEl = modal.querySelector('.modal-mensaje');
+      const esAdmin = this.getUsuarioStorage()?.rol === 'admin';
       if (msgEl) {
-        msgEl.innerHTML = mensaje || 'Tu evento ha sido enviado correctamente a revisión.<br>Nuestro equipo lo revisará en un plazo de <strong>24 a 72 horas</strong>.';
+        msgEl.innerHTML = mensaje || (esAdmin ? 'El evento ha sido guardado correctamente.' : 'Tu evento ha sido enviado correctamente a revisión.<br>Nuestro equipo lo revisará en un plazo de <strong>24 a 72 horas</strong>.');
       }
       modal.style.display = 'flex';
       document.getElementById('btn-ir-cuenta')?.addEventListener('click', () => {
-        window.location.href = '/mi-cuenta.html';
+        window.location.href = esAdmin ? '/admin/dashboard.html' : '/mi-cuenta.html';
       });
     }
   }
@@ -502,7 +621,7 @@ export class CrearEvento {
   mostrarMensaje(texto, tipo) {
     if (!this.mensajeDiv) return;
     this.mensajeDiv.textContent = texto;
-    this.mensajeDiv.className   = `mensaje-estado ${tipo}`;
+    this.mensajeDiv.className = `mensaje-estado ${tipo}`;
     this.mensajeDiv.style.display = 'block';
     if (tipo !== 'error') {
       setTimeout(() => { this.mensajeDiv.style.display = 'none'; }, 8000);

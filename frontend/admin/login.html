@@ -21,9 +21,12 @@
         const btn = document.getElementById('btnLogin');
         const errorDiv = document.getElementById('errorMsg');
 
-        btn.addEventListener('click', async () => {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        const doLogin = async () => {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
 
             if (!email || !password) {
                 errorDiv.innerText = 'Por favor complete ambos campos.';
@@ -47,6 +50,16 @@
             } catch (err) {
                 errorDiv.innerText = 'Error de conexión con el servidor.';
             }
+        };
+
+        btn.addEventListener('click', doLogin);
+
+        emailInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') doLogin();
+        });
+
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') doLogin();
         });
     </script>
 </body>

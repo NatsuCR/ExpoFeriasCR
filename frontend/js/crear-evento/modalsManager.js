@@ -6,8 +6,12 @@
 import { subirImagen } from './uploadManager.js';
 import { programarActualizacion } from './previewManager.js';
 
+// Variable global para rastrear si estamos editando una fila
+let filaEnEdicion = null;
+
 // ─── PRECIO ───
 export function abrirModalPrecio() {
+  filaEnEdicion = null;
   document.getElementById('form-precio').reset();
   document.getElementById('modal-precio').style.display = 'flex';
 }
@@ -23,22 +27,44 @@ export function agregarPrecioDelModal() {
   const descripcion = document.getElementById('precio-descripcion').value;
   if (!fecha || !monto) { alert('Completa fecha y precio'); return; }
 
-  const row = document.createElement('tr');
-  row.innerHTML = `
-    <td><input type="date" value="${fecha}" class="precio-fecha"></td>
-    <td><input type="number" value="${monto}" class="precio-monto"></td>
-    <td><input type="text"   value="${promocion}" class="precio-promocion"></td>
-    <td><input type="text"   value="${descripcion}" class="precio-descripcion"></td>
-    <td><button type="button" class="btn-danger btn-eliminar">Eliminar</button></td>
-  `;
-  row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
-  document.getElementById('precios-rows').appendChild(row);
+  if (filaEnEdicion) {
+    filaEnEdicion.querySelector('.precio-fecha').value = fecha;
+    filaEnEdicion.querySelector('.precio-monto').value = monto;
+    filaEnEdicion.querySelector('.precio-promocion').value = promocion;
+    filaEnEdicion.querySelector('.precio-descripcion').value = descripcion;
+  } else {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="date" value="${fecha}" class="precio-fecha"></td>
+      <td><input type="number" value="${monto}" class="precio-monto"></td>
+      <td><input type="text"   value="${promocion}" class="precio-promocion"></td>
+      <td><input type="text"   value="${descripcion}" class="precio-descripcion"></td>
+      <td>
+        <button type="button" class="btn-warning btn-editar" style="margin-right: 5px;">Editar</button>
+        <button type="button" class="btn-danger btn-eliminar">Eliminar</button>
+      </td>
+    `;
+    row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
+    row.querySelector('.btn-editar').addEventListener('click', () => editarPrecio(row));
+    document.getElementById('precios-rows').appendChild(row);
+  }
+  
   programarActualizacion();
   cerrarModalPrecio();
 }
 
+export function editarPrecio(row) {
+  filaEnEdicion = row;
+  document.getElementById('precio-fecha').value = row.querySelector('.precio-fecha').value;
+  document.getElementById('precio-monto').value = row.querySelector('.precio-monto').value;
+  document.getElementById('precio-promocion').value = row.querySelector('.precio-promocion').value;
+  document.getElementById('precio-descripcion').value = row.querySelector('.precio-descripcion').value;
+  document.getElementById('modal-precio').style.display = 'flex';
+}
+
 // ─── ACTIVIDAD ───
 export function abrirModalActividad() {
+  filaEnEdicion = null;
   document.getElementById('form-actividad').reset();
   document.getElementById('actividad-enlace-group').style.display = 'none';
   const fb = document.getElementById('feedback-actividad-img');
@@ -66,26 +92,74 @@ export function agregarActividadDelModal() {
 
   if (!titulo || !tipo || !fecha) { alert('Completa título, tipo y fecha'); return; }
 
-  const row = document.createElement('tr');
-  row.innerHTML = `
-    <td><input type="text" value="${titulo}" class="act-titulo"></td>
-    <td><input type="text" value="${tipo}"   class="act-tipo"></td>
-    <td><input type="date" value="${fecha}"  class="act-fecha"></td>
-    <td><input type="time" value="${hora}"   class="act-hora"></td>
-    <td><input type="text" value="${lugar}"  class="act-lugar" placeholder="Lugar/escenario"></td>
-    <td style="text-align:center;font-size:18px;">
-        <span class="act-gratis" data-value="${esGratis}">${esGratis ? '✅' : '❌'}</span>
-    </td>
-    <td><button type="button" class="btn-danger btn-eliminar">Eliminar</button></td>
-    <td style="display:none;"><input type="text" value="${descripcion}" class="act-descripcion"></td>
-    <td style="display:none;"><input type="text" value='${JSON.stringify(imagenes)}' class="act-imagenes"></td>
-    <td style="display:none;"><span class="act-requiere-online" data-value="${reqOnline}"></span></td>
-    <td style="display:none;"><input type="text" value="${enlace}" class="act-enlace"></td>
-  `;
-  row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
-  document.getElementById('actividades-rows').appendChild(row);
+  if (filaEnEdicion) {
+    filaEnEdicion.querySelector('.act-titulo').value = titulo;
+    filaEnEdicion.querySelector('.act-tipo').value = tipo;
+    filaEnEdicion.querySelector('.act-fecha').value = fecha;
+    filaEnEdicion.querySelector('.act-hora').value = hora;
+    filaEnEdicion.querySelector('.act-lugar').value = lugar;
+    const spanGratis = filaEnEdicion.querySelector('.act-gratis');
+    spanGratis.setAttribute('data-value', esGratis);
+    spanGratis.textContent = esGratis ? '✅' : '❌';
+    filaEnEdicion.querySelector('.act-descripcion').value = descripcion;
+    filaEnEdicion.querySelector('.act-imagenes').value = JSON.stringify(imagenes);
+    filaEnEdicion.querySelector('.act-requiere-online').setAttribute('data-value', reqOnline);
+    filaEnEdicion.querySelector('.act-enlace').value = enlace;
+  } else {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="text" value="${titulo}" class="act-titulo"></td>
+      <td><input type="text" value="${tipo}"   class="act-tipo"></td>
+      <td><input type="date" value="${fecha}"  class="act-fecha"></td>
+      <td><input type="time" value="${hora}"   class="act-hora"></td>
+      <td><input type="text" value="${lugar}"  class="act-lugar" placeholder="Lugar/escenario"></td>
+      <td style="text-align:center;font-size:18px;">
+          <span class="act-gratis" data-value="${esGratis}">${esGratis ? '✅' : '❌'}</span>
+      </td>
+      <td>
+        <button type="button" class="btn-warning btn-editar" style="margin-right: 5px;">Editar</button>
+        <button type="button" class="btn-danger btn-eliminar">Eliminar</button>
+      </td>
+      <td style="display:none;"><input type="text" value="${descripcion}" class="act-descripcion"></td>
+      <td style="display:none;"><input type="text" value='${JSON.stringify(imagenes)}' class="act-imagenes"></td>
+      <td style="display:none;"><span class="act-requiere-online" data-value="${reqOnline}"></span></td>
+      <td style="display:none;"><input type="text" value="${enlace}" class="act-enlace"></td>
+    `;
+    row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
+    row.querySelector('.btn-editar').addEventListener('click', () => editarActividad(row));
+    document.getElementById('actividades-rows').appendChild(row);
+  }
+  
   programarActualizacion();
   cerrarModalActividad();
+}
+
+export function editarActividad(row) {
+  filaEnEdicion = row;
+  document.getElementById('actividad-titulo').value = row.querySelector('.act-titulo').value;
+  document.getElementById('actividad-tipo').value = row.querySelector('.act-tipo').value;
+  document.getElementById('actividad-fecha').value = row.querySelector('.act-fecha').value;
+  document.getElementById('actividad-hora').value = row.querySelector('.act-hora').value;
+  document.getElementById('actividad-lugar').value = row.querySelector('.act-lugar').value;
+  document.getElementById('actividad-descripcion').value = row.querySelector('.act-descripcion').value;
+  
+  const reqOnline = row.querySelector('.act-requiere-online').getAttribute('data-value') === 'true';
+  document.getElementById('actividad-requiere-online').checked = reqOnline;
+  document.getElementById('actividad-es-gratis').checked = row.querySelector('.act-gratis').getAttribute('data-value') === 'true';
+  const enlaceGrp = document.getElementById('actividad-enlace-group');
+  if (enlaceGrp) enlaceGrp.style.display = reqOnline ? 'block' : 'none';
+  document.getElementById('actividad-enlace').value = row.querySelector('.act-enlace').value;
+
+  const lista = document.getElementById('actividadImagenesLista');
+  if (lista) {
+    lista.innerHTML = '';
+    try {
+      const imagenes = JSON.parse(row.querySelector('.act-imagenes').value || '[]');
+      imagenes.forEach(url => addActividadImageRow(url));
+    } catch(e) {}
+  }
+
+  document.getElementById('modal-actividad').style.display = 'flex';
 }
 
 export function addActividadImageRow(initialUrl) {
@@ -119,9 +193,12 @@ export function addActividadImageRow(initialUrl) {
 
 // ─── EXPOSITOR ───
 export function abrirModalExpositor() {
+  filaEnEdicion = null;
   document.getElementById('form-expositor').reset();
-  const fb = document.getElementById('feedback-logo');
+  const fb = document.getElementById('feedback-expositor-img');
   if (fb) { fb.className = 'upload-feedback'; fb.style.display = 'none'; }
+  const lista = document.getElementById('expositorImagenesLista');
+  if (lista) lista.innerHTML = '';
   document.getElementById('modal-expositor').style.display = 'flex';
 }
 
@@ -134,29 +211,100 @@ export function agregarExpositorDelModal() {
   const rubro       = document.getElementById('expositor-rubro').value.trim();
   const descripcion = document.getElementById('expositor-descripcion').value.trim();
   const ubicacion   = document.getElementById('expositor-ubicacion').value.trim();
-  const logo        = document.getElementById('expositor-logo').value.trim();
   const video       = document.getElementById('expositor-video').value.trim();
+
+  // Recopilar urls de imagenes
+  const urls = [];
+  document.querySelectorAll('.expositor-img-url').forEach(inpt => {
+    const val = inpt.value.trim();
+    if (val) urls.push(val);
+  });
+  const imagenesJSON = JSON.stringify(urls);
 
   if (!nombre || !rubro || !ubicacion) { alert('Completa nombre, rubro y ubicación'); return; }
 
-  const row = document.createElement('tr');
-  row.innerHTML = `
-    <td><input type="text" value="${nombre}"   class="exp-nombre"></td>
-    <td><input type="text" value="${rubro}"    class="exp-rubro"></td>
-    <td><input type="text" value="${ubicacion}"class="exp-ubicacion"></td>
-    <td><button type="button" class="btn-danger btn-eliminar">Eliminar</button></td>
-    <td style="display:none;"><input type="text" value="${descripcion}" class="exp-descripcion"></td>
-    <td style="display:none;"><input type="text" value="${logo}"        class="exp-logo"></td>
-    <td style="display:none;"><input type="text" value="${video}"       class="exp-video"></td>
-  `;
-  row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
-  document.getElementById('expositores-rows').appendChild(row);
+  if (filaEnEdicion) {
+    filaEnEdicion.querySelector('.exp-nombre').value = nombre;
+    filaEnEdicion.querySelector('.exp-rubro').value = rubro;
+    filaEnEdicion.querySelector('.exp-ubicacion').value = ubicacion;
+    filaEnEdicion.querySelector('.exp-descripcion').value = descripcion;
+    filaEnEdicion.querySelector('.exp-imagenes').value = imagenesJSON;
+    filaEnEdicion.querySelector('.exp-video').value = video;
+  } else {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="text" value="${nombre}"   class="exp-nombre"></td>
+      <td><input type="text" value="${rubro}"    class="exp-rubro"></td>
+      <td><input type="text" value="${ubicacion}"class="exp-ubicacion"></td>
+      <td>
+        <button type="button" class="btn-warning btn-editar" style="margin-right: 5px;">Editar</button>
+        <button type="button" class="btn-danger btn-eliminar">Eliminar</button>
+      </td>
+      <td style="display:none;"><input type="text" value="${descripcion}" class="exp-descripcion"></td>
+      <td style="display:none;"><input type="text" value='${imagenesJSON}' class="exp-imagenes"></td>
+      <td style="display:none;"><input type="text" value="${video}"       class="exp-video"></td>
+    `;
+    row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
+    row.querySelector('.btn-editar').addEventListener('click', () => editarExpositor(row));
+    document.getElementById('expositores-rows').appendChild(row);
+  }
+  
   programarActualizacion();
   cerrarModalExpositor();
 }
 
+export function editarExpositor(row) {
+  filaEnEdicion = row;
+  document.getElementById('expositor-nombre').value = row.querySelector('.exp-nombre').value;
+  document.getElementById('expositor-rubro').value = row.querySelector('.exp-rubro').value;
+  document.getElementById('expositor-ubicacion').value = row.querySelector('.exp-ubicacion').value;
+  document.getElementById('expositor-descripcion').value = row.querySelector('.exp-descripcion').value;
+  document.getElementById('expositor-video').value = row.querySelector('.exp-video').value;
+
+  const lista = document.getElementById('expositorImagenesLista');
+  if (lista) {
+    lista.innerHTML = '';
+    try {
+      const imagenes = JSON.parse(row.querySelector('.exp-imagenes').value || '[]');
+      imagenes.forEach(url => addExpositorImageRow(url));
+    } catch(e) {}
+  }
+
+  document.getElementById('modal-expositor').style.display = 'flex';
+}
+
+export function addExpositorImageRow(initialUrl) {
+  const lista = document.getElementById('expositorImagenesLista');
+  if (!lista) return;
+  const row = document.createElement('div');
+  row.style.display = 'flex';
+  row.style.gap = '8px';
+  row.style.alignItems = 'center';
+  row.innerHTML = `
+    <input type="text" class="expositor-img-url" placeholder="URL de imagen" value="${initialUrl || ''}" style="flex:1;padding:8px;border:1px solid #ddd;border-radius:6px;">
+    <button type="button" class="btn-secondary btn-subir-row">Subir</button>
+    <button type="button" class="btn-danger btn-eliminar-row">Eliminar</button>
+  `;
+  const subirBtn = row.querySelector('.btn-subir-row');
+  subirBtn.addEventListener('click', () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+    fileInput.addEventListener('change', async (e) => {
+      const f = e.target.files[0]; if (!f) { fileInput.remove(); return; }
+      const url = await subirImagen(f, 'feedback-expositor-img', null);
+      if (url) row.querySelector('.expositor-img-url').value = url;
+      fileInput.remove();
+    });
+    fileInput.click();
+  });
+  row.querySelector('.btn-eliminar-row').addEventListener('click', () => row.remove());
+  lista.appendChild(row);
+}
+
 // ─── GALERÍA ───
 export function abrirModalImagen() {
+  filaEnEdicion = null;
   document.getElementById('form-imagen').reset();
   const fb = document.getElementById('feedback-galeria');
   if (fb) { fb.className = 'upload-feedback'; fb.style.display = 'none'; }
@@ -175,22 +323,49 @@ export function agregarImagenDelModal() {
 
   if (!url) { alert('Ingresa o sube una imagen'); return; }
 
-  const row = document.createElement('tr');
-  row.innerHTML = `
-    <td>
-      <img src="${url}" alt="img"
-           style="width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #eee;"
-           onerror="this.style.display='none'">
-    </td>
-    <td><input type="text"   value="${url}"   class="gal-url"   style="width:100%;max-width:220px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
-    <td><input type="number" value="${orden}" class="gal-orden" style="width:60px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
-    <td><button type="button" class="btn-danger btn-eliminar">Eliminar</button></td>
-  `;
-  row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
-  row.querySelector('.gal-url').addEventListener('input', (e) => {
-    row.querySelector('img').src = e.target.value;
-  });
-  document.getElementById('galeria-rows').appendChild(row);
+  if (filaEnEdicion) {
+    filaEnEdicion.querySelector('.gal-url').value = url;
+    filaEnEdicion.querySelector('.gal-orden').value = orden;
+    const imgEl = filaEnEdicion.querySelector('img');
+    if (imgEl) imgEl.src = url;
+  } else {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>
+        <img src="${url}" alt="img"
+             style="width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #eee;"
+             onerror="this.style.display='none'">
+      </td>
+      <td><input type="text"   value="${url}"   class="gal-url"   style="width:100%;max-width:220px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
+      <td><input type="number" value="${orden}" class="gal-orden" style="width:60px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
+      <td>
+        <button type="button" class="btn-warning btn-editar" style="margin-right: 5px;">Editar</button>
+        <button type="button" class="btn-danger btn-eliminar">Eliminar</button>
+      </td>
+    `;
+    row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
+    row.querySelector('.btn-editar').addEventListener('click', () => editarImagen(row));
+    row.querySelector('.gal-url').addEventListener('input', (e) => {
+      row.querySelector('img').src = e.target.value;
+    });
+    document.getElementById('galeria-rows').appendChild(row);
+  }
+  
   programarActualizacion();
   cerrarModalImagen();
+}
+
+export function editarImagen(row) {
+  filaEnEdicion = row;
+  document.getElementById('imagen-url').value = row.querySelector('.gal-url').value;
+  document.getElementById('imagen-orden').value = row.querySelector('.gal-orden').value;
+
+  const wrap = document.getElementById('preview-galeria-img-wrap');
+  const imgPreview = document.getElementById('preview-galeria-img');
+  if (wrap && imgPreview) {
+    imgPreview.src = document.getElementById('imagen-url').value;
+    wrap.style.display = 'block';
+  }
+
+  document.getElementById('modal-imagen').style.display = 'flex';
 }

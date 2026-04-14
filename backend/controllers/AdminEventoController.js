@@ -16,7 +16,20 @@ class AdminEventoController {
     try {
       const [rows] = await pool.query('SELECT * FROM eventos WHERE id = ?', [id]);
       if (rows.length === 0) return res.status(404).json({ error: 'Evento no encontrado' });
-      res.json(rows[0]);
+      
+      const evento = rows[0];
+      const [actividades] = await pool.query('SELECT * FROM actividades WHERE evento_id = ? ORDER BY fecha, hora', [id]);
+      const [precios] = await pool.query('SELECT * FROM precios_entrada WHERE evento_id = ? ORDER BY fecha', [id]);
+      const [expositores] = await pool.query('SELECT * FROM expositores WHERE evento_id = ? ORDER BY nombre', [id]);
+      const [galeria] = await pool.query('SELECT * FROM evento_galeria WHERE evento_id = ? ORDER BY orden', [id]);
+
+      res.json({
+        evento,
+        actividades,
+        precios,
+        expositores,
+        galeria
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al obtener evento' });
@@ -34,7 +47,8 @@ class AdminEventoController {
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
-      color_titulo_h3
+      color_titulo_h3,
+      precios, actividades, expositores, galeria
     } = req.body;
 
     const values = [
@@ -85,7 +99,59 @@ class AdminEventoController {
 
     try {
       const [result] = await pool.query(query, values);
-      const [newEvent] = await pool.query('SELECT * FROM eventos WHERE id = ?', [result.insertId]);
+      const eventoId = result.insertId;
+
+      // Guardar tablas relacionadas
+      if (precios && Array.isArray(precios) && precios.length > 0) {
+        for (const precio of precios) {
+          if (precio.fecha && precio.precio_normal !== undefined) {
+            await pool.query(
+              'INSERT INTO precios_entrada (evento_id, fecha, precio_normal, promocion, descripcion_promocion) VALUES (?, ?, ?, ?, ?)',
+              [eventoId, precio.fecha, precio.precio_normal, precio.promocion || '', precio.descripcion_promocion || '']
+            );
+          }
+        }
+      }
+
+      if (actividades && Array.isArray(actividades) && actividades.length > 0) {
+        for (const actividad of actividades) {
+          if (actividad.titulo && actividad.fecha) {
+            await pool.query(
+              'INSERT INTO actividades (evento_id, titulo, tipo, fecha, hora, lugar, descripcion, imagen, es_gratis, requiere_entrada_online, enlace_venta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [
+                eventoId, actividad.titulo, actividad.tipo || '', actividad.fecha, actividad.hora || null,
+                actividad.lugar || '', actividad.descripcion || '',
+                Array.isArray(actividad.imagen) ? JSON.stringify(actividad.imagen) : actividad.imagen || null,
+                actividad.es_gratis ? 1 : 0, actividad.requiere_entrada_online ? 1 : 0, actividad.enlace_venta || ''
+              ]
+            );
+          }
+        }
+      }
+
+      if (expositores && Array.isArray(expositores) && expositores.length > 0) {
+        for (const expositor of expositores) {
+          if (expositor.nombre) {
+            await pool.query(
+              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              [eventoId, expositor.nombre, expositor.rubro || '', expositor.ubicacion || '', expositor.descripcion || '', expositor.logo || '', expositor.video || '']
+            );
+          }
+        }
+      }
+
+      if (galeria && Array.isArray(galeria) && galeria.length > 0) {
+        for (const img of galeria) {
+          if (img.imagen_url) {
+            await pool.query(
+              'INSERT INTO evento_galeria (evento_id, imagen_url, orden) VALUES (?, ?, ?)',
+              [eventoId, img.imagen_url, img.orden || 0]
+            );
+          }
+        }
+      }
+
+      const [newEvent] = await pool.query('SELECT * FROM eventos WHERE id = ?', [eventoId]);
       res.status(201).json(newEvent[0]);
     } catch (error) {
       console.error(error);
@@ -105,7 +171,8 @@ class AdminEventoController {
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
-      color_titulo_h3
+      color_titulo_h3,
+      precios, actividades, expositores, galeria
     } = req.body;
 
     try {
@@ -138,6 +205,57 @@ class AdminEventoController {
         ]
       );
       if (result.affectedRows === 0) return res.status(404).json({ error: 'Evento no encontrado' });
+
+      // Actualizar tablas relacionadas 
+      if (precios && Array.isArray(precios)) {
+        await pool.query('DELETE FROM precios_entrada WHERE evento_id = ?', [id]);
+        for (const precio of precios) {
+          if (precio.fecha && precio.precio_normal !== undefined) {
+            await pool.query(
+              'INSERT INTO precios_entrada (evento_id, fecha, precio_normal, promocion, descripcion_promocion) VALUES (?, ?, ?, ?, ?)',
+              [id, precio.fecha, precio.precio_normal, precio.promocion || null, precio.descripcion_promocion || null]
+            );
+          }
+        }
+      }
+
+      if (actividades && Array.isArray(actividades)) {
+        await pool.query('DELETE FROM actividades WHERE evento_id = ?', [id]);
+        for (const acti of actividades) {
+          if (acti.titulo) {
+            await pool.query(
+              `INSERT INTO actividades (evento_id, titulo, tipo, fecha, hora, lugar, descripcion, imagen, es_gratis, requiere_entrada_online, enlace_venta)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+              [id, acti.titulo, acti.tipo || null, acti.fecha || null, acti.hora || null, acti.lugar || null, acti.descripcion || null, Array.isArray(acti.imagen) ? JSON.stringify(acti.imagen) : acti.imagen || null, acti.es_gratis || 0, acti.requiere_entrada_online || 0, acti.enlace_venta || null]
+            );
+          }
+        }
+      }
+
+      if (expositores && Array.isArray(expositores)) {
+        await pool.query('DELETE FROM expositores WHERE evento_id = ?', [id]);
+        for (const exp of expositores) {
+          if (exp.nombre) {
+            await pool.query(
+              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              [id, exp.nombre, exp.rubro || null, exp.ubicacion || null, exp.descripcion || null, exp.logo || null, exp.video || null]
+            );
+          }
+        }
+      }
+
+      if (galeria && Array.isArray(galeria)) {
+        await pool.query('DELETE FROM evento_galeria WHERE evento_id = ?', [id]);
+        for (const img of galeria) {
+          if (img.imagen_url) {
+            await pool.query(
+              'INSERT INTO evento_galeria (evento_id, imagen_url, orden) VALUES (?, ?, ?)',
+              [id, img.imagen_url, img.orden || 0]
+            );
+          }
+        }
+      }
+
       const [updated] = await pool.query('SELECT * FROM eventos WHERE id = ?', [id]);
       res.json(updated[0]);
     } catch (error) {

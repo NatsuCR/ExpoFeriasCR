@@ -72,6 +72,12 @@
             <div class="seccion-header">
                 <h2>📅 Mis Eventos</h2>
                 <p>Aquí puedes ver todos los eventos que has creado</p>
+                <div style="display:flex; gap:10px; margin-top:15px; align-items:center;">
+                    <input type="checkbox" id="seleccionar-todos-eventos" title="Seleccionar todos"> <label for="seleccionar-todos-eventos" style="font-size:14px; color:#555;">Seleccionar todos</label>
+                    <button type="button" id="btn-eliminar-seleccionados" class="btn-danger" style="padding:6px 12px; font-size:12px; border:none; border-radius:4px; opacity:0.5; pointer-events:none; transition:0.3s;">
+                        <i class="fas fa-trash-alt"></i> Eliminar Seleccionados
+                    </button>
+                </div>
             </div>
 
             <div id="eventos-contenedor" class="eventos-grid">

@@ -304,31 +304,108 @@ class AdminEventoController {
    */
   async aprobarEdicionEvento(req, res) {
     const { id } = req.params;
-    const { notas } = req.body || {};
 
     try {
-      const [eventos] = await pool.query(
+      const [rows] = await pool.query(
         'SELECT * FROM eventos WHERE id = ? AND estado = ?',
         [id, 'edicion_pendiente']
       );
 
-      if (eventos.length === 0) {
+      if (rows.length === 0) {
         return res.status(404).json({ error: 'Evento no encontrado o no está pendiente de edición' });
       }
 
-      // Cambiar estado a aprobado (vuelve a estado anterior)
+      const eventoRow = rows[0];
+      if (!eventoRow.borrador_cambios) {
+        return res.status(400).json({ error: 'No hay cambios en borrador para aplicar' });
+      }
+
+      const body = JSON.parse(eventoRow.borrador_cambios);
+      const {
+        slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
+        imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
+        precios, actividades, expositores, galeria
+      } = body;
+
+      // 1. Actualizar tabla principal
       await pool.query(
-        'UPDATE eventos SET estado = ?, razon_rechazo = NULL WHERE id = ?',
-        ['aprobado', id]
+        `UPDATE eventos SET
+          slug = ?, nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, ubicacion = ?, provincia = ?,
+          imagen_portada = ?, horario_imagen = ?, mapa_embed = ?, tipo_venta = ?, url_venta_online = ?,
+          color_primario = ?, color_secundario = ?, color_fondo = ?, color_texto = ?,
+          color_hero_overlay = ?, color_titulo_seccion = ?,
+          color_titulo_hero = ?, color_descripcion_hero = ?, color_fondo_fechas = ?, color_texto_fechas = ?,
+          color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
+          color_titulo_h3 = ?,
+          color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
+          color_fondo_footer = ?, color_texto_footer = ?,
+          estado = 'aprobado',
+          borrador_cambios = NULL,
+          razon_rechazo = NULL,
+          updated_at = NOW()
+        WHERE id = ?`,
+        [
+          slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
+          imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
+          body.color_primario || '#8b5a2b', body.color_secundario || '#d4a373', body.color_fondo || '#f4e4c1', body.color_texto || '#2c1a0e',
+          body.color_hero_overlay || 'rgba(62,42,31,0.7)', body.color_titulo_seccion || '#2c1a0e',
+          body.color_titulo_hero || '#ffffff', body.color_descripcion_hero || '#ffffff', body.color_fondo_fechas || '#d4a373', body.color_texto_fechas || '#8b5a2b',
+          body.color_menu_fondo || '#ffffff', body.color_menu_texto || '#ffffff', body.color_menu_fondo_hover || '', body.color_menu_texto_hover || '',
+          body.color_titulo_h3 || '#2c1a0e',
+          body.color_fondo_contacto || '#f4e4c1', body.color_texto_contacto || '#2c1a0e', body.color_enlace_contacto || '#8b5a2b',
+          body.color_fondo_footer || '#8b5a2b', body.color_texto_footer || '#ffffff',
+          id
+        ]
       );
 
+      // 2. Actualizar tablas relacionadas
+      if (precios && Array.isArray(precios)) {
+        await pool.query('DELETE FROM precios_entrada WHERE evento_id = ?', [id]);
+        for (const p of precios) {
+          if (p.fecha && p.precio_normal !== undefined) {
+            await pool.query('INSERT INTO precios_entrada (evento_id, fecha, precio_normal, promocion, descripcion_promocion) VALUES (?, ?, ?, ?, ?)',
+              [id, p.fecha, p.precio_normal, p.promocion || null, p.descripcion_promocion || null]);
+          }
+        }
+      }
+
+      if (actividades && Array.isArray(actividades)) {
+        await pool.query('DELETE FROM actividades WHERE evento_id = ?', [id]);
+        for (const act of actividades) {
+          if (act.titulo) {
+            await pool.query('INSERT INTO actividades (evento_id, titulo, tipo, fecha, hora, lugar, descripcion, imagen, es_gratis, requiere_entrada_online, enlace_venta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [id, act.titulo, act.tipo || null, act.fecha || null, act.hora || null, act.lugar || null, act.descripcion || null, Array.isArray(act.imagen) ? JSON.stringify(act.imagen) : act.imagen || null, act.es_gratis || 0, act.requiere_entrada_online || 0, act.enlace_venta || null]);
+          }
+        }
+      }
+
+      if (expositores && Array.isArray(expositores)) {
+        await pool.query('DELETE FROM expositores WHERE evento_id = ?', [id]);
+        for (const exp of expositores) {
+          if (exp.nombre) {
+            await pool.query('INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              [id, exp.nombre, exp.rubro || null, exp.ubicacion || null, exp.descripcion || null, exp.logo || null, exp.video || null]);
+          }
+        }
+      }
+
+      if (galeria && Array.isArray(galeria)) {
+        await pool.query('DELETE FROM evento_galeria WHERE evento_id = ?', [id]);
+        for (const img of galeria) {
+          if (img.imagen_url) {
+            await pool.query('INSERT INTO evento_galeria (evento_id, imagen_url, orden) VALUES (?, ?, ?)',
+              [id, img.imagen_url, img.orden || 0]);
+          }
+        }
+      }
+
       res.json({
-        message: 'Cambios del evento aprobados exitosamente',
+        message: 'Cambios del evento aprobados y aplicados exitosamente',
         evento: { id, estado: 'aprobado' }
       });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al aprobar evento' });
+      console.error('Error al aprobar cambios de evento:', error);
+      res.status(500).json({ error: 'Error al aprobar cambios del evento' });
     }
   }
 
@@ -341,12 +418,12 @@ class AdminEventoController {
     const { razon } = req.body;
 
     try {
-      const [eventos] = await pool.query(
+      const [rows] = await pool.query(
         'SELECT * FROM eventos WHERE id = ? AND estado = ?',
         [id, 'edicion_pendiente']
       );
 
-      if (eventos.length === 0) {
+      if (rows.length === 0) {
         return res.status(404).json({ error: 'Evento no encontrado o no está pendiente de edición' });
       }
 
@@ -354,19 +431,19 @@ class AdminEventoController {
         return res.status(400).json({ error: 'Debes proporcionar una razón del rechazo' });
       }
 
-      // Cambiar estado a aprobado nuevamente (rechaza cambios, pero el evento ya aprobado se mantiene)
+      // Cambiar estado a aprobado nuevamente (rechaza cambios, marcando el borrador como nulo)
       await pool.query(
-        'UPDATE eventos SET estado = ?, razon_rechazo = ? WHERE id = ?',
+        'UPDATE eventos SET estado = ?, razon_rechazo = ?, borrador_cambios = NULL WHERE id = ?',
         ['aprobado', razon, id]
       );
 
       res.json({
-        message: 'Cambios rechazados. El evento se mantiene en su estado anterior.',
+        message: 'Cambios rechazados. El evento se mantiene en su estado original.',
         evento: { id, estado: 'aprobado', razon_rechazo: razon }
       });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al rechazar evento' });
+      console.error('Error al rechazar cambios de evento:', error);
+      res.status(500).json({ error: 'Error al rechazar cambios del evento' });
     }
   }
 }

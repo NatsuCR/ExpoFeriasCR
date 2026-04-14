@@ -11,63 +11,113 @@ class UsuarioEventsController {
     const {
       slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
       imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
-      color_primario, color_secundario, color_fondo,
-      color_titulo_hero, color_descripcion_hero, color_fondo_footer,
+      color_primario, color_secundario, color_fondo, color_texto,
+      color_hero_overlay, color_titulo_seccion,
+      color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
+      color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
+      color_titulo_h3,
+      color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
+      color_fondo_footer, color_texto_footer,
       precios, actividades, expositores, galeria
     } = req.body;
 
     try {
-      // Validaciones básicas
       if (!slug || !nombre || !fecha_inicio || !fecha_fin || !ubicacion) {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
       }
 
-      // Verificar que el slug sea único
-      const [existingSlug] = await pool.query(
-        'SELECT id FROM eventos WHERE slug = ?',
-        [slug]
-      );
+      const [existingSlug] = await pool.query('SELECT id FROM eventos WHERE slug = ?', [slug]);
       if (existingSlug.length > 0) {
         return res.status(409).json({ error: 'Este slug ya existe' });
       }
 
-      // Validar fechas
       const fechaInicio = new Date(fecha_inicio);
       const fechaFin = new Date(fecha_fin);
       if (fechaFin < fechaInicio) {
         return res.status(400).json({ error: 'La fecha final no puede ser anterior a la inicial' });
       }
 
-      // Insertar evento en estado pendiente
       const [result] = await pool.query(
         `INSERT INTO eventos
         (usuario_id, slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
          imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
-         color_primario, color_secundario, color_fondo,
-         color_titulo_hero, color_descripcion_hero, color_fondo_footer, estado, activo)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         color_primario, color_secundario, color_fondo, color_texto,
+         color_hero_overlay, color_titulo_seccion,
+         color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
+         color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
+         color_titulo_h3,
+         color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
+         color_fondo_footer, color_texto_footer, estado, activo)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           usuarioId, slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
           imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
-          color_primario || '#8b5a2b', color_secundario || '#d4a373', color_fondo || '#f4e4c1',
-          color_titulo_hero || '#ffffff', color_descripcion_hero || '#ffffff', color_fondo_footer || '#8b5a2b',
+          color_primario || '#8b5a2b', color_secundario || '#d4a373', color_fondo || '#f4e4c1', color_texto || '#2c1a0e',
+          color_hero_overlay || 'rgba(62,42,31,0.7)', color_titulo_seccion || '#2c1a0e',
+          color_titulo_hero || '#ffffff', color_descripcion_hero || '#ffffff', color_fondo_fechas || '#d4a373', color_texto_fechas || '#8b5a2b',
+          color_menu_fondo || '#ffffff', color_menu_texto || '#ffffff', color_menu_fondo_hover || '', color_menu_texto_hover || '',
+          color_titulo_h3 || '#2c1a0e',
+          color_fondo_contacto || '#f4e4c1', color_texto_contacto || '#2c1a0e', color_enlace_contacto || '#8b5a2b',
+          color_fondo_footer || '#8b5a2b', color_texto_footer || '#ffffff',
           'pendiente', 0
         ]
       );
 
       const eventoId = result.insertId;
 
-      // TODO: Enviar email de notificación de evento creado
-      // await emailService.notificarEventoCreado(req.user.email, req.user.nombre, nombre, eventoId);
+      // Guardar tablas relacionadas
+      if (precios && Array.isArray(precios) && precios.length > 0) {
+        for (const precio of precios) {
+          if (precio.fecha && precio.precio_normal !== undefined) {
+            await pool.query(
+              'INSERT INTO precios_entrada (evento_id, fecha, precio_normal, promocion, descripcion_promocion) VALUES (?, ?, ?, ?, ?)',
+              [eventoId, precio.fecha, precio.precio_normal, precio.promocion || '', precio.descripcion_promocion || '']
+            );
+          }
+        }
+      }
+
+      if (actividades && Array.isArray(actividades) && actividades.length > 0) {
+        for (const actividad of actividades) {
+          if (actividad.titulo && actividad.fecha) {
+            await pool.query(
+              'INSERT INTO actividades (evento_id, titulo, tipo, fecha, hora, lugar, descripcion, imagen, es_gratis, requiere_entrada_online, enlace_venta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [
+                eventoId, actividad.titulo, actividad.tipo || '', actividad.fecha, actividad.hora || null,
+                actividad.lugar || '', actividad.descripcion || '',
+                Array.isArray(actividad.imagen) ? JSON.stringify(actividad.imagen) : actividad.imagen || null,
+                actividad.es_gratis ? 1 : 0, actividad.requiere_entrada_online ? 1 : 0, actividad.enlace_venta || ''
+              ]
+            );
+          }
+        }
+      }
+
+      if (expositores && Array.isArray(expositores) && expositores.length > 0) {
+        for (const expositor of expositores) {
+          if (expositor.nombre) {
+            await pool.query(
+              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              [eventoId, expositor.nombre, expositor.rubro || '', expositor.ubicacion || '', expositor.descripcion || '', expositor.logo || '', expositor.video || '']
+            );
+          }
+        }
+      }
+
+      if (galeria && Array.isArray(galeria) && galeria.length > 0) {
+        for (const img of galeria) {
+          if (img.imagen_url) {
+            await pool.query(
+              'INSERT INTO evento_galeria (evento_id, imagen_url, orden) VALUES (?, ?, ?)',
+              [eventoId, img.imagen_url, img.orden || 0]
+            );
+          }
+        }
+      }
 
       res.status(201).json({
         message: 'Evento creado exitosamente. Está siendo revisado por nuestro equipo.',
-        evento: {
-          id: eventoId,
-          slug,
-          nombre,
-          estado: 'pendiente'
-        }
+        evento: { id: eventoId, slug, nombre, estado: 'pendiente' }
       });
     } catch (error) {
       console.error('Error al crear evento:', error);
@@ -260,8 +310,13 @@ class UsuarioEventsController {
     const {
       slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
       imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
-      color_primario, color_secundario, color_fondo, color_titulo_hero, color_descripcion_hero,
-      color_fondo_footer,
+      color_primario, color_secundario, color_fondo, color_texto,
+      color_hero_overlay, color_titulo_seccion,
+      color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
+      color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
+      color_titulo_h3,
+      color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
+      color_fondo_footer, color_texto_footer,
       precios, actividades, expositores, galeria
     } = req.body;
 
@@ -296,20 +351,30 @@ class UsuarioEventsController {
       const nuevoEstado = (evento.estado === 'aprobado' || evento.estado === 'finalizado') ? 'edicion_pendiente' : 'pendiente';
       const fechaEnvioRevisionSql = nuevoEstado === 'edicion_pendiente' ? ', fecha_envio_revision = NOW()' : '';
 
-      // Actualizar evento (marcar fecha_envio_revision solo si se solicita revisión)
+      // Actualizar evento con TODOS los campos
       await pool.query(
         `UPDATE eventos SET 
           slug = ?, nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, ubicacion = ?, provincia = ?,
           imagen_portada = ?, horario_imagen = ?, mapa_embed = ?, tipo_venta = ?, url_venta_online = ?,
-          color_primario = ?, color_secundario = ?, color_fondo = ?, color_titulo_hero = ?, color_descripcion_hero = ?,
-          color_fondo_footer = ?,
+          color_primario = ?, color_secundario = ?, color_fondo = ?, color_texto = ?,
+          color_hero_overlay = ?, color_titulo_seccion = ?,
+          color_titulo_hero = ?, color_descripcion_hero = ?, color_fondo_fechas = ?, color_texto_fechas = ?,
+          color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
+          color_titulo_h3 = ?,
+          color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
+          color_fondo_footer = ?, color_texto_footer = ?,
           estado = ? ${fechaEnvioRevisionSql}
          WHERE id = ?`,
         [
           slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
           imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
-          color_primario, color_secundario, color_fondo, color_titulo_hero, color_descripcion_hero,
-          color_fondo_footer,
+          color_primario || '#8b5a2b', color_secundario || '#d4a373', color_fondo || '#f4e4c1', color_texto || '#2c1a0e',
+          color_hero_overlay || 'rgba(62,42,31,0.7)', color_titulo_seccion || '#2c1a0e',
+          color_titulo_hero || '#ffffff', color_descripcion_hero || '#ffffff', color_fondo_fechas || '#d4a373', color_texto_fechas || '#8b5a2b',
+          color_menu_fondo || '#ffffff', color_menu_texto || '#ffffff', color_menu_fondo_hover || '', color_menu_texto_hover || '',
+          color_titulo_h3 || '#2c1a0e',
+          color_fondo_contacto || '#f4e4c1', color_texto_contacto || '#2c1a0e', color_enlace_contacto || '#8b5a2b',
+          color_fondo_footer || '#8b5a2b', color_texto_footer || '#ffffff',
           nuevoEstado, eventoId
         ]
       );
@@ -399,6 +464,52 @@ class UsuarioEventsController {
     } catch (error) {
       console.error('Error al obtener eventos aprobados:', error);
       res.status(500).json({ error: 'Error al obtener eventos' });
+    }
+  }
+
+  /**
+   * Obtener eventos pendientes de aprobación del usuario
+   * GET /api/eventos/mis-eventos/pendientes
+   */
+  async misEventosPendientes(req, res) {
+    const usuarioId = req.user.id;
+
+    try {
+      const [eventos] = await pool.query(
+        `SELECT id, slug, nombre, fecha_inicio, fecha_fin, estado, razon_rechazo, created_at, fecha_envio_revision
+         FROM eventos
+         WHERE usuario_id = ? AND estado IN ('pendiente', 'edicion_pendiente')
+         ORDER BY fecha_envio_revision DESC, created_at DESC`,
+        [usuarioId]
+      );
+
+      res.json({ eventos });
+    } catch (error) {
+      console.error('Error al obtener eventos pendientes:', error);
+      res.status(500).json({ error: 'Error al obtener eventos pendientes' });
+    }
+  }
+
+  /**
+   * Obtener eventos rechazados del usuario
+   * GET /api/eventos/mis-eventos/rechazados
+   */
+  async misEventosRechazados(req, res) {
+    const usuarioId = req.user.id;
+
+    try {
+      const [eventos] = await pool.query(
+        `SELECT id, slug, nombre, fecha_inicio, fecha_fin, estado, razon_rechazo, created_at
+         FROM eventos
+         WHERE usuario_id = ? AND estado = 'rechazado'
+         ORDER BY created_at DESC`,
+        [usuarioId]
+      );
+
+      res.json({ eventos });
+    } catch (error) {
+      console.error('Error al obtener eventos rechazados:', error);
+      res.status(500).json({ error: 'Error al obtener eventos rechazados' });
     }
   }
 }

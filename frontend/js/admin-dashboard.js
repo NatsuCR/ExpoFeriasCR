@@ -35,12 +35,19 @@ function formatFecha(isoStr) {
 }
 
 function estadoEvento(e) {
+    // Primero verificar estado de aprobación
+    if (e.estado === 'pendiente')           return { label: 'Pendiente', cls: 'estado-pendiente' };
+    if (e.estado === 'edicion_pendiente')   return { label: 'Edición pendiente', cls: 'estado-edicion-pendiente' };
+    if (e.estado === 'rechazado')           return { label: 'Rechazado', cls: 'estado-rechazado' };
+    if (e.estado !== 'aprobado')            return { label: 'Sin aprobar', cls: 'estado-no-aprobado' };
+    
+    // Si está aprobado, mostrar estado por fechas
     const hoy   = new Date();
     const ini   = new Date(e.fecha_inicio);
     const fin   = new Date(e.fecha_fin);
-    if (hoy >= ini && hoy <= fin) return { label: 'En curso', cls: 'estado-activo' };
-    if (hoy < ini)                return { label: 'Próximo',  cls: 'estado-proximo' };
-    return                               { label: 'Finalizado', cls: 'estado-pasado' };
+    if (hoy >= ini && hoy <= fin) return { label: 'En curso ✓', cls: 'estado-activo' };
+    if (hoy < ini)                return { label: 'Próximo ✓',  cls: 'estado-proximo' };
+    return                               { label: 'Finalizado ✓', cls: 'estado-pasado' };
 }
 
 // ── Secciones de resumen ──────────────────────────────────────────────────────

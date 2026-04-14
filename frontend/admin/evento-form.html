@@ -134,6 +134,8 @@
             </table>
         </div>
 
+
+ 
         <!-- ==================== PESTAÑA ACTIVIDADES ==================== -->
         <div id="actividades" class="tab-pane">
             <h3>Actividades</h3>
@@ -145,6 +147,8 @@
                 <tbody id="tbodyActividades"></tbody>
             </table>
         </div>
+
+
 
         <!-- ==================== PESTAÑA EXPOSITORES ==================== -->
         <div id="expositores" class="tab-pane">
@@ -158,6 +162,8 @@
             </table>
         </div>
 
+
+  
         <!-- ==================== PESTAÑA GALERÍA ==================== -->
         <div id="galeria" class="tab-pane">
             <h3>Imágenes para el carrusel de fondo</h3>
@@ -169,6 +175,8 @@
                 <tbody id="tbodyGaleria"></tbody>
             </table>
         </div>
+
+
 
         <!-- Barra de acciones -->
         <div class="acciones-bar">
@@ -312,12 +320,19 @@
     <script type="module">
         import { initPreview, refrescarPreview } from '../js/admin-preview.js';
         initPreview();
-        const btnGuardar = document.getElementById('guardarBasicos');
-        if (btnGuardar) {
-            btnGuardar.addEventListener('click', () => {
-                setTimeout(refrescarPreview, 1200);
-            });
-        }
+
+        // Botón principal guardar básicos → guarda + recarga preview
+        document.getElementById('guardarBasicos')?.addEventListener('click', async () => {
+            const ok = await guardarBasicos();
+            if (ok !== false) setTimeout(refrescarPreview, 800);
+        });
+
+        // Botones "Guardar vista previa" en tabs (precios, actividades, expositores, galería)
+        document.querySelectorAll('.btn-guardar-tab').forEach(btn => {
+            btn.addEventListener('click', () => refrescarPreview());
+        });
+
+        // Botón recargar del panel
         document.getElementById('btnReloadPreview')?.addEventListener('click', refrescarPreview);
     </script>
 

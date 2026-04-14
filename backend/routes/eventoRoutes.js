@@ -17,6 +17,8 @@ router.get('/finalizados', eventoController.obtenerFinalizados.bind(eventoContro
 router.post('/crear', authMiddleware, usuarioEventsController.crearEvento.bind(usuarioEventsController));
 router.get('/mis-eventos', authMiddleware, usuarioEventsController.misEventos.bind(usuarioEventsController));
 router.get('/mis-eventos/aprobados', authMiddleware, usuarioEventsController.misEventosAprobados.bind(usuarioEventsController));
+router.get('/mis-eventos/pendientes', authMiddleware, usuarioEventsController.misEventosPendientes.bind(usuarioEventsController));
+router.get('/mis-eventos/rechazados', authMiddleware, usuarioEventsController.misEventosRechazados.bind(usuarioEventsController));
 router.get('/mi-evento/:id', authMiddleware, usuarioEventsController.obtenerEvento.bind(usuarioEventsController));
 router.put('/actualizar/:id', authMiddleware, usuarioEventsController.actualizarEvento.bind(usuarioEventsController));
 router.post('/:id/editar-aprobado', authMiddleware, usuarioEventsController.editarEventoAprobado.bind(usuarioEventsController));

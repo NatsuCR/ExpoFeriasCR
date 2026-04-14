@@ -53,5 +53,26 @@ ALTER TABLE `usuarios` ADD KEY `idx_rol` (`rol`);
 ALTER TABLE `usuarios` ADD KEY `idx_email_verificado` (`email`, `email_verificado`);
 
 -- ============================================
+-- 5. AGREGAR COLUMNAS DE COLORES ADICIONALES
+-- ============================================
+
+-- Agregar nuevos campos de color a la tabla eventos (updateado 2026-04-14)
+-- Usando IF NOT EXISTS para evitar errores si ya existen
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_texto` VARCHAR(7) DEFAULT '#2c1a0e' AFTER `color_fondo`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_hero_overlay` VARCHAR(50) DEFAULT 'rgba(62,42,31,0.7)' AFTER `color_texto`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_titulo_seccion` VARCHAR(7) DEFAULT '#2c1a0e' AFTER `color_hero_overlay`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_fondo_fechas` VARCHAR(7) DEFAULT '#d4a373' AFTER `color_descripcion_hero`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_texto_fechas` VARCHAR(7) DEFAULT '#8b5a2b' AFTER `color_fondo_fechas`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_menu_fondo` VARCHAR(7) DEFAULT '#ffffff' AFTER `color_texto_fechas`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_menu_texto` VARCHAR(7) DEFAULT '#ffffff' AFTER `color_menu_fondo`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_menu_fondo_hover` VARCHAR(7) DEFAULT '' AFTER `color_menu_texto`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_menu_texto_hover` VARCHAR(7) DEFAULT '' AFTER `color_menu_fondo_hover`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_titulo_h3` VARCHAR(7) DEFAULT '#2c1a0e' AFTER `color_menu_texto_hover`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_fondo_contacto` VARCHAR(7) DEFAULT '#f4e4c1' AFTER `color_titulo_h3`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_texto_contacto` VARCHAR(7) DEFAULT '#2c1a0e' AFTER `color_fondo_contacto`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_enlace_contacto` VARCHAR(7) DEFAULT '#8b5a2b' AFTER `color_texto_contacto`;
+ALTER TABLE `eventos` ADD COLUMN IF NOT EXISTS `color_texto_footer` VARCHAR(7) DEFAULT '#ffffff' AFTER `color_fondo_footer`;
+
+-- ============================================
 -- FIN DE MIGRACIONES
 -- ============================================

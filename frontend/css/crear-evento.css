@@ -312,6 +312,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 15px;
+  min-width: 100%;
 }
 
 .tabla-eventos thead {
@@ -319,18 +320,26 @@
 }
 
 .tabla-eventos th {
-  padding: 12px;
+  padding: 12px 8px;
   text-align: left;
   font-weight: 600;
   color: #333;
   border-bottom: 2px solid #f0f0f0;
   font-size: 13px;
+  min-width: 80px;
 }
 
 .tabla-eventos td {
-  padding: 12px;
+  padding: 8px;
   border-bottom: 1px solid #f0f0f0;
   font-size: 13px;
+  max-width: 120px;
+}
+
+.tabla-eventos td input {
+  width: 100%;
+  max-width: 110px;
+  box-sizing: border-box;
 }
 
 .tabla-eventos tr:hover {
@@ -343,6 +352,12 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 13px;
+}
+
+/* Contenedor de tablas con scroll horizontal si es necesario */
+.form-section {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .btn-subir-archivo {

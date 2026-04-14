@@ -236,6 +236,10 @@
     margin-left: 0.4rem;
     vertical-align: middle;
 }
-.estado-activo  { background: #d4edda; color: #155724; }
-.estado-proximo { background: #cce5ff; color: #004085; }
-.estado-pasado  { background: #e9ecef; color: #6c757d; }s
+.estado-activo              { background: #d4edda; color: #155724; }
+.estado-proximo             { background: #cce5ff; color: #004085; }
+.estado-pasado              { background: #e9ecef; color: #6c757d; }
+.estado-pendiente           { background: #fff3cd; color: #856404; }
+.estado-edicion-pendiente   { background: #e2e3e5; color: #383d41; }
+.estado-rechazado           { background: #f8d7da; color: #721c24; }
+.estado-no-aprobado         { background: #d1ecf1; color: #0c5460; }

@@ -19,8 +19,8 @@ class AdminEventosPendientesController {
         consulta += ' WHERE e.estado = ?';
         params.push(estado);
       } else {
-        consulta += ' WHERE e.estado IN (?, ?, ?)';
-        params.push('pendiente', 'aprobado', 'rechazado');
+        consulta += ' WHERE e.estado IN (?, ?, ?, ?)';
+        params.push('pendiente', 'edicion_pendiente', 'aprobado', 'rechazado');
       }
 
       consulta += ' ORDER BY e.created_at DESC LIMIT ? OFFSET ?';
@@ -238,7 +238,7 @@ class AdminEventosPendientesController {
       const [stats] = await pool.query(`
         SELECT
           COUNT(*) as total,
-          SUM(CASE WHEN estado = 'pendiente' THEN 1 ELSE 0 END) as pendientes,
+          SUM(CASE WHEN estado IN ('pendiente', 'edicion_pendiente') THEN 1 ELSE 0 END) as pendientes,
           SUM(CASE WHEN estado = 'aprobado' THEN 1 ELSE 0 END) as aprobados,
           SUM(CASE WHEN estado = 'rechazado' THEN 1 ELSE 0 END) as rechazados
         FROM eventos

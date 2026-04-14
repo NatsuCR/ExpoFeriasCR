@@ -4,6 +4,7 @@
 
 class AdminEventosPendientes {
   constructor() {
+    this.inicializarHelpers();
     this.eventos = [];
     this.eventosFiltrados = [];
     this.eventoActualModal = null;
@@ -11,6 +12,39 @@ class AdminEventosPendientes {
     this.paginaActual = 1;
     this.eventosPerPagina = 10;
     this.init();
+  }
+
+  inicializarHelpers() {
+    window.toggleDesc = function (btn, isShow) {
+        const container = btn.parentElement;
+        if (isShow) {
+            container.querySelector('.desc-short').style.display = 'none';
+            container.querySelector('.desc-full').style.display = 'block';
+            btn.style.display = 'none';
+            container.querySelector('.btn-ver-menos').style.display = 'inline-block';
+        } else {
+            container.querySelector('.desc-full').style.display = 'none';
+            container.querySelector('.desc-short').style.display = 'block';
+            btn.style.display = 'none';
+            container.querySelector('.btn-ver-mas').style.display = 'inline-block';
+        }
+    };
+
+    window.formatDescription = function (text) {
+        if (!text) return '';
+        if (text.length <= 50) return `<p class="descripcion-texto descripcion">${text}</p>`;
+
+        // Si es muy largo, cortamos y ponemos Ver más
+        const shortText = text.substring(0, 50) + '...';
+        return `
+          <div class="desc-container" style="margin-bottom:10px; width:100%; max-width:100%; overflow-wrap: break-word;">
+             <p class="descripcion-texto descripcion desc-short" style="margin:0;">${shortText}</p>
+             <p class="descripcion-texto descripcion desc-full" style="display:none; margin:0; white-space:pre-wrap;">${text}</p>
+             <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas" style="background:none; border:none; border-bottom:1px solid; color:#0033A0; cursor:pointer; padding:0; font-weight:bold; font-size:12px; margin-top:4px;">Ver más</button>
+             <button onclick="window.toggleDesc(this, false)" class="btn-ver-menos" style="background:none; border:none; border-bottom:1px solid; color:#0033A0; cursor:pointer; padding:0; font-weight:bold; font-size:12px; margin-top:4px; display:none;">Ver menos</button>
+          </div>
+        `;
+    };
   }
 
   init() {
@@ -187,7 +221,14 @@ class AdminEventosPendientes {
       if(res.ok) {
           const fullData = await res.json();
           // Combinar datos basicos con las colecciones y extras
-          Object.assign(evento, fullData);
+          // IMPORTANTE: el API devuelve { evento: {...}, actividades: [], ... }
+          if (fullData.evento) {
+            Object.assign(evento, fullData.evento);
+          }
+          evento.actividades = fullData.actividades || [];
+          evento.precios = fullData.precios || [];
+          evento.expositores = fullData.expositores || [];
+          evento.galeria = fullData.galeria || [];
       }
 
       // Guardar datos del evento en localStorage con una clave única
@@ -198,27 +239,39 @@ class AdminEventosPendientes {
         fecha_fin: evento.fecha_fin,
         ubicacion: evento.ubicacion,
         provincia: evento.provincia,
-        imagen_portada: evento.imagen_portada,
+        imagen_portada: (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/')) ? '/' + evento.imagen_portada : evento.imagen_portada,
         mapa_embed: evento.mapa_embed,
-        color_primario: evento.color_primario || '#8b5a2b',
-        color_secundario: evento.color_secundario || '#d4a373',
-        color_fondo: evento.color_fondo || '#f4e4c1',
+        color_primario: evento.color_primario || '#C8102E',
+        color_secundario: evento.color_secundario || '#0033A0',
+        color_fondo: evento.color_fondo || '#FFFFFF',
         color_texto: evento.color_texto || '#2c1a0e',
+        color_hero_overlay: evento.color_hero_overlay || 'rgba(0,0,0,0.4)',
         color_titulo_hero: evento.color_titulo_hero || '#ffffff',
         color_descripcion_hero: evento.color_descripcion_hero || '#ffffff',
-        color_fondo_fechas: evento.color_fondo_fechas || '#d4a373',
-        color_texto_fechas: evento.color_texto_fechas || '#8b5a2b',
-        color_hero_overlay: evento.color_hero_overlay || '',
-        color_titulo_seccion: evento.color_titulo_seccion || '',
-        color_menu_texto: evento.color_menu_texto || '',
-        color_menu_fondo: evento.color_menu_fondo || '',
-        color_fondo_footer: evento.color_fondo_footer || '',
-        color_texto_footer: evento.color_texto_footer || '',
-        color_fondo_contacto: evento.color_fondo_contacto || '',
-        color_texto_contacto: evento.color_texto_contacto || '',
+        color_fondo_fechas: evento.color_fondo_fechas || '#0033A0',
+        color_texto_fechas: evento.color_texto_fechas || '#ffffff',
+        color_titulo_seccion: evento.color_titulo_seccion || '#C8102E',
+        color_menu_fondo: evento.color_menu_fondo || '#ffffff',
+        color_menu_texto: evento.color_menu_texto || '#333333',
+        color_menu_fondo_hover: evento.color_menu_fondo_hover || '#C8102E',
+        color_menu_texto_hover: evento.color_menu_texto_hover || '#ffffff',
+        color_fondo_contacto: evento.color_fondo_contacto || '#f8f8f8',
+        color_texto_contacto: evento.color_texto_contacto || '#333333',
+        color_enlace_contacto: evento.color_enlace_contacto || '#C8102E',
+        color_fondo_footer: evento.color_fondo_footer || '#C8102E',
+        color_texto_footer: evento.color_texto_footer || '#ffffff',
+        color_titulo_h3: evento.color_titulo_h3 || '#2c1a0e',
         precios: evento.precios || [],
-        actividades: evento.actividades || [],
-        expositores: evento.expositores || [],
+        actividades: (evento.actividades || []).map(act => ({
+          ...act,
+          // Asegurar que imagen sea un array si viene como JSON string
+          imagen: (typeof act.imagen === 'string' && act.imagen.startsWith('[')) ? JSON.parse(act.imagen) : act.imagen
+        })),
+        expositores: (evento.expositores || []).map(exp => ({
+          ...exp,
+          logo: exp.imagen_logo || exp.logo, // Sincronizar nombre de columna
+          video: exp.video_url || exp.video   // Sincronizar nombre de columna
+        })),
         galeria: evento.galeria || []
       };
       
@@ -226,22 +279,33 @@ class AdminEventosPendientes {
       localStorage.setItem(dataKey, JSON.stringify(datosPreview));
 
       const formatDate = (dateStr) => {
-        if (!dateStr) return '';
-        const d = new Date(dateStr + 'T12:00:00');
-        return d.toLocaleDateString();
+        if (!dateStr) return 'N/A';
+        // Si ya es un ISO completo, tomamos solo la fecha
+        const cleanDate = dateStr.includes('T') ? dateStr.split('T')[0] : dateStr;
+        const d = new Date(cleanDate + 'T12:00:00');
+        return d.toLocaleDateString('es-CR');
       };
 
       const buildCard = (isLive) => {
-        const liveBadge = isLive ? `<div class="live-badge" style="position:absolute; top:10px; right:10px; background:#e74c3c; color:white; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; z-index:10;">🔴 EN VIVO</div>` : '';
+        const liveBadge = isLive ? `<div style="position:absolute; top:10px; right:10px; background:#e74c3c; color:white; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; z-index:10;">🔴 EN VIVO</div>` : '';
+        // Usar colores por defecto del sitio para la simulación de portada (Red/Blue)
+        const cp = '#C8102E'; // Rojo marca
+        const cs = '#0033A0'; // Azul marca
+        const imgUrl = (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/')) 
+          ? '/' + evento.imagen_portada 
+          : (evento.imagen_portada || '/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');
+
         return `
-          <div style="position:relative; width:280px; border:1px solid #ddd; border-radius:8px; overflow:hidden; background:white; text-align:left;">
-            ${liveBadge}
-            <img src="${evento.imagen_portada || '/assets/images/default-feria.jpg'}" alt="${this.escapeHtml(evento.nombre)}" style="width:100%; height:180px; object-fit:cover; border-bottom:1px solid #eee;">
-            <div style="padding:15px;">
-              <h3 style="margin:0 0 10px; font-size:18px; color:#333;">${this.escapeHtml(evento.nombre)}</h3>
-              <p style="margin:5px 0; color:#666; font-size:14px;">${formatDate(evento.fecha_inicio)} - ${formatDate(evento.fecha_fin)}</p>
-              <p style="margin:5px 0 15px; color:#666; font-size:14px;">${this.escapeHtml(evento.ubicacion)}</p>
-              <button type="button" class="btn-primary" style="width:100%; padding:8px; border:none; background:#0033A0; color:white; border-radius:4px; font-size:14px; cursor:pointer;">Ver más</button>
+          <div class="evento-card" style="--color-primary: ${cp}; --color-secondary: ${cs}; width:250px; margin:0 auto; box-shadow:0 4px 10px rgba(0,0,0,0.1); border-top:5px solid ${cp}; border-radius:8px; overflow:hidden; background:white;">
+            <div style="position:relative;">
+              ${liveBadge}
+              <img src="${imgUrl}" alt="${this.escapeHtml(evento.nombre)}" style="width:100%; height:160px; object-fit:cover;">
+            </div>
+            <div style="padding:12px; text-align:left;">
+              <h3 style="margin:0 0 8px; font-size:16px; color:${cs}; font-family:'Playfair Display', serif;">${this.escapeHtml(evento.nombre)}</h3>
+              <p style="margin:4px 0; color:#666; font-size:13px;">${formatDate(evento.fecha_inicio)} - ${formatDate(evento.fecha_fin)}</p>
+              <p style="margin:4px 0 12px; color:#666; font-size:13px;">${this.escapeHtml(evento.ubicacion)}</p>
+              <button type="button" style="width:100%; padding:8px; border:none; background:${cs}; color:white; border-radius:4px; font-size:13px; font-weight:bold; cursor:pointer;">Ver más</button>
             </div>
           </div>
         `;
@@ -261,18 +325,18 @@ class AdminEventosPendientes {
             </div>
 
             <div style="margin-top:20px;">
-              <h4>Simulación Portada (Index)</h4>
-              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
-                <div style="flex:1;">
-                   <h5 style="margin-bottom:5px;">Normal / Hoy</h5>
+              <h4 style="border-bottom: 2px solid #ddd; padding-bottom: 8px; margin-bottom: 15px;">Simulación Portada (Index)</h4>
+              <div style="display:flex; flex-direction:column; gap:25px; margin-top:10px;">
+                <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border-left: 5px solid #C8102E;">
+                   <h5 style="margin: 0 0 10px 0; color: #333; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Normal / Hoy</h5>
                    ${buildCard(false)}
                 </div>
-                <div style="flex:1;">
-                   <h5 style="margin-bottom:5px;">En Vivo</h5>
+                <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border-left: 5px solid #e74c3c;">
+                   <h5 style="margin: 0 0 10px 0; color: #333; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">En Vivo</h5>
                    ${buildCard(true)}
                 </div>
-                <div style="flex:1;">
-                   <h5 style="margin-bottom:5px;">Próximos Eventos</h5>
+                <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border-left: 5px solid #0033A0;">
+                   <h5 style="margin: 0 0 10px 0; color: #333; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Próximos Eventos</h5>
                    ${buildCard(false)}
                 </div>
               </div>

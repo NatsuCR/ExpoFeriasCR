@@ -230,15 +230,31 @@ export function agregarExpositorDelModal() {
     filaEnEdicion.querySelector('.exp-descripcion').value = descripcion;
     filaEnEdicion.querySelector('.exp-imagenes').value = imagenesJSON;
     filaEnEdicion.querySelector('.exp-video').value = video;
+
+    // Actualizar badges visuales
+    const cells = filaEnEdicion.querySelectorAll('td');
+    const numImg = urls.length;
+    cells[3].innerHTML = numImg > 0 ? `<span class="badge" style="background:#27ae60; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">${numImg} img</span>` : '<span style="color:#ccc;">-</span>';
+    cells[4].innerHTML = video ? `<span class="badge" style="background:#3498db; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
   } else {
     const row = document.createElement('tr');
+    
+    // Generar un pequeño badge para las imágenes
+    const numImg = urls.length;
+    const imgBadge = numImg > 0 ? `<span class="badge" style="background:#27ae60; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">${numImg} img</span>` : '<span style="color:#ccc;">-</span>';
+    const videoBadge = video ? `<span class="badge" style="background:#3498db; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
+
     row.innerHTML = `
       <td><input type="text" value="${nombre}"   class="exp-nombre"></td>
       <td><input type="text" value="${rubro}"    class="exp-rubro"></td>
       <td><input type="text" value="${ubicacion}"class="exp-ubicacion"></td>
+      <td style="text-align:center;">${imgBadge}</td>
+      <td style="text-align:center;">${videoBadge}</td>
       <td>
-        <button type="button" class="btn-warning btn-editar" style="margin-right: 5px;">Editar</button>
-        <button type="button" class="btn-danger btn-eliminar">Eliminar</button>
+        <div style="display:flex; gap:5px;">
+          <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-edit"></i></button>
+          <button type="button" class="btn-danger btn-eliminar"><i class="fas fa-trash"></i></button>
+        </div>
       </td>
       <td style="display:none;"><input type="text" value="${descripcion}" class="exp-descripcion"></td>
       <td style="display:none;"><input type="text" value='${imagenesJSON}' class="exp-imagenes"></td>

@@ -28,16 +28,16 @@ function construirDatosPreview() {
         url_venta_online: get('url_venta_online'),
 
         // ── Los 20 colores exactos de la BD ──────────────────────────────────
-        color_primario:         get('color_primario')         || '#8b5a2b',
-        color_secundario:       get('color_secundario')       || '#d4a373',
+        color_primario:         get('color_primario')         || '#C8102E',
+        color_secundario:       get('color_secundario')       || '#0033A0',
         color_fondo:            get('color_fondo')            || '#f4e4c1',
         color_texto:            get('color_texto')            || '#2c1a0e',
         color_hero_overlay:     get('color_hero_overlay')     || 'rgba(62,42,31,0.7)',
+        color_titulo_seccion:   get('color_titulo_seccion')   || '#2c1a0e',
         color_titulo_hero:      get('color_titulo_hero')      || '#ffffff',
         color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
         color_fondo_fechas:     get('color_fondo_fechas')     || '#d4a373',
         color_texto_fechas:     get('color_texto_fechas')     || '#8b5a2b',
-        color_titulo_seccion:   get('color_titulo_seccion')   || '#2c1a0e',
         color_menu_fondo:       get('color_menu_fondo')       || '#ffffff',
         color_menu_texto:       get('color_menu_texto')       || '#ffffff',
         color_menu_fondo_hover: get('color_menu_fondo_hover') || '',
@@ -87,19 +87,19 @@ function construirDatosPreview() {
             if (btn && btn.dataset.expositor) {
                 try {
                     const e = JSON.parse(btn.dataset.expositor);
-                    let logoUrl = '';
+                    let imagenes = [];
                     if (e.imagen_logo) {
                         try {
                             const p = JSON.parse(e.imagen_logo);
-                            logoUrl = Array.isArray(p) ? (p[0] || '') : e.imagen_logo;
-                        } catch (_) { logoUrl = e.imagen_logo; }
+                            imagenes = Array.isArray(p) ? p.filter(Boolean) : [e.imagen_logo];
+                        } catch (_) { imagenes = [e.imagen_logo]; }
                     }
                     return {
                         nombre:      e.nombre,
                         rubro:       e.rubro || '',
                         ubicacion:   e.ubicacion || '',
                         descripcion: e.descripcion || '',
-                        logo:        logoUrl,
+                        imagenes:    imagenes,
                         video:       e.video_url || ''
                     };
                 } catch (_) {}
@@ -182,8 +182,8 @@ function aplicarCambiosEnVivo() {
 
     // ── CSS variables principales (igual que cargarEvento.js) ────────────────
     const r = doc.documentElement;
-    const colorPrimario   = get('color_primario')   || '#8b5a2b';
-    const colorSecundario = get('color_secundario') || '#d4a373';
+    const colorPrimario   = get('color_primario')   || '#C8102E';
+    const colorSecundario = get('color_secundario') || '#0033A0';
     const colorFondo      = get('color_fondo')      || '#f4e4c1';
 
     r.style.setProperty('--evento-primario',   colorPrimario);
@@ -195,8 +195,10 @@ function aplicarCambiosEnVivo() {
     if (colorTexto) doc.body.style.color = colorTexto;
 
     // ── color_hero_overlay → .hero-overlay ──────────────────────────────────
-    const overlay = doc.querySelector('.hero-overlay');
-    if (overlay && get('color_hero_overlay')) overlay.style.backgroundColor = get('color_hero_overlay');
+    if (get('color_hero_overlay')) {
+        const overlay = doc.querySelector('.hero-overlay');
+        if (overlay) overlay.style.backgroundColor = get('color_hero_overlay');
+    }
 
     // ── Hero: título, descripción, fechas ────────────────────────────────────
     if (h1 && get('color_titulo_hero'))         h1.style.color = get('color_titulo_hero');
@@ -214,8 +216,6 @@ function aplicarCambiosEnVivo() {
     }
 
     // ── Menú: CSS variables para .nav-links a ────────────────────────────────
-    // .navbar usa --evento-primario (ya seteado arriba vía CSS var)
-    // .nav-links a usa --color-menu-fondo y --color-menu-texto
     if (get('color_menu_fondo')) r.style.setProperty('--color-menu-fondo', get('color_menu_fondo'));
     if (get('color_menu_texto')) r.style.setProperty('--color-menu-texto', get('color_menu_texto'));
     if (get('color_menu_fondo_hover')) r.style.setProperty('--color-menu-fondo-hover', get('color_menu_fondo_hover'));
@@ -251,10 +251,12 @@ function aplicarCambiosEnVivo() {
     const portadaUrl = get('imagen_portada');
     if (portadaUrl) {
         const slides = doc.getElementById('heroSlides');
-        if (slides && slides.children.length === 0) {
-            slides.innerHTML = `<div class="hero-slide active" style="background-image:url('${portadaUrl}');background-size:cover;background-position:center;width:100%;height:100%;position:absolute;display:block;"></div>`;
-        } else if (slides && slides.children[0]) {
-            slides.children[0].style.backgroundImage = `url('${portadaUrl}')`;
+        if (slides) {
+            if (slides.children.length === 0) {
+                slides.innerHTML = `<div class="hero-slide active" style="background-image:url('${portadaUrl}');background-size:cover;background-position:center;width:100%;height:100%;position:absolute;display:block;"></div>`;
+            } else if (slides.children[0]) {
+                slides.children[0].style.backgroundImage = `url('${portadaUrl}')`;
+            }
         }
     }
 
@@ -294,17 +296,28 @@ function renderizarSeccionesEnIframe(doc) {
             let html = '';
             datos.actividades.forEach(act => {
                 const imgs = act.imagenes || [];
+                const showButtons = imgs.length > 1 ? 'flex' : 'none';
                 const imgHtml = imgs.length > 0
-                    ? `<img src="${imgs[0]}" alt="${act.titulo}" class="card-img-principal">`
-                    : '<div class="placeholder-img"></div>';
+                    ? `
+                    <div class="mini-carrusel">
+                        <button class="mini-btn mini-prev" style="display:${showButtons};">❮</button>
+                        <div class="mini-carrusel-track">
+                            ${imgs.map((src, i) => `<div class="mini-slide ${i===0?'activa':''}" style="width:100%;"><img src="${src}" style="width:100%; height:200px; object-fit:cover;"></div>`).join('')}
+                        </div>
+                        <button class="mini-btn mini-next" style="display:${showButtons};">❯</button>
+                    </div>`
+                    : '<div class="placeholder-img" style="height:200px; background:#f0f0f0;"></div>';
+                
+                const descHtml = doc.defaultView.formatDescription ? doc.defaultView.formatDescription(act.descripcion) : `<p class="descripcion">${act.descripcion || ''}</p>`;
+
                 html += `<div class="actividad-card">
                     ${imgHtml}
                     <div class="card-content">
                         <h3>${act.titulo}</h3>
                         <p class="tipo"><strong>Tipo:</strong> ${act.tipo || '—'}</p>
-                        <p class="fecha"><strong>Fecha:</strong> ${fmt(act.fecha)} ${act.hora ? act.hora.slice(0,5) : ''}</p>
+                        <p class="fecha"><strong>Fecha:</strong> ${fmt(act.fecha ? act.fecha.slice(0,10) : '')} ${act.hora ? act.hora.slice(0,5) : ''}</p>
                         <p class="lugar"><strong>Lugar:</strong> ${act.lugar || '—'}</p>
-                        <p class="descripcion">${act.descripcion || ''}</p>
+                        ${descHtml}
                         <p class="gratuito">${act.es_gratis ? '<strong>✓ Gratis</strong>' : '<strong>Requiere entrada</strong>'}</p>
                         ${act.enlace_venta ? `<a href="${act.enlace_venta}" target="_blank" class="btn-comprar">Comprar entrada</a>` : ''}
                     </div>
@@ -322,16 +335,28 @@ function renderizarSeccionesEnIframe(doc) {
         if (datos.expositores.length > 0) {
             let html = '';
             datos.expositores.forEach(exp => {
-                const logoHtml = exp.logo
-                    ? `<img src="${exp.logo}" alt="${exp.nombre}" class="card-img-principal">`
-                    : '<div class="placeholder-img"></div>';
+                const imgs = exp.logo ? [exp.logo] : []; // Admin preview might have single logo or array
+                const showButtons = imgs.length > 1 ? 'flex' : 'none';
+                const logoHtml = imgs.length > 0
+                    ? `
+                    <div class="mini-carrusel">
+                        <button class="mini-btn mini-prev" style="display:${showButtons};">❮</button>
+                        <div class="mini-carrusel-track">
+                            ${imgs.map((src, i) => `<div class="mini-slide ${i===0?'activa':''}" style="width:100%;"><img src="${src}" style="width:100%; height:150px; object-fit:cover;"></div>`).join('')}
+                        </div>
+                        <button class="mini-btn mini-next" style="display:${showButtons};">❯</button>
+                    </div>`
+                    : '<div class="placeholder-img" style="height:150px; background:#f0f0f0;"></div>';
+                
+                const descHtml = doc.defaultView.formatDescription ? doc.defaultView.formatDescription(exp.descripcion) : `<p class="descripcion">${exp.descripcion || ''}</p>`;
+
                 html += `<div class="expositor-card">
                     ${logoHtml}
                     <div class="card-content">
                         <h3>${exp.nombre}</h3>
                         <p class="rubro"><strong>Rubro:</strong> ${exp.rubro}</p>
                         <p class="ubicacion"><strong>Ubicación:</strong> ${exp.ubicacion}</p>
-                        <p class="descripcion">${exp.descripcion}</p>
+                        ${descHtml}
                     </div>
                 </div>`;
             });
@@ -378,6 +403,18 @@ function onIframeLoad() {
     setTimeout(() => {
         aplicarCambiosEnVivo();
         renderizarSeccionesEnIframe(doc);
+        
+        // Inicializar mini-carruseles inyectados dinámicamente
+        doc.querySelectorAll('.actividad-carousel').forEach(car => {
+            const slides = car.querySelectorAll('.actividad-slide');
+            let idx = 0;
+            const prev = car.querySelector('.actividad-prev');
+            const next = car.querySelector('.actividad-next');
+            if (!prev || !next) return;
+            function update() { slides.forEach((s, i) => s.style.display = i === idx ? 'block' : 'none'); }
+            prev.onclick = (e) => { e.preventDefault(); idx = (idx - 1 + slides.length) % slides.length; update(); };
+            next.onclick = (e) => { e.preventDefault(); idx = (idx + 1) % slides.length; update(); };
+        });
     }, 200);
 }
 

@@ -32,14 +32,17 @@ window.toggleDesc = function (btn, isShow) {
 };
 
 window.formatDescription = function (text) {
-    if (!text || text.length <= 150) return `<p class="descripcion">${text || ''}</p>`;
-    const shortText = text.substring(0, 150) + '...';
+    if (!text) return '';
+    if (text.length <= 50) return `<p class="descripcion-texto descripcion">${text}</p>`;
+
+    // Si es muy largo, cortamos y ponemos Ver más
+    const shortText = text.substring(0, 50) + '...';
     return `
-      <div class="desc-container" style="margin-bottom:10px;">
-         <p class="descripcion desc-short" style="margin:0;">${shortText}</p>
-         <p class="descripcion desc-full" style="display:none; margin:0; white-space:pre-wrap;">${text}</p>
-         <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas" style="background:none; border:none; color:#0033A0; cursor:pointer; padding:0; text-decoration:underline; font-weight:bold; font-size:13px; margin-top:4px;">Ver más</button>
-         <button onclick="window.toggleDesc(this, false)" class="btn-ver-menos" style="background:none; border:none; color:#0033A0; cursor:pointer; padding:0; text-decoration:underline; font-weight:bold; font-size:13px; margin-top:4px; display:none;">Ver menos</button>
+      <div class="desc-container" style="margin-bottom:10px; width:100%; max-width:100%; overflow-wrap: break-word;">
+         <p class="descripcion-texto descripcion desc-short" style="margin:0;">${shortText}</p>
+         <p class="descripcion-texto descripcion desc-full" style="display:none; margin:0; white-space:pre-wrap;">${text}</p>
+         <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas" style="background:none; border:none; color:var(--evento-primario, #C8102E); cursor:pointer; padding:0; text-decoration:underline; font-weight:bold; font-size:13px; margin-top:4px;">Ver más</button>
+         <button onclick="window.toggleDesc(this, false)" class="btn-ver-menos" style="background:none; border:none; color:var(--evento-primario, #C8102E); cursor:pointer; padding:0; text-decoration:underline; font-weight:bold; font-size:13px; margin-top:4px; display:none;">Ver menos</button>
       </div>
     `;
 };
@@ -216,6 +219,58 @@ function cargarEventoDesdePreview(datos) {
     r.style.setProperty('--evento-secundario', datos.color_secundario || '#d4a373');
     r.style.setProperty('--evento-fondo', datos.color_fondo || '#f4e4c1');
 
+    if (datos.color_texto) document.body.style.color = datos.color_texto;
+
+    if (datos.color_hero_overlay) {
+        const overlay = document.querySelector('.hero-overlay');
+        if (overlay) overlay.style.backgroundColor = datos.color_hero_overlay;
+    }
+
+    const h1 = document.getElementById('eventoNombre');
+    const desc = document.getElementById('eventoDescripcion');
+    if (h1 && datos.color_titulo_hero) h1.style.color = datos.color_titulo_hero;
+    if (desc && datos.color_descripcion_hero) desc.style.color = datos.color_descripcion_hero;
+
+    const heroDates = document.querySelector('.hero-dates');
+    if (heroDates) {
+        if (datos.color_fondo_fechas) heroDates.style.backgroundColor = datos.color_fondo_fechas;
+        if (datos.color_texto_fechas) heroDates.style.color = datos.color_texto_fechas;
+    }
+
+    if (datos.color_titulo_seccion) {
+        document.querySelectorAll('h2').forEach(h => h.style.color = datos.color_titulo_seccion);
+    }
+
+    if (datos.color_menu_fondo) r.style.setProperty('--color-menu-fondo', datos.color_menu_fondo);
+    if (datos.color_menu_texto) r.style.setProperty('--color-menu-texto', datos.color_menu_texto);
+    if (datos.color_menu_fondo_hover) r.style.setProperty('--color-menu-fondo-hover', datos.color_menu_fondo_hover);
+    if (datos.color_menu_texto_hover) r.style.setProperty('--color-menu-texto-hover', datos.color_menu_texto_hover);
+
+    // Títulos H3 (tarjetas info, actividades, expositores)
+    if (datos.color_titulo_h3) {
+        document.querySelectorAll('.info-card h3, .actividad-card h3, .expositor-card h3').forEach(h3 => {
+            h3.style.color = datos.color_titulo_h3;
+        });
+    }
+
+    const contacto = document.querySelector('.contacto');
+    if (contacto) {
+        if (datos.color_fondo_contacto) contacto.style.backgroundColor = datos.color_fondo_contacto;
+        if (datos.color_texto_contacto) contacto.style.color = datos.color_texto_contacto;
+        if (datos.color_enlace_contacto) {
+            contacto.querySelectorAll('a').forEach(a => a.style.color = datos.color_enlace_contacto);
+        }
+    }
+
+    const footer = document.querySelector('footer');
+    if (footer) {
+        if (datos.color_fondo_footer) footer.style.backgroundColor = datos.color_fondo_footer;
+        if (datos.color_texto_footer) {
+            footer.style.color = datos.color_texto_footer;
+            footer.querySelectorAll('p').forEach(p => p.style.color = datos.color_texto_footer);
+        }
+    }
+
     // ──── PRECIOS ────
     if (datos.precios && datos.precios.length > 0) {
         const tablaPrecios = document.getElementById('tablaPrecios');
@@ -249,30 +304,19 @@ function cargarEventoDesdePreview(datos) {
                 } else if (act.imagen) images = [act.imagen];
 
                 // crear contenedor de imagenes (mini-carrusel)
+                const showButtons = images.length > 1 ? 'flex' : 'none';
                 const imagesHtml = images.length ? `
-                    <div class="actividad-carousel" data-idx="0">
-                        <button class="actividad-prev">&#10094;</button>
-                        <div class="actividad-viewport">
-                            <div class="actividad-track">
-                                ${images.map(src => `<div class="actividad-slide"><img src="${src}" alt="${act.titulo}" class="card-img-principal"></div>`).join('')}
-                            </div>
+                    <div class="mini-carrusel" data-idx="0">
+                        <button class="mini-btn mini-prev" style="display: ${showButtons}">❮</button>
+                        <div class="mini-carrusel-track">
+                             ${images.map((src, i) => `<div class="mini-slide ${i === 0 ? 'activa' : ''}"><img src="${src}" alt="${act.titulo}" class="card-img-principal"></div>`).join('')}
                         </div>
-                        <button class="actividad-next">&#10095;</button>
-                    </div>` : '<div class="placeholder-img"></div>';
+                        <button class="mini-btn mini-next" style="display: ${showButtons}">❯</button>
+                    </div>` : '<div class="placeholder-img" style="height:200px;background:#f0f0f0;border-radius:8px;"></div>';
 
                 const card = document.createElement('div');
                 card.className = 'actividad-card';
                 card.innerHTML = `
-                    <style>
-                        .actividad-carousel { position: relative; overflow: hidden; border-radius: 4px; }
-                        .actividad-viewport { display: flex; align-items: center; justify-content: center; background: #fafafa; }
-                        .actividad-slide { width: 100%; display: none; text-align: center; }
-                        .actividad-slide img { width: 100%; height: 200px; object-fit: cover; cursor: pointer; }
-                        .actividad-prev, .actividad-next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; cursor: pointer; z-index: 2; border-radius: 50%; opacity: 0.7; }
-                        .actividad-prev:hover, .actividad-next:hover { opacity: 1; }
-                        .actividad-prev { left: 5px; }
-                        .actividad-next { right: 5px; }
-                    </style>
                     ${imagesHtml}
                     <div class="card-content">
                         <h3>${act.titulo}</h3>
@@ -288,17 +332,17 @@ function cargarEventoDesdePreview(datos) {
             });
 
             // inicializar mini-carruseles por actividad
-            actividadesGrid.querySelectorAll('.actividad-carousel').forEach(car => {
-                const track = car.querySelector('.actividad-track');
-                const slides = car.querySelectorAll('.actividad-slide');
+            actividadesGrid.querySelectorAll('.mini-carrusel').forEach(car => {
+                const slides = car.querySelectorAll('.mini-slide');
                 let idx = 0;
-                const prev = car.querySelector('.actividad-prev');
-                const next = car.querySelector('.actividad-next');
+                const prev = car.querySelector('.mini-prev');
+                const next = car.querySelector('.mini-next');
+                if (!prev || !next) return;
                 function update() {
-                    slides.forEach((s, i) => s.style.display = i === idx ? 'block' : 'none');
+                    slides.forEach((s, l) => s.classList.toggle('activa', l === idx));
                 }
-                if (prev) prev.addEventListener('click', () => { idx = (idx - 1 + slides.length) % slides.length; update(); });
-                if (next) next.addEventListener('click', () => { idx = (idx + 1) % slides.length; update(); });
+                prev.onclick = (e) => { e.preventDefault(); idx = (idx - 1 + slides.length) % slides.length; update(); };
+                next.onclick = (e) => { e.preventDefault(); idx = (idx + 1) % slides.length; update(); };
                 update();
             });
         }
@@ -311,27 +355,28 @@ function cargarEventoDesdePreview(datos) {
             expositoresGrid.innerHTML = '';
             datos.expositores.forEach(exp => {
                 let images = [];
+                const rawLogo = exp.imagen_logo || exp.logo;
                 if (Array.isArray(exp.imagenes) && exp.imagenes.length) images = exp.imagenes.filter(u => u);
-                else if (typeof exp.logo === 'string' && exp.logo.startsWith('[')) {
-                    try { images = JSON.parse(exp.logo).filter(u => u); } catch (e) { images = [exp.logo]; }
-                } else if (exp.logo) images = [exp.logo];
+                else if (typeof rawLogo === 'string' && rawLogo.startsWith('[')) {
+                    try { images = JSON.parse(rawLogo).filter(u => u); } catch (e) { images = [rawLogo]; }
+                } else if (rawLogo) images = [rawLogo];
 
                 // crear contenedor de imagenes (mini-carrusel)
+                const showButtons = images.length > 1 ? 'flex' : 'none';
                 const imagesHtml = images.length ? `
-                    <div class="actividad-carousel" data-idx="0">
-                        <button class="actividad-prev">&#10094;</button>
-                        <div class="actividad-viewport">
-                            <div class="actividad-track">
-                                ${images.map(src => `<div class="actividad-slide"><img src="${src}" alt="${exp.nombre}" class="expositor-img-principal" style="width:100%;height:150px;object-fit:cover;border-radius:4px;"></div>`).join('')}
-                            </div>
+                    <div class="mini-carrusel" data-idx="0">
+                        <button class="mini-btn mini-prev" style="display: ${showButtons}">❮</button>
+                        <div class="mini-carrusel-track" style="min-height: 150px;">
+                             ${images.map((src, i) => `<div class="mini-slide ${i === 0 ? 'activa' : ''}"><img src="${src}" alt="${exp.nombre}"></div>`).join('')}
                         </div>
-                        <button class="actividad-next">&#10095;</button>
+                        <button class="mini-btn mini-next" style="display: ${showButtons}">❯</button>
                     </div>` : '<div class="placeholder-img" style="height:150px;background:#f0f0f0;"></div>';
 
                 let videoHtml = '';
-                if (exp.video) {
-                    let embedUrl = exp.video;
-                    if (exp.video.includes('youtube.com/watch?v=')) embedUrl = exp.video.replace('watch?v=', 'embed/');
+                const rawVideo = exp.video_url || exp.video;
+                if (rawVideo) {
+                    let embedUrl = rawVideo;
+                    if (rawVideo.includes('youtube.com/watch?v=')) embedUrl = rawVideo.replace('watch?v=', 'embed/');
                     if (exp.video.includes('youtu.be/')) embedUrl = exp.video.replace('youtu.be/', 'youtube.com/embed/');
                     videoHtml = `<div style="margin-top:10px;"><iframe width="100%" height="150" src="${embedUrl}" frameborder="0" allowfullscreen></iframe></div>`;
                 }
@@ -357,17 +402,17 @@ function cargarEventoDesdePreview(datos) {
             });
 
             // inicializar mini-carruseles por expositor
-            expositoresGrid.querySelectorAll('.actividad-carousel').forEach(car => {
-                const track = car.querySelector('.actividad-track');
-                const slides = car.querySelectorAll('.actividad-slide');
+            expositoresGrid.querySelectorAll('.mini-carrusel').forEach(car => {
+                const slides = car.querySelectorAll('.mini-slide');
                 let idx = 0;
-                const prev = car.querySelector('.actividad-prev');
-                const next = car.querySelector('.actividad-next');
+                const prev = car.querySelector('.mini-prev');
+                const next = car.querySelector('.mini-next');
+                if (!prev || !next) return;
                 function update() {
-                    slides.forEach((s, i) => s.style.display = i === idx ? 'block' : 'none');
+                    slides.forEach((s, l) => s.classList.toggle('activa', l === idx));
                 }
-                if (prev) prev.addEventListener('click', () => { idx = (idx - 1 + slides.length) % slides.length; update(); });
-                if (next) next.addEventListener('click', () => { idx = (idx + 1) % slides.length; update(); });
+                prev.onclick = (e) => { e.preventDefault(); idx = (idx - 1 + slides.length) % slides.length; update(); };
+                next.onclick = (e) => { e.preventDefault(); idx = (idx + 1) % slides.length; update(); };
                 update();
             });
         }
@@ -425,6 +470,7 @@ function cargarEventoDesdePreview(datos) {
         }
     }
 }
+
 
 // Lightbox Functionality
 const initLightbox = () => {

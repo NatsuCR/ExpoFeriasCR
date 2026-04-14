@@ -42,11 +42,11 @@ export function guardarDatosPreview() {
         color_fondo:            get('color_fondo')            || '#f4e4c1',
         color_texto:            get('color_texto')            || '#2c1a0e',
         color_hero_overlay:     get('color_hero_overlay')     || 'rgba(62,42,31,0.7)',
+        color_titulo_seccion:   get('color_titulo_seccion')   || '#2c1a0e',
         color_titulo_hero:      get('color_titulo_hero')      || '#ffffff',
         color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
         color_fondo_fechas:     get('color_fondo_fechas')     || '#d4a373',
         color_texto_fechas:     get('color_texto_fechas')     || '#8b5a2b',
-        color_titulo_seccion:   get('color_titulo_seccion')   || '#2c1a0e',
         color_menu_fondo:       get('color_menu_fondo')       || '#ffffff',
         color_menu_texto:       get('color_menu_texto')       || '#ffffff',
         color_menu_fondo_hover: get('color_menu_fondo_hover') || '',
@@ -82,14 +82,28 @@ export function guardarDatosPreview() {
     })).filter(a => a.titulo);
 
     // Expositores
-    datos.expositores = Array.from(document.querySelectorAll('#expositores-rows tr')).map(row => ({
-        nombre:      row.querySelector('.exp-nombre')?.value || '',
-        rubro:       row.querySelector('.exp-rubro')?.value || '',
-        ubicacion:   row.querySelector('.exp-ubicacion')?.value || '',
-        descripcion: row.querySelector('.exp-descripcion')?.value || '',
-        logo:        row.querySelector('.exp-logo')?.value || '',
-        video:       row.querySelector('.exp-video')?.value || ''
-    })).filter(e => e.nombre);
+    datos.expositores = Array.from(document.querySelectorAll('#expositores-rows tr')).map(row => {
+        const logoInp = row.querySelector('.exp-imagenes') || row.querySelector('.exp-logo');
+        let imagenes = [];
+        if (logoInp) {
+            try {
+                const val = logoInp.value.trim();
+                if (val.startsWith('[')) {
+                    imagenes = JSON.parse(val).filter(u => u);
+                } else if (val) {
+                    imagenes = [val];
+                }
+            } catch(e) { imagenes = []; }
+        }
+        return {
+            nombre:      row.querySelector('.exp-nombre')?.value || '',
+            rubro:       row.querySelector('.exp-rubro')?.value || '',
+            ubicacion:   row.querySelector('.exp-ubicacion')?.value || '',
+            descripcion: row.querySelector('.exp-descripcion')?.value || '',
+            imagenes:    imagenes,
+            video:       row.querySelector('.exp-video')?.value || ''
+        };
+    }).filter(e => e.nombre);
 
     // Galería
     datos.galeria = Array.from(document.querySelectorAll('#galeria-rows tr')).map(row => ({

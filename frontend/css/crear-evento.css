@@ -3,7 +3,7 @@
  */
 
 .crear-evento-container {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 40px auto;
   padding-bottom: 40px;
 }
@@ -652,7 +652,7 @@
 /* Cuando la vista previa est√° activa, el layout cambia a 2 columnas */
 .crear-evento-split {
   display: grid;
-  grid-template-columns: 1fr 420px;
+  grid-template-columns: 1fr 750px;
   gap: 24px;
   align-items: start;
 }
@@ -951,7 +951,7 @@
 
 #formLayout {
     display: block;
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 40px auto;
     padding: 0 20px 60px;
 }
@@ -1138,4 +1138,86 @@
 
 @media (max-width: 768px) {
     #formLayout { padding: 0 12px 40px; }
+}
+/* ============================================================
+   SISTEMA DE AYUDA Y GUÕA (UI ASISTIDA)
+   ============================================================ */
+
+.help-box {
+  background: #fdf2e9;
+  border-left: 5px solid #e67e22;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  box-shadow: 0 2px 5px rgba(230, 126, 34, 0.1);
+}
+
+.help-box i {
+  color: #e67e22;
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.help-box-content h4 {
+  margin: 0 0 5px 0;
+  color: #d35400;
+  font-size: 15px;
+}
+
+.help-box-content p {
+  margin: 0;
+  color: #5d4037;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.field-guide {
+  display: block;
+  font-size: 12px;
+  color: #8b562b;
+  margin-top: 5px;
+  background: #fff8f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px dashed #d4a373;
+}
+
+.field-guide strong {
+  color: #5d4037;
+}
+
+.map-help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #0033A0;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.map-help-link:hover {
+  text-decoration: underline;
+}
+
+/* Tooltip simple */
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-help-icon {
+  color: #999;
+  cursor: help;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.btn-help-icon:hover {
+  color: #e67e22;
 }

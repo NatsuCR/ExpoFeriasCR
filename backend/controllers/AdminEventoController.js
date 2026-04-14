@@ -133,7 +133,7 @@ class AdminEventoController {
         for (const expositor of expositores) {
           if (expositor.nombre) {
             await pool.query(
-              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
               [eventoId, expositor.nombre, expositor.rubro || '', expositor.ubicacion || '', expositor.descripcion || '', expositor.logo || '', expositor.video || '']
             );
           }
@@ -237,7 +237,7 @@ class AdminEventoController {
         for (const exp of expositores) {
           if (exp.nombre) {
             await pool.query(
-              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
               [id, exp.nombre, exp.rubro || null, exp.ubicacion || null, exp.descripcion || null, exp.logo || null, exp.video || null]
             );
           }

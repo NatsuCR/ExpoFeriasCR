@@ -97,7 +97,7 @@ class UsuarioEventsController {
         for (const expositor of expositores) {
           if (expositor.nombre) {
             await pool.query(
-              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
               [eventoId, expositor.nombre, expositor.rubro || '', expositor.ubicacion || '', expositor.descripcion || '', expositor.logo || '', expositor.video || '']
             );
           }
@@ -399,7 +399,11 @@ class UsuarioEventsController {
             await pool.query(
               `INSERT INTO actividades (evento_id, titulo, tipo, fecha, hora, lugar, descripcion, imagen, es_gratis, requiere_entrada_online, enlace_venta)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-              [eventoId, acti.titulo, acti.tipo || null, acti.fecha || null, acti.hora || null, acti.lugar || null, acti.descripcion || null, acti.imagen || null, acti.es_gratis || 0, acti.requiere_entrada_online || 0, acti.enlace_venta || null]
+                              [
+                  eventoId, acti.titulo, acti.tipo || null, acti.fecha || null, acti.hora || null, acti.lugar || null, acti.descripcion || null, 
+                  Array.isArray(acti.imagen) ? JSON.stringify(acti.imagen) : acti.imagen || null,
+                  acti.es_gratis || 0, acti.requiere_entrada_online || 0, acti.enlace_venta || null
+                ]
             );
           }
         }
@@ -410,7 +414,7 @@ class UsuarioEventsController {
         for (const exp of expositores) {
           if (exp.nombre) {
             await pool.query(
-              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, logo, video) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
               [eventoId, exp.nombre, exp.rubro || null, exp.ubicacion || null, exp.descripcion || null, exp.logo || null, exp.video || null]
             );
           }

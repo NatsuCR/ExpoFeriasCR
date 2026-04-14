@@ -75,13 +75,22 @@
                         <div id="tab-basicos" class="tab-content active">
                             <div class="tab-header">
                                 <h2>Información del Evento</h2>
-                                <p>Los campos con * son obligatorios.</p>
+                                <p>Comencemos con los detalles generales de tu gran evento.</p>
                             </div>
+
+                            <div class="help-box">
+                                <i class="fas fa-lightbulb"></i>
+                                <div class="help-box-content">
+                                    <h4>💡 Consejo: Tu presencia online</h4>
+                                    <p>El nombre y la dirección (URL) son lo primero que verán tus visitantes. Elige nombres cortos y fáciles de recordar.</p>
+                                </div>
+                            </div>
+
                             <div class="form-section">
                                 <div class="form-group">
-                                    <label for="slug">🔗 Identificador (URL) *</label>
+                                    <label for="slug">🔗 Dirección web personalizada (URL) * <i class="fas fa-question-circle btn-help-icon" title="Esta será la dirección que compartirás. Ej: expoferiascr.com/evento/mi-evento"></i></label>
                                     <input type="text" id="slug" name="slug" placeholder="mi-evento-2026" required>
-                                    <small>Sin espacios, solo letras, números y guiones. Ej: expo-san-carlos-2026</small>
+                                    <span class="field-guide"><strong>Ejemplo:</strong> san-carlos-2026 (sin espacios ni tildes)</span>
                                 </div>
                                 <div class="form-group">
                                     <label for="nombre">📝 Nombre del Evento *</label>
@@ -150,9 +159,17 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="mapa_embed">🗺️ Mapa (código iframe de Google Maps)</label>
+                                    <label for="mapa_embed">🗺️ Mapa Interactiva (Google Maps) <i class="fas fa-question-circle btn-help-icon" title="Pega aquí el código 'iframe' de Google Maps para que los usuarios vean el mapa real."></i></label>
                                     <textarea id="mapa_embed" name="mapa_embed" placeholder='<iframe src="..."></iframe>' rows="3"></textarea>
-                                    <small><a href="https://www.google.com/maps" target="_blank">¿Necesitas ayuda? →</a></small>
+                                    <div class="help-box" style="margin-top:10px; margin-bottom:0; background:#ebf5fb; border-left-color:#3498db;">
+                                        <i class="fas fa-map-marked-alt" style="color:#3498db;"></i>
+                                        <div class="help-box-content">
+                                            <p style="font-size:12.5px;"><strong>¿Cómo obtener el mapa?</strong><br>
+                                            1. Busca el lugar en <a href="https://www.google.com/maps" target="_blank" style="color:#2980b9; font-weight:bold;">Google Maps</a>.<br>
+                                            2. Haz clic en <strong>Compartir</strong> > <strong>Incorporar un mapa</strong>.<br>
+                                            3. Copia el código HTML y pégalo arriba.</p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -170,16 +187,22 @@
                                 </div>
 
                                 <hr>
-                                <h3>🎨 Colores del Evento</h3>
-                                <p style="color:#666;font-size:13px;margin-bottom:16px;">Personaliza todos los aspectos del diseño de tu evento.</p>
+                                <div class="help-box" style="background:#f4ecf7; border-left-color:#8e44ad;">
+                                    <i class="fas fa-palette" style="color:#8e44ad;"></i>
+                                    <div class="help-box-content">
+                                        <h4>🎨 Dale personalidad a tu evento</h4>
+                                        <p>Los colores definen el ambiente. Te recomendamos usar el <strong>Color Primario</strong> igual al de tu logotipo para coherencia visual.</p>
+                                    </div>
+                                </div>
+                                <h3>Colores del Evento</h3>
+                                <p style="color:#666;font-size:13px;margin-bottom:16px;">Personaliza el diseño para que coincida con tu marca.</p>
 
                                 <!-- Colores Principales -->
                                 <div class="form-row">
-                                    <div class="form-group"><label>Color Primario</label><input type="color" id="color_primario" value="#8b5a2b"></div>
-                                    <div class="form-group"><label>Color Secundario</label><input type="color" id="color_secundario" value="#d4a373"></div>
-                                    <div class="form-group"><label>Color Fondo</label><input type="color" id="color_fondo" value="#f4e4c1"></div>
-                                    <div class="form-group"><label>Color Texto</label><input type="color" id="color_texto" value="#2c1a0e"></div>
-                                    <div class="form-group"><label>Overlay Hero</label><input type="text" id="color_hero_overlay" placeholder="rgba(62,42,31,0.7)"></div>
+                                    <div class="form-group"><label>Color Primario <i class="fas fa-info-circle btn-help-icon" title="Botones y encabezados principales"></i></label><input type="color" id="color_primario" value="#C8102E"></div>
+                                    <div class="form-group"><label>Color Secundario <i class="fas fa-info-circle btn-help-icon" title="Detalles y acentos"></i></label><input type="color" id="color_secundario" value="#0033A0"></div>
+                                    <div class="form-group"><label>Fondo de Página</label><input type="color" id="color_fondo" value="#f4e4c1"></div>
+                                    <div class="form-group"><label>Texto General</label><input type="color" id="color_texto" value="#2c1a0e"></div>
                                 </div>
 
                                 <!-- Colores de Títulos -->
@@ -217,7 +240,14 @@
 
                         <!-- ══ TAB 2: PRECIOS ══ -->
                         <div id="tab-precios" class="tab-content">
-                            <div class="tab-header"><h2>Precios de Entrada</h2><p>Define los precios para cada día de tu evento</p></div>
+                            <div class="tab-header"><h2>💰 Precios de Entrada</h2><p>Indica cuánto costará la entrada cada día.</p></div>
+                            <div class="help-box" style="background:#e8f8f5; border-left-color:#1abc9c;">
+                                <i class="fas fa-ticket-alt" style="color:#1abc9c;"></i>
+                                <div class="help-box-content">
+                                    <h4>¡Atrae a más gente!</h4>
+                                    <p>Si tienes días gratuitos o promociones de "2x1", asegúrate de indicarlo en el campo de <strong>Promoción</strong>.</p>
+                                </div>
+                            </div>
                             <div class="form-section">
                                 <table id="tabla-precios" class="tabla-eventos">
                                     <thead><tr><th>Fecha</th><th>Precio Normal (₡)</th><th>Promoción</th><th>Descripción</th><th>Acción</th></tr></thead>
@@ -233,7 +263,15 @@
 
                         <!-- ══ TAB 3: ACTIVIDADES ══ -->
                         <div id="tab-actividades" class="tab-content">
-                            <div class="tab-header"><h2>Actividades del Evento</h2><p>Agrega todas las actividades que habrá durante tu evento</p></div>
+                            <div class="tab-header"><h2>🎭 Actividades del Evento</h2><p>¿Qué pasará en tu evento? Cuéntalo aquí.</p></div>
+                            
+                            <div class="help-box" style="background:#fef9e7; border-left-color:#f1c40f;">
+                                <i class="fas fa-star" style="color:#f1c40f;"></i>
+                                <div class="help-box-content">
+                                    <h4>💡 Consejo Pro</h4>
+                                    <p>Las actividades con <strong>imágenes y descripciones detalladas</strong> tienen un 40% más de interés por parte de los visitantes.</p>
+                                </div>
+                            </div>
                             <div class="form-section">
                                 <table id="tabla-actividades" class="tabla-eventos">
                                     <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Gratuito</th><th>Acción</th></tr></thead>
@@ -249,10 +287,17 @@
 
                         <!-- ══ TAB 4: EXPOSITORES ══ -->
                         <div id="tab-expositores" class="tab-content">
-                            <div class="tab-header"><h2>Expositores</h2><p>Agrega los expositores o patrocinadores de tu evento</p></div>
+                            <div class="tab-header"><h2>🤝 Expositores y Patrocinadores</h2><p>Dale visibilidad a las marcas que hacen posible tu evento.</p></div>
+                            <div class="help-box" style="background:#eaeded; border-left-color:#7f8c8d;">
+                                <i class="fas fa-handshake" style="color:#7f8c8d;"></i>
+                                <div class="help-box-content">
+                                    <h4>Por qué añadir expositores</h4>
+                                    <p>Tener una lista clara de expositores ayuda a que los patrocinadores se sientan valorados y a que el público sepa qué marcas encontrará.</p>
+                                </div>
+                            </div>
                             <div class="form-section">
                                 <table id="tabla-expositores" class="tabla-eventos">
-                                    <thead><tr><th>Nombre</th><th>Rubro</th><th>Ubicación</th><th>Acción</th></tr></thead>
+                                    <thead><tr><th>Nombre</th><th>Rubro</th><th>Ubicación</th><th>Imágenes/Logos</th><th>Video</th><th>Acción</th></tr></thead>
                                     <tbody id="expositores-rows"></tbody>
                                 </table>
                                 <button type="button" id="btn-agregar-expositor" class="btn-secondary">+ Agregar Expositor</button>
@@ -265,7 +310,14 @@
 
                         <!-- ══ TAB 5: GALERÍA ══ -->
                         <div id="tab-galeria" class="tab-content">
-                            <div class="tab-header"><h2>Galería de Imágenes</h2><p>Agrega imágenes que se mostrarán en el carrusel de tu evento</p></div>
+                            <div class="tab-header"><h2>📸 Galería de Imágenes</h2><p>Las mejores fotos de tu evento para enamorar al público.</p></div>
+                            <div class="help-box" style="background:#f4f6f7; border-left-color:#34495e;">
+                                <i class="fas fa-camera-retro" style="color:#34495e;"></i>
+                                <div class="help-box-content">
+                                    <h4>📸 Calidad Visual</h4>
+                                    <p>Te recomendamos usar imágenes en alta resolución y de formato horizontal. Estas fotos aparecerán en el carrusel principal de tu evento.</p>
+                                </div>
+                            </div>
                             <div class="form-section">
                                 <table id="tabla-galeria" class="tabla-eventos">
                                     <thead><tr><th>Vista</th><th>URL de Imagen</th><th>Orden</th><th>Acción</th></tr></thead>

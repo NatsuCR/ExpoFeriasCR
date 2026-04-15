@@ -16,27 +16,27 @@ class AdminEventosPendientes {
 
   inicializarHelpers() {
     window.toggleDesc = function (btn, isShow) {
-        const container = btn.parentElement;
-        if (isShow) {
-            container.querySelector('.desc-short').style.display = 'none';
-            container.querySelector('.desc-full').style.display = 'block';
-            btn.style.display = 'none';
-            container.querySelector('.btn-ver-menos').style.display = 'inline-block';
-        } else {
-            container.querySelector('.desc-full').style.display = 'none';
-            container.querySelector('.desc-short').style.display = 'block';
-            btn.style.display = 'none';
-            container.querySelector('.btn-ver-mas').style.display = 'inline-block';
-        }
+      const container = btn.parentElement;
+      if (isShow) {
+        container.querySelector('.desc-short').style.display = 'none';
+        container.querySelector('.desc-full').style.display = 'block';
+        btn.style.display = 'none';
+        container.querySelector('.btn-ver-menos').style.display = 'inline-block';
+      } else {
+        container.querySelector('.desc-full').style.display = 'none';
+        container.querySelector('.desc-short').style.display = 'block';
+        btn.style.display = 'none';
+        container.querySelector('.btn-ver-mas').style.display = 'inline-block';
+      }
     };
 
     window.formatDescription = function (text) {
-        if (!text) return '';
-        if (text.length <= 50) return `<p class="descripcion-texto descripcion">${text}</p>`;
+      if (!text) return '';
+      if (text.length <= 50) return `<p class="descripcion-texto descripcion">${text}</p>`;
 
-        // Si es muy largo, cortamos y ponemos Ver más
-        const shortText = text.substring(0, 50) + '...';
-        return `
+      // Si es muy largo, cortamos y ponemos Ver más
+      const shortText = text.substring(0, 50) + '...';
+      return `
           <div class="desc-container" style="margin-bottom:10px; width:100%; max-width:100%; overflow-wrap: break-word;">
              <p class="descripcion-texto descripcion desc-short" style="margin:0;">${shortText}</p>
              <p class="descripcion-texto descripcion desc-full" style="display:none; margin:0; white-space:pre-wrap;">${text}</p>
@@ -219,22 +219,26 @@ class AdminEventosPendientes {
         return;
       }
 
+
+      this.eventoActualModal = evento;
+      this.eventosAprobar = evento.id;
+
       // Fetch full event info to show everything including carousels and images
       const token = localStorage.getItem('token');
       const res = await fetch(`/api/admin/eventos-pendientes/${eventoId}`, {
-         headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 'Authorization': `Bearer ${token}` }
       });
-      if(res.ok) {
-          const fullData = await res.json();
-          // Combinar datos basicos con las colecciones y extras
-          // IMPORTANTE: el API devuelve { evento: {...}, actividades: [], ... }
-          if (fullData.evento) {
-            Object.assign(evento, fullData.evento);
-          }
-          evento.actividades = fullData.actividades || [];
-          evento.precios = fullData.precios || [];
-          evento.expositores = fullData.expositores || [];
-          evento.galeria = fullData.galeria || [];
+      if (res.ok) {
+        const fullData = await res.json();
+        // Combinar datos basicos con las colecciones y extras
+        // IMPORTANTE: el API devuelve { evento: {...}, actividades: [], ... }
+        if (fullData.evento) {
+          Object.assign(evento, fullData.evento);
+        }
+        evento.actividades = fullData.actividades || [];
+        evento.precios = fullData.precios || [];
+        evento.expositores = fullData.expositores || [];
+        evento.galeria = fullData.galeria || [];
       }
 
       // Guardar datos del evento en localStorage con una clave única
@@ -280,7 +284,7 @@ class AdminEventosPendientes {
         })),
         galeria: evento.galeria || []
       };
-      
+
       const dataKey = 'preview_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       localStorage.setItem(dataKey, JSON.stringify(datosPreview));
 
@@ -297,8 +301,8 @@ class AdminEventosPendientes {
         // Usar colores por defecto del sitio para la simulación de portada (Red/Blue)
         const cp = '#C8102E'; // Rojo marca
         const cs = '#0033A0'; // Azul marca
-        const imgUrl = (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/')) 
-          ? '/' + evento.imagen_portada 
+        const imgUrl = (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/'))
+          ? '/' + evento.imagen_portada
           : (evento.imagen_portada || '/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');
 
         return `
@@ -392,13 +396,25 @@ class AdminEventosPendientes {
   }
 
   async aprobarEventoModal() {
-    if (this.eventoActualModal) {
-      await this.aprobarEvento(this.eventoActualModal.id);
+    const id = this.eventosAprobar || (this.eventoActualModal ? this.eventoActualModal.id : null);
+
+    if (!id) {
+      alert('No se encontró el evento a aprobar');
+      return;
     }
+
+    await this.aprobarEvento(id);
   }
 
   abrirRechazar(eventoId) {
-    this.eventosAprobar = eventoId || (this.eventoActualModal ? this.eventoActualModal.id : null);
+    const id = eventoId || this.eventosAprobar || (this.eventoActualModal ? this.eventoActualModal.id : null);
+
+    if (!id) {
+      alert('No se encontró el evento a rechazar');
+      return;
+    }
+
+    this.eventosAprobar = id;
     document.getElementById('razon-rechazo').value = '';
     document.getElementById('modal-evento-preview').style.display = 'none';
     document.getElementById('modal-rechazar').style.display = 'flex';

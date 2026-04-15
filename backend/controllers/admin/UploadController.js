@@ -5,7 +5,7 @@ const fs = require('fs');
 // Configurar almacenamiento
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../../frontend/assets/uploads');
+        const uploadDir = path.join(process.cwd(), 'frontend', 'assets', 'uploads');
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
         }

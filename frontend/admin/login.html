@@ -11,9 +11,11 @@
 <body class="admin-body">
     <div class="login-container">
         <h2>Acceso Administrador</h2>
-        <input type="email" id="email" placeholder="Correo electrónico" autocomplete="off">
-        <input type="password" id="password" placeholder="Contraseña">
-        <button id="btnLogin">Iniciar sesión</button>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Correo electrónico" autocomplete="off" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button type="submit" id="btnLogin">Iniciar sesión</button>
+        </form>
         <div id="errorMsg" class="error"></div>
     </div>
 

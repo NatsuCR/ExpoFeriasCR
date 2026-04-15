@@ -207,8 +207,8 @@ class AdminEventosPendientesController {
             for (const a of b.actividades) {
               if (a.titulo) await pool.query('INSERT INTO actividades (evento_id, titulo, tipo, fecha, hora, lugar, descripcion, imagen, es_gratis, requiere_entrada_online, enlace_venta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [eventoId, a.titulo, a.tipo || null, a.fecha || null, a.hora || null, a.lugar || null, a.descripcion || null,
-                 Array.isArray(a.imagen) ? JSON.stringify(a.imagen) : a.imagen || null,
-                 a.es_gratis || 0, a.requiere_entrada_online || 0, a.enlace_venta || null]);
+                  Array.isArray(a.imagen) ? JSON.stringify(a.imagen) : a.imagen || null,
+                  a.es_gratis || 0, a.requiere_entrada_online || 0, a.enlace_venta || null]);
             }
           }
           // Promover expositores
@@ -268,10 +268,13 @@ class AdminEventosPendientesController {
         return res.status(400).json({ error: 'La razón del rechazo es requerida' });
       }
 
-      // Obtener evento
+      // 🔥 CAMBIO AQUÍ: aceptar pendiente y edicion_pendiente
       const [eventos] = await pool.query(
-        'SELECT * FROM eventos WHERE id = ? AND estado = ? AND usuario_id IS NOT NULL',
-        [eventoId, 'pendiente']
+        `SELECT * FROM eventos 
+       WHERE id = ? 
+       AND estado IN ('pendiente', 'edicion_pendiente') 
+       AND usuario_id IS NOT NULL`,
+        [eventoId]
       );
 
       if (eventos.length === 0) {
@@ -292,13 +295,15 @@ class AdminEventosPendientesController {
 
       const usuario = usuarios[0];
 
-      // Actualizar estado a rechazado
+      // 🔥 Si era edición pendiente, limpiar borrador también
       await pool.query(
-        'UPDATE eventos SET estado = ?, activo = 0, razon_rechazo = ? WHERE id = ?',
+        `UPDATE eventos 
+       SET estado = ?, activo = 0, razon_rechazo = ?, borrador_cambios = NULL 
+       WHERE id = ?`,
         ['rechazado', razonRechazo, eventoId]
       );
 
-      // Enviar email al usuario
+      // Enviar email
       await emailService.notificarRechazo(
         usuario.email,
         usuario.nombre,
@@ -313,6 +318,7 @@ class AdminEventosPendientesController {
           estado: 'rechazado'
         }
       });
+
     } catch (error) {
       console.error('Error al rechazar evento:', error);
       res.status(500).json({ error: 'Error al rechazar evento' });

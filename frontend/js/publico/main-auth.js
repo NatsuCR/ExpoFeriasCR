@@ -24,13 +24,17 @@ async function verificarReinicioServidor() {
     const data = await res.json();
     
     const lastBoot = localStorage.getItem('serverBootTime');
+    
+    // 🔥 Seguridad: Si no hay bootTime en la respuesta, no hacemos nada para evitar bucles
+    if (!data.bootTime) return;
+
     if (lastBoot && lastBoot !== data.bootTime) {
       // El servidor se reinició, limpiar sesión
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
       localStorage.setItem('serverBootTime', data.bootTime);
       window.location.reload();
-    } else if (!lastBoot) {
+    } else if (!lastBoot || lastBoot !== data.bootTime) {
       localStorage.setItem('serverBootTime', data.bootTime);
     }
   } catch (error) {

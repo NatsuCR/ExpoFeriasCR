@@ -1,4 +1,5 @@
 const pool = require('../../db');
+const EventoService = require('../../services/EventoService');
 
 class AdminEventoController {
   async listar(req, res) {
@@ -267,12 +268,24 @@ class AdminEventoController {
   async eliminar(req, res) {
     const { id } = req.params;
     try {
+      // 1. LIMPIEZA FÍSICA de archivos
+      const eventoService = new EventoService();
+      await eventoService.eliminarRecursosFisicos(id);
+
+      // 2. Eliminar relaciones para no dejar datos huérfanos
+      await pool.query('DELETE FROM precios_entrada WHERE evento_id = ?', [id]);
+      await pool.query('DELETE FROM actividades WHERE evento_id = ?', [id]);
+      await pool.query('DELETE FROM expositores WHERE evento_id = ?', [id]);
+      await pool.query('DELETE FROM evento_galeria WHERE evento_id = ?', [id]);
+
+      // 3. Eliminar evento principal
       const [result] = await pool.query('DELETE FROM eventos WHERE id = ?', [id]);
+
       if (result.affectedRows === 0) return res.status(404).json({ error: 'Evento no encontrado' });
-      res.json({ message: 'Evento eliminado' });
+      res.json({ message: 'Evento y sus recursos físicos eliminados exitosamente' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Error al eliminar evento' });
+      res.status(500).json({ error: 'Error al eliminar evento y sus recursos' });
     }
   }
 

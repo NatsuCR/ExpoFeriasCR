@@ -284,7 +284,7 @@ class UsuarioEventsController {
   }
 
   /**
-   * Eliminar evento (solo si es pendiente)
+   * Eliminar evento (usuario propietario)
    * DELETE /api/eventos/:id
    */
   async eliminarEvento(req, res) {
@@ -292,28 +292,34 @@ class UsuarioEventsController {
     const eventoId = req.params.id;
 
     try {
-      // Verificar propiedad y estado
-      const [eventos] = await pool.query(
-        'SELECT * FROM eventos WHERE id = ? AND usuario_id = ?',
-        [eventoId, usuarioId]
-      );
-
-      if (eventos.length === 0) {
+      // 1. Verificar propiedad y existencia
+      const [rows] = await pool.query('SELECT * FROM eventos WHERE id = ?', [eventoId]);
+      if (rows.length === 0) {
         return res.status(404).json({ error: 'Evento no encontrado' });
       }
 
-      // Solo permitir eliminación si estado es pendiente
-      if (eventos[0].estado !== 'pendiente') {
-        return res.status(403).json({ error: 'No puedes eliminar eventos aprobados o rechazados' });
+      const evento = rows[0];
+      if (evento.usuario_id !== usuarioId && req.user.rol !== 'admin') {
+        return res.status(403).json({ error: 'No tienes permiso para eliminar este evento' });
       }
 
-      // Eliminar evento (cascade delete de relacionados)
+      // 2. LIMPIEZA FÍSICA de archivos
+      const eventoService = new EventoService();
+      await eventoService.eliminarRecursosFisicos(eventoId);
+
+      // 3. Eliminar relaciones para no dejar datos huérfanos
+      await pool.query('DELETE FROM precios_entrada WHERE evento_id = ?', [eventoId]);
+      await pool.query('DELETE FROM actividades WHERE evento_id = ?', [eventoId]);
+      await pool.query('DELETE FROM expositores WHERE evento_id = ?', [eventoId]);
+      await pool.query('DELETE FROM evento_galeria WHERE evento_id = ?', [eventoId]);
+
+      // 4. Eliminar evento principal
       await pool.query('DELETE FROM eventos WHERE id = ?', [eventoId]);
 
-      res.json({ message: 'Evento eliminado exitosamente' });
+      res.json({ message: 'Evento y sus archivos eliminados exitosamente' });
     } catch (error) {
       console.error('Error al eliminar evento:', error);
-      res.status(500).json({ error: 'Error al eliminar evento' });
+      res.status(500).json({ error: 'Error interno del servidor al eliminar evento' });
     }
   }
 
@@ -521,42 +527,6 @@ class UsuarioEventsController {
     }
   }
 
-  /**
-   * Eliminar evento
-   * DELETE /api/eventos/:id
-   */
-  async eliminarEvento(req, res) {
-    const eventoId = req.params.id;
-    const usuarioId = req.user.id;
-
-    try {
-      const [rows] = await pool.query('SELECT usuario_id FROM eventos WHERE id = ?', [eventoId]);
-      if (rows.length === 0) {
-        return res.status(404).json({ error: 'Evento no encontrado' });
-      }
-
-      if (rows[0].usuario_id !== usuarioId) {
-        // En caso de que se añada soporte de rol administrador en este endpoint en el futuro
-        if (req.user.rol !== 'admin') {
-           return res.status(403).json({ error: 'No tienes permiso para eliminar este evento' });
-        }
-      }
-
-      // Eliminar relaciones para no dejar datos huérfanos
-      await pool.query('DELETE FROM precios_entrada WHERE evento_id = ?', [eventoId]);
-      await pool.query('DELETE FROM actividades WHERE evento_id = ?', [eventoId]);
-      await pool.query('DELETE FROM expositores WHERE evento_id = ?', [eventoId]);
-      await pool.query('DELETE FROM evento_galeria WHERE evento_id = ?', [eventoId]);
-
-      // Eliminar evento principal
-      await pool.query('DELETE FROM eventos WHERE id = ?', [eventoId]);
-
-      res.json({ message: 'Evento eliminado correctamente' });
-    } catch (error) {
-      console.error('Error al eliminar evento:', error);
-      res.status(500).json({ error: 'Error interno del servidor al eliminar evento' });
-    }
-  }
 }
 
 module.exports = UsuarioEventsController;

@@ -12,7 +12,7 @@ export function cargarCarruselFondo(slug) {
         .then(imagenes => {
             imagenesFondo = imagenes;
             if (imagenesFondo.length === 0) {
-                slidesContainer.innerHTML = `<div class="hero-carrusel-slide" style="background-image: url('assets/images/ExpoSanCarlos2026/campo-ferial.jpg');"></div>`;
+                slidesContainer.innerHTML = `<div class="hero-carrusel-slide" style="background-image: url('assets/images/default-feria.jpg');"></div>`;
                 return;
             }
             slidesContainer.innerHTML = '';

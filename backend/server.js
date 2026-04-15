@@ -19,11 +19,19 @@ const SERVER_BOOT_TIME = Date.now().toString();
 // =======================
 const authRoutes = require('./routes/authRoutes');
 const eventoRoutes = require('./routes/eventoRoutes');
-const adminRoutes = require('./routes/adminRoutes'); // 👈 Añadido
+const adminRoutes = require('./routes/adminRoutes');
+const actividadRoutes = require('./routes/actividadRoutes');
+const precioRoutes = require('./routes/precioRoutes');
+const expositorRoutes = require('./routes/expositorRoutes');
+const galeriaRoutes = require('./routes/galeriaRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/eventos', eventoRoutes);
-app.use('/api/admin', adminRoutes); // 👈 Añadido
+app.use('/api/admin', adminRoutes);
+app.use('/api/actividades', actividadRoutes);
+app.use('/api/precios', precioRoutes);
+app.use('/api/expositores', expositorRoutes);
+app.use('/api/galeria', galeriaRoutes);
 
 // =======================
 // 📁 ARCHIVOS ESTÁTICOS

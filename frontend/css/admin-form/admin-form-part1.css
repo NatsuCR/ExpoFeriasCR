@@ -1,0 +1,277 @@
+/* ============================================
+   admin-form.css — Rediseño completo
+   ============================================ */
+
+:root {
+    --form-bg:        #f0f2f5;
+    --form-surface:   #ffffff;
+    --form-border:    #e0e4ea;
+    --form-accent:    #3b5bdb;
+    --form-accent2:   #1971c2;
+    --form-text:      #1a1d23;
+    --form-muted:     #6b7280;
+    --form-radius:    10px;
+    --form-shadow:    0 1px 4px rgba(0,0,0,0.08);
+    --form-shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+    --form-success:   #2f9e44;
+    --form-danger:    #e03131;
+    --form-warning:   #e67700;
+}
+
+/* ══════════════════════════════════════════
+   BODY / CONTAINER
+   ══════════════════════════════════════════ */
+
+body.admin-body {
+    background: var(--form-bg);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: var(--form-text);
+}
+
+.admin-container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+}
+
+/* Título principal */
+.admin-container > h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--form-text);
+    margin-bottom: 0.25rem;
+}
+
+/* ══════════════════════════════════════════
+   BARRA SUPERIOR (volver + toggle preview)
+   ══════════════════════════════════════════ */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--form-surface);
+    color: var(--form-muted);
+    border: 1px solid var(--form-border);
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.18s;
+}
+.btn-volver:hover {
+    background: var(--form-text);
+    color: #fff;
+    border-color: var(--form-text);
+}
+
+#btnTogglePreview {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #1e1e2e;
+    color: #c8d0e0;
+    border: 1px solid #2e3450;
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+}
+#btnTogglePreview:hover {
+    background: #2b2d42;
+    color: #fff;
+}
+
+/* ══════════════════════════════════════════
+   LAYOUT DOS COLUMNAS (form | preview)
+   ══════════════════════════════════════════ */
+
+#formLayout { display: block; }
+
+#formLayout.with-preview {
+    display: grid;
+    grid-template-columns: 1fr 430px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+#formColumna { min-width: 0; }
+
+/* ══════════════════════════════════════════
+   TABS
+   ══════════════════════════════════════════ */
+
+.tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--form-border);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    background: var(--form-surface);
+    border-radius: var(--form-radius) var(--form-radius) 0 0;
+    padding: 0 1rem;
+    box-shadow: var(--form-shadow);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--form-muted);
+    border-radius: 0;
+    transition: all 0.18s;
+    white-space: nowrap;
+}
+
+.tab-btn:hover { color: var(--form-accent); }
+
+.tab-btn.active {
+    color: var(--form-accent);
+    border-bottom-color: var(--form-accent);
+    background: none;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.2s ease;
+}
+.tab-pane.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════
+   CARD / SECCIÓN DEL FORMULARIO
+   ══════════════════════════════════════════ */
+
+.form-card {
+    background: var(--form-surface);
+    border: 1px solid var(--form-border);
+    border-radius: var(--form-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--form-shadow);
+}
+
+.form-card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--form-muted);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--form-border);
+}
+
+/* ══════════════════════════════════════════
+   FORM ROW / GROUP
+   ══════════════════════════════════════════ */
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--form-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.form-group input:not([type="color"]):not([type="checkbox"]),
+.form-group textarea,
+.form-group select,
+.form-control {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--form-border);
+    border-radius: 7px;
+    font-size: 0.9rem;
+    color: var(--form-text);
+    background: var(--form-surface);
+    transition: border-color 0.18s, box-shadow 0.18s;
+    box-sizing: border-box;
+}
+
+.form-group input:not([type="color"]):not([type="checkbox"]):focus,
+.form-group textarea:focus,
+.form-group select:focus,
+.form-control:focus {
+    outline: none;
+    border-color: var(--form-accent);
+    box-shadow: 0 0 0 3px rgba(59,91,219,0.12);
+}
+
+.form-group textarea { resize: vertical; min-height: 80px; }
+
+/* Checkbox */
+.form-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--form-accent);
+    cursor: pointer;
+}
+
+/* ══════════════════════════════════════════
+   COLOR PICKER — tarjetas visuales
+   ══════════════════════════════════════════ */
+
+.colores-seccion {
+    background: var(--form-surface);
+    border: 1px solid var(--form-border);
+    border-radius: var(--form-radius);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--form-shadow);
+}
+
+.colores-seccion-titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--form-muted);
+    border-bottom: 1px solid var(--form-border);
+    background: #fafbfc;
+}
+
+.colores-grupo {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--form-border);
+}
+.colores-grupo:last-child { border-bottom: none; }

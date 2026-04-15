@@ -1,0 +1,272 @@
+.colores-grupo-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--form-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+.colores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+}
+
+/* Tarjeta individual de color */
+.color-card {
+    position: relative;
+    background: #fafbfc;
+    border: 1.5px solid var(--form-border);
+    border-radius: 8px;
+    padding: 0.6rem 0.75rem 0.65rem;
+    cursor: pointer;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    overflow: hidden;
+}
+
+.color-card:hover {
+    border-color: var(--form-accent);
+    box-shadow: 0 0 0 3px rgba(59,91,219,0.1);
+}
+
+/* Franja de color en la parte superior */
+.color-preview {
+    width: calc(100% + 1.5rem);
+    height: 38px;
+    margin: -0.6rem -0.75rem 0.4rem;
+    border-radius: 6px 6px 0 0;
+    border-bottom: 1px solid var(--form-border);
+    transition: background-color 0.2s;
+}
+
+/* Input color nativo — invisible pero funcional */
+.color-input {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 38px;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.color-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.25rem;
+}
+
+.color-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--form-text);
+}
+
+.color-hex {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--form-muted);
+    font-family: 'Courier New', monospace;
+    background: var(--form-border);
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+.color-desc {
+    font-size: 0.72rem;
+    color: var(--form-muted);
+    line-height: 1.3;
+}
+
+/* Tarjeta ancha (overlay rgba) */
+.color-card-wide {
+    grid-column: 1 / -1;
+    flex-direction: column;
+}
+
+.color-overlay-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.color-overlay-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--form-text);
+}
+
+.color-overlay-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid var(--form-border);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: 'Courier New', monospace;
+    color: var(--form-text);
+    background: white;
+    transition: border-color 0.18s;
+    box-sizing: border-box;
+}
+.color-overlay-input:focus {
+    outline: none;
+    border-color: var(--form-accent);
+    box-shadow: 0 0 0 3px rgba(59,91,219,0.1);
+}
+
+.color-overlay-hint {
+    font-size: 0.72rem;
+    color: var(--form-muted);
+    line-height: 1.4;
+}
+
+/* ══════════════════════════════════════════
+   BOTONES
+   ══════════════════════════════════════════ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.18s;
+    white-space: nowrap;
+}
+
+.btn-primary   { background: var(--form-accent);   color: #fff; }
+.btn-primary:hover  { background: var(--form-accent2); }
+
+.btn-success   { background: var(--form-success);  color: #fff; }
+.btn-success:hover  { filter: brightness(1.1); }
+
+.btn-danger    { background: var(--form-danger);   color: #fff; }
+.btn-danger:hover   { filter: brightness(1.1); }
+
+.btn-warning   { background: var(--form-warning);  color: #fff; }
+.btn-warning:hover  { filter: brightness(1.1); }
+
+.btn-secondary { background: #e9ecef; color: var(--form-text); }
+.btn-secondary:hover { background: #dee2e6; }
+
+.btn:disabled  { opacity: 0.5; cursor: not-allowed; }
+
+/* Upload */
+.btn-upload {
+    background: #e9ecef;
+    color: var(--form-text);
+    padding: 8px 12px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.18s;
+    white-space: nowrap;
+}
+.btn-upload:hover { background: #dee2e6; }
+
+/* ══════════════════════════════════════════
+   TABLAS
+   ══════════════════════════════════════════ */
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: var(--form-surface);
+    border-radius: var(--form-radius);
+    overflow: hidden;
+    display: block;
+    box-shadow: var(--form-shadow);
+}
+
+.data-table thead,
+.data-table tbody,
+.data-table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.data-table th {
+    background: #f1f3f9;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--form-muted);
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--form-border);
+    text-align: left;
+}
+
+.data-table td {
+    padding: 10px 12px;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--form-border);
+    vertical-align: middle;
+    word-wrap: break-word;
+    white-space: normal;
+    color: var(--form-text);
+}
+
+.data-table tbody tr:hover { background: #f8f9ff; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+.data-table td:nth-child(3) {
+    max-width: 260px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.data-table td:last-child,
+.data-table th:last-child {
+    white-space: nowrap;
+    width: 130px;
+    text-align: center;
+}
+
+.data-table td:last-child button {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 2px;
+    padding: 5px 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+@media (max-width: 480px) {
+    .data-table td:last-child { white-space: normal; }
+    .data-table td:last-child button { display: block; width: 100%; margin: 3px 0; }
+}
+
+/* ══════════════════════════════════════════
+   MODALES
+   ══════════════════════════════════════════ */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}

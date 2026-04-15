@@ -1,0 +1,170 @@
+.upload-feedback.ok {
+    color: #155724;
+    background: #d4edda;
+    display: block;
+}
+
+.upload-feedback.err {
+    color: #721c24;
+    background: #f8d7da;
+    display: block;
+}
+
+.uploading-spinner {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 1100px) {
+    #formLayout.with-preview {
+        grid-template-columns: 1fr;
+    }
+    #previewPanel.visible {
+        position: static;
+        height: 600px;
+    }
+}
+
+@media (max-width: 768px) {
+    #formLayout { padding: 0 12px 40px; }
+}
+/* ============================================================
+   SISTEMA DE AYUDA Y GU�A (UI ASISTIDA)
+   ============================================================ */
+
+.help-box {
+  background: #fdf2e9;
+  border-left: 5px solid #e67e22;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  box-shadow: 0 2px 5px rgba(230, 126, 34, 0.1);
+}
+
+.help-box i {
+  color: #e67e22;
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.help-box-content h4 {
+  margin: 0 0 5px 0;
+  color: #d35400;
+  font-size: 15px;
+}
+
+.help-box-content p {
+  margin: 0;
+  color: #5d4037;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.field-guide {
+  display: block;
+  font-size: 12px;
+  color: #8b562b;
+  margin-top: 5px;
+  background: #fff8f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px dashed #d4a373;
+}
+
+.field-guide strong {
+  color: #5d4037;
+}
+
+.map-help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #0033A0;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.map-help-link:hover {
+  text-decoration: underline;
+}
+
+/* Tooltip simple */
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-help-icon {
+  color: #999;
+  cursor: help;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.btn-help-icon:hover {
+  color: #e67e22;
+}
+
+/* ── Botones de accion en tablas (Editar / Eliminar) ── */
+.btn-warning,
+.btn-editar {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  box-shadow: 0 2px 6px rgba(230,126,34,0.35);
+  flex-shrink: 0;
+  padding: 0;
+}
+.btn-warning:hover,
+.btn-editar:hover {
+  filter: brightness(1.12);
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 4px 12px rgba(230,126,34,0.5);
+}
+.btn-danger.btn-eliminar {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(231,76,60,0.35);
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  flex-shrink: 0;
+}
+.btn-danger.btn-eliminar:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 4px 12px rgba(231,76,60,0.5);
+}
+.acciones-tabla {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}

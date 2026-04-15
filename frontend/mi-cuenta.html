@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta | ExpoFeriasCR</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/mi-cuenta/layout.css">
+    <link rel="stylesheet" href="css/mi-cuenta/modales.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR">
+                <span>ExpoFeriasCR</span>
+            </div>
+            <button id="btn-volver-cuenta" class="btn-navbar-back">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mi-cuenta-container">
+        <!-- Header -->
+        <div class="cuenta-header">
+            <h1>👤 Mi Cuenta</h1>
+            <p>Gestiona tu perfil y tus eventos</p>
+        </div>
+
+        <!-- Perfil del Usuario -->
+        <section class="seccion-perfil">
+            <div class="perfil-card">
+                <div class="perfil-info">
+                    <div class="perfil-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="perfil-datos">
+                        <h2 id="perfil-nombre">Cargando...</h2>
+                        <p id="perfil-email">email@ejemplo.com</p>
+                        <p id="perfil-miembro" class="perfil-miembro">Miembro desde hace poco</p>
+                    </div>
+                </div>
+                <div class="perfil-acciones">
+                    <button id="btn-cambiar-password" class="btn-secondary">
+                        <i class="fas fa-key"></i> Cambiar Contraseña
+                    </button>
+                    <button id="btn-logout" class="btn-danger">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Crear Nuevo Evento -->
+        <section class="seccion-crear-evento">
+            <button id="btn-crear-evento" class="btn-crear-grande">
+                <i class="fas fa-plus-circle"></i>
+                <span>
+                    <strong>Crear Nuevo Evento</strong>
+                    <small>Crea un evento y comparte con la comunidad</small>
+                </span>
+            </button>
+        </section>
+
+        <!-- Mis Eventos -->
+        <section class="seccion-eventos">
+            <div class="seccion-header">
+                <h2>📅 Mis Eventos</h2>
+                <p>Aquí puedes ver todos los eventos que has creado</p>
+                <div style="display:flex; gap:10px; margin-top:15px; align-items:center;">
+                    <input type="checkbox" id="seleccionar-todos-eventos" title="Seleccionar todos"> <label for="seleccionar-todos-eventos" style="font-size:14px; color:#555;">Seleccionar todos</label>
+                    <button type="button" id="btn-eliminar-seleccionados" class="btn-danger" style="padding:6px 12px; font-size:12px; border:none; border-radius:4px; opacity:0.5; pointer-events:none; transition:0.3s;">
+                        <i class="fas fa-trash-alt"></i> Eliminar Seleccionados
+                    </button>
+                </div>
+            </div>
+
+            <div id="eventos-contenedor" class="eventos-grid">
+                <div class="evento-card-loading">
+                    <div class="spinner"></div>
+                    <p>Cargando eventos...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal de cambio de contraseña -->
+        <div id="modal-cambiar-password" class="modal-overlay" style="display: none;">
+            <div class="modal-contenedor">
+                <div class="modal-header">
+                    <h3>Cambiar Contraseña</h3>
+                    <button id="btn-cerrar-modal-password" class="btn-cerrar-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form id="form-cambiar-password" class="modal-form">
+                    <div class="form-group">
+                        <label>Nueva Contraseña</label>
+                        <input type="password" id="nueva-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirmar Contraseña</label>
+                        <input type="password" id="confirmar-password" placeholder="Confirma tu contraseña" autocomplete="new-password" required>
+                    </div>
+
+                    <div id="mensaje-password" class="modal-mensaje" style="display: none;"></div>
+
+                    <div class="modal-acciones">
+                        <button type="button" id="btn-cancelar-password" class="btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de detalles del evento -->
+        <div id="modal-evento-detalles" class="modal-overlay" style="display: none;">
+            <div class="modal-contenedor modal-grande">
+                <div class="modal-header">
+                    <h3 id="modal-evento-titulo">Evento</h3>
+                    <button id="btn-cerrar-modal-evento" class="btn-cerrar-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div id="modal-evento-contenido"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="btn-editar-evento" class="btn-primary" style="display: none;">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button id="btn-eliminar-evento" class="btn-danger" style="display: none;">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('modal-evento-detalles').style.display='none'">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 ExpoFeriasCR - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script src="js/mi-cuenta.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+.preview-item-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preview-item-value {
+  color: #2c1a0e;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.badge-contador {
+  display: inline-block;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-eventos-container {
+    margin: 20px auto;
+  }
+
+  .admin-header h1 {
+    font-size: 24px;
+  }
+
+  .filtros-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filtros-group {
+    width: 100%;
+  }
+
+  .tabla-eventos th,
+  .tabla-eventos td {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+
+  .tabla-eventos th {
+    font-size: 11px;
+  }
+
+  .acciones-cell {
+    flex-direction: column;
+  }
+
+  .btn-accion {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal-contenedor {
+    width: 95%;
+  }
+
+  .modal-body {
+    max-height: 80vh;
+    padding: 20px;
+  }
+
+  .preview-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .preview-imagen {
+    width: 150px;
+    height: 150px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  #btn-limpiar-filtros {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .paginacion-container {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+/* Vista previa evento con iframe */
+.evento-preview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.evento-preview-info {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #8b5a2b;
+}
+
+.preview-usuario-info h4 {
+  margin: 0 0 12px 0;
+  color: #2c1a0e;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.preview-usuario-info p {
+  margin: 6px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.evento-preview-iframe {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  min-height: 60vh;
+  width: 100%;
+}
+
+/* Decoración botón Limpiar Filtros */
+#btn-limpiar-filtros {
+  background: linear-gradient(135deg, #8b5a2b 0%, #a67c52 100%);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(139, 90, 43, 0.2);
+}
+
+#btn-limpiar-filtros:hover {
+  background: linear-gradient(135deg, #a67c52 0%, #c89d6b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(139, 90, 43, 0.3);
+}
+
+#btn-limpiar-filtros:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(139, 90, 43, 0.2);
+}
+
+#btn-limpiar-filtros::before {
+  content: '✕';
+  font-weight: bold;
+}

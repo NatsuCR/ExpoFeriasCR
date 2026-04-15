@@ -1,0 +1,129 @@
+/* ============================================
+   EVENTO - RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .hero-carrusel {
+        height: 60vh;
+    }
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    .hero-content p {
+        font-size: 1rem;
+        padding: 0 1rem;
+    }
+    .hero-dates {
+        font-size: 1.2rem;
+        padding: 0.3rem 1rem;
+    }
+    .hero-carrusel-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+    }
+    .info-grid, .actividades-grid, .expositores-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .actividad-card, .expositor-card {
+        padding: 1rem;
+    }
+    .actividad-card img, .expositor-card img {
+        height: 150px;
+    }
+    .tabla-precios th, .tabla-precios td {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
+    .mapa iframe {
+        height: 250px;
+    }
+    .actividades-carrusel-track .actividad-card,
+    .expositores-carrusel-track .expositor-card {
+        min-width: 100%;
+    }
+    .navbar .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .nav-links {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .nav-links a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+}
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 1.5rem;
+    }
+    .hero-dates {
+        font-size: 1rem;
+    }
+    .tabla-precios th, .tabla-precios td {
+        font-size: 0.7rem;
+        padding: 4px;
+    }
+}
+
+
+/* ============================================
+   Responsive para botones < > (carruseles)
+   ============================================ */
+
+/* Botones del carrusel del hero */
+@media (max-width: 768px) {
+    .hero-carrusel-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+        padding: 0.2rem;
+    }
+    .hero-carrusel-btn.prev {
+        left: 10px;
+    }
+    .hero-carrusel-btn.next {
+        right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-carrusel-btn {
+        width: 25px;
+        height: 25px;
+        font-size: 1rem;
+    }
+}
+
+/* Botones de actividades y expositores */
+@media (max-width: 768px) {
+    .actividades-btn,
+    .expositores-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+        padding: 0;
+        background-color: rgba(0,0,0,0.6);
+    }
+    .actividades-btn.prev,
+    .expositores-btn.prev {
+        left: 5px;
+    }
+    .actividades-btn.next,
+    .expositores-btn.next {
+        right: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .actividades-btn,
+    .expositores-btn {
+        width: 25px;
+        height: 25px;
+        font-size: 1rem;
+    }
+}
+

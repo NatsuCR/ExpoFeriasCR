@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ExpoFeriasCR</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link rel="stylesheet" href="css/panel.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+
+        <div class="dashboard-header">
+            <h1>Panel de Administración</h1>
+            <div class="header-buttons">
+                <a href="eventos-pendientes.html" class="btn btn-warning">⏳ Eventos Pendientes <span id="badge-pendientes-header" class="badge-contador" style="display: none;">0</span></a>
+                <a href="usuarios.html" class="btn btn-secondary">Gestionar Usuarios</a>
+                <a href="stats.html" class="btn btn-primary">📊 Estadísticas</a>
+                <button id="btnLogout" class="btn-logout">Cerrar Sesión</button>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button id="btnCrearEvento" class="btn btn-primary">+ Nuevo Evento</button>
+            <button id="btnEliminarSeleccionados" class="btn btn-danger" disabled>🗑️ Eliminar seleccionados</button>
+        </div>
+
+        <div class="dashboard-sections">
+            <div class="dashboard-section">
+                <div class="section-header recientes">
+                    <span class="section-icon">🕐</span>
+                    <h3>Agregados Recientemente</h3>
+                    <span class="badge" id="badgeRecientes">0</span>
+                </div>
+                <div class="section-body" id="listaRecientes">
+                    <p class="section-empty">Cargando...</p>
+                </div>
+            </div>
+            <div class="dashboard-section">
+                <div class="section-header cronologico">
+                    <span class="section-icon">📅</span>
+                    <h3>Orden Cronológico</h3>
+                    <span class="badge" id="badgeCronologico">0</span>
+                </div>
+                <div class="section-body" id="listaCronologico">
+                    <p class="section-empty">Cargando...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="filtro-fechas">
+            <h3>Eliminar eventos por rango de fechas</h3>
+            <div class="date-range">
+                <input type="date" id="fecha_inicio_eliminar" placeholder="Fecha inicio">
+                <span>—</span>
+                <input type="date" id="fecha_fin_eliminar" placeholder="Fecha fin">
+                <button id="btnEliminarPorFecha" class="btn btn-warning">Eliminar en rango</button>
+            </div>
+        </div>
+
+        <div class="lista-header">
+            <h3>Todos los Eventos</h3>
+        </div>
+
+        <div id="listaEventos" class="eventos-list">
+            <p>Cargando eventos...</p>
+        </div>
+
+    </div>
+
+    <script src="js/dashboard.js"></script>
+    <script src="js/inactivity.js"></script>
+</body>
+</html>

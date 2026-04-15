@@ -1,0 +1,26 @@
+/* ============================================
+   EVENTO - BASE (variables y reset específico)
+   ============================================ */
+:root {
+    --evento-primario: #8b5a2b;
+    --evento-secundario: #d4a373;
+    --evento-fondo: #f4e4c1;
+    --evento-texto: #2c1a0e;
+    --evento-overlay: rgba(62,42,31,0.7);
+    --color-menu-fondo: rgba(255,255,255,0.15);
+    --color-menu-texto: white;
+    --color-menu-fondo-hover: var(--evento-secundario);
+    --color-menu-texto-hover: var(--evento-primario);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--evento-fondo);
+    color: var(--evento-texto);
+    transition: background-color 0.3s, color 0.3s;
+}

@@ -1,0 +1,58 @@
+.btn-volver {
+  color: #8b5a2b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 8px 0;
+  text-align: center;
+  width: 100%;
+  transition: color 0.2s;
+}
+
+.btn-volver:hover {
+  color: #a67c52;
+  text-decoration: underline;
+}
+
+/* Estados de carga */
+.btn-primary-auth.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.btn-primary-auth.loading::after {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .modal-auth-container {
+    width: 95%;
+    max-width: none;
+    border-radius: 0;
+  }
+
+  .modal-auth-header {
+    border-radius: 0;
+  }
+
+  .modal-auth-tab-content {
+    padding: 20px 15px;
+  }
+
+  .form-group {
+    gap: 10px;
+  }
+}

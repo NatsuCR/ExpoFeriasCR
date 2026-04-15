@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evento - ExpoFeriasCR</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/evento/evento-base.css">
+<link rel="stylesheet" href="css/evento/evento-layout.css">
+<link rel="stylesheet" href="css/evento/evento-components.css">
+<link rel="stylesheet" href="css/evento/evento-responsive.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR">
+                <span>ExpoFeriasCR</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="#informacion">Información</a></li>
+                <li><a href="#actividades">Actividades</a></li>
+                <li><a href="#precios">Precios</a></li>
+                <li><a href="#expositores">Expositores</a></li>
+                <li><a href="#ubicacion">Ubicación</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="hero-carrusel" id="heroCarrusel">
+        <div class="hero-carrusel-slides" id="heroSlides"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="container">
+                <h1 id="eventoNombre">Cargando...</h1>
+                <p id="eventoDescripcion"></p>
+                <div class="hero-dates" id="eventoFechas"></div>
+            </div>
+        </div>
+        <button class="hero-carrusel-btn prev" id="heroPrevBtn">&#10094;</button>
+        <button class="hero-carrusel-btn next" id="heroNextBtn">&#10095;</button>
+    </div>
+
+    <section id="informacion" class="info">
+        <div class="container">
+            <h2>Sobre el evento</h2>
+            <p id="eventoInfoCompleta"></p>
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Fechas</h3>
+                    <p id="infoFechas"></p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Ubicación</h3>
+                    <p id="infoUbicacion"></p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-ticket-alt"></i>
+                    <h3>Entradas</h3>
+                    <p id="entradasTexto">En taquilla del campo ferial</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="horario">
+        <div class="container">
+            <h2>Horario General</h2>
+            <div id="horarioContainer">Cargando...</div>
+        </div>
+    </section>
+
+<section id="actividades" class="actividades">
+    <div class="container">
+        <h2>Actividades Destacadas</h2>
+        <div class="actividades-carrusel-wrapper" id="actividadesWrapper">
+            <button class="actividades-btn prev" id="actividadesPrev">&#10094;</button>
+            <div class="actividades-carrusel-viewport">
+                <div class="actividades-carrusel-track" id="actividadesGrid">
+                    <!-- cards se insertan aquí -->
+                </div>
+            </div>
+            <button class="actividades-btn next" id="actividadesNext">&#10095;</button>
+        </div>
+    </div>
+</section>
+
+    <section id="precios" class="precios">
+        <div class="container">
+            <h2>Precios de Entrada</h2>
+            <div id="tablaPrecios" class="tabla-precios">Cargando...</div>
+        </div>
+    </section>
+
+<section id="expositores" class="expositores">
+    <div class="container">
+        <h2>Expositores</h2>
+        <div class="expositores-carrusel-wrapper" id="expositoresWrapper">
+            <button class="expositores-btn prev" id="expositoresPrev">&#10094;</button>
+            <div class="expositores-carrusel-viewport">
+                <div class="expositores-carrusel-track" id="expositoresGrid">
+                    <!-- cards se insertan aquí -->
+                </div>
+            </div>
+            <button class="expositores-btn next" id="expositoresNext">&#10095;</button>
+        </div>
+    </div>
+</section>
+
+    <section id="ubicacion" class="ubicacion">
+        <div class="container">
+            <h2>¿Cómo llegar?</h2>
+            <p id="ubicacionTexto"></p>
+            <div class="mapa" id="mapaIframe"></div>
+        </div>
+    </section>
+
+<section id="contacto" class="contacto">
+    <div class="container">
+        <h2>Contacto</h2>
+        <p>¿Tienes una feria o una exposición y quieres aparecer? Escríbenos al correo <a href="mailto:jaravillaloboscarlos531@gmail.com">jaravillaloboscarlos531@gmail.com</a></p>
+        <p>Síguenos en redes sociales (próximamente)</p>
+    </div>
+</section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 ExpoFeriasCR - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script type="module" src="js/evento/evento-main.js"></script>
+</body>
+</html>

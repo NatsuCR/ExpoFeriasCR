@@ -1,0 +1,277 @@
+.preview-list li {
+  font-size: 12px;
+  color: #555;
+  padding: 5px 0;
+  border-bottom: 1px solid #f5f5f5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-list li i {
+  color: #8b5a2b;
+  width: 14px;
+}
+
+.preview-list li:last-child {
+  border-bottom: none;
+}
+
+.preview-empty-list {
+  color: #bbb;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Botón toggle vista previa */
+#btn-toggle-preview {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 500;
+  background: linear-gradient(135deg, #0033A0 0%, #003db5 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0,51,160,0.4);
+  transition: all 0.3s;
+}
+
+#btn-toggle-preview:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,51,160,0.4);
+}
+
+/* Estado del tab "Vista Previa" */
+.tab-btn[data-tab="preview"] {
+  background: linear-gradient(135deg, #0033A0 0%, #003db5 100%);
+  color: white !important;
+}
+
+.tab-btn[data-tab="preview"].active,
+.tab-btn[data-tab="preview"]:hover {
+  background: linear-gradient(135deg, #002a89 0%, #0033A0 100%);
+  color: white !important;
+}
+
+/* Vista previa en modo pantalla completa (tab activo en móvil) */
+#tab-preview {
+  padding: 0;
+}
+
+#tab-preview .preview-panel-fullscreen {
+  display: block;
+  border-radius: 0;
+  box-shadow: none;
+  max-height: none;
+}
+
+/* Subir imagen: feedback visual */
+.upload-feedback {
+  font-size: 12px;
+  margin-top: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: none;
+}
+
+.upload-feedback.ok {
+  color: #155724;
+  background: #d4edda;
+  display: block;
+}
+
+.upload-feedback.err {
+  color: #721c24;
+  background: #f8d7da;
+  display: block;
+}
+
+.uploading-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .crear-evento-split {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-panel {
+    position: static;
+    max-height: none;
+    display: none; /* se muestra solo en el tab */
+  }
+}
+
+/* ============================================================
+   LAYOUT FORMULARIO + IFRAME PREVIEW (igual al admin)
+   ============================================================ */
+
+#formLayout {
+    display: block;
+    max-width: 1600px;
+    margin: 40px auto;
+    padding: 0 20px 60px;
+}
+
+#formLayout.with-preview {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    gap: 20px;
+    align-items: start;
+    max-width: 1600px;
+}
+
+#formColumna { min-width: 0; }
+
+/* Botón toggle preview */
+.btn-toggle-preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 9px 18px;
+    background: linear-gradient(135deg, #0033A0 0%, #003db5 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-toggle-preview:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,51,160,0.3);
+}
+
+/* Panel de vista previa (estilo "navegador" igual al admin) */
+#previewPanel {
+    display: none;
+    flex-direction: column;
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 100px);
+    background: #1a1b2e;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    border: 1px solid #2e3250;
+}
+
+#previewPanel.visible {
+    display: flex;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #141527;
+    color: #c8d0e8;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.preview-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #e74c3c;
+    animation: pulse-dot 2s infinite;
+    flex-shrink: 0;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.preview-url-bar {
+    flex: 1;
+    background: #1e2040;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 11px;
+    color: #8892b0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: monospace;
+}
+
+.preview-reload-btn {
+    background: none;
+    border: none;
+    color: #8892b0;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+    line-height: 1;
+}
+
+.preview-reload-btn:hover {
+    color: #ffffff;
+    background: rgba(255,255,255,0.1);
+}
+
+#previewIframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: white;
+}
+
+/* Mensaje de estado (éxito/error) */
+.mensaje-estado {
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+}
+
+.mensaje-estado.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.mensaje-estado.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Upload feedback */
+.upload-feedback {
+    font-size: 12px;
+    margin-top: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: none;
+}

@@ -1,0 +1,280 @@
+/* ============================================
+   EVENTO - COMPONENTES
+   ============================================ */
+
+/* Grids */
+.info-grid, .actividades-grid, .expositores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.info-card, .actividad-card, .expositor-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.info-card:hover, .actividad-card:hover, .expositor-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-card i {
+    font-size: 2.5rem;
+    color: var(--evento-secundario);
+    margin-bottom: 1rem;
+}
+
+.actividad-card img, .expositor-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.expositor-card video {
+    width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+/* Horario (imagen) */
+.horario-img {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-top: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tabla de precios */
+.tabla-precios {
+    overflow-x: auto;
+    margin-top: 2rem;
+}
+
+.tabla-precios-estilo {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.tabla-precios-estilo th,
+.tabla-precios-estilo td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla-precios-estilo th {
+    background-color: var(--evento-primario, var(--color-primary));
+    color: white;
+}
+
+.tabla-precios-estilo tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Mapa */
+.mapa {
+    margin-top: 2rem;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.mapa iframe {
+    width: 100%;
+    height: 350px;
+    border: 0;
+}
+
+/* Contacto */
+.contacto {
+    text-align: center;
+    background-color: var(--evento-fondo);
+    padding: 2rem 0;
+}
+
+.contacto a {
+    color: var(--evento-primario);
+    text-decoration: none;
+}
+
+.contacto a:hover {
+    text-decoration: underline;
+}
+
+/* Botones redondeados del menú */
+.nav-links a {
+    display: inline-block;
+    border-radius: 30px;
+    padding: 0.5rem 1.2rem;
+    transition: all 0.3s ease;
+    background-color: var(--color-menu-fondo, rgba(255,255,255,0.15));
+    color: var(--color-menu-texto, white);
+    margin: 0 2px;
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    background-color: var(--color-menu-fondo-hover, #F7C600);
+    color: var(--color-menu-texto-hover, #2c1a0e);
+    transform: translateY(-2px);
+}
+
+/* ========== CARRUSELES DE ACTIVIDADES Y EXPOSITORES ========== */
+.actividades-carrusel-wrapper,
+.expositores-carrusel-wrapper {
+    position: relative;
+    
+    
+}
+
+.actividades-carrusel-viewport,
+.expositores-carrusel-viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.actividades-carrusel-track,
+.expositores-carrusel-track {
+    display: flex;
+    gap: 1rem;
+    transition: transform 0.5s ease-in-out;
+    align-items: flex-start; /* cada card tiene su propia altura */
+}
+
+/* Cada card ocupa exactamente 280px fijos */
+.actividades-carrusel-track .actividad-card,
+.expositores-carrusel-track .expositor-card {
+    flex: 0 0 280px;
+    min-width: 280px;
+    max-width: 280px;
+    box-sizing: border-box;
+}
+
+/* Botones prev/next */
+.actividades-btn,
+.expositores-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.actividades-btn:hover,
+.expositores-btn:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.actividades-btn.prev,
+.expositores-btn.prev {
+    left: 5px;
+}
+
+.actividades-btn.next,
+.expositores-btn.next {
+    right: 5px;
+}
+
+
+
+.actividad-card .descripcion-texto,
+.actividad-card .descripcion,
+.expositor-card .descripcion-texto,
+.expositor-card .descripcion {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.actividad-card.expandida .descripcion-texto,
+.actividad-card.expandida .descripcion,
+.expositor-card.expandida .descripcion-texto,
+.expositor-card.expandida .descripcion {
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    overflow: visible;
+    text-align: center;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.actividad-card .btn-ver-mas,
+.expositor-card .btn-ver-mas {
+    background: none;
+    border: none;
+    color: var(--evento-primario, #C8102E);
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    margin: 0.3rem auto 0;
+    font-size: 0.9rem;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+/* ══════════════════════════════════════════
+   MINI-CARRUSEL dentro de cards
+   ══════════════════════════════════════════ */
+
+/* Imagen simple (una sola foto) */
+.card-img-principal {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.mini-carrusel {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.mini-carrusel-track {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 220px;
+}

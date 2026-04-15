@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas - ExpoFeriasCR</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link rel="stylesheet" href="css/panel.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/stats.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+<div class="dashboard-header">
+    <h1>Estadísticas de Visitas</h1>
+    <div>
+        <a href="dashboard.html" class="btn btn-volver">← Volver al Dashboard</a>
+        <button id="btnExportarZip" class="btn btn-success">📦 Exportar ZIP (CSVs completos)</button>
+    </div>
+</div>
+
+        <div id="statsContent" class="stats-content">
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>Visitas Totales</h3>
+                    <p id="totalVisits" class="stat-number">--</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Visitantes Únicos</h3>
+                    <p id="uniqueVisitors" class="stat-number">--</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Visitas (Última Semana)</h3>
+                    <p id="weekVisits" class="stat-number">--</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Visitas (Último Año)</h3>
+                    <p id="yearVisits" class="stat-number">--</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Visitas Hoy</h3>
+                    <p id="todayVisits" class="stat-number">--</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Visitantes Únicos Hoy</h3>
+                    <p id="todayUnique" class="stat-number">--</p>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-box">
+                    <h3>Visitas por Página</h3>
+                    <canvas id="pagesChart" width="400" height="400"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>Tráfico de los Últimos 7 Días</h3>
+                    <canvas id="dailyChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+        <div id="loadingMessage" class="loading-message">Cargando estadísticas...</div>
+    </div>
+
+    <script src="js/stats.js"></script>
+    <script src="js/inactivity.js"></script>
+</body>
+</html>

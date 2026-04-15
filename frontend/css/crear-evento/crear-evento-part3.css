@@ -1,0 +1,276 @@
+.btn-cerrar-modal {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.btn-cerrar-modal:hover {
+  transform: scale(1.2);
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-form .form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+}
+
+.modal-form .form-group input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.modal-form .form-group input:focus {
+  outline: none;
+  border-color: #0033A0;
+  box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
+}
+
+.modal-footer {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  border-top: 1px solid #f0f0f0;
+  justify-content: flex-end;
+}
+
+.modal-footer button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+@media (max-width: 768px) {
+  .crear-evento-container {
+    margin: 20px auto;
+  }
+
+  .crear-evento-header h1 {
+    font-size: 24px;
+  }
+
+  .tabs-nav {
+    overflow-x: auto;
+  }
+
+  .tab-content {
+    padding: 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-navigation {
+    flex-direction: column;
+  }
+
+  .form-navigation button {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   VISTA PREVIA DEL EVENTO (split layout)
+   ============================================================ */
+
+/* Cuando la vista previa está activa, el layout cambia a 2 columnas */
+.crear-evento-split {
+  display: grid;
+  grid-template-columns: 1fr 750px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Panel de vista previa */
+.preview-panel {
+  position: sticky;
+  top: 80px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  overflow: hidden;
+  display: none; /* oculto por defecto */
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+.preview-panel.visible {
+  display: block;
+}
+
+.preview-header-bar {
+  background: linear-gradient(135deg, #0033A0 0%, #003db5 100%);
+  color: white;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.preview-header-bar span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-live-badge {
+  background: #e74c3c;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Mini hero */
+.preview-hero {
+  position: relative;
+  height: 160px;
+  background: linear-gradient(135deg, #8b5a2b, #d4a373);
+  display: flex;
+  align-items: flex-end;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.preview-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.4s ease;
+}
+
+.preview-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(44, 26, 14, 0.6);
+  transition: background 0.3s;
+}
+
+.preview-hero-content {
+  position: relative;
+  z-index: 1;
+  color: white;
+}
+
+.preview-hero-content h3 {
+  font-size: 17px;
+  font-weight: 900;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+  transition: color 0.3s;
+}
+
+.preview-hero-content p {
+  font-size: 11px;
+  opacity: 0.9;
+  margin: 0;
+  transition: color 0.3s;
+}
+
+/* Cuerpo de la previa */
+.preview-body {
+  padding: 16px;
+}
+
+.preview-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #444;
+}
+
+.preview-field i {
+  width: 16px;
+  color: #8b5a2b;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.preview-field span {
+  flex: 1;
+}
+
+.preview-field span.vacio {
+  color: #bbb;
+  font-style: italic;
+}
+
+.preview-divider {
+  border: none;
+  border-top: 1px solid #f0f0f0;
+  margin: 14px 0;
+}
+
+/* Colores en mini píldoras */
+.preview-colores {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.preview-color-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.1);
+  display: inline-block;
+  flex-shrink: 0;
+  cursor: default;
+  transition: transform 0.2s;
+}
+
+.preview-color-dot:hover {
+  transform: scale(1.2);
+}
+
+/* Listas dentro de la previa */
+.preview-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

@@ -1,0 +1,72 @@
+/* ══════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════ */
+
+@media (max-width: 1200px) {
+    #formLayout.with-preview {
+        grid-template-columns: 1fr;
+    }
+    #previewPanel {
+        position: relative;
+        height: 600px;
+        top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-container { padding: 1rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .colores-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    .data-table { display: block; overflow-x: auto; white-space: nowrap; }
+    .data-table td, .data-table th { white-space: normal; }
+    .data-table td:last-child, .data-table th:last-child { white-space: nowrap; }
+    .modal-content { width: 95%; padding: 1.25rem; }
+    .tab-btn { font-size: 0.8rem; padding: 10px 12px; }
+    .acciones-bar { flex-direction: column; align-items: stretch; }
+    .acciones-botones { flex-direction: column; }
+    .btn-guardar-preview, .btn-publicar { width: 100%; justify-content: center; }
+}
+/* ── Botones de accion icono en tablas de admin ── */
+.btn-warning {
+  background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s !important;
+  box-shadow: 0 2px 6px rgba(230,126,34,0.35) !important;
+}
+.btn-warning:hover {
+  filter: brightness(1.12) !important;
+  transform: translateY(-2px) scale(1.08) !important;
+  box-shadow: 0 4px 12px rgba(230,126,34,0.5) !important;
+}
+.btn-danger {
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  font-size: 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 6px rgba(231,76,60,0.35) !important;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s !important;
+}
+.btn-danger:hover {
+  filter: brightness(1.1) !important;
+  transform: translateY(-2px) scale(1.08) !important;
+  box-shadow: 0 4px 12px rgba(231,76,60,0.5) !important;
+}
+.acciones-tabla {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}

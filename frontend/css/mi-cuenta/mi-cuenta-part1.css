@@ -1,0 +1,279 @@
+/**
+ * Estilos para mi-cuenta.html
+ */
+
+.mi-cuenta-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding-bottom: 40px;
+}
+
+.cuenta-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.cuenta-header h1 {
+  color: #2c1a0e;
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.cuenta-header p {
+  color: #666;
+  font-size: 16px;
+}
+
+/* Perfil */
+.seccion-perfil {
+  margin-bottom: 40px;
+}
+
+.perfil-card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.perfil-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.perfil-avatar {
+  font-size: 80px;
+  color: #8b5a2b;
+  width: 100px;
+  text-align: center;
+}
+
+.perfil-datos h2 {
+  color: #2c1a0e;
+  margin: 0 0 5px 0;
+  font-size: 24px;
+}
+
+.perfil-datos p {
+  color: #666;
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.perfil-miembro {
+  color: #8b5a2b;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.perfil-acciones {
+  display: flex;
+  gap: 10px;
+}
+
+/* Crear Evento */
+.seccion-crear-evento {
+  margin-bottom: 40px;
+}
+
+.btn-crear-grande {
+  width: 100%;
+  padding: 30px;
+  background: linear-gradient(135deg, #0033A0 0%, #003db5 100%);
+  color: white;
+  border: 2px solid #003db5;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn-crear-grande:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 51, 160, 0.3);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-crear-grande i {
+  font-size: 40px;
+}
+
+.btn-crear-grande span {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.btn-crear-grande strong {
+  font-size: 18px;
+}
+
+.btn-crear-grande small {
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+/* Eventos Grid */
+.seccion-eventos {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.seccion-header {
+  margin-bottom: 30px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 20px;
+}
+
+.seccion-header h2 {
+  color: #2c1a0e;
+  font-size: 24px;
+  margin: 0 0 8px 0;
+}
+
+.seccion-header p {
+  color: #666;
+  margin: 0;
+  font-size: 14px;
+}
+
+.eventos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+/* Evento Card */
+.evento-card {
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+  background: #f9f9f9;
+}
+
+.evento-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.evento-card-header {
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  background: white;
+}
+
+.evento-card-titulo {
+  color: #2c1a0e;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.evento-card-fecha {
+  color: #999;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.evento-card-body {
+  padding: 20px;
+}
+
+.evento-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.evento-status.pendiente {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.evento-status.aprobado {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.evento-status.rechazado {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.evento-razon-rechazo {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #721c24;
+}
+
+.evento-razon-titulo {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* Loading */
+.evento-card-loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f0f0f0;
+  border-top-color: #8b5a2b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.eventos-vacio {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.eventos-vacio i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+/* Modal */

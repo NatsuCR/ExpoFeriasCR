@@ -96,7 +96,7 @@ function initCardListeners(container) {
             const card = btn.closest('.expositor-card');
             const full = card.querySelector('.desc-full');
             const short = card.querySelector('.desc-short');
-            
+
             if (full.style.display === 'none') {
                 full.style.display = 'block';
                 short.style.display = 'none';
@@ -128,7 +128,7 @@ export function renderExpositores(lista) {
     });
 
     let html = '';
-    
+
     // 1. Renderizar categorías en el orden de prioridad definido
     ORDEN_CATEGORIAS.forEach((cat) => {
         if (!grupos[cat]) return;
@@ -142,10 +142,10 @@ export function renderExpositores(lista) {
     });
 
     container.innerHTML = html;
-    
+
     // Re-obtener todas las categorías renderizadas para inicializar carruseles
     const todasLasCategorias = [...ORDEN_CATEGORIAS, ...Object.keys(grupos)];
-    
+
     todasLasCategorias.forEach(cat => {
         const catId = cat.toLowerCase().replace(/\s+/g, '-');
         const wrapper = document.getElementById(`wrapper-${catId}`);
@@ -171,12 +171,12 @@ function generarHTMLCategoria(cat, expositores) {
                 <div class="expositores-carrusel-viewport">
                     <div class="expositores-carrusel-track" id="track-${catId}">
                         ${expositores.map(e => {
-                            const imagenes = parseImagenes(e.imagen_logo || e.imagenLogo);
-                            const imagenesLimpias = imagenes.map(u => u.replace(/\\/g, '/'));
-                            const descripcion = e.descripcion || '';
-                            const shortDesc = descripcion.length > 100 ? descripcion.substring(0, 100) + '...' : descripcion;
-                            
-                            return `
+        const imagenes = parseImagenes(e.imagen_logo || e.imagenLogo);
+        const imagenesLimpias = imagenes.map(u => u.replace(/\\/g, '/'));
+        const descripcion = e.descripcion || '';
+        const shortDesc = descripcion.length > 100 ? descripcion.substring(0, 100) + '...' : descripcion;
+
+        return `
                                 <div class="expositor-card">
                                     ${buildMiniCarrusel(imagenesLimpias, e.nombre)}
                                     <h3>${e.nombre}</h3>
@@ -191,7 +191,7 @@ function generarHTMLCategoria(cat, expositores) {
                                        <i class="fas fa-map-marker-alt"></i> Localidades en plano
                                     </a>
                                 </div>`;
-                        }).join('')}
+    }).join('')}
                     </div>
                 </div>
                 <button class="expositores-btn next" id="next-${catId}">&#10095;</button>
@@ -211,9 +211,9 @@ export async function cargarExpositores(slug) {
         const searchContainer = document.getElementById('expositorSearchContainer');
         if (allExpositores.length > 0 && searchContainer) {
             searchContainer.style.display = 'flex';
-            
+
             // Aplicar color personalizado si existe
-            const [eventoRows] = await fetch(`/api/eventos/${slug}`).then(r => r.json()).then(data => [data]); 
+            const [eventoRows] = await fetch(`/api/eventos/${slug}`).then(r => r.json()).then(data => [data]);
             // Nota: El endpoint /api/eventos/:slug devuelve el objeto directamente usualmente
             const colorBuscador = allExpositores.length > 0 ? (window.colorBuscadorExpositores || '#ffffff') : '#ffffff';
             // Para obtener el color necesitamos el evento, pero cargarEvento ya lo hace.
@@ -231,8 +231,8 @@ export async function cargarExpositores(slug) {
         if (inputSearch) {
             inputSearch.addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
-                const filtrados = allExpositores.filter(exp => 
-                    exp.nombre.toLowerCase().includes(term) || 
+                const filtrados = allExpositores.filter(exp =>
+                    exp.nombre.toLowerCase().includes(term) ||
                     (exp.ubicacion || '').toLowerCase().includes(term)
                 );
                 renderExpositores(filtrados);

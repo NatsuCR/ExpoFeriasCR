@@ -85,26 +85,26 @@ class UsuarioEventsController {
       if (evento.length === 0) return res.status(404).json({ error: 'No tienes permiso o el evento no existe' });
 
       const ev = evento[0];
-      
+
       if (isAdmin) {
-          // Si es admin, aplicar los cambios directamente a las tablas reales y dejarlo como aprobado
-          const { precios, actividades, expositores, galeria, ...datosEvento } = body;
-          
-          // Limpiar datos que no deben ir en el UPDATE directo
-          delete datosEvento.id;
-          delete datosEvento.usuario_id;
-          delete datosEvento.created_at;
-          delete datosEvento.updated_at;
+        // Si es admin, aplicar los cambios directamente a las tablas reales y dejarlo como aprobado
+        const { precios, actividades, expositores, galeria, ...datosEvento } = body;
 
-          // Asegurar estado aprobado y limpiar borrador
-          datosEvento.estado = 'aprobado';
-          datosEvento.borrador_cambios = null;
-          datosEvento.fecha_aprobacion = new Date();
+        // Limpiar datos que no deben ir en el UPDATE directo
+        delete datosEvento.id;
+        delete datosEvento.usuario_id;
+        delete datosEvento.created_at;
+        delete datosEvento.updated_at;
 
-          await pool.query('UPDATE eventos SET ? WHERE id = ?', [datosEvento, id]);
-          await relatedTables.guardarTodo(id, { precios, actividades, expositores, galeria });
-          
-          return res.json({ message: 'Cambios aplicados y aprobados por el administrador' });
+        // Asegurar estado aprobado y limpiar borrador
+        datosEvento.estado = 'aprobado';
+        datosEvento.borrador_cambios = null;
+        datosEvento.fecha_aprobacion = new Date();
+
+        await pool.query('UPDATE eventos SET ? WHERE id = ?', [datosEvento, id]);
+        await relatedTables.actualizarTodo(id, { precios, actividades, expositores, galeria });
+
+        return res.json({ message: 'Cambios aplicados y aprobados por el administrador' });
       }
 
       // Lógica para usuarios normales (enviar a revisión)
@@ -215,15 +215,15 @@ class UsuarioEventsController {
       if (evento.length === 0) return res.status(404).json({ error: 'No encontrado' });
 
       const { precios, actividades, expositores, galeria, ...datosEvento } = req.body;
-      
+
       if (isAdmin) {
-          datosEvento.estado = 'aprobado';
-          datosEvento.borrador_cambios = null;
-          datosEvento.fecha_aprobacion = new Date();
+        datosEvento.estado = 'aprobado';
+        datosEvento.borrador_cambios = null;
+        datosEvento.fecha_aprobacion = new Date();
       }
 
       await pool.query('UPDATE eventos SET ? WHERE id = ?', [datosEvento, id]);
-      await relatedTables.guardarTodo(id, { precios, actividades, expositores, galeria });
+      await relatedTables.actualizarTodo(id, { precios, actividades, expositores, galeria });
       res.json({ message: isAdmin ? 'Evento actualizado y aprobado directamente' : 'Actualizado correctamente' });
     } catch (error) { res.status(500).json({ error: 'Error' }); }
   }

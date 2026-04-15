@@ -19,7 +19,7 @@ export function actualizarUrlBar() {
         : '/evento.html?slug=...';
 }
 
-// ─── Recolectar todos los datos del formulario de usuario ─────────────────────
+// ─── Recolectar todos los datos del formulario ───────────────────────────────
 export function guardarDatosPreview() {
     const get = id => (document.getElementById(id)?.value || '').trim();
 
@@ -36,7 +36,7 @@ export function guardarDatosPreview() {
         tipo_venta: get('tipo_venta'),
         url_venta_online: get('url_venta_online'),
 
-        // ── Los 20 colores exactos de la BD ──────────────────────────────────
+        // Colores
         color_primario: get('color_primario') || '#8b5a2b',
         color_secundario: get('color_secundario') || '#d4a373',
         color_fondo: get('color_fondo') || '#f4e4c1',
@@ -59,7 +59,7 @@ export function guardarDatosPreview() {
         color_texto_footer: get('color_texto_footer') || '#ffffff'
     };
 
-    // Precios
+    // ─── Precios ─────────────────────────────────────────────────────────────
     datos.precios = Array.from(document.querySelectorAll('#precios-rows tr')).map(row => ({
         fecha: row.querySelector('.precio-fecha')?.value || '',
         precio_normal: parseFloat(row.querySelector('.precio-monto')?.value) || 0,
@@ -67,7 +67,7 @@ export function guardarDatosPreview() {
         descripcion_promocion: row.querySelector('.precio-descripcion')?.value || ''
     })).filter(p => p.fecha);
 
-    // Actividades
+    // ─── Actividades ─────────────────────────────────────────────────────────
     datos.actividades = Array.from(document.querySelectorAll('#actividades-rows tr')).map(row => ({
         titulo: row.querySelector('.act-titulo')?.value || '',
         tipo: row.querySelector('.act-tipo')?.value || '',
@@ -75,16 +75,20 @@ export function guardarDatosPreview() {
         hora: row.querySelector('.act-hora')?.value || null,
         lugar: row.querySelector('.act-lugar')?.value || '',
         descripcion: row.querySelector('.act-descripcion')?.value || '',
-        imagenes: (() => { try { return JSON.parse(row.querySelector('.act-imagenes')?.value || '[]'); } catch (e) { return []; } })(),
+        imagenes: (() => {
+            try { return JSON.parse(row.querySelector('.act-imagenes')?.value || '[]'); }
+            catch { return []; }
+        })(),
         es_gratis: row.querySelector('.act-gratis')?.dataset.value === 'true' ? 1 : 0,
         requiere_entrada_online: row.querySelector('.act-requiere-online')?.dataset.value === 'true',
         enlace_venta: row.querySelector('.act-enlace')?.value || ''
     })).filter(a => a.titulo);
 
-    // Expositores
+    // ─── EXPO SITORES (FIX COMPLETO AQUÍ) ────────────────────────────────────
     datos.expositores = Array.from(document.querySelectorAll('#expositores-rows tr')).map(row => {
         const logoInp = row.querySelector('.exp-imagenes') || row.querySelector('.exp-logo');
         let imagenes = [];
+
         if (logoInp) {
             try {
                 const val = logoInp.value.trim();
@@ -93,19 +97,30 @@ export function guardarDatosPreview() {
                 } else if (val) {
                     imagenes = [val];
                 }
-            } catch (e) { imagenes = []; }
+            } catch {
+                imagenes = [];
+            }
         }
+
+        const imagenLogo = imagenes.length > 0 ? imagenes[0] : '';
+
         return {
             nombre: row.querySelector('.exp-nombre')?.value || '',
             rubro: row.querySelector('.exp-rubro')?.value || '',
             ubicacion: row.querySelector('.exp-ubicacion')?.value || '',
             descripcion: row.querySelector('.exp-descripcion')?.value || '',
+
+            // 🔥 Compatibilidad total
             imagenes: imagenes,
-            video: row.querySelector('.exp-video')?.value || ''
+            imagen_logo: imagenLogo,
+            logo: imagenLogo,
+
+            video: row.querySelector('.exp-video')?.value || '',
+            video_url: row.querySelector('.exp-video')?.value || ''
         };
     }).filter(e => e.nombre);
 
-    // Galería
+    // ─── Galería ─────────────────────────────────────────────────────────────
     datos.galeria = Array.from(document.querySelectorAll('#galeria-rows tr')).map(row => ({
         imagen_url: row.querySelector('.gal-url')?.value || '',
         orden: parseInt(row.querySelector('.gal-orden')?.value) || 0
@@ -117,7 +132,7 @@ export function guardarDatosPreview() {
     return previewKey;
 }
 
-// ─── Programar actualización en vivo (debounce) ───────────────────────────────
+// ─── Debounce actualización ─────────────────────────────────────────────────
 export function programarActualizacion() {
     clearTimeout(previewTimer);
     previewTimer = setTimeout(() => {
@@ -126,17 +141,21 @@ export function programarActualizacion() {
     }, 400);
 }
 
-// ─── Abrir / cerrar / toggle panel ───────────────────────────────────────────
+// ─── Abrir preview ─────────────────────────────────────────────────────────
 export function abrirPreview() {
     const panel = document.getElementById('previewPanel');
     const layout = document.getElementById('formLayout');
+
     panel.classList.add('visible');
     layout.classList.add('with-preview');
     previewAbierto = true;
-    document.getElementById('btnTogglePreview').innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar preview';
+
+    document.getElementById('btnTogglePreview').innerHTML =
+        '<i class="fas fa-eye-slash"></i> Ocultar preview';
 
     const dataKey = guardarDatosPreview();
     const iframe = getIframe();
+
     iframe.src = `/evento.html?preview=1&dataKey=${dataKey}`;
 
     iframe.addEventListener('load', () => {
@@ -144,23 +163,30 @@ export function abrirPreview() {
     }, { once: true });
 }
 
+// ─── Cerrar preview ────────────────────────────────────────────────────────
 export function cerrarPreview() {
     document.getElementById('previewPanel').classList.remove('visible');
     document.getElementById('formLayout').classList.remove('with-preview');
     previewAbierto = false;
-    document.getElementById('btnTogglePreview').innerHTML = '<i class="fas fa-eye"></i> Vista previa';
+
+    document.getElementById('btnTogglePreview').innerHTML =
+        '<i class="fas fa-eye"></i> Vista previa';
 }
 
+// ─── Toggle ────────────────────────────────────────────────────────────────
 export function togglePreview() {
-    if (previewAbierto) { cerrarPreview(); } else { abrirPreview(); }
+    if (previewAbierto) cerrarPreview();
+    else abrirPreview();
 }
 
-// ─── Aplicar colores en vivo (sin recargar iframe) ───────────────────────────
-// Espeja EXACTAMENTE el orden y lógica de cargarEvento.js
+// ─── Aplicar cambios en iframe ─────────────────────────────────────────────
 export function aplicarCambiosEnVivo() {
     const iframe = getIframe();
     let win;
-    try { win = iframe.contentWindow; } catch (_) { return; }
+
+    try { win = iframe.contentWindow; }
+    catch { return; }
+
     if (!win || !win.cargarEventoDesdePreview) return;
 
     const dataStr = localStorage.getItem(window.previewDataKey);
@@ -173,6 +199,7 @@ export function aplicarCambiosEnVivo() {
         if (typeof win.initCarouselControls === 'function') win.initCarouselControls();
         if (typeof win.initHeroCarousel === 'function') win.initHeroCarousel();
         if (typeof win.initLightbox === 'function') win.initLightbox();
+
     } catch (e) {
         console.error('Error aplicando preview:', e);
     }

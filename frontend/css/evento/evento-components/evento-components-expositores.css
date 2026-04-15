@@ -1,0 +1,172 @@
+/* Estilos para el nuevo sistema de Expositores */
+
+.expositor-search-bar {
+    margin: 20px 0 30px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: center;
+}
+
+.search-input-wrapper {
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+}
+
+.search-input-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 2px solid #eee;
+    border-radius: 30px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.search-input-wrapper input:focus {
+    outline: none;
+    border-color: var(--evento-primario);
+    box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
+}
+
+.categoria-grupo {
+    margin-bottom: 50px;
+}
+
+.categoria-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--evento-titulo-seccion, #222);
+    margin-bottom: 25px;
+    padding-left: 15px;
+    border-left: 5px solid var(--evento-primario);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Tarjeta de Expositor Refactorizada */
+.expositor-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid #f0f0f0;
+}
+
+.expositor-card:hover {
+    transform: translateY(-5px);
+}
+
+.expositor-card h3 {
+    font-size: 1.4rem;
+    margin: 15px 0 5px;
+    color: var(--evento-titulo-h3, #333);
+}
+
+.expositor-card .rubro-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #f0f0f0;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.descripcion-contenedor {
+    position: relative;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.desc-texto {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #555;
+    overflow: hidden;
+}
+
+.desc-texto.recortada {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.btn-toggle-desc {
+    background: none;
+    border: none;
+    color: var(--evento-primario);
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 5px 0;
+    margin-top: 5px;
+}
+
+.info-ubicacion {
+    font-size: 0.9rem;
+    color: #444;
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.enlace-localidades {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--evento-secundario);
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: opacity 0.2s;
+}
+
+.enlace-localidades:hover {
+    opacity: 0.8;
+}
+
+/* Estilos para carruseles por categoría */
+.categoria-grupo .expositores-carrusel-wrapper {
+    position: relative;
+    padding: 0 40px;
+}
+
+.categoria-grupo .expositores-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.categoria-grupo .expositores-btn:hover {
+    background: var(--evento-primario);
+    color: #fff;
+}
+
+.categoria-grupo .expositores-btn.prev { left: 0; }
+.categoria-grupo .expositores-btn.next { right: 0; }

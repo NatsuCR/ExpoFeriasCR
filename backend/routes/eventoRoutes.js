@@ -13,17 +13,17 @@ router.get('/hoy', eventoController.obtenerHoy.bind(eventoController));
 router.get('/en-progreso', eventoController.obtenerEnProgreso.bind(eventoController));
 router.get('/finalizados', eventoController.obtenerFinalizados.bind(eventoController));
 
-// Rutas de usuario autenticado (deben ir antes de :slug)
-router.post('/crear', authMiddleware, usuarioEventsController.crearEvento.bind(usuarioEventsController));
-router.get('/mis-eventos', authMiddleware, usuarioEventsController.misEventos.bind(usuarioEventsController));
-router.get('/mis-eventos/aprobados', authMiddleware, usuarioEventsController.misEventosAprobados.bind(usuarioEventsController));
-router.get('/mis-eventos/pendientes', authMiddleware, usuarioEventsController.misEventosPendientes.bind(usuarioEventsController));
-router.get('/mis-eventos/rechazados', authMiddleware, usuarioEventsController.misEventosRechazados.bind(usuarioEventsController));
-router.get('/mi-evento/:id', authMiddleware, usuarioEventsController.obtenerEvento.bind(usuarioEventsController));
-router.put('/actualizar/:id', authMiddleware, usuarioEventsController.actualizarEvento.bind(usuarioEventsController));
-router.post('/:id/editar-aprobado', authMiddleware, usuarioEventsController.editarEventoAprobado.bind(usuarioEventsController));
-router.get('/estado/:id', authMiddleware, usuarioEventsController.obtenerEstadoEvento.bind(usuarioEventsController));
-router.delete('/:id', authMiddleware, usuarioEventsController.eliminarEvento.bind(usuarioEventsController));
+// Rutas de usuario autenticado
+router.post('/crear', authMiddleware, (req, res) => usuarioEventsController.crearEvento(req, res));
+router.get('/mis-eventos', authMiddleware, (req, res) => usuarioEventsController.misEventos(req, res));
+router.get('/mis-eventos/aprobados', authMiddleware, (req, res) => usuarioEventsController.misEventosAprobados(req, res));
+router.get('/mis-eventos/pendientes', authMiddleware, (req, res) => usuarioEventsController.misEventosPendientes(req, res));
+router.get('/mis-eventos/rechazados', authMiddleware, (req, res) => usuarioEventsController.misEventosRechazados(req, res));
+router.get('/mi-evento/:id', authMiddleware, (req, res) => usuarioEventsController.obtenerEvento(req, res));
+router.put('/actualizar/:id', authMiddleware, (req, res) => usuarioEventsController.actualizarEvento(req, res));
+router.post('/:id/editar-aprobado', authMiddleware, (req, res) => usuarioEventsController.editarEventoAprobado(req, res));
+router.get('/estado/:id', authMiddleware, (req, res) => usuarioEventsController.obtenerEstadoEvento(req, res));
+router.delete('/:id', authMiddleware, (req, res) => usuarioEventsController.eliminarEvento(req, res));
 
 // Ruta pública
 router.get('/', eventoController.obtenerTodos.bind(eventoController));

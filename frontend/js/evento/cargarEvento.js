@@ -164,6 +164,14 @@ export async function cargarEvento(slug) {
                 footer.querySelectorAll('p').forEach(p => p.style.color = ctfoot);
             }
         }
+        
+        // Color Buscador Expositores
+        const cbe = evento.color_buscador_expositores || evento.colorBuscadorExpositores;
+        if (cbe) {
+            window.colorBuscadorExpositores = cbe;
+            const searchBar = document.querySelector('.expositor-search-bar');
+            if (searchBar) searchBar.style.backgroundColor = cbe;
+        }
 
     } catch (err) {
         console.error(err);

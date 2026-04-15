@@ -231,6 +231,7 @@
                                     <div class="form-group"><label>Color enlace contacto</label><input type="color" id="color_enlace_contacto" value="#8b5a2b"></div>
                                     <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
                                     <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
+                                    <div class="form-group"><label>Color buscador expositores</label><input type="color" id="color_buscador_expositores" value="#ffffff"></div>
                                 </div>
                             </div>
                             <div class="form-navigation">
@@ -456,7 +457,22 @@
             </div>
             <form id="form-expositor" class="modal-form" onsubmit="return false;">
                 <div class="form-group"><label>Nombre *</label><input type="text" id="expositor-nombre" placeholder="ej: TechCorp" required></div>
-                <div class="form-group"><label>Rubro / Categoría *</label><input type="text" id="expositor-rubro" placeholder="ej: Tecnología" required></div>
+                <div class="form-group">
+                    <label>Tipo de Expositor *</label>
+                    <select id="expositor-rubro" required>
+                        <option value="Toldos">Toldos</option>
+                        <option value="Comidas y Bebidas">Comidas y Bebidas</option>
+                        <option value="Bar">Bar</option>
+                        <option value="Chinamos">Chinamos</option>
+                        <option value="Moda">Moda</option>
+                        <option value="Administración">Administración</option>
+                        <option value="Tecnología">Tecnología</option>
+                        <option value="Construcción">Construcción</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Ganadería y Agricultura">Ganadería y Agricultura</option>
+                        <option value="Juegos">Juegos</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Descripción</label>
                     <textarea id="expositor-descripcion" placeholder="Detalle del expositor" rows="3"

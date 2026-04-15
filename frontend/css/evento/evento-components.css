@@ -1,3 +1,4 @@
 /* Archivo reorganizado: wrapper de imports */
 @import "./evento-components/evento-components-part1.css";
 @import "./evento-components/evento-components-part2.css";
+@import "./evento-components/evento-components-expositores.css";

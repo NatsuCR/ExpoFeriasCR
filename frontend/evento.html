@@ -103,14 +103,25 @@
 <section id="expositores" class="expositores">
     <div class="container">
         <h2>Expositores</h2>
-        <div class="expositores-carrusel-wrapper" id="expositoresWrapper">
-            <button class="expositores-btn prev" id="expositoresPrev">&#10094;</button>
-            <div class="expositores-carrusel-viewport">
-                <div class="expositores-carrusel-track" id="expositoresGrid">
-                    <!-- cards se insertan aquí -->
+        
+        <!-- Buscador de Expositores -->
+        <div id="expositorSearchContainer" class="expositor-search-bar" style="display: none;">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="expositorSearch" placeholder="Buscar por nombre o ubicación...">
+            </div>
+        </div>
+
+        <!-- Contenedor dinámico para categorías y carruseles -->
+        <div id="expositoresDinamicContainer">
+            <!-- Se inyectarán grupos de: <h3>Categoría</h3> + carrusel -->
+            <div class="expositores-carrusel-wrapper" id="expositoresWrapper">
+                <div class="expositores-carrusel-viewport">
+                    <div class="expositores-carrusel-track" id="expositoresGrid">
+                        <p>Cargando expositores...</p>
+                    </div>
                 </div>
             </div>
-            <button class="expositores-btn next" id="expositoresNext">&#10095;</button>
         </div>
     </div>
 </section>

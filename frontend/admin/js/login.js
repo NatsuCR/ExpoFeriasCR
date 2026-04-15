@@ -4,7 +4,10 @@ const errorDiv = document.getElementById('errorMsg');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 
-const doLogin = async () => {
+const loginForm = document.getElementById('loginForm');
+
+const doLogin = async (e) => {
+    if (e) e.preventDefault();
     const email = emailInput.value.trim();
     const password = passwordInput.value;
 
@@ -32,12 +35,12 @@ const doLogin = async () => {
     }
 };
 
-btn.addEventListener('click', doLogin);
+loginForm.addEventListener('submit', doLogin);
 
 emailInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') doLogin();
+    if (e.key === 'Enter') doLogin(e);
 });
 
 passwordInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') doLogin();
+    if (e.key === 'Enter') doLogin(e);
 });

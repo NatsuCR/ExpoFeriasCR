@@ -1,4 +1,4 @@
-﻿/**
+/**
  * crearEventoMain.js
  * Clase principal para gestionar la creación de eventos
  */
@@ -197,7 +197,7 @@ verificarAutenticacion() {
 
           tr.innerHTML = `
               <td><input type="text" class="exp-nombre" value="${e.nombre || ''}"></td>
-              <td><input type="text" class="exp-rubro" value="${e.rubro || ''}"></td>
+              <td><input type="text" class="exp-rubro" value="${e.tipo_expositor || e.rubro || ''}"></td>
               <td><input type="text" class="exp-ubicacion" value="${e.ubicacion || ''}"></td>
               <td style="text-align:center;">${imgBadge}</td>
               <td style="text-align:center;">${videoBadge}</td>
@@ -376,7 +376,7 @@ initPreviewListeners() {
     'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
     'color_titulo_h3',
     'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
-    'color_fondo_footer', 'color_texto_footer'
+    'color_fondo_footer', 'color_texto_footer', 'color_buscador_expositores'
   ];
   camposWatch.forEach(id => {
     const el = document.getElementById(id);

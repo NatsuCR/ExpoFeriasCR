@@ -10,8 +10,9 @@ module.exports = (req, res, next) => {
 
         const token = authHeader.split(' ')[1];
 
-        if (!token) {
-            return res.status(401).json({ error: 'Token inválido' });
+        // Evitar error 'jwt malformed' si el cliente envía strings inválidos como "null" o "undefined"
+        if (!token || token === 'null' || token === 'undefined' || token === '') {
+            return res.status(401).json({ error: 'Token inválido o sesión expirada' });
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -20,7 +21,10 @@ module.exports = (req, res, next) => {
 
         next();
     } catch (error) {
-        console.error('Error en auth middleware:', error);
+        // Solo loguear errores que no sean de malformación o expiración para evitar ruido en consola
+        if (error.name !== 'JsonWebTokenError' && error.name !== 'TokenExpiredError') {
+            console.error('Error crítico en auth middleware:', error);
+        }
         return res.status(401).json({ error: 'Token inválido o expirado' });
     }
 };

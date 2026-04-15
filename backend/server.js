@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
+const trackerMiddleware = require('./middlewares/trackerMiddleware');
 
 const app = express();
 
@@ -13,6 +14,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Registrar tiempo de inicio del servidor para forzar re-login al reiniciar
 const SERVER_BOOT_TIME = Date.now().toString();
+
+// Rastreador de visitas (Estadísticas)
+app.use(trackerMiddleware);
 
 // =======================
 // 📡 RUTAS API

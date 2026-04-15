@@ -2,7 +2,7 @@
 import { cargarEvento } from './cargarEvento.js';
 import { cargarActividades } from './cargarActividades.js';
 import { cargarPrecios } from './cargarPrecios.js';
-import { cargarExpositores } from './cargarExpositores.js';
+import { cargarExpositores, renderExpositores } from './cargarExpositores.js';
 import { cargarCarruselFondo } from './carruselFondo.js';
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -348,75 +348,11 @@ function cargarEventoDesdePreview(datos) {
         }
     }
 
-    // ──── EXPOSITORES ────
+    // ──── EXPOSITORES (PREVIEW) ────
     if (datos.expositores && datos.expositores.length > 0) {
-        const expositoresGrid = document.getElementById('expositoresGrid');
-        if (expositoresGrid) {
-            expositoresGrid.innerHTML = '';
-            datos.expositores.forEach(exp => {
-                let images = [];
-                const rawLogo = exp.imagen_logo || exp.logo;
-                if (Array.isArray(exp.imagenes) && exp.imagenes.length) images = exp.imagenes.filter(u => u);
-                else if (typeof rawLogo === 'string' && rawLogo.startsWith('[')) {
-                    try { images = JSON.parse(rawLogo).filter(u => u); } catch (e) { images = [rawLogo]; }
-                } else if (rawLogo) images = [rawLogo];
-
-                // crear contenedor de imagenes (mini-carrusel)
-                const showButtons = images.length > 1 ? 'flex' : 'none';
-                const imagesHtml = images.length ? `
-                    <div class="mini-carrusel" data-idx="0">
-                        <button class="mini-btn mini-prev" style="display: ${showButtons}">❮</button>
-                        <div class="mini-carrusel-track" style="min-height: 150px;">
-                             ${images.map((src, i) => `<div class="mini-slide ${i === 0 ? 'activa' : ''}"><img src="${src}" alt="${exp.nombre}"></div>`).join('')}
-                        </div>
-                        <button class="mini-btn mini-next" style="display: ${showButtons}">❯</button>
-                    </div>` : '<div class="placeholder-img" style="height:150px;background:#f0f0f0;"></div>';
-
-                let videoHtml = '';
-                const rawVideo = exp.video_url || exp.video;
-                if (rawVideo) {
-                    let embedUrl = rawVideo;
-                    if (rawVideo.includes('youtube.com/watch?v=')) embedUrl = rawVideo.replace('watch?v=', 'embed/');
-                    if (exp.video.includes('youtu.be/')) embedUrl = exp.video.replace('youtu.be/', 'youtube.com/embed/');
-                    videoHtml = `<div style="margin-top:10px;"><iframe width="100%" height="150" src="${embedUrl}" frameborder="0" allowfullscreen></iframe></div>`;
-                }
-
-                const card = document.createElement('div');
-                card.className = 'expositor-card';
-                card.style.position = 'relative';
-                card.style.background = '#fff';
-                card.style.borderRadius = '8px';
-                card.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                card.style.overflow = 'hidden';
-                card.innerHTML = `
-                    ${imagesHtml}
-                    ${videoHtml}
-                    <div class="card-content" style="padding:15px;text-align:center;">
-                        <h3 style="margin:10px 0 5px;font-size:18px;">${exp.nombre}</h3>
-                        <p class="rubro" style="color:#666;font-size:14px;margin-bottom:5px;"><strong>Rubro:</strong> ${exp.rubro}</p>
-                        <p class="ubicacion" style="color:#666;font-size:14px;margin-bottom:10px;"><strong>Stand:</strong> ${exp.ubicacion}</p>
-                        ${exp.descripcion ? window.formatDescription(exp.descripcion) : ''}
-                        <p><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(exp.nombre + ' Costa Rica')}" target="_blank" class="enlace-localidades" style="color: var(--evento-secundario, #0033A0); font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-top: 5px;"><i class="fas fa-map-marker-alt"></i> Localidades</a></p>
-                    </div>
-                `;
-                expositoresGrid.appendChild(card);
-            });
-
-            // inicializar mini-carruseles por expositor
-            expositoresGrid.querySelectorAll('.mini-carrusel').forEach(car => {
-                const slides = car.querySelectorAll('.mini-slide');
-                let idx = 0;
-                const prev = car.querySelector('.mini-prev');
-                const next = car.querySelector('.mini-next');
-                if (!prev || !next) return;
-                function update() {
-                    slides.forEach((s, l) => s.classList.toggle('activa', l === idx));
-                }
-                prev.onclick = (e) => { e.preventDefault(); idx = (idx - 1 + slides.length) % slides.length; update(); };
-                next.onclick = (e) => { e.preventDefault(); idx = (idx + 1) % slides.length; update(); };
-                update();
-            });
-        }
+        renderExpositores(datos.expositores);
+        const searchContainer = document.getElementById('expositorSearchContainer');
+        if (searchContainer) searchContainer.style.display = 'flex';
     }
 
     // ──── HORARIO GENERAL ────

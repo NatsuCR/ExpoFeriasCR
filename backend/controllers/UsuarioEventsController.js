@@ -17,7 +17,8 @@ class UsuarioEventsController {
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_titulo_h3,
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
-      color_fondo_footer, color_texto_footer,
+      color_fondo_footer, color_texto_footer, color_buscador_expositores,
+      color_borde_buscador_expositores,
       precios, actividades, expositores, galeria
     } = req.body;
 
@@ -47,8 +48,8 @@ class UsuarioEventsController {
          color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
          color_titulo_h3,
          color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
-         color_fondo_footer, color_texto_footer, estado, activo)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         color_fondo_footer, color_texto_footer, color_buscador_expositores, color_borde_buscador_expositores, estado, activo)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           usuarioId, slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
           imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
@@ -59,6 +60,7 @@ class UsuarioEventsController {
           color_titulo_h3 || '#2c1a0e',
           color_fondo_contacto || '#f4e4c1', color_texto_contacto || '#2c1a0e', color_enlace_contacto || '#8b5a2b',
           color_fondo_footer || '#8b5a2b', color_texto_footer || '#ffffff',
+          color_buscador_expositores || '#ffffff', color_borde_buscador_expositores || '#eeeeee',
           'pendiente', 0
         ]
       );
@@ -97,8 +99,8 @@ class UsuarioEventsController {
         for (const expositor of expositores) {
           if (expositor.nombre) {
             await pool.query(
-              'INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
-              [eventoId, expositor.nombre, expositor.rubro || '', expositor.ubicacion || '', expositor.descripcion || '', expositor.logo || '', expositor.video || '']
+              'INSERT INTO expositores (evento_id, nombre, tipo_expositor, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              [eventoId, expositor.nombre, expositor.tipo_expositor || expositor.rubro || '', expositor.ubicacion || '', expositor.descripcion || '', expositor.logo || '', expositor.video || '']
             );
           }
         }
@@ -385,7 +387,8 @@ class UsuarioEventsController {
             color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
             color_titulo_h3 = ?,
             color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
-            color_fondo_footer = ?, color_texto_footer = ?,
+            color_fondo_footer = ?, color_texto_footer = ?, color_buscador_expositores = ?,
+            color_borde_buscador_expositores = ?,
             estado = 'pendiente'
            WHERE id = ?`,
           [
@@ -398,6 +401,7 @@ class UsuarioEventsController {
             body.color_titulo_h3 || '#2c1a0e',
             body.color_fondo_contacto || '#f4e4c1', body.color_texto_contacto || '#2c1a0e', body.color_enlace_contacto || '#8b5a2b',
             body.color_fondo_footer || '#8b5a2b', body.color_texto_footer || '#ffffff',
+            body.color_buscador_expositores || '#ffffff', body.color_borde_buscador_expositores || '#eeeeee',
             eventoId
           ]
         );
@@ -426,8 +430,8 @@ class UsuarioEventsController {
           await pool.query('DELETE FROM expositores WHERE evento_id = ?', [eventoId]);
           for (const exp of expositores) {
             if (exp.nombre) {
-              await pool.query('INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [eventoId, exp.nombre, exp.rubro || null, exp.ubicacion || null, exp.descripcion || null, exp.logo || null, exp.video || null]);
+              await pool.query('INSERT INTO expositores (evento_id, nombre, tipo_expositor, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [eventoId, exp.nombre, exp.tipo_expositor || exp.rubro || null, exp.ubicacion || null, exp.descripcion || null, exp.logo || null, exp.video || null]);
             }
           }
         }

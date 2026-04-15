@@ -220,6 +220,11 @@ class UsuarioEventsController {
         datosEvento.estado = 'aprobado';
         datosEvento.borrador_cambios = null;
         datosEvento.fecha_aprobacion = new Date();
+      } else {
+        // Un usuario normal no puede forzar el estado a aprobado
+        delete datosEvento.estado;
+        delete datosEvento.activo;
+        delete datosEvento.borrador_cambios;
       }
 
       await pool.query('UPDATE eventos SET ? WHERE id = ?', [datosEvento, id]);

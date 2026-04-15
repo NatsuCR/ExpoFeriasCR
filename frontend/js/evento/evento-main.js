@@ -4,6 +4,7 @@ import { cargarActividades } from './cargarActividades.js';
 import { cargarPrecios } from './cargarPrecios.js';
 import { cargarExpositores, renderExpositores } from './cargarExpositores.js';
 import { cargarCarruselFondo } from './carruselFondo.js';
+import { abrirLightbox } from './lightbox.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const slug = urlParams.get('slug');
@@ -31,19 +32,27 @@ window.toggleDesc = function (btn, isShow) {
     }
 };
 
-window.formatDescription = function (text) {
+window.formatDescription = function(text, forceFull = false) {
     if (!text) return '';
-    if (text.length <= 50) return `<p class="descripcion-texto descripcion">${text}</p>`;
+    
+    // Si se fuerza completa, no truncamos
+    if (forceFull || text.length <= 100) {
+        return `
+            <div class="desc-container">
+                <p class="descripcion-texto descripcion desc-full" style="display: block; max-height: none; white-space: pre-wrap;">${text}</p>
+            </div>
+        `;
+    }
 
-    // Si es muy largo, cortamos y ponemos Ver más
-    const shortText = text.substring(0, 50) + '...';
+    // Lógica con truncamiento y botones "Ver más"
+    const shortText = text.substring(0, 100) + '...';
     return `
-      <div class="desc-container" style="margin-bottom:10px; width:100%; max-width:100%; overflow-wrap: break-word;">
-         <p class="descripcion-texto descripcion desc-short" style="margin:0;">${shortText}</p>
-         <p class="descripcion-texto descripcion desc-full" style="display:none; margin:0; white-space:pre-wrap;">${text}</p>
-         <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas" style="background:none; border:none; color:var(--evento-primario, #C8102E); cursor:pointer; padding:0; text-decoration:underline; font-weight:bold; font-size:13px; margin-top:4px;">Ver más</button>
-         <button onclick="window.toggleDesc(this, false)" class="btn-ver-menos" style="background:none; border:none; color:var(--evento-primario, #C8102E); cursor:pointer; padding:0; text-decoration:underline; font-weight:bold; font-size:13px; margin-top:4px; display:none;">Ver menos</button>
-      </div>
+        <div class="desc-container">
+            <p class="descripcion-texto descripcion desc-short">${shortText}</p>
+            <p class="descripcion-texto descripcion desc-full" style="display: none; white-space: pre-wrap;">${text}</p>
+            <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas">Ver más</button>
+            <button onclick="window.toggleDesc(this, false)" class="btn-ver-mas btn-ver-menos" style="display: none;">Ver menos</button>
+        </div>
     `;
 };
 function initCarouselControls() {
@@ -183,7 +192,7 @@ function cargarEventoDesdePreview(datos) {
         document.getElementById('eventoDescripcion').innerText = datos.descripcion.length > 80 ? datos.descripcion.substring(0, 80) + '...' : datos.descripcion;
         const infoCompleta = document.getElementById('eventoInfoCompleta');
         if (infoCompleta) {
-            infoCompleta.innerHTML = window.formatDescription(datos.descripcion);
+            infoCompleta.innerHTML = window.formatDescription(datos.descripcion, true);
         }
     }
 
@@ -252,6 +261,14 @@ function cargarEventoDesdePreview(datos) {
             h3.style.color = datos.color_titulo_h3;
         });
     }
+    
+    // Color buscador y borde
+    if (datos.color_buscador_expositores || datos.color_borde_buscador_expositores) {
+        const searchBar = document.querySelector('.expositor-search-bar');
+        const searchInput = document.querySelector('.search-input-wrapper input');
+        if (searchBar && datos.color_buscador_expositores) searchBar.style.backgroundColor = datos.color_buscador_expositores;
+        if (searchInput && datos.color_borde_buscador_expositores) searchInput.style.borderColor = datos.color_borde_buscador_expositores;
+    }
 
     const contacto = document.querySelector('.contacto');
     if (contacto) {
@@ -298,10 +315,18 @@ function cargarEventoDesdePreview(datos) {
                 const fmt = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-CR', { day: '2-digit', month: 'short' }) : '?';
                 // imágenes: puede ser act.imagen (string) o act.imagenes (array)
                 let images = [];
-                if (Array.isArray(act.imagenes) && act.imagenes.length) images = act.imagenes.filter(u => u);
-                else if (typeof act.imagen === 'string' && act.imagen.startsWith('[')) {
-                    try { images = JSON.parse(act.imagen).filter(u => u); } catch (e) { images = [act.imagen]; }
-                } else if (act.imagen) images = [act.imagen];
+                if (Array.isArray(act.imagenes) && act.imagenes.length) {
+                    images = act.imagenes.filter(u => u);
+                } else if (typeof act.imagen === 'string') {
+                    const trimmed = act.imagen.trim();
+                    if (trimmed.startsWith('[')) {
+                        try { images = JSON.parse(trimmed).filter(u => u); } catch (e) { images = [trimmed]; }
+                    } else if (trimmed.includes(',')) {
+                        images = trimmed.split(',').map(s => s.trim()).filter(u => u && u !== 'null');
+                    } else if (trimmed) {
+                        images = [trimmed];
+                    }
+                }
 
                 // crear contenedor de imagenes (mini-carrusel)
                 const showButtons = images.length > 1 ? 'flex' : 'none';
@@ -409,33 +434,13 @@ function cargarEventoDesdePreview(datos) {
 }
 
 
-// Lightbox Functionality
+// Lightbox Functionality - Redirigido al modulo compartido
 const initLightbox = () => {
-    let overlay = document.getElementById('lightbox-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'lightbox-overlay';
-        overlay.style.display = 'none';
-        overlay.innerHTML = `
-            <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; display:flex; justify-content:center; align-items:center;">
-                <span style="position:absolute; top:20px; right:30px; color:white; font-size:40px; cursor:pointer;" onclick="document.getElementById('lightbox-overlay').style.display='none'">&times;</span>
-                <img id="lightbox-img" src="" style="max-width:90%; max-height:90%; object-fit:contain; border:4px solid white; border-radius:8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-            </div>
-        `;
-        document.body.appendChild(overlay);
-    }
-    document.querySelectorAll('.card-img-principal, .expositor-img-principal').forEach(img => {
+    document.querySelectorAll('.card-img-principal, .expositor-img-principal, .mini-slide img').forEach(img => {
         img.style.cursor = 'pointer';
-        // Evitamos multiples escuchadores si esta funcion se llama varias veces (como en preview mode)
-        img.removeEventListener('click', openLightbox);
-        img.addEventListener('click', openLightbox);
+        img.onclick = () => abrirLightbox(img.src, img.alt);
     });
 };
-
-function openLightbox(e) {
-    document.getElementById('lightbox-img').src = e.target.src;
-    document.getElementById('lightbox-overlay').style.display = 'block';
-}
 
 window.initLightbox = initLightbox;
 window.cargarEventoDesdePreview = cargarEventoDesdePreview;
@@ -443,7 +448,6 @@ window.initCarouselControls = initCarouselControls;
 window.initHeroCarousel = initHeroCarousel;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Si no estamos en preview, damos un tiempito y ejecutamos el lightbox para amarrar las imagenes
     const u = new URLSearchParams(window.location.search);
     if (!u.get('preview')) {
         setTimeout(initLightbox, 1500);

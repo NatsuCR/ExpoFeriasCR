@@ -16,62 +16,120 @@ window.toggleDesc = function (btn, isShow) {
     }
 };
 
-window.formatDescription = function (text) {
+window.formatDescription = function(text, forceFull = false) {
     if (!text) return '';
-    if (text.length <= 50) return `<p class="descripcion-texto descripcion">${text}</p>`;
+    
+    // Si se fuerza completa (ej: info principal del evento), no truncamos
+    if (forceFull || text.length <= 100) {
+        return `
+            <div class="desc-container">
+                <p class="descripcion-texto descripcion desc-full" style="display: block; max-height: none; white-space: pre-wrap;">${text}</p>
+            </div>
+        `;
+    }
 
-    // Si es muy largo, cortamos y ponemos Ver más
-    const shortText = text.substring(0, 50) + '...';
+    // Lógica con truncamiento y botones "Ver más"
+    const shortText = text.substring(0, 100) + '...';
     return `
-      <div class="desc-container" style="margin-bottom:10px; width:100%; max-width:100%; overflow-wrap: break-word;">
-         <p class="descripcion-texto descripcion desc-short" style="margin:0;">${shortText}</p>
-         <p class="descripcion-texto descripcion desc-full" style="display:none; margin:0; white-space:pre-wrap;">${text}</p>
-         <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas" style="background:none; border:none; color:var(--evento-primario, #C8102E); cursor:pointer; padding:0; text-decoration:underline; font-weight:bold; font-size:13px; margin-top:4px;">Ver más</button>
-         <button onclick="window.toggleDesc(this, false)" class="btn-ver-menos" style="background:none; border:none; color:var(--evento-primario, #C8102E); cursor:pointer; padding:0; text-decoration:underline; font-weight:bold; font-size:13px; margin-top:4px; display:none;">Ver menos</button>
-      </div>
+        <div class="desc-container">
+            <p class="descripcion-texto descripcion desc-short">${shortText}</p>
+            <p class="descripcion-texto descripcion desc-full" style="display: none; white-space: pre-wrap;">${text}</p>
+            <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas">Ver más</button>
+            <button onclick="window.toggleDesc(this, false)" class="btn-ver-mas btn-ver-menos" style="display: none;">Ver menos</button>
+        </div>
     `;
 };
+
 export async function cargarEvento(slug) {
     try {
-        const res = await fetch(`/api/eventos/${slug}`);
-        const evento = await res.json();
+        const urlParams = new URLSearchParams(window.location.search);
+        const isPreview = urlParams.get('preview') === '1';
+        const dataKey = urlParams.get('dataKey');
+        
+        let evento;
+        if (isPreview && dataKey) {
+            console.log('[Preview Mode] Loading from localStorage:', dataKey);
+            const data = localStorage.getItem(dataKey);
+            if (!data) throw new Error('Datos de vista previa no encontrados');
+            evento = JSON.parse(data);
+        } else {
+            const res = await fetch(`/api/eventos/${slug}`);
+            if (!res.ok) throw new Error('Evento no encontrado');
+            evento = await res.json();
+        }
 
-        document.title = evento.nombre;
-        document.getElementById('eventoNombre').innerText = evento.nombre;
-        document.getElementById('eventoDescripcion').innerText = evento.descripcion;
-        document.getElementById('eventoFechas').innerHTML = `${new Date(evento.fechaInicio).toLocaleDateString()} al ${new Date(evento.fechaFin).toLocaleDateString()}`;
-        document.getElementById('eventoInfoCompleta').innerHTML = typeof window.formatDescription === 'function' ? window.formatDescription(evento.descripcion) : evento.descripcion;
-        document.getElementById('infoFechas').innerHTML = `${new Date(evento.fechaInicio).toLocaleDateString()} - ${new Date(evento.fechaFin).toLocaleDateString()}`;
-        document.getElementById('infoUbicacion').innerHTML = evento.ubicacion;
-        document.getElementById('ubicacionTexto').innerHTML = evento.ubicacion;
+        // Normalizar nombres de propiedades (DB vs CamelCase)
+        const nombre = evento.nombre || '';
+        const descripcion = evento.descripcion || '';
+        const fechaInicio = evento.fecha_inicio || evento.fechaInicio;
+        const fechaFin = evento.fecha_fin || evento.fechaFin;
+        const ubicacion = evento.ubicacion || '';
+        const horarioImgUrl = evento.horario_imagen || evento.horarioImagen;
+        const mapaEmbed = evento.mapa_embed || evento.mapaEmbed;
+
+        document.title = nombre;
+        document.getElementById('eventoNombre').innerText = nombre;
+        document.getElementById('eventoDescripcion').innerText = descripcion;
+
+        const fmt = (dStr) => {
+            if (!dStr || dStr === 'Invalid Date') return '—';
+            try {
+                const clean = (typeof dStr === 'string' && dStr.includes('T')) ? dStr.split('T')[0] : dStr;
+                const d = new Date(clean + 'T12:00:00');
+                if (isNaN(d.getTime())) return '—';
+                return d.toLocaleDateString('es-CR', { day: '2-digit', month: 'long', year: 'numeric' });
+            } catch (e) { return '—'; }
+        };
+
+        const fechaRango = `${fmt(fechaInicio)} al ${fmt(fechaFin)}`;
+        document.getElementById('eventoFechas').innerHTML = fechaRango;
+        document.getElementById('eventoInfoCompleta').innerHTML = typeof window.formatDescription === 'function' ? window.formatDescription(descripcion, true) : descripcion;
+        document.getElementById('infoFechas').innerHTML = `${fmt(fechaInicio)} - ${fmt(fechaFin)}`;
+        document.getElementById('infoUbicacion').innerHTML = ubicacion;
+        document.getElementById('ubicacionTexto').innerHTML = ubicacion;
 
         // Horario
         const horarioDiv = document.getElementById('horarioContainer');
-        const horarioImgUrl = evento.horarioImagen || evento.horario_imagen;
-        if (horarioImgUrl) {
-            horarioDiv.innerHTML = `<img src="${horarioImgUrl}" class="horario-img" style="max-width:100%;">`;
-        } else {
-            horarioDiv.innerHTML = '<p>Horario no disponible</p>';
+        if (horarioDiv) {
+            let src = horarioImgUrl;
+            // Manejar si viene como JSON de un array
+            if (typeof src === 'string' && src.startsWith('[')) {
+                try { 
+                    const parsed = JSON.parse(src);
+                    if (Array.isArray(parsed) && parsed.length > 0) src = parsed[0];
+                } catch(e) {}
+            }
+
+            if (src && src !== 'null' && src !== 'undefined') {
+                horarioDiv.innerHTML = `<img src="${src}" class="horario-img" style="max-width:100%; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">`;
+            } else {
+                horarioDiv.innerHTML = '<p style="color:#999; font-style:italic;">Horario no disponible en este momento</p>';
+            }
         }
 
         // Mapa
         const mapaDiv = document.getElementById('mapaIframe');
-        if (evento.mapaEmbed) {
-            mapaDiv.innerHTML = evento.mapaEmbed;
-        } else {
-            mapaDiv.innerHTML = '<p>Mapa no disponible</p>';
+        if (mapaDiv) {
+            if (mapaEmbed) {
+                mapaDiv.innerHTML = mapaEmbed;
+            } else {
+                mapaDiv.innerHTML = '<p style="color:#999;">Mapa no disponible</p>';
+            }
         }
 
         // Entradas
         const entradasParrafo = document.getElementById('entradasTexto');
+        const tipoVenta = evento.tipo_venta || evento.tipoVenta;
+        const urlVentaOnline = evento.url_venta_online || evento.urlVentaOnline;
+
         if (entradasParrafo) {
             let textoEntradas = '';
-            switch (evento.tipoVenta) {
+            switch (tipoVenta) {
                 case 'online':
-                    textoEntradas = `Entradas en línea: <a href="${evento.urlVentaOnline}" target="_blank">Comprar aquí</a>`;
+                    textoEntradas = `Entradas en línea: <a href="${urlVentaOnline}" target="_blank">Comprar aquí</a>`;
                     break;
                 case 'ambos':
-                    textoEntradas = `Entradas en taquilla y en línea: <a href="${evento.urlVentaOnline}" target="_blank">Comprar en línea</a>`;
+                    textoEntradas = `Entradas en taquilla y en línea: <a href="${urlVentaOnline}" target="_blank">Comprar en línea</a>`;
                     break;
                 default:
                     textoEntradas = 'Entradas solo en taquilla del campo ferial';
@@ -139,6 +197,20 @@ export async function cargarEvento(slug) {
             });
         }
 
+        // Buscador
+        const cbe = evento.color_buscador_expositores || evento.colorBuscadorExpositores;
+        if (cbe) {
+            window.colorBuscadorExpositores = cbe;
+            const searchBar = document.querySelector('.expositor-search-bar');
+            if (searchBar) searchBar.style.backgroundColor = cbe;
+        }
+
+        const cbbe = evento.color_borde_buscador_expositores || evento.colorBordeBuscadorExpositores;
+        if (cbbe) {
+            const searchInput = document.querySelector('.search-input-wrapper input');
+            if (searchInput) searchInput.style.borderColor = cbbe;
+        }
+
         // Contacto
         const cfc = evento.color_fondo_contacto || evento.colorFondoContacto;
         const ctc = evento.color_texto_contacto || evento.colorTextoContacto;
@@ -165,16 +237,8 @@ export async function cargarEvento(slug) {
             }
         }
         
-        // Color Buscador Expositores
-        const cbe = evento.color_buscador_expositores || evento.colorBuscadorExpositores;
-        if (cbe) {
-            window.colorBuscadorExpositores = cbe;
-            const searchBar = document.querySelector('.expositor-search-bar');
-            if (searchBar) searchBar.style.backgroundColor = cbe;
-        }
-
     } catch (err) {
-        console.error(err);
-        document.body.innerHTML = '<h1>Evento no encontrado</h1><a href="/">Volver</a>';
+        console.error('Error al cargar evento:', err);
+        document.body.innerHTML = `<div style="padding:40px; text-align:center;"><h1>⚠️ ${err.message}</h1><a href="/">Volver</a></div>`;
     }
 }

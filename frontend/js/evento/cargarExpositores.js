@@ -21,28 +21,43 @@ let carruselControls = [];
 
 function parseImagenes(valor) {
     if (!valor) return [];
-    try {
-        const parsed = JSON.parse(valor);
-        if (Array.isArray(parsed)) return parsed.filter(Boolean);
-    } catch (_) { }
-    return valor.trim() ? [valor.trim()] : [];
+    // Caso 1: Ya es un array
+    if (Array.isArray(valor)) return valor.filter(Boolean);
+    
+    // Caso 2: Es un string JSON
+    if (typeof valor === 'string' && valor.trim().startsWith('[')) {
+        try {
+            const parsed = JSON.parse(valor);
+            if (Array.isArray(parsed)) return parsed.filter(Boolean);
+        } catch (_) { }
+    }
+
+    // Caso 3: Es un string con comas o por defecto
+    if (typeof valor === 'string') {
+        if (valor.includes(',')) {
+            return valor.split(',').map(s => s.trim()).filter(Boolean);
+        }
+        return valor.trim() ? [valor.trim()] : [];
+    }
+    
+    return [];
 }
 
 function buildMiniCarrusel(imagenes, altText) {
-    if (imagenes.length === 0) return '<div class="placeholder-img" style="height:150px; background:#f0f0f0; border-radius:8px;"></div>';
+    if (imagenes.length === 0) return '<div class="placeholder-img" style="height:220px; background:#f0f0f0; border-radius:8px;"></div>';
     if (imagenes.length === 1) {
-        return `<img src="${imagenes[0]}" alt="${altText}" class="card-img-principal" style="height:150px; object-fit:cover; width:100%; border-radius:8px;">`;
+        return `<img src="${imagenes[0]}" alt="${altText}" class="card-img-principal" style="object-fit:cover; width:100%; border-radius:8px;">`;
     }
     const slides = imagenes.map((url, i) =>
         `<div class="mini-slide${i === 0 ? ' activa' : ''}">
-            <img src="${url}" alt="${altText} ${i + 1}" style="height:150px; object-fit:cover; width:100%; border-radius:8px;">
+            <img src="${url}" alt="${altText} ${i + 1}" style="object-fit:cover; width:100%; border-radius:8px;">
         </div>`
     ).join('');
     return `
         <div class="mini-carrusel">
             <div class="mini-carrusel-track">${slides}</div>
-            <button class="mini-btn mini-prev" aria-label="Anterior">&#8249;</button>
-            <button class="mini-btn mini-next" aria-label="Siguiente">&#8250;</button>
+            <button class="mini-btn mini-prev" style="display: ${imagenes.length > 1 ? 'flex' : 'none'}" aria-label="Anterior">&#10094;</button>
+            <button class="mini-btn mini-next" style="display: ${imagenes.length > 1 ? 'flex' : 'none'}" aria-label="Siguiente">&#10095;</button>
             <div class="mini-dots">
                 ${imagenes.map((_, i) => `<span class="mini-dot${i === 0 ? ' activo' : ''}"></span>`).join('')}
             </div>
@@ -171,7 +186,7 @@ function generarHTMLCategoria(cat, expositores) {
                 <div class="expositores-carrusel-viewport">
                     <div class="expositores-carrusel-track" id="track-${catId}">
                         ${expositores.map(e => {
-        const imagenes = parseImagenes(e.imagen_logo || e.imagenLogo);
+        const imagenes = parseImagenes(e.logo || e.imagen_logo || e.imagenLogo);
         const imagenesLimpias = imagenes.map(u => u.replace(/\\/g, '/'));
         const descripcion = e.descripcion || '';
         const shortDesc = descripcion.length > 100 ? descripcion.substring(0, 100) + '...' : descripcion;
@@ -180,16 +195,17 @@ function generarHTMLCategoria(cat, expositores) {
                                 <div class="expositor-card">
                                     ${buildMiniCarrusel(imagenesLimpias, e.nombre)}
                                     <h3>${e.nombre}</h3>
+                                    <p class="rubro-tag">${e.rubro || e.tipo_expositor || ''}</p>
                                     <div class="descripcion-contenedor">
-                                        <p class="desc-texto desc-short recortada">${shortDesc}</p>
-                                        <p class="desc-texto desc-full" style="display:none; white-space:pre-wrap;">${descripcion}</p>
-                                        ${descripcion.length > 100 ? '<button class="btn-toggle-desc">Ver más</button>' : ''}
+                                        ${window.formatDescription(descripcion)}
                                     </div>
-                                    <p class="info-ubicacion"><strong>Ubicación:</strong> ${e.ubicacion || 'Por definir'}</p>
-                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.nombre + ' ' + (e.ubicacion || '') + ' Costa Rica')}" 
-                                       target="_blank" class="enlace-localidades">
-                                       <i class="fas fa-map-marker-alt"></i> Localidades en plano
-                                    </a>
+                                    <p class="info-ubicacion" style="text-align:center;"><strong>Ubicación:</strong> ${e.ubicacion || 'Por definir'}</p>
+                                    <div style="text-align: center; width: 100%; margin-top: 10px;">
+                                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.nombre)}" 
+                                           target="_blank" class="enlace-localidades" style="display: inline-flex; justify-content: center;">
+                                           <i class="fas fa-map-marker-alt"></i> Puntos de venta
+                                        </a>
+                                    </div>
                                 </div>`;
     }).join('')}
                     </div>

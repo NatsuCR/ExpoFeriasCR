@@ -97,7 +97,8 @@ verificarAutenticacion() {
       'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
       'color_titulo_h3',
       'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
-      'color_fondo_footer', 'color_texto_footer'
+      'color_fondo_footer', 'color_texto_footer', 'color_buscador_expositores',
+      'color_borde_buscador_expositores'
     ];
 
     camposBasicos.forEach(k => {
@@ -153,22 +154,26 @@ verificarAutenticacion() {
 
           const tr = document.createElement('tr');
           tr.innerHTML = `
-              <td><input type="text" class="act-titulo" value="${a.titulo || ''}"></td>
-              <td><input type="text" class="act-tipo" value="${a.tipo || ''}"></td>
-              <td><input type="date" class="act-fecha" value="${a.fecha ? a.fecha.slice(0, 10) : ''}"></td>
-              <td><input type="time" class="act-hora" value="${a.hora ? a.hora.slice(0, 5) : ''}"></td>
-              <td><input type="text" class="act-lugar" value="${a.lugar || ''}"></td>
-              <td style="text-align:center;font-size:18px;">
-                <span class="act-gratis" data-value="${a.es_gratis ? 'true' : 'false'}">${a.es_gratis ? '✅' : '❌'}</span>
-              </td>
-              <td>
-                <div class="acciones-tabla"><button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button><button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button></div>
-              </td>
-              <td style="display:none;"><input type="text" class="act-descripcion" value="${a.descripcion || ''}"></td>
-              <td style="display:none;"><input type="text" class="act-imagenes" value='${JSON.stringify(imagenes)}'></td>
-              <td style="display:none;"><span class="act-requiere-online" data-value="${a.requiere_entrada_online ? 'true' : 'false'}"></span></td>
-              <td style="display:none;"><input type="text" class="act-enlace" value="${a.enlace_venta || ''}"></td>
-            `;
+        <td><input type="text" value="${a.titulo || ''}" class="act-titulo"></td>
+        <td><input type="text" value="${a.tipo || ''}"   class="act-tipo"></td>
+        <td><input type="date" value="${a.fecha ? a.fecha.slice(0, 10) : ''}"  class="act-fecha"></td>
+        <td><input type="time" value="${a.hora ? a.hora.slice(0, 5) : ''}"   class="act-hora"></td>
+        <td><input type="text" value="${a.lugar || ''}"  class="act-lugar"></td>
+        <td><div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${a.descripcion || ''}">${a.descripcion || '-'}</div></td>
+        <td style="text-align:center;font-size:18px;">
+            <span class="act-gratis" data-value="${a.es_gratis ? 'true' : 'false'}">${a.es_gratis ? '✅' : '❌'}</span>
+        </td>
+        <td>
+          <div class="acciones-tabla">
+            <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
+            <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+        <td style="display:none;"><input type="text" value="${a.descripcion || ''}" class="act-descripcion"></td>
+        <td style="display:none;"><input type="text" value='${JSON.stringify(imagenes)}' class="act-imagenes"></td>
+        <td style="display:none;"><span class="act-requiere-online" data-value="${a.requiere_entrada_online ? 'true' : 'false'}"></span></td>
+        <td style="display:none;"><input type="text" value="${a.enlace_venta || ''}" class="act-enlace"></td>
+      `;
           tr.querySelector('.btn-eliminar').addEventListener('click', () => tr.remove());
           tr.querySelector('.btn-editar').addEventListener('click', () => editarActividad(tr));
           tbody.appendChild(tr);
@@ -193,21 +198,25 @@ verificarAutenticacion() {
 
           const numImg = imagenes.length;
           const imgBadge = numImg > 0 ? `<span class="badge" style="background:#27ae60; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">${numImg} img</span>` : '<span style="color:#ccc;">-</span>';
-          const videoBadge = e.video_url ? `<span class="badge" style="background:#3498db; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
+          const videoBadge = (e.video_url || e.video) ? `<span class="badge" style="background:#3498db; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
 
           tr.innerHTML = `
-              <td><input type="text" class="exp-nombre" value="${e.nombre || ''}"></td>
-              <td><input type="text" class="exp-rubro" value="${e.tipo_expositor || e.rubro || ''}"></td>
-              <td><input type="text" class="exp-ubicacion" value="${e.ubicacion || ''}"></td>
-              <td style="text-align:center;">${imgBadge}</td>
-              <td style="text-align:center;">${videoBadge}</td>
-              <td>
-                <div class="acciones-tabla"><button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button><button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button></div>
-              </td>
-              <td style="display:none;"><input type="text" class="exp-descripcion" value="${e.descripcion || ''}"></td>
-              <td style="display:none;"><input type="text" class="exp-imagenes" value='${JSON.stringify(imagenes)}'></td>
-              <td style="display:none;"><input type="text" class="exp-video" value="${e.video_url || ''}"></td>
-            `;
+        <td><input type="text" value="${e.nombre || ''}"   class="exp-nombre"></td>
+        <td><input type="text" value="${e.tipo_expositor || e.rubro || ''}"    class="exp-tipo"></td>
+        <td><input type="text" value="${e.ubicacion || ''}"class="exp-ubicacion"></td>
+        <td><div style="max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${e.descripcion || ''}">${e.descripcion || '-'}</div></td>
+        <td style="text-align:center;">${imgBadge}</td>
+        <td style="text-align:center;">${videoBadge}</td>
+        <td>
+          <div class="acciones-tabla">
+            <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
+            <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+        <td style="display:none;"><input type="text" value="${e.descripcion || ''}" class="exp-descripcion"></td>
+        <td style="display:none;"><input type="text" value='${JSON.stringify(imagenes)}' class="exp-imagenes"></td>
+        <td style="display:none;"><input type="text" value="${e.video_url || e.video || ''}" class="exp-video"></td>
+      `;
           tr.querySelector('.btn-eliminar').addEventListener('click', () => tr.remove());
           tr.querySelector('.btn-editar').addEventListener('click', () => editarExpositor(tr));
           tbody.appendChild(tr);
@@ -256,14 +265,23 @@ verificarAutenticacion() {
 }
 
 init() {
+  const esAdminPath = window.location.pathname.includes('/admin/');
+
   this.tabBtns.forEach((btn, i) => btn.addEventListener('click', () => this.cambiarTab(i)));
   document.querySelectorAll('.tab-next-btn').forEach(b => b.addEventListener('click', e => { e.preventDefault(); this.irSiguienteTab(); }));
   document.querySelectorAll('.tab-prev-btn').forEach(b => b.addEventListener('click', e => { e.preventDefault(); this.irTabAnterior(); }));
 
-  const esAdminStr = window.location.pathname.includes('/admin/') ? true : false;
-  document.getElementById('btn-volver-crear')?.addEventListener('click', () => { window.location.href = esAdminStr ? '/admin/dashboard.html' : '/mi-cuenta.html'; });
+  // Botón Volver (Navbar)
+  const btnVolver = document.getElementById('btn-volver-crear');
+  if (btnVolver) {
+    btnVolver.addEventListener('click', (e) => {
+       e.preventDefault();
+       console.log('[CrearEvento] Volviendo... esAdmin:', esAdminPath);
+       window.location.href = esAdminPath ? '/admin/dashboard.html' : '/mi-cuenta.html';
+    });
+  }
 
-  if (esAdminStr && this.eventoId) {
+  if (esAdminPath && this.eventoId) {
     const btnEliminar = document.getElementById('btnEliminarEvento');
     if (btnEliminar) {
       btnEliminar.style.display = 'inline-flex';
@@ -376,7 +394,8 @@ initPreviewListeners() {
     'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
     'color_titulo_h3',
     'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
-    'color_fondo_footer', 'color_texto_footer', 'color_buscador_expositores'
+    'color_fondo_footer', 'color_texto_footer', 'color_buscador_expositores',
+    'color_borde_buscador_expositores'
   ];
   camposWatch.forEach(id => {
     const el = document.getElementById(id);
@@ -606,6 +625,8 @@ simularPortada() {
     color_enlace_contacto: get('color_enlace_contacto') || '#8b5a2b',
     color_fondo_footer: get('color_fondo_footer') || '#8b5a2b',
     color_texto_footer: get('color_texto_footer') || '#ffffff',
+    color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
+    color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
     activo: document.getElementById('activo')?.checked ? 1 : 0
   };
 
@@ -616,7 +637,7 @@ simularPortada() {
         const el = row.querySelector(sel);
         if (!el) return;
         if (key === 'precio_normal' || key === 'orden') obj[key] = parseInt(el.value) || 0;
-        else if (key === 'imagen') {
+        else if (key === 'imagen' || key === 'logo') {
           try { obj[key] = JSON.parse(el.value || '[]'); } catch (e) { obj[key] = []; }
         } else if (key === 'es_gratis' || key === 'requiere_entrada_online') {
           obj[key] = el.dataset?.value === 'true' ? 1 : 0;
@@ -648,7 +669,7 @@ simularPortada() {
 
   const expositores = recolectarTabla('#expositores-rows tr', {
     nombre: '.exp-nombre',
-    rubro: '.exp-rubro',
+    rubro: '.exp-tipo',
     ubicacion: '.exp-ubicacion',
     descripcion: '.exp-descripcion',
     logo: '.exp-imagenes',

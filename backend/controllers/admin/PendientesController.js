@@ -175,7 +175,7 @@ class AdminEventosPendientesController {
               color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
               color_titulo_h3 = ?,
               color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
-              color_fondo_footer = ?, color_texto_footer = ?,
+              color_fondo_footer = ?, color_texto_footer = ?, color_buscador_expositores = ?, color_borde_buscador_expositores = ?,
               estado = 'aprobado', activo = 1, razon_rechazo = NULL, borrador_cambios = NULL
              WHERE id = ?`,
             [
@@ -188,7 +188,7 @@ class AdminEventosPendientesController {
               b.color_menu_fondo || '#ffffff', b.color_menu_texto || '#ffffff', b.color_menu_fondo_hover || '', b.color_menu_texto_hover || '',
               b.color_titulo_h3 || '#2c1a0e',
               b.color_fondo_contacto || '#f4e4c1', b.color_texto_contacto || '#2c1a0e', b.color_enlace_contacto || '#8b5a2b',
-              b.color_fondo_footer || '#8b5a2b', b.color_texto_footer || '#ffffff',
+              b.color_fondo_footer || '#8b5a2b', b.color_texto_footer || '#ffffff', b.color_buscador_expositores || '#ffffff', b.color_borde_buscador_expositores || '#eeeeee',
               eventoId
             ]
           );
@@ -215,8 +215,10 @@ class AdminEventosPendientesController {
           if (b.expositores && Array.isArray(b.expositores)) {
             await pool.query('DELETE FROM expositores WHERE evento_id = ?', [eventoId]);
             for (const e of b.expositores) {
-              if (e.nombre) await pool.query('INSERT INTO expositores (evento_id, nombre, rubro, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [eventoId, e.nombre, e.rubro || null, e.ubicacion || null, e.descripcion || null, e.logo || null, e.video || null]);
+              if (e.nombre) await pool.query('INSERT INTO expositores (evento_id, nombre, tipo_expositor, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [eventoId, e.nombre, e.tipo_expositor || e.rubro || null, e.ubicacion || null, e.descripcion || null, 
+                  Array.isArray(e.logo) ? JSON.stringify(e.logo) : e.logo || null, 
+                  e.video || null]);
             }
           }
           // Promover galería

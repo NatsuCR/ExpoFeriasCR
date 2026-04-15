@@ -19,7 +19,22 @@ class AdminEventoController {
       const [rows] = await pool.query('SELECT * FROM eventos WHERE id = ?', [id]);
       if (rows.length === 0) return res.status(404).json({ error: 'Evento no encontrado' });
 
-      const evento = rows[0];
+      let evento = rows[0];
+
+      // SI el evento tiene un borrador pendiente, mezclar los campos del borrador
+      // para que el administrador vea los cambios propuestos en la vista previa
+      if (evento.borrador_cambios) {
+        try {
+          const borradorData = typeof evento.borrador_cambios === 'string'
+            ? JSON.parse(evento.borrador_cambios)
+            : evento.borrador_cambios;
+          
+          evento = { ...evento, ...borradorData };
+        } catch (e) {
+          console.error("Error al parsear borrador_cambios:", e);
+        }
+      }
+
       const [actividades] = await pool.query('SELECT * FROM actividades WHERE evento_id = ? ORDER BY fecha, hora', [id]);
       const [precios] = await pool.query('SELECT * FROM precios_entrada WHERE evento_id = ? ORDER BY fecha', [id]);
       const [expositores] = await pool.query('SELECT * FROM expositores WHERE evento_id = ? ORDER BY nombre', [id]);
@@ -43,7 +58,7 @@ class AdminEventoController {
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
-      color_titulo_h3, color_buscador_expositores,
+      color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
       precios, actividades, expositores, galeria
     } = req.body;
 
@@ -62,7 +77,7 @@ class AdminEventoController {
       color_fondo_contacto || '#f4e4c1', color_texto_contacto || '#2c1a0e',
       color_enlace_contacto || '#8b5a2b', color_fondo_footer || '#8b5a2b',
       color_texto_footer || '#ffffff', color_titulo_h3 || '#2c1a0e',
-      color_buscador_expositores || '#ffffff'
+      color_buscador_expositores || '#ffffff', color_borde_buscador_expositores || '#eee'
     ];
 
     const query = `
@@ -76,7 +91,7 @@ class AdminEventoController {
         color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
         color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
         color_fondo_footer, color_texto_footer,
-        color_titulo_h3, color_buscador_expositores
+        color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores
       ) VALUES (${values.map(() => '?').join(', ')})
     `;
 
@@ -107,7 +122,7 @@ class AdminEventoController {
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
-      color_titulo_h3, color_buscador_expositores
+      color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores
     } = data;
 
     try {
@@ -122,7 +137,7 @@ class AdminEventoController {
           color_menu_fondo=?, color_menu_texto=?, color_menu_fondo_hover=?, color_menu_texto_hover=?,
           color_fondo_contacto=?, color_texto_contacto=?, color_enlace_contacto=?,
           color_fondo_footer=?, color_texto_footer=?,
-          color_titulo_h3=?, color_buscador_expositores=?,
+          color_titulo_h3=?, color_buscador_expositores=?, color_borde_buscador_expositores=?,
           estado='aprobado', borrador_cambios=NULL, updated_at=NOW()
         WHERE id = ?`,
         [
@@ -135,7 +150,7 @@ class AdminEventoController {
           color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
           color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
           color_fondo_footer, color_texto_footer,
-          color_titulo_h3, color_buscador_expositores,
+          color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
           id
         ]
       );
@@ -200,7 +215,7 @@ class AdminEventoController {
           color_hero_overlay=?, color_titulo_seccion=?,
           color_titulo_hero=?, color_descripcion_hero=?, color_fondo_fechas=?, color_texto_fechas=?,
           color_menu_fondo=?, color_menu_texto=?, color_menu_fondo_hover=?, color_menu_texto_hover=?,
-          color_titulo_h3=?, color_buscador_expositores=?,
+          color_titulo_h3=?, color_buscador_expositores=?, color_borde_buscador_expositores=?,
           color_fondo_contacto=?, color_texto_contacto=?, color_enlace_contacto=?,
           color_fondo_footer=?, color_texto_footer=?,
           estado='aprobado', borrador_cambios=NULL, razon_rechazo=NULL, updated_at=NOW()
@@ -212,7 +227,7 @@ class AdminEventoController {
           body.color_hero_overlay || 'rgba(62,42,31,0.7)', body.color_titulo_seccion || '#2c1a0e',
           body.color_titulo_hero || '#ffffff', body.color_descripcion_hero || '#ffffff', body.color_fondo_fechas || '#d4a373', body.color_texto_fechas || '#8b5a2b',
           body.color_menu_fondo || '#ffffff', body.color_menu_texto || '#ffffff', body.color_menu_fondo_hover || '', body.color_menu_texto_hover || '',
-          body.color_titulo_h3 || '#2c1a0e', body.color_buscador_expositores || '#ffffff',
+          body.color_titulo_h3 || '#2c1a0e', body.color_buscador_expositores || '#ffffff', body.color_borde_buscador_expositores || '#eeeeee',
           body.color_fondo_contacto || '#f4e4c1', body.color_texto_contacto || '#2c1a0e', body.color_enlace_contacto || '#8b5a2b',
           body.color_fondo_footer || '#8b5a2b', body.color_texto_footer || '#ffffff', id
         ]

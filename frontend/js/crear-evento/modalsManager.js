@@ -1,49 +1,49 @@
-﻿/**
- * modalsManager.js
- * Gestiona todos los modales (Precio, Actividad, Expositor, Galería)
- */
-
-import { subirImagen } from './uploadManager.js';
 import { programarActualizacion } from './previewManager.js';
+import { subirImagen } from './uploadManager.js';
 
-// Variable global para rastrear si estamos editando una fila
 let filaEnEdicion = null;
+let onModalConfirmadoCallback = null;
 
-// Callback que se llama cuando el usuario confirma cualquier modal (agregar o editar)
-let _onModalConfirmado = null;
-export function registrarOnModalConfirmado(fn) { _onModalConfirmado = fn; }
-const notificarConfirmacion = () => { if (_onModalConfirmado) _onModalConfirmado(); };
+export function registrarOnModalConfirmado(callback) {
+  onModalConfirmadoCallback = callback;
+}
 
-// ─── PRECIO ───
+function notificarConfirmacion() {
+  console.log('[modalsManager] Datos confirmados en tabla');
+  if (onModalConfirmadoCallback) onModalConfirmadoCallback();
+}
+
+// ─── PRECIOS ───
 export function abrirModalPrecio() {
   filaEnEdicion = null;
   document.getElementById('form-precio').reset();
   document.getElementById('modal-precio').style.display = 'flex';
 }
 
-export function cerrarModalPrecio() { 
-  document.getElementById('modal-precio').style.display = 'none'; 
+export function cerrarModalPrecio() {
+  document.getElementById('modal-precio').style.display = 'none';
 }
 
 export function agregarPrecioDelModal() {
-  const fecha       = document.getElementById('precio-fecha').value;
-  const monto       = document.getElementById('precio-monto').value;
-  const promocion   = document.getElementById('precio-promocion').value || 'no';
-  const descripcion = document.getElementById('precio-descripcion').value;
-  if (!fecha || !monto) { alert('Completa fecha y precio'); return; }
+  const fecha = document.getElementById('precio-fecha').value;
+  const monto = document.getElementById('precio-monto').value;
+  const promo = document.getElementById('precio-promocion').value.trim();
+  const desc  = document.getElementById('precio-descripcion').value.trim();
+
+  if (!fecha || !monto) { alert('Completa fecha y monto'); return; }
 
   if (filaEnEdicion) {
     filaEnEdicion.querySelector('.precio-fecha').value = fecha;
     filaEnEdicion.querySelector('.precio-monto').value = monto;
-    filaEnEdicion.querySelector('.precio-promocion').value = promocion;
-    filaEnEdicion.querySelector('.precio-descripcion').value = descripcion;
+    filaEnEdicion.querySelector('.precio-promocion').value = promo;
+    filaEnEdicion.querySelector('.precio-descripcion').value = desc;
   } else {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td><input type="date" value="${fecha}" class="precio-fecha"></td>
       <td><input type="number" value="${monto}" class="precio-monto"></td>
-      <td><input type="text"   value="${promocion}" class="precio-promocion"></td>
-      <td><input type="text"   value="${descripcion}" class="precio-descripcion"></td>
+      <td><input type="text" value="${promo}" class="precio-promocion" placeholder="ej: 2x1"></td>
+      <td><input type="text" value="${desc}" class="precio-descripcion" placeholder="Detalle"></td>
       <td>
         <div class="acciones-tabla">
           <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
@@ -55,7 +55,7 @@ export function agregarPrecioDelModal() {
     row.querySelector('.btn-editar').addEventListener('click', () => editarPrecio(row));
     document.getElementById('precios-rows').appendChild(row);
   }
-  
+
   programarActualizacion();
   notificarConfirmacion();
   cerrarModalPrecio();
@@ -74,7 +74,6 @@ export function editarPrecio(row) {
 export function abrirModalActividad() {
   filaEnEdicion = null;
   document.getElementById('form-actividad').reset();
-  document.getElementById('actividad-enlace-group').style.display = 'none';
   const fb = document.getElementById('feedback-actividad-img');
   if (fb) { fb.className = 'upload-feedback'; fb.style.display = 'none'; }
   const lista = document.getElementById('actividadImagenesLista');
@@ -89,14 +88,20 @@ export function cerrarModalActividad() {
 export function agregarActividadDelModal() {
   const titulo      = document.getElementById('actividad-titulo').value.trim();
   const tipo        = document.getElementById('actividad-tipo').value.trim();
-  const descripcion = document.getElementById('actividad-descripcion').value.trim();
   const fecha       = document.getElementById('actividad-fecha').value;
   const hora        = document.getElementById('actividad-hora').value;
   const lugar       = document.getElementById('actividad-lugar').value.trim();
-  const imagenes = Array.from(document.querySelectorAll('#actividadImagenesLista .actividad-img-url')).map(i => i.value.trim()).filter(u => u);
+  const descripcion = document.getElementById('actividad-descripcion').value.trim();
   const esGratis    = document.getElementById('actividad-es-gratis').checked;
   const reqOnline   = document.getElementById('actividad-requiere-online').checked;
   const enlace      = document.getElementById('actividad-enlace').value.trim();
+
+  // Recopilar imagenes
+  const imagenes = [];
+  document.querySelectorAll('.actividad-img-url').forEach(inpt => {
+    const val = inpt.value.trim();
+    if (val) imagenes.push(val);
+  });
 
   if (!titulo || !tipo || !fecha) { alert('Completa título, tipo y fecha'); return; }
 
@@ -109,6 +114,13 @@ export function agregarActividadDelModal() {
     const spanGratis = filaEnEdicion.querySelector('.act-gratis');
     spanGratis.setAttribute('data-value', esGratis);
     spanGratis.textContent = esGratis ? '✅' : '❌';
+    
+    // Actualizar descripción visible
+    const descCell = filaEnEdicion.querySelectorAll('td')[5];
+    if (descCell) {
+        descCell.innerHTML = `<div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion}">${descripcion || '-'}</div>`;
+    }
+
     filaEnEdicion.querySelector('.act-descripcion').value = descripcion;
     filaEnEdicion.querySelector('.act-imagenes').value = JSON.stringify(imagenes);
     filaEnEdicion.querySelector('.act-requiere-online').setAttribute('data-value', reqOnline);
@@ -121,6 +133,11 @@ export function agregarActividadDelModal() {
       <td><input type="date" value="${fecha}"  class="act-fecha"></td>
       <td><input type="time" value="${hora}"   class="act-hora"></td>
       <td><input type="text" value="${lugar}"  class="act-lugar" placeholder="Lugar/escenario"></td>
+      <td>
+        <div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion}">
+          ${descripcion || '<span style="color:#ccc;">-</span>'}
+        </div>
+      </td>
       <td style="text-align:center;font-size:18px;">
           <span class="act-gratis" data-value="${esGratis}">${esGratis ? '✅' : '❌'}</span>
       </td>
@@ -232,21 +249,27 @@ export function agregarExpositorDelModal() {
   });
   const imagenesJSON = JSON.stringify(urls);
 
-  if (!nombre || !rubro || !ubicacion) { alert('Completa nombre, rubro y ubicación'); return; }
+  if (!nombre || !rubro || !ubicacion) { alert('Completa nombre, categoría y ubicación'); return; }
 
   if (filaEnEdicion) {
     filaEnEdicion.querySelector('.exp-nombre').value = nombre;
-    filaEnEdicion.querySelector('.exp-rubro').value = rubro;
+    filaEnEdicion.querySelector('.exp-tipo').value = rubro;
     filaEnEdicion.querySelector('.exp-ubicacion').value = ubicacion;
     filaEnEdicion.querySelector('.exp-descripcion').value = descripcion;
     filaEnEdicion.querySelector('.exp-imagenes').value = imagenesJSON;
     filaEnEdicion.querySelector('.exp-video').value = video;
 
+    // Actualizar descripción visible
+    const descCell = filaEnEdicion.querySelectorAll('td')[3];
+    if (descCell) {
+        descCell.innerHTML = `<div style="max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion}">${descripcion || '-'}</div>`;
+    }
+
     // Actualizar badges visuales
     const cells = filaEnEdicion.querySelectorAll('td');
     const numImg = urls.length;
-    cells[3].innerHTML = numImg > 0 ? `<span class="badge" style="background:#27ae60; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">${numImg} img</span>` : '<span style="color:#ccc;">-</span>';
-    cells[4].innerHTML = video ? `<span class="badge" style="background:#3498db; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
+    cells[4].innerHTML = numImg > 0 ? `<span class="badge" style="background:#27ae60; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">${numImg} img</span>` : '<span style="color:#ccc;">-</span>';
+    cells[5].innerHTML = video ? `<span class="badge" style="background:#3498db; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
   } else {
     const row = document.createElement('tr');
     
@@ -257,8 +280,13 @@ export function agregarExpositorDelModal() {
 
     row.innerHTML = `
       <td><input type="text" value="${nombre}"   class="exp-nombre"></td>
-      <td><input type="text" value="${rubro}"    class="exp-rubro"></td>
+      <td><input type="text" value="${rubro}"    class="exp-tipo"></td>
       <td><input type="text" value="${ubicacion}"class="exp-ubicacion"></td>
+      <td>
+        <div style="max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion}">
+          ${descripcion || '<span style="color:#ccc;">-</span>'}
+        </div>
+      </td>
       <td style="text-align:center;">${imgBadge}</td>
       <td style="text-align:center;">${videoBadge}</td>
       <td>
@@ -284,7 +312,7 @@ export function agregarExpositorDelModal() {
 export function editarExpositor(row) {
   filaEnEdicion = row;
   document.getElementById('expositor-nombre').value = row.querySelector('.exp-nombre').value;
-  document.getElementById('expositor-rubro').value = row.querySelector('.exp-rubro').value;
+  document.getElementById('expositor-rubro').value = row.querySelector('.exp-tipo').value;
   document.getElementById('expositor-ubicacion').value = row.querySelector('.exp-ubicacion').value;
   document.getElementById('expositor-descripcion').value = row.querySelector('.exp-descripcion').value;
   document.getElementById('expositor-video').value = row.querySelector('.exp-video').value;
@@ -400,4 +428,3 @@ export function editarImagen(row) {
 
   document.getElementById('modal-imagen').style.display = 'flex';
 }
-

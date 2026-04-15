@@ -56,7 +56,9 @@ export function guardarDatosPreview() {
         color_texto_contacto: get('color_texto_contacto') || '#2c1a0e',
         color_enlace_contacto: get('color_enlace_contacto') || '#8b5a2b',
         color_fondo_footer: get('color_fondo_footer') || '#8b5a2b',
-        color_texto_footer: get('color_texto_footer') || '#ffffff'
+        color_texto_footer: get('color_texto_footer') || '#ffffff',
+        color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
+        color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee'
     };
 
     // ─── Precios ─────────────────────────────────────────────────────────────
@@ -106,14 +108,14 @@ export function guardarDatosPreview() {
 
         return {
             nombre: row.querySelector('.exp-nombre')?.value || '',
-            rubro: row.querySelector('.exp-rubro')?.value || '',
+            rubro: row.querySelector('.exp-tipo')?.value || '',
             ubicacion: row.querySelector('.exp-ubicacion')?.value || '',
             descripcion: row.querySelector('.exp-descripcion')?.value || '',
 
             // 🔥 Compatibilidad total
             imagenes: imagenes,
             imagen_logo: imagenLogo,
-            logo: imagenLogo,
+            logo: imagenes, // <--- CAMBIO CLAVE: Pasar todo el array para el carrusel
 
             video: row.querySelector('.exp-video')?.value || '',
             video_url: row.querySelector('.exp-video')?.value || ''

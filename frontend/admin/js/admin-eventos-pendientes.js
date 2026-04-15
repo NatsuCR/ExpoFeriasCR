@@ -250,6 +250,7 @@ class AdminEventosPendientes {
         ubicacion: evento.ubicacion,
         provincia: evento.provincia,
         imagen_portada: (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/')) ? '/' + evento.imagen_portada : evento.imagen_portada,
+        horario_imagen: (evento.horario_imagen && !evento.horario_imagen.startsWith('http') && !evento.horario_imagen.startsWith('/')) ? '/' + evento.horario_imagen : evento.horario_imagen,
         mapa_embed: evento.mapa_embed,
         color_primario: evento.color_primario || '#C8102E',
         color_secundario: evento.color_secundario || '#0033A0',
@@ -271,17 +272,38 @@ class AdminEventosPendientes {
         color_fondo_footer: evento.color_fondo_footer || '#C8102E',
         color_texto_footer: evento.color_texto_footer || '#ffffff',
         color_titulo_h3: evento.color_titulo_h3 || '#2c1a0e',
+        color_buscador_expositores: evento.color_buscador_expositores || '#ffffff',
+        color_borde_buscador_expositores: evento.color_borde_buscador_expositores || '#eeeeee',
         precios: evento.precios || [],
-        actividades: (evento.actividades || []).map(act => ({
-          ...act,
-          // Asegurar que imagen sea un array si viene como JSON string
-          imagen: (typeof act.imagen === 'string' && act.imagen.startsWith('[')) ? JSON.parse(act.imagen) : act.imagen
-        })),
-        expositores: (evento.expositores || []).map(exp => ({
-          ...exp,
-          logo: exp.imagen_logo || exp.logo, // Sincronizar nombre de columna
-          video: exp.video_url || exp.video   // Sincronizar nombre de columna
-        })),
+        actividades: (evento.actividades || []).map(act => {
+          let imgs = [];
+          if (Array.isArray(act.imagen)) imgs = act.imagen;
+          else if (typeof act.imagen === 'string' && act.imagen.startsWith('[')) {
+            try { imgs = JSON.parse(act.imagen); } catch (e) { imgs = [act.imagen]; }
+          } else if (typeof act.imagen === 'string' && act.imagen.includes(',')) {
+            imgs = act.imagen.split(',').map(s => s.trim()).filter(Boolean);
+          } else if (act.imagen) {
+            imgs = [act.imagen];
+          }
+          return { ...act, imagenes: imgs };
+        }),
+        expositores: (evento.expositores || []).map(exp => {
+          let logos = [];
+          const rawLogo = exp.imagen_logo || exp.logo;
+          if (Array.isArray(rawLogo)) logos = rawLogo;
+          else if (typeof rawLogo === 'string' && rawLogo.trim().startsWith('[')) {
+            try { logos = JSON.parse(rawLogo); } catch (e) { logos = [rawLogo]; }
+          } else if (typeof rawLogo === 'string' && rawLogo.includes(',')) {
+            logos = rawLogo.split(',').map(s => s.trim()).filter(Boolean);
+          } else if (rawLogo) {
+            logos = [rawLogo];
+          }
+          return { 
+            ...exp, 
+            logo: logos, // Se envía como array para mayor robustez
+            video: exp.video_url || exp.video 
+          };
+        }),
         galeria: evento.galeria || []
       };
 
@@ -303,7 +325,7 @@ class AdminEventosPendientes {
         const cs = '#0033A0'; // Azul marca
         const imgUrl = (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/'))
           ? '/' + evento.imagen_portada
-          : (evento.imagen_portada || '/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');
+          : (evento.imagen_portada || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');
 
         return `
           <div class="evento-card" style="--color-primary: ${cp}; --color-secondary: ${cs}; width:250px; margin:0 auto; box-shadow:0 4px 10px rgba(0,0,0,0.1); border-top:5px solid ${cp}; border-radius:8px; overflow:hidden; background:white;">

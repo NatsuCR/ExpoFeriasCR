@@ -151,6 +151,7 @@ function initSocialShare() {
     const facebook = document.getElementById('shareFacebook');
     const twitter = document.getElementById('shareTwitter');
     const whatsapp = document.getElementById('shareWhatsapp');
+    const telegram = document.getElementById('shareTelegram');
     const copy = document.getElementById('shareCopy');
 
     const url = window.location.href;
@@ -160,7 +161,8 @@ function initSocialShare() {
     if (facebook) facebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
     if (twitter) twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     if (whatsapp) whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
-    
+    if (telegram) telegram.href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+
     if (copy) {
         copy.onclick = () => {
             navigator.clipboard.writeText(url).then(() => {
@@ -224,6 +226,10 @@ function cargarEventoDesdePreview(datos) {
 
     if (datos.color_texto) document.body.style.color = datos.color_texto;
 
+    // Color Fondo y Texto Share (Preview)
+    r.style.setProperty('--color-fondo-share', datos.color_fondo_share || 'rgba(255, 255, 255, 0.5)');
+    r.style.setProperty('--color-texto-share', datos.color_texto_share || '#2c1a0e');
+
     if (datos.color_hero_overlay) {
         const overlay = document.querySelector('.hero-overlay');
         if (overlay) overlay.style.backgroundColor = datos.color_hero_overlay;
@@ -273,7 +279,7 @@ function cargarEventoDesdePreview(datos) {
         }
     }
 
-    
+
     // ──── ENTRADAS (PREVIEW) ────
     const entradasParrafo = document.getElementById('entradasTexto');
     if (entradasParrafo) {

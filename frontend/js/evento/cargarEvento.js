@@ -138,6 +138,12 @@ export async function cargarEvento(slug) {
         if (cf) document.documentElement.style.setProperty('--evento-fondo', cf);
         if (ct) document.body.style.color = ct;
 
+        // Color Fondo y Texto Share
+        const cfs = evento.colorFondoShare || evento.color_fondo_share || 'rgba(255, 255, 255, 0.5)';
+        const ctshare = evento.colorTextoShare || evento.color_texto_share || '#2c1a0e';
+        document.documentElement.style.setProperty('--color-fondo-share', cfs);
+        document.documentElement.style.setProperty('--color-texto-share', ctshare);
+
         // Overlay Hero
         const cho = evento.color_hero_overlay || evento.colorHeroOverlay;
         if (cho) {
@@ -163,9 +169,9 @@ export async function cargarEvento(slug) {
         }
 
         // Títulos Sección (h2)
-        const cts = evento.color_titulo_seccion || evento.colorTituloSeccion;
-        if (cts) {
-            document.querySelectorAll('h2').forEach(h2 => h2.style.color = cts);
+        const ctseccion = evento.color_titulo_seccion || evento.colorTituloSeccion;
+        if (ctseccion) {
+            document.querySelectorAll('h2').forEach(h2 => h2.style.color = ctseccion);
         }
 
         // Menú

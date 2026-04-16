@@ -10,6 +10,7 @@ class Evento {
     colorFondoContacto, colorTextoContacto, colorEnlaceContacto,
     colorFondoFooter, colorTextoFooter,
     colorTituloH3, colorBuscadorExpositores, colorBordeBuscadorExpositores,
+    color_fondo_share, color_texto_share,
     createdAt, updatedAt
   ) {
     this.id = id;
@@ -48,6 +49,8 @@ class Evento {
     this.colorTituloH3 = colorTituloH3;
     this.colorBuscadorExpositores = colorBuscadorExpositores;
     this.colorBordeBuscadorExpositores = colorBordeBuscadorExpositores;
+    this.colorFondoShare = color_fondo_share;
+    this.colorTextoShare = color_texto_share;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -69,6 +72,7 @@ class Evento {
       row.color_fondo_contacto, row.color_texto_contacto, row.color_enlace_contacto,
       row.color_fondo_footer, row.color_texto_footer,
       row.color_titulo_h3, row.color_buscador_expositores, row.color_borde_buscador_expositores,
+      row.color_fondo_share, row.color_texto_share,
       row.created_at, row.updated_at
     );
   }

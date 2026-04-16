@@ -110,14 +110,21 @@ export class CrearEvento {
         'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
         'color_titulo_h3',
         'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
-        'color_fondo_footer', 'color_texto_footer'
+        'color_fondo_footer', 'color_texto_footer',
+        'color_fondo_share', 'color_texto_share'
         // ELIMINADOS: color_buscador_expositores, color_borde_buscador_expositores
       ];
 
       camposBasicos.forEach(k => {
         const el = document.getElementById(k);
-        if (el && evento[k] !== undefined && evento[k] !== null) {
-          let value = evento[k];
+        let value = evento[k];
+
+        // Si no está en 'evento', probar en 'data.shareConfig' (nueva tabla)
+        if (value === undefined && data.shareConfig && data.shareConfig[k] !== undefined) {
+          value = data.shareConfig[k];
+        }
+
+        if (el && value !== undefined && value !== null) {
           // Formatear fechas para input type="date"
           if ((k === 'fecha_inicio' || k === 'fecha_fin') && typeof value === 'string') {
             value = value.slice(0, 10);
@@ -416,7 +423,8 @@ export class CrearEvento {
       'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
       'color_titulo_h3',
       'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
-      'color_fondo_footer', 'color_texto_footer'
+      'color_fondo_footer', 'color_texto_footer',
+      'color_fondo_share', 'color_texto_share'
     ];
     camposWatch.forEach(id => {
       const el = document.getElementById(id);
@@ -650,6 +658,8 @@ export class CrearEvento {
       color_enlace_contacto: get('color_enlace_contacto') || '#8b5a2b',
       color_fondo_footer: get('color_fondo_footer') || '#8b5a2b',
       color_texto_footer: get('color_texto_footer') || '#ffffff',
+      color_fondo_share: get('color_fondo_share') || 'rgba(255, 255, 255, 0.5)',
+      color_texto_share: get('color_texto_share') || '#2c1a0e',
       activo: document.getElementById('activo')?.checked ? 1 : 0
     };
 

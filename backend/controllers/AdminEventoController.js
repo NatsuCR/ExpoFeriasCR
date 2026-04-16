@@ -23,12 +23,18 @@ class AdminEventoController {
       const [expositores] = await pool.query('SELECT * FROM expositores WHERE evento_id = ? ORDER BY nombre', [id]);
       const [galeria] = await pool.query('SELECT * FROM evento_galeria WHERE evento_id = ? ORDER BY orden', [id]);
 
+      const [shareConfig] = await pool.query('SELECT color_fondo_share, color_texto_share FROM evento_compartir WHERE evento_id = ?', [id]);
+
       res.json({
         evento,
         actividades,
         precios,
         expositores,
-        galeria
+        galeria,
+        shareConfig: shareConfig[0] || {
+          color_fondo_share: 'rgba(255, 255, 255, 0.5)',
+          color_texto_share: '#2c1a0e'
+        }
       });
     } catch (error) {
       console.error(error);
@@ -48,6 +54,7 @@ class AdminEventoController {
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
       color_titulo_h3,
+      color_fondo_share, color_texto_share,
       precios, actividades, expositores, galeria
     } = req.body;
 
@@ -151,6 +158,18 @@ class AdminEventoController {
         }
       }
 
+      // Guardar configuración de compartir
+      await pool.query(
+        'INSERT INTO evento_compartir (evento_id, color_fondo_share, color_texto_share) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE color_fondo_share = ?, color_texto_share = ?',
+        [
+          eventoId,
+          color_fondo_share || 'rgba(255, 255, 255, 0.5)',
+          color_texto_share || '#2c1a0e',
+          color_fondo_share || 'rgba(255, 255, 255, 0.5)',
+          color_texto_share || '#2c1a0e'
+        ]
+      );
+
       const [newEvent] = await pool.query('SELECT * FROM eventos WHERE id = ?', [eventoId]);
       res.status(201).json(newEvent[0]);
     } catch (error) {
@@ -172,6 +191,7 @@ class AdminEventoController {
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
       color_titulo_h3,
+      color_fondo_share, color_texto_share,
       precios, actividades, expositores, galeria
     } = req.body;
 
@@ -255,6 +275,18 @@ class AdminEventoController {
           }
         }
       }
+
+      // Actualizar configuración de compartir
+      await pool.query(
+        'INSERT INTO evento_compartir (evento_id, color_fondo_share, color_texto_share) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE color_fondo_share = ?, color_texto_share = ?',
+        [
+          id,
+          color_fondo_share || 'rgba(255, 255, 255, 0.5)',
+          color_texto_share || '#2c1a0e',
+          color_fondo_share || 'rgba(255, 255, 255, 0.5)',
+          color_texto_share || '#2c1a0e'
+        ]
+      );
 
       const [updated] = await pool.query('SELECT * FROM eventos WHERE id = ?', [id]);
       res.json(updated[0]);

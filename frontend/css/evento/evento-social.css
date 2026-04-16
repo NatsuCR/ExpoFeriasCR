@@ -2,7 +2,7 @@
 .social-share {
     margin: 20px 0;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--color-fondo-share, rgba(255, 255, 255, 0.5));
     backdrop-filter: blur(10px);
     border-radius: 12px;
     border: 1px solid rgba(0, 0, 0, 0.05);
@@ -15,7 +15,7 @@
 .social-share h3 {
     margin: 0;
     font-size: 1.1rem;
-    color: var(--evento-primario);
+    color: var(--color-texto-share, var(--evento-primario));
     font-family: 'Playfair Display', serif;
 }
 
@@ -48,8 +48,9 @@
 
 .share-btn.whatsapp { background-color: #25D366; }
 .share-btn.facebook { background-color: #1877F2; }
-.share-btn.twitter { background-color: #1DA1F2; }
-.share-btn.copy-link { background-color: #6c757d; }
+.share-btn.telegram { background-color: #0088cc; }
+.share-btn.twitter { background-color: #000000; }
+.share-btn.copy-link { background-color: #007bff; }
 
 .share-btn.copy-link.success {
     background-color: #28a745;

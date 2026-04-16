@@ -68,7 +68,13 @@ class EventoService {
   }
 
   async obtenerEventoPorSlug(slug) {
-    const [rows] = await pool.query('SELECT * FROM eventos WHERE slug = ?', [slug]);
+    const query = `
+      SELECT e.*, ec.color_fondo_share, ec.color_texto_share
+      FROM eventos e
+      LEFT JOIN evento_compartir ec ON e.id = ec.evento_id
+      WHERE e.slug = ?
+    `;
+    const [rows] = await pool.query(query, [slug]);
     if (rows.length === 0) return null;
     return Evento.fromDatabase(rows[0]);
   }

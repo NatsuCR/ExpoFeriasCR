@@ -143,6 +143,7 @@ class UsuarioEventsController {
         [usuarioId]
       );
 
+      res.set('Cache-Control', 'no-store');
       res.json({ eventos });
     } catch (error) {
       console.error('Error al obtener mis eventos:', error);

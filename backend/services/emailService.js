@@ -141,7 +141,7 @@ const emailService = {
    */
   notificarAprobacion: async (email, nombre, nombreEvento, idEvento, slugEvento) => {
     try {
-      const eventoLink = `${process.env.APP_URL || 'http://localhost:3000'}/evento.html?evento=${slugEvento}`;
+      const miCuentaLink = `${process.env.APP_URL || 'http://localhost:3000'}/mi-cuenta.html`;
       const result = await transporter.sendMail({
         from: process.env.MAIL_FROM,
         to: email,
@@ -158,8 +158,8 @@ const emailService = {
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${eventoLink}" style="background-color: #8b5a2b; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
-                Ver mi evento
+              <a href="${miCuentaLink}" style="background-color: #0033A0; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                Ir a mi cuenta
               </a>
             </div>
 
@@ -201,7 +201,7 @@ const emailService = {
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${msCuentaLink}" style="background-color: #8b5a2b; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+              <a href="${msCuentaLink}" style="background-color: #0033A0; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
                 Editar tu evento
               </a>
             </div>

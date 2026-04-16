@@ -119,7 +119,8 @@ class MiCuenta {
   async cargarEventos() {
     try {
       const response = await fetch('/api/eventos/mis-eventos', {
-        headers: { 'Authorization': `Bearer ${this.token}` }
+        headers: { 'Authorization': `Bearer ${this.token}` },
+        cache: 'no-store'
       });
 
       if (!response.ok) {

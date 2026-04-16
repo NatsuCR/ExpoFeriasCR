@@ -179,10 +179,10 @@ if (btnExportarZip) {
             });
             if (!response.ok) throw new Error('Error al generar ZIP');
             const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = 'estadisticas_visitas.zip';
+            const blobUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = blobUrl; a.download = 'estadisticas_visitas.zip';
             document.body.appendChild(a); a.click(); a.remove();
-            window.URL.revokeObjectURL(url);
+            window.URL.revokeObjectURL(blobUrl);
         } catch (error) {
             console.error(error);
             alert('Error al exportar los datos');

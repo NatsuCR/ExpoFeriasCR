@@ -374,13 +374,11 @@ export function cerrarModalImagen() {
 
 export function agregarImagenDelModal() {
   const url   = document.getElementById('imagen-url').value.trim();
-  const orden = document.getElementById('imagen-orden').value || '0';
 
   if (!url) { alert('Ingresa o sube una imagen'); return; }
 
   if (filaEnEdicion) {
     filaEnEdicion.querySelector('.gal-url').value = url;
-    filaEnEdicion.querySelector('.gal-orden').value = orden;
     const imgEl = filaEnEdicion.querySelector('img');
     if (imgEl) imgEl.src = url;
   } else {
@@ -392,7 +390,6 @@ export function agregarImagenDelModal() {
              onerror="this.style.display='none'">
       </td>
       <td><input type="text"   value="${url}"   class="gal-url"   style="width:100%;max-width:220px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
-      <td><input type="number" value="${orden}" class="gal-orden" style="width:60px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
       <td>
         <div class="acciones-tabla">
           <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
@@ -416,7 +413,6 @@ export function agregarImagenDelModal() {
 export function editarImagen(row) {
   filaEnEdicion = row;
   document.getElementById('imagen-url').value = row.querySelector('.gal-url').value;
-  document.getElementById('imagen-orden').value = row.querySelector('.gal-orden').value;
 
   const wrap = document.getElementById('preview-galeria-img-wrap');
   const imgPreview = document.getElementById('preview-galeria-img');

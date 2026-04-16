@@ -15,6 +15,7 @@ const dataKey = urlParams.get('dataKey');
 let activitiesCarouselIndex = 0;
 let expositorsCarouselIndex = 0;
 let galleryCarouselIndex = 0;
+let heroInterval = null;
 
 function initCarouselControls() {
     // Actividades
@@ -101,21 +102,33 @@ function initHeroCarousel() {
         slides.forEach((s, i) => s.style.display = (i === galleryCarouselIndex) ? 'block' : 'none');
     }
 
+    function startAutoPlay() {
+        if (heroInterval) clearInterval(heroInterval);
+        heroInterval = setInterval(next, 10000);
+    }
+
+    function next() {
+        const slides = slidesWrap.querySelectorAll('.hero-slide');
+        if (slides.length <= 1) return;
+        galleryCarouselIndex = (galleryCarouselIndex + 1) % slides.length;
+        updateSlides();
+        startAutoPlay(); // Reiniciar el timer tras avanzar
+    }
+
     if (prevBtn) prevBtn.addEventListener('click', () => {
         const slides = slidesWrap.querySelectorAll('.hero-slide');
-        if (slides.length === 0) return;
+        if (slides.length <= 1) return;
         galleryCarouselIndex = (galleryCarouselIndex - 1 + slides.length) % slides.length;
         updateSlides();
+        startAutoPlay(); // Reiniciar el timer tras click manual
     });
 
     if (nextBtn) nextBtn.addEventListener('click', () => {
-        const slides = slidesWrap.querySelectorAll('.hero-slide');
-        if (slides.length === 0) return;
-        galleryCarouselIndex = (galleryCarouselIndex + 1) % slides.length;
-        updateSlides();
+        next();
     });
 
     updateSlides();
+    startAutoPlay();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -434,7 +447,7 @@ function cargarEventoDesdePreview(datos) {
         const slides = document.getElementById('heroSlides');
         if (slides) {
             slides.innerHTML = '';
-            const sorted = datos.galeria.slice().sort((a, b) => (a.orden || 0) - (b.orden || 0));
+            const sorted = datos.galeria.slice(); // Ya no ordenamos por campo 'orden'
             sorted.forEach((g, idx) => {
                 const div = document.createElement('div');
                 div.className = 'hero-slide';
@@ -447,9 +460,8 @@ function cargarEventoDesdePreview(datos) {
                 div.style.display = idx === 0 ? 'block' : 'none';
                 slides.appendChild(div);
             });
-            // activar índices del carrusel
+            // activar índices del carrusel (el inicio real lo hace el timeout del main)
             galleryCarouselIndex = 0;
-            initHeroCarousel();
         }
     }
 }

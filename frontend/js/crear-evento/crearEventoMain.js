@@ -263,7 +263,6 @@ export class CrearEvento {
             tr.innerHTML = `
               <td><img src="${g.imagen_url}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #eee;" onerror="this.style.display='none'"></td>
               <td><input type="text" class="gal-url" value="${g.imagen_url}"></td>
-              <td><input type="number" class="gal-orden" value="${g.orden || 0}"></td>
               <td>
                 <div class="acciones-tabla"><button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button><button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button></div>
               </td>
@@ -710,8 +709,7 @@ export class CrearEvento {
     }).filter(e => e.nombre);
 
     const galeria = recolectarTabla('#galeria-rows tr', {
-      imagen_url: '.gal-url',
-      orden: '.gal-orden'
+      imagen_url: '.gal-url'
     }).filter(g => g.imagen_url);
 
     if (btn) { btn.innerHTML = '<span class="uploading-spinner"></span> Enviando…'; btn.disabled = true; }

@@ -117,11 +117,10 @@ class RelatedTablesController {
     for (const img of galeria) {
       if (img.imagen_url) {
         await pool.query(
-          'INSERT INTO evento_galeria (evento_id, imagen_url, orden) VALUES (?, ?, ?)',
+          'INSERT INTO evento_galeria (evento_id, imagen_url) VALUES (?, ?)',
           [
             eventoId,
-            img.imagen_url,
-            img.orden || 0
+            img.imagen_url
           ]
         );
       }

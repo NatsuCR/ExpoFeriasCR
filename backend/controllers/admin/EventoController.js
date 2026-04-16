@@ -38,7 +38,7 @@ class AdminEventoController {
       const [actividades] = await pool.query('SELECT * FROM actividades WHERE evento_id = ? ORDER BY fecha, hora', [id]);
       const [precios] = await pool.query('SELECT * FROM precios_entrada WHERE evento_id = ? ORDER BY fecha', [id]);
       const [expositores] = await pool.query('SELECT * FROM expositores WHERE evento_id = ? ORDER BY nombre', [id]);
-      const [galeria] = await pool.query('SELECT * FROM evento_galeria WHERE evento_id = ? ORDER BY orden', [id]);
+      const [galeria] = await pool.query('SELECT * FROM evento_galeria WHERE evento_id = ?', [id]);
 
       res.json({ evento, actividades, precios, expositores, galeria });
     } catch (error) {

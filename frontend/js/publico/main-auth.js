@@ -88,6 +88,11 @@ function actualizarNavbarAuth() {
           <a href="/crear-evento.html" class="dropdown-item">
             <i class="fas fa-plus"></i> Crear Evento
           </a>
+          ${usuario.rol === 'admin' ? `
+            <a href="/admin/dashboard.html" class="dropdown-item" style="color: #c8102e; font-weight: bold;">
+              <i class="fas fa-user-shield"></i> Ir a Admin
+            </a>
+          ` : ''}
           <hr class="dropdown-divider">
           <button id="btn-logout" class="dropdown-item btn-logout">
             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión

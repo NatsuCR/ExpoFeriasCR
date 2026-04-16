@@ -127,6 +127,25 @@ class MiCuenta {
   cargarPerfil() {
     document.getElementById('perfil-nombre').textContent = this.usuario.nombre;
     document.getElementById('perfil-email').textContent = this.usuario.email;
+    
+    // Si es administrador, mostrar botón para ir al panel
+    if (this.usuario.rol === 'admin') {
+      const perfilAcciones = document.querySelector('.perfil-acciones');
+      if (perfilAcciones) {
+        const btnAdmin = document.createElement('a');
+        btnAdmin.href = '/admin/dashboard.html';
+        btnAdmin.className = 'btn-primary';
+        btnAdmin.style.marginBottom = '10px';
+        btnAdmin.style.textDecoration = 'none';
+        btnAdmin.style.display = 'flex';
+        btnAdmin.style.alignItems = 'center';
+        btnAdmin.style.gap = '8px';
+        btnAdmin.style.justifyContent = 'center';
+        btnAdmin.style.backgroundColor = '#C8102E';
+        btnAdmin.innerHTML = '<i class="fas fa-user-shield"></i> Ir a Panel Admin';
+        perfilAcciones.prepend(btnAdmin);
+      }
+    }
   }
 
   async cargarEventos() {

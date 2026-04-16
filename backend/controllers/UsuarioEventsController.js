@@ -17,8 +17,7 @@ class UsuarioEventsController {
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_titulo_h3,
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
-      color_fondo_footer, color_texto_footer, color_buscador_expositores,
-      color_borde_buscador_expositores,
+      color_fondo_footer, color_texto_footer,
       precios, actividades, expositores, galeria
     } = req.body;
 
@@ -48,8 +47,8 @@ class UsuarioEventsController {
          color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
          color_titulo_h3,
          color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
-         color_fondo_footer, color_texto_footer, color_buscador_expositores, color_borde_buscador_expositores, estado, activo)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         color_fondo_footer, color_texto_footer, estado, activo)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           usuarioId, slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
           imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
@@ -60,7 +59,6 @@ class UsuarioEventsController {
           color_titulo_h3 || '#2c1a0e',
           color_fondo_contacto || '#f4e4c1', color_texto_contacto || '#2c1a0e', color_enlace_contacto || '#8b5a2b',
           color_fondo_footer || '#8b5a2b', color_texto_footer || '#ffffff',
-          color_buscador_expositores || '#ffffff', color_borde_buscador_expositores || '#eeeeee',
           'pendiente', 0
         ]
       );
@@ -349,7 +347,7 @@ class UsuarioEventsController {
       const evento = eventos[0];
 
       // Permitir edición si estado es pendiente, aprobado, finalizado, rechazado o edicion_pendiente
-      if (!['pendiente','aprobado','finalizado','rechazado','edicion_pendiente'].includes(evento.estado)) {
+      if (!['pendiente', 'aprobado', 'finalizado', 'rechazado', 'edicion_pendiente'].includes(evento.estado)) {
         return res.status(403).json({ error: 'No puedes editar este evento en su estado actual: ' + evento.estado });
       }
 
@@ -388,8 +386,7 @@ class UsuarioEventsController {
             color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
             color_titulo_h3 = ?,
             color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
-            color_fondo_footer = ?, color_texto_footer = ?, color_buscador_expositores = ?,
-            color_borde_buscador_expositores = ?,
+            color_fondo_footer = ?, color_texto_footer = ?,
             estado = 'pendiente'
            WHERE id = ?`,
           [
@@ -402,7 +399,6 @@ class UsuarioEventsController {
             body.color_titulo_h3 || '#2c1a0e',
             body.color_fondo_contacto || '#f4e4c1', body.color_texto_contacto || '#2c1a0e', body.color_enlace_contacto || '#8b5a2b',
             body.color_fondo_footer || '#8b5a2b', body.color_texto_footer || '#ffffff',
-            body.color_buscador_expositores || '#ffffff', body.color_borde_buscador_expositores || '#eeeeee',
             eventoId
           ]
         );
@@ -422,8 +418,8 @@ class UsuarioEventsController {
             if (acti.titulo) {
               await pool.query('INSERT INTO actividades (evento_id, titulo, tipo, fecha, hora, lugar, descripcion, imagen, es_gratis, requiere_entrada_online, enlace_venta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [eventoId, acti.titulo, acti.tipo || null, acti.fecha || null, acti.hora || null, acti.lugar || null, acti.descripcion || null,
-                 Array.isArray(acti.imagen) ? JSON.stringify(acti.imagen) : acti.imagen || null,
-                 acti.es_gratis || 0, acti.requiere_entrada_online || 0, acti.enlace_venta || null]);
+                  Array.isArray(acti.imagen) ? JSON.stringify(acti.imagen) : acti.imagen || null,
+                  acti.es_gratis || 0, acti.requiere_entrada_online || 0, acti.enlace_venta || null]);
             }
           }
         }
@@ -543,7 +539,7 @@ class UsuarioEventsController {
       if (rows[0].usuario_id !== usuarioId) {
         // En caso de que se añada soporte de rol administrador en este endpoint en el futuro
         if (req.user.rol !== 'admin') {
-           return res.status(403).json({ error: 'No tienes permiso para eliminar este evento' });
+          return res.status(403).json({ error: 'No tienes permiso para eliminar este evento' });
         }
       }
 

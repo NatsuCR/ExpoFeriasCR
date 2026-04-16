@@ -50,7 +50,7 @@
       <form id="form-registro" class="modal-auth-form">
         <div class="form-group">
           <label for="registro-nombre">Nombre Completo</label>
-          <input type="text" id="registro-nombre" name="nombre" placeholder="Tu nombre" required>
+          <input type="text" id="registro-nombre" name="nombre" placeholder="Tu nombre" autocomplete="name" required>
         </div>
 
         <div class="form-group">
@@ -107,7 +107,7 @@
         <form id="form-cambiar-password" class="modal-auth-form">
           <div class="form-group">
             <label for="reset-codigo">Código de 6 dígitos</label>
-            <input type="text" id="reset-codigo" name="codigo" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required>
+            <input type="text" id="reset-codigo" name="codigo" placeholder="123456" maxlength="6" pattern="[0-9]{6}" autocomplete="one-time-code" required>
           </div>
 
           <div class="form-group">

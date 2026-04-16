@@ -16,45 +16,6 @@ let activitiesCarouselIndex = 0;
 let expositorsCarouselIndex = 0;
 let galleryCarouselIndex = 0;
 
-// Helper global para "Ver más" / "Ver menos"
-window.toggleDesc = function (btn, isShow) {
-    const container = btn.parentElement;
-    if (isShow) {
-        container.querySelector('.desc-short').style.display = 'none';
-        container.querySelector('.desc-full').style.display = 'block';
-        btn.style.display = 'none';
-        container.querySelector('.btn-ver-menos').style.display = 'inline-block';
-    } else {
-        container.querySelector('.desc-full').style.display = 'none';
-        container.querySelector('.desc-short').style.display = 'block';
-        btn.style.display = 'none';
-        container.querySelector('.btn-ver-mas').style.display = 'inline-block';
-    }
-};
-
-window.formatDescription = function (text, forceFull = false) {
-    if (!text) return '';
-
-    // Si se fuerza completa, no truncamos
-    if (forceFull || text.length <= 100) {
-        return `
-            <div class="desc-container">
-                <p class="descripcion-texto descripcion desc-full" style="display: block; max-height: none; white-space: pre-wrap;">${text}</p>
-            </div>
-        `;
-    }
-
-    // Lógica con truncamiento y botones "Ver más"
-    const shortText = text.substring(0, 100) + '...';
-    return `
-        <div class="desc-container">
-            <p class="descripcion-texto descripcion desc-short">${shortText}</p>
-            <p class="descripcion-texto descripcion desc-full" style="display: none; white-space: pre-wrap;">${text}</p>
-            <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas">Ver más</button>
-            <button onclick="window.toggleDesc(this, false)" class="btn-ver-mas btn-ver-menos" style="display: none;">Ver menos</button>
-        </div>
-    `;
-};
 function initCarouselControls() {
     // Actividades
     let actPrev = document.getElementById('actividadesPrev');
@@ -182,8 +143,39 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarPrecios(slug);
         cargarExpositores(slug);
         cargarCarruselFondo(slug);
+        initSocialShare();
     }
 });
+
+function initSocialShare() {
+    const facebook = document.getElementById('shareFacebook');
+    const twitter = document.getElementById('shareTwitter');
+    const whatsapp = document.getElementById('shareWhatsapp');
+    const copy = document.getElementById('shareCopy');
+
+    const url = window.location.href;
+    const title = document.title;
+    const text = `¡Mira este evento en ExpoFeriasCR: ${title}!`;
+
+    if (facebook) facebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    if (twitter) twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    if (whatsapp) whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
+    
+    if (copy) {
+        copy.onclick = () => {
+            navigator.clipboard.writeText(url).then(() => {
+                const icon = copy.querySelector('i');
+                icon.className = 'fas fa-check';
+                copy.classList.add('success');
+                setTimeout(() => {
+                    icon.className = 'fas fa-link';
+                    copy.classList.remove('success');
+                }, 2000);
+            });
+        };
+    }
+}
+
 
 // Función para cargar datos de preview desde localStorage
 function cargarEventoDesdePreview(datos) {
@@ -218,7 +210,9 @@ function cargarEventoDesdePreview(datos) {
     if (datos.imagen_portada) {
         const slides = document.getElementById('heroSlides');
         if (slides) {
-            slides.innerHTML = `<div class="hero-slide active" style="background-image:url('${datos.imagen_portada}');background-size:cover;background-position:center;width:100%;height:100%;position:absolute;"></div>`;
+            slides.innerHTML = `<div class="hero-slide active" style="background-image:url('${datos.imagen_portada}');background-size:cover;background-position:center;width:100%;height:100%;position:absolute;">
+                <img src="${datos.imagen_portada}" alt="${datos.nombre}" style="display:none;" loading="lazy">
+            </div>`;
         }
     }
 
@@ -279,6 +273,26 @@ function cargarEventoDesdePreview(datos) {
         }
     }
 
+    
+    // ──── ENTRADAS (PREVIEW) ────
+    const entradasParrafo = document.getElementById('entradasTexto');
+    if (entradasParrafo) {
+        const tipoVenta = datos.tipo_venta || 'taquilla';
+        const urlVentaOnline = datos.url_venta_online || '';
+        let textoEntradas = '';
+        switch (tipoVenta) {
+            case 'online':
+                textoEntradas = `Entradas en línea: <a href="${urlVentaOnline}" target="_blank">Comprar aquí</a>`;
+                break;
+            case 'ambos':
+                textoEntradas = `Entradas en taquilla y en línea: <a href="${urlVentaOnline}" target="_blank">Comprar en línea</a>`;
+                break;
+            default:
+                textoEntradas = 'Entradas solo en taquilla del campo ferial';
+        }
+        entradasParrafo.innerHTML = textoEntradas;
+    }
+
     const footer = document.querySelector('footer');
     if (footer) {
         if (datos.color_fondo_footer) footer.style.backgroundColor = datos.color_fondo_footer;
@@ -335,7 +349,7 @@ function cargarEventoDesdePreview(datos) {
                     <div class="mini-carrusel" data-idx="0">
                         <button class="mini-btn mini-prev" style="display: ${showButtons}">❮</button>
                         <div class="mini-carrusel-track">
-                             ${images.map((src, i) => `<div class="mini-slide ${i === 0 ? 'activa' : ''}"><img src="${src}" alt="${act.titulo}" class="card-img-principal"></div>`).join('')}
+                             ${images.map((src, i) => `<div class="mini-slide ${i === 0 ? 'activa' : ''}"><img src="${src}" alt="${act.titulo}" class="card-img-principal" loading="lazy"></div>`).join('')}
                         </div>
                         <button class="mini-btn mini-next" style="display: ${showButtons}">❯</button>
                     </div>` : '<div class="placeholder-img" style="height:200px;background:#f0f0f0;border-radius:8px;"></div>';
@@ -385,7 +399,7 @@ function cargarEventoDesdePreview(datos) {
     if (datos.horario_imagen) {
         const horarioDiv = document.getElementById('horarioContainer');
         if (horarioDiv) {
-            horarioDiv.innerHTML = `<img src="${datos.horario_imagen}" alt="Horario del evento" style="max-width:100%; border-radius:8px;">`;
+            horarioDiv.innerHTML = `<img src="${datos.horario_imagen}" alt="Horario del evento" style="max-width:100%; border-radius:8px;" loading="lazy">`;
         }
     } else {
         const horarioDiv = document.getElementById('horarioContainer');

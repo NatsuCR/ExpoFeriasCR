@@ -252,12 +252,14 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: center;
-    word-break: break-all;
-    word-wrap: break-word;
+    text-align: left; /* Alineación natural */
+    word-break: normal; /* No romper palabras a la mitad */
     overflow-wrap: break-word;
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    line-height: 1.6; /* Mejor interlineado */
+    color: #444; /* Color más suave */
+    font-size: 0.95rem;
 }
 
 .actividad-card.expandida .descripcion-texto,
@@ -268,10 +270,10 @@
     -webkit-line-clamp: unset;
     line-clamp: unset;
     overflow: visible;
-    text-align: center;
-    word-break: break-all;
-    word-wrap: break-word;
+    text-align: left;
+    word-break: normal;
     overflow-wrap: break-word;
+    line-height: 1.6;
 }
 
 .actividad-card .btn-ver-mas,

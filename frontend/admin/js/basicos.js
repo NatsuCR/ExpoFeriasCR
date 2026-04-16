@@ -5,8 +5,8 @@ async function cargarDatosEvento() {
     document.getElementById('slug').value = evento.slug;
     document.getElementById('nombre').value = evento.nombre;
     document.getElementById('descripcion').value = evento.descripcion || '';
-    document.getElementById('fecha_inicio').value = evento.fecha_inicio?.slice(0,10) || '';
-    document.getElementById('fecha_fin').value = evento.fecha_fin?.slice(0,10) || '';
+    document.getElementById('fecha_inicio').value = evento.fecha_inicio?.slice(0, 10) || '';
+    document.getElementById('fecha_fin').value = evento.fecha_fin?.slice(0, 10) || '';
     document.getElementById('provincia').value = evento.provincia || '';
     document.getElementById('ubicacion').value = evento.ubicacion || '';
     document.getElementById('imagen_portada').value = evento.imagen_portada || '';

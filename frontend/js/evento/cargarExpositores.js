@@ -8,6 +8,7 @@ const ORDEN_CATEGORIAS = [
     'Bar',
     'Chinamos',
     'Moda',
+    'Artesanía',
     'Administración',
     'Tecnología',
     'Construcción',
@@ -23,7 +24,7 @@ function parseImagenes(valor) {
     if (!valor) return [];
     // Caso 1: Ya es un array
     if (Array.isArray(valor)) return valor.filter(Boolean);
-    
+
     // Caso 2: Es un string JSON
     if (typeof valor === 'string' && valor.trim().startsWith('[')) {
         try {
@@ -39,18 +40,18 @@ function parseImagenes(valor) {
         }
         return valor.trim() ? [valor.trim()] : [];
     }
-    
+
     return [];
 }
 
 function buildMiniCarrusel(imagenes, altText) {
     if (imagenes.length === 0) return '<div class="placeholder-img" style="height:220px; background:#f0f0f0; border-radius:8px;"></div>';
     if (imagenes.length === 1) {
-        return `<img src="${imagenes[0]}" alt="${altText}" class="card-img-principal" style="object-fit:cover; width:100%; border-radius:8px;">`;
+        return `<img src="${imagenes[0]}" alt="${altText}" class="card-img-principal" style="object-fit:cover; width:100%; border-radius:8px;" loading="lazy">`;
     }
     const slides = imagenes.map((url, i) =>
         `<div class="mini-slide${i === 0 ? ' activa' : ''}">
-            <img src="${url}" alt="${altText} ${i + 1}" style="object-fit:cover; width:100%; border-radius:8px;">
+            <img src="${url}" alt="${altText} ${i + 1}" style="object-fit:cover; width:100%; border-radius:8px;" loading="lazy">
         </div>`
     ).join('');
     return `
@@ -105,21 +106,26 @@ function initCardListeners(container) {
         img.addEventListener('click', () => abrirLightbox(img.src, img.alt));
     });
 
-    // Toggle descripción (usando el helper global de evento-main.js)
-    container.querySelectorAll('.btn-ver-mas, .btn-toggle-desc').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const card = btn.closest('.expositor-card');
-            const full = card.querySelector('.desc-full');
-            const short = card.querySelector('.desc-short');
+    // Toggle descripción (ELIMINADO: ahora se maneja vía onclick centralizado en helpers.js)
 
-            if (full.style.display === 'none') {
-                full.style.display = 'block';
-                short.style.display = 'none';
-                btn.textContent = 'Ver menos';
+    // Toggle video
+    container.querySelectorAll('.btn-toggle-video').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const wrapper = btn.closest('.expositor-video-wrapper');
+            const container = wrapper.querySelector('.video-container');
+            const isHidden = container.style.display === 'none';
+
+            if (isHidden) {
+                container.style.display = 'block';
+                btn.innerHTML = 'Ocultar video';
+                btn.classList.add('btn-ver-menos');
             } else {
-                full.style.display = 'none';
-                short.style.display = '-webkit-box';
-                btn.textContent = 'Ver más';
+                container.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-play-circle"></i> Ver video';
+                btn.classList.remove('btn-ver-menos');
+                // Pausar video si es local
+                const videoTag = container.querySelector('video');
+                if (videoTag) videoTag.pause();
             }
         });
     });
@@ -205,6 +211,35 @@ function generarHTMLCategoria(cat, expositores) {
         const descripcion = e.descripcion || '';
         const shortDesc = descripcion.length > 100 ? descripcion.substring(0, 100) + '...' : descripcion;
 
+        let videoHtml = '';
+        const videoSrc = (e.video || e.video_url || e.videoUrl || '').trim();
+        if (videoSrc) {
+            let mediaContent = '';
+            const isLocalVideo = videoSrc.match(/\.(mp4|webm|ogg|mov)(\?.*)?$/i) || videoSrc.startsWith('/assets/uploads/');
+            if (isLocalVideo) {
+                mediaContent = `<video src="${videoSrc}" controls style="width:100%; border-radius:12px; aspect-ratio:16/9; background:#000;"></video>`;
+            } else {
+                let embedUrl = videoSrc;
+                if (videoSrc.includes('youtube.com/watch?v=')) {
+                    embedUrl = videoSrc.replace('watch?v=', 'embed/');
+                } else if (videoSrc.includes('youtu.be/')) {
+                    embedUrl = videoSrc.replace('youtu.be/', 'youtube.com/embed/');
+                }
+                mediaContent = `<iframe src="${embedUrl}" frameborder="0" allowfullscreen style="width:100%; border-radius:12px; aspect-ratio:16/9;"></iframe>`;
+            }
+
+            videoHtml = `
+                <div class="expositor-video-wrapper" style="margin-top:15px; text-align:center;">
+                    <button type="button" class="btn-toggle-video btn-ver-mas">
+                        <i class="fas fa-play-circle"></i> Ver video
+                    </button>
+                    <div class="video-container" style="display:none; margin-top:15px;">
+                        ${mediaContent}
+                    </div>
+                </div>
+            `;
+        }
+
         return `
                                 <div class="expositor-card">
                                     ${buildMiniCarrusel(imagenesLimpias, e.nombre)}
@@ -213,7 +248,8 @@ function generarHTMLCategoria(cat, expositores) {
                                     <div class="descripcion-contenedor">
                                         ${window.formatDescription(descripcion)}
                                     </div>
-                                    <p class="info-ubicacion" style="text-align:center;"><strong>Ubicación:</strong> ${e.ubicacion || 'Por definir'}</p>
+                                    ${videoHtml}
+                                    <p class="info-ubicacion" style="text-align:center; margin-top:10px;"><strong>Ubicación:</strong> ${e.ubicacion || 'Por definir'}</p>
                                     <div style="text-align: center; width: 100%; margin-top: 10px;">
                                         <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.nombre)}" 
                                            target="_blank" class="enlace-localidades" style="display: inline-flex; justify-content: center;">

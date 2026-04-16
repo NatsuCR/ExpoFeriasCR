@@ -219,7 +219,6 @@ export function addActividadImageRow(initialUrl) {
   lista.appendChild(row);
 }
 
-// ─── EXPOSITOR ───
 export function abrirModalExpositor() {
   filaEnEdicion = null;
   document.getElementById('form-expositor').reset();

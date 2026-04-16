@@ -6,6 +6,19 @@
  * - Actualización del navbar según autenticación
  */
 
+// Interceptor global para renovación de tokens
+(function() {
+    const originalFetch = window.fetch;
+    window.fetch = async function(...args) {
+        const response = await originalFetch(...args);
+        const newToken = response.headers.get('X-New-Token');
+        if (newToken) {
+            localStorage.setItem('token', newToken);
+        }
+        return response;
+    };
+})();
+
 async function cargarModalAuth() {
   try {
     const response = await fetch('/modal-auth.html');

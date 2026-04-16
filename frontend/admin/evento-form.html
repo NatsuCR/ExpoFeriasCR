@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../css/navbar-auth.css">
     <link rel="stylesheet" href="../css/crear-evento/form.css">
     <link rel="stylesheet" href="../css/crear-evento/preview.css">
+    <script src="../js/helpers.js?v=3"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -229,8 +230,7 @@
                                     <div class="form-group"><label>Color enlace contacto</label><input type="color" id="color_enlace_contacto" value="#8b5a2b"></div>
                                     <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
                                     <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
-                                    <div class="form-group"><label>Color buscador</label><input type="color" id="color_buscador_expositores" value="#ffffff"></div>
-                                    <div class="form-group"><label>Color borde buscador</label><input type="color" id="color_borde_buscador_expositores" value="#eeeeee"></div>
+                                    <!-- ELIMINADOS: Color buscador y Color borde buscador -->
                                 </div>
                             </div>
                             <div class="form-navigation">
@@ -435,6 +435,7 @@
                         <option value="Bar">Bar</option>
                         <option value="Chinamos">Chinamos</option>
                         <option value="Moda">Moda</option>
+                        <option value="Artesanía">Artesanía</option>
                         <option value="Administración">Administración</option>
                         <option value="Tecnología">Tecnología</option>
                         <option value="Construcción">Construcción</option>
@@ -460,7 +461,17 @@
                     </div>
                     <div id="feedback-expositor-img" class="upload-feedback"></div>
                 </div>
-                <div class="form-group"><label>Video URL (YouTube/Vimeo)</label><input type="text" id="expositor-video" placeholder="https://youtube.com/..."></div>
+                <div class="form-group">
+                    <label>Video URL (YouTube/Vimeo)</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="expositor-video" placeholder="https://youtube.com/..." style="flex: 1;">
+                        <button type="button" class="btn-secondary" id="btn-subir-expositor-video" title="Subir video desde mi equipo">
+                            <i class="fas fa-upload"></i> Subir
+                        </button>
+                        <input type="file" id="archivo-expositor-video" accept="video/*" style="display: none;">
+                    </div>
+                    <small style="opacity: 0.7;">Puedes pegar un link o subir un archivo (mp4, webm).</small>
+                </div>
             </form>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="cerrarModalExpositor()">Cancelar</button>

@@ -31,7 +31,7 @@ class AuthController {
       const token = jwt.sign(
         { id: user.id, email: user.email, rol: user.rol },
         process.env.JWT_SECRET,
-        { expiresIn: '8h' }
+        { expiresIn: '3h' }
       );
 
       res.json({
@@ -108,7 +108,7 @@ class AuthController {
       const token = jwt.sign(
         { id: usuarioId, email, rol: 'user' },
         process.env.JWT_SECRET,
-        { expiresIn: '8h' }
+        { expiresIn: '3h' }
       );
 
       res.status(201).json({

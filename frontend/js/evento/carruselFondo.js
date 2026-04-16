@@ -16,10 +16,18 @@ export function cargarCarruselFondo(slug) {
                 return;
             }
             slidesContainer.innerHTML = '';
-            imagenesFondo.forEach(img => {
+            imagenesFondo.forEach((img, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'hero-carrusel-slide';
-                slide.style.backgroundImage = `url('${img.imagen_url}')`;
+                // Usamos una etiqueta img real para SEO (Google Imágenes)
+                const image = document.createElement('img');
+                image.src = img.imagen_url;
+                image.alt = `Galería ${idx + 1} - ${document.title}`;
+                if (idx > 0) image.setAttribute('loading', 'lazy');
+                image.style.width = '100%';
+                image.style.height = '100%';
+                image.style.objectFit = 'cover';
+                slide.appendChild(image);
                 slidesContainer.appendChild(slide);
             });
             mostrarSlideFondo(0);
@@ -28,7 +36,7 @@ export function cargarCarruselFondo(slug) {
         })
         .catch(err => {
             console.error('Error cargando galería:', err);
-            slidesContainer.innerHTML = `<div class="hero-carrusel-slide" style="background-image: url('assets/images/ExpoSanCarlos2026/campo-ferial.jpg');"></div>`;
+            slidesContainer.innerHTML = `<div class="hero-carrusel-slide" style="background-image: url('assets/images/default-feria.jpg');"></div>`;
         });
 
     function mostrarSlideFondo(index) {

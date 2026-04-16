@@ -1,3 +1,16 @@
+// Interceptor global para renovación de tokens
+(function() {
+    const originalFetch = window.fetch;
+    window.fetch = async function(...args) {
+        const response = await originalFetch(...args);
+        const newToken = response.headers.get('X-New-Token');
+        if (newToken) {
+            localStorage.setItem('token', newToken);
+        }
+        return response;
+    };
+})();
+
 /**
  * mi-cuenta.js - Gestión de cuenta y eventos del usuario
  */
@@ -12,7 +25,7 @@ class MiCuenta {
       return;
     }
 
-    this.token = localStorage.getItem('token');
+    this.getToken = () => localStorage.getItem('token');
     this.eventosContenedor = document.getElementById('eventos-contenedor');
 
     this.init();
@@ -119,7 +132,7 @@ class MiCuenta {
   async cargarEventos() {
     try {
       const response = await fetch('/api/eventos/mis-eventos', {
-        headers: { 'Authorization': `Bearer ${this.token}` },
+        headers: { 'Authorization': `Bearer ${this.getToken()}` },
         cache: 'no-store'
       });
 
@@ -361,7 +374,7 @@ class MiCuenta {
     try {
       const response = await fetch(`/api/eventos/${eventoId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${this.token}` }
+        headers: { 'Authorization': `Bearer ${this.getToken()}` }
       });
 
       if (response.ok) {

@@ -14,11 +14,11 @@ function parseImagenes(valor) {
 function buildMiniCarrusel(imagenes, altText) {
     if (imagenes.length === 0) return '';
     if (imagenes.length === 1) {
-        return `<img src="${imagenes[0]}" alt="${altText}" class="card-img-principal">`;
+        return `<img src="${imagenes[0]}" alt="${altText}" class="card-img-principal" loading="lazy">`;
     }
     const slides = imagenes.map((url, i) =>
         `<div class="mini-slide${i === 0 ? ' activa' : ''}">
-            <img src="${url}" alt="${altText} ${i + 1}">
+            <img src="${url}" alt="${altText} ${i + 1}" loading="lazy">
         </div>`
     ).join('');
     return `
@@ -133,18 +133,7 @@ export async function cargarActividades(slug) {
 
         const carruselControl = initResponsiveCarousel('actividadesWrapper', 'actividadesGrid', 'actividadesPrev', 'actividadesNext', 280, 10000);
 
-        container.querySelectorAll('.btn-ver-mas, .btn-ver-menos').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const card = btn.closest('.actividad-card');
-                setTimeout(() => {
-                    if (card && card.querySelector('.desc-full').style.display === 'block') {
-                        carruselControl.detener();
-                    } else {
-                        carruselControl.reanudar();
-                    }
-                }, 0);
-            });
-        });
+        // Toggle descripción (ELIMINADO: ahora se maneja vía onclick centralizado en helpers.js)
     } catch (err) {
         console.error(err);
         container.innerHTML = '<p>Error al cargar actividades.</p>';

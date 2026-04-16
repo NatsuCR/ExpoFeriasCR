@@ -41,6 +41,47 @@ app.use('/api/galeria', galeriaRoutes);
 // 📁 ARCHIVOS ESTÁTICOS
 // =======================
 
+const fs = require('fs');
+const seoService = require('./services/seoService');
+const EventoService = require('./services/EventoService');
+const eventoService = new EventoService();
+
+// Ruta dinámica para inyectar SEO en eventos
+app.get('/evento.html', async (req, res) => {
+  const { slug } = req.query;
+  const filePath = path.join(process.cwd(), 'frontend', 'evento.html');
+
+  if (!slug) return res.sendFile(filePath);
+
+  try {
+    const evento = await eventoService.obtenerEventoPorSlug(slug);
+    let html = fs.readFileSync(filePath, 'utf8');
+    
+    // Inyectar metadatos
+    html = seoService.inyectarMetadatos(html, evento);
+    
+    res.send(html);
+  } catch (error) {
+    console.error('[SEO] Error inyectando metadatos:', error);
+    res.sendFile(filePath);
+  }
+});
+
+// Ruta para el Sitemap dinámico
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const eventos = await eventoService.obtenerTodosActivos();
+    const slugs = eventos.map(e => e.slug);
+    const xml = seoService.generarSitemapXML(slugs);
+    
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (error) {
+    console.error('[SEO] Error generando sitemap:', error);
+    res.status(500).end();
+  }
+});
+
 // 🔥 Esto arregla tu problema de uploads
 app.use('/assets', express.static(path.join(process.cwd(), 'frontend', 'assets')));
 

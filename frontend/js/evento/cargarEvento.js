@@ -1,51 +1,13 @@
 // frontend/js/evento/cargarEvento.js
 
-// Helper global para "Ver más" / "Ver menos"
-window.toggleDesc = function (btn, isShow) {
-    const container = btn.parentElement;
-    if (isShow) {
-        container.querySelector('.desc-short').style.display = 'none';
-        container.querySelector('.desc-full').style.display = 'block';
-        btn.style.display = 'none';
-        container.querySelector('.btn-ver-menos').style.display = 'inline-block';
-    } else {
-        container.querySelector('.desc-full').style.display = 'none';
-        container.querySelector('.desc-short').style.display = 'block';
-        btn.style.display = 'none';
-        container.querySelector('.btn-ver-mas').style.display = 'inline-block';
-    }
-};
-
-window.formatDescription = function(text, forceFull = false) {
-    if (!text) return '';
-    
-    // Si se fuerza completa (ej: info principal del evento), no truncamos
-    if (forceFull || text.length <= 100) {
-        return `
-            <div class="desc-container">
-                <p class="descripcion-texto descripcion desc-full" style="display: block; max-height: none; white-space: pre-wrap;">${text}</p>
-            </div>
-        `;
-    }
-
-    // Lógica con truncamiento y botones "Ver más"
-    const shortText = text.substring(0, 100) + '...';
-    return `
-        <div class="desc-container">
-            <p class="descripcion-texto descripcion desc-short">${shortText}</p>
-            <p class="descripcion-texto descripcion desc-full" style="display: none; white-space: pre-wrap;">${text}</p>
-            <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas">Ver más</button>
-            <button onclick="window.toggleDesc(this, false)" class="btn-ver-mas btn-ver-menos" style="display: none;">Ver menos</button>
-        </div>
-    `;
-};
+// Las funciones window.toggleDesc y window.formatDescription se definen ahora centralmente en evento-main.js
 
 export async function cargarEvento(slug) {
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const isPreview = urlParams.get('preview') === '1';
         const dataKey = urlParams.get('dataKey');
-        
+
         let evento;
         if (isPreview && dataKey) {
             console.log('[Preview Mode] Loading from localStorage:', dataKey);
@@ -94,14 +56,14 @@ export async function cargarEvento(slug) {
             let src = horarioImgUrl;
             // Manejar si viene como JSON de un array
             if (typeof src === 'string' && src.startsWith('[')) {
-                try { 
+                try {
                     const parsed = JSON.parse(src);
                     if (Array.isArray(parsed) && parsed.length > 0) src = parsed[0];
-                } catch(e) {}
+                } catch (e) { }
             }
 
             if (src && src !== 'null' && src !== 'undefined') {
-                horarioDiv.innerHTML = `<img src="${src}" class="horario-img" style="max-width:100%; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">`;
+                horarioDiv.innerHTML = `<img src="${src}" class="horario-img" style="max-width:100%; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);" loading="lazy">`;
             } else {
                 horarioDiv.innerHTML = '<p style="color:#999; font-style:italic;">Horario no disponible en este momento</p>';
             }
@@ -123,6 +85,33 @@ export async function cargarEvento(slug) {
         const urlVentaOnline = evento.url_venta_online || evento.urlVentaOnline;
 
         if (entradasParrafo) {
+            let videoHtml = '';
+            if (evento.video_url || evento.video) {
+                const videoSrc = (evento.video_url || evento.video).trim();
+                const isLocalVideo = videoSrc.match(/\.(mp4|webm|ogg|mov)(\?.*)?$/i) || videoSrc.startsWith('/assets/uploads/');
+
+                if (isLocalVideo) {
+                    videoHtml = `
+                        <div class="video-container">
+                            <video src="${videoSrc}" controls style="width:100%; border-radius:12px; aspect-ratio:16/9; background:#000;"></video>
+                        </div>
+                    `;
+                } else {
+                    // YouTube / Vimeo
+                    let embedUrl = videoSrc;
+                    if (videoSrc.includes('youtube.com/watch?v=')) {
+                        embedUrl = videoSrc.replace('watch?v=', 'embed/');
+                    } else if (videoSrc.includes('youtu.be/')) {
+                        embedUrl = videoSrc.replace('youtu.be/', 'youtube.com/embed/');
+                    }
+                    videoHtml = `
+                        <div class="video-container">
+                            <iframe src="${embedUrl}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    `;
+                }
+            }
+
             let textoEntradas = '';
             switch (tipoVenta) {
                 case 'online':
@@ -134,7 +123,7 @@ export async function cargarEvento(slug) {
                 default:
                     textoEntradas = 'Entradas solo en taquilla del campo ferial';
             }
-            entradasParrafo.innerHTML = textoEntradas;
+            entradasParrafo.innerHTML = videoHtml + textoEntradas;
         }
 
         // Colores generales
@@ -197,25 +186,13 @@ export async function cargarEvento(slug) {
             });
         }
 
-        // Buscador
-        const cbe = evento.color_buscador_expositores || evento.colorBuscadorExpositores;
-        if (cbe) {
-            window.colorBuscadorExpositores = cbe;
-            const searchBar = document.querySelector('.expositor-search-bar');
-            if (searchBar) searchBar.style.backgroundColor = cbe;
-        }
-
-        const cbbe = evento.color_borde_buscador_expositores || evento.colorBordeBuscadorExpositores;
-        if (cbbe) {
-            const searchInput = document.querySelector('.search-input-wrapper input');
-            if (searchInput) searchInput.style.borderColor = cbbe;
-        }
+        // ELIMINADO: Buscador de expositores personalizado (se usa estilo fijo)
 
         // Contacto
         const cfc = evento.color_fondo_contacto || evento.colorFondoContacto;
         const ctc = evento.color_texto_contacto || evento.colorTextoContacto;
         const cec = evento.color_enlace_contacto || evento.colorEnlaceContacto;
-        
+
         const contactoSection = document.querySelector('.contacto');
         if (contactoSection) {
             if (cfc) contactoSection.style.backgroundColor = cfc;
@@ -236,7 +213,7 @@ export async function cargarEvento(slug) {
                 footer.querySelectorAll('p').forEach(p => p.style.color = ctfoot);
             }
         }
-        
+
     } catch (err) {
         console.error('Error al cargar evento:', err);
         document.body.innerHTML = `<div style="padding:40px; text-align:center;"><h1>⚠️ ${err.message}</h1><a href="/">Volver</a></div>`;

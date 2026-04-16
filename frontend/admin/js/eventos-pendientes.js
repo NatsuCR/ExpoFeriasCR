@@ -4,7 +4,6 @@
 
 class AdminEventosPendientes {
   constructor() {
-    this.inicializarHelpers();
     this.eventos = [];
     this.eventosFiltrados = [];
     this.eventoActualModal = null;
@@ -14,38 +13,6 @@ class AdminEventosPendientes {
     this.init();
   }
 
-  inicializarHelpers() {
-    window.toggleDesc = function (btn, isShow) {
-        const container = btn.parentElement;
-        if (isShow) {
-            container.querySelector('.desc-short').style.display = 'none';
-            container.querySelector('.desc-full').style.display = 'block';
-            btn.style.display = 'none';
-            container.querySelector('.btn-ver-menos').style.display = 'inline-block';
-        } else {
-            container.querySelector('.desc-full').style.display = 'none';
-            container.querySelector('.desc-short').style.display = 'block';
-            btn.style.display = 'none';
-            container.querySelector('.btn-ver-mas').style.display = 'inline-block';
-        }
-    };
-
-    window.formatDescription = function (text) {
-        if (!text) return '';
-        if (text.length <= 50) return `<p class="descripcion-texto descripcion">${text}</p>`;
-
-        // Si es muy largo, cortamos y ponemos Ver más
-        const shortText = text.substring(0, 50) + '...';
-        return `
-          <div class="desc-container" style="margin-bottom:10px; width:100%; max-width:100%; overflow-wrap: break-word;">
-             <p class="descripcion-texto descripcion desc-short" style="margin:0;">${shortText}</p>
-             <p class="descripcion-texto descripcion desc-full" style="display:none; margin:0; white-space:pre-wrap;">${text}</p>
-             <button onclick="window.toggleDesc(this, true)" class="btn-ver-mas" style="background:none; border:none; border-bottom:1px solid; color:#0033A0; cursor:pointer; padding:0; font-weight:bold; font-size:12px; margin-top:4px;">Ver más</button>
-             <button onclick="window.toggleDesc(this, false)" class="btn-ver-menos" style="background:none; border:none; border-bottom:1px solid; color:#0033A0; cursor:pointer; padding:0; font-weight:bold; font-size:12px; margin-top:4px; display:none;">Ver menos</button>
-          </div>
-        `;
-    };
-  }
 
   init() {
     this.verificarAutenticacion();

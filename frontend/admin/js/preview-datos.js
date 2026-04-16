@@ -3,10 +3,10 @@
 // Espeja EXACTAMENTE lo que hace cargarEvento.js en la página real.
 
 let previewAbierto = true;
-let previewSlug    = null;
-let previewTimer   = null;
+let previewSlug = null;
+let previewTimer = null;
 
-function getSlug()   { return document.getElementById('slug')?.value.trim() || null; }
+function getSlug() { return document.getElementById('slug')?.value.trim() || null; }
 function getIframe() { return document.getElementById('previewIframe'); }
 
 // ─── Recolectar datos del formulario admin ────────────────────────────────────
@@ -15,39 +15,39 @@ function construirDatosPreview() {
 
     const datos = {
         // Básicos
-        nombre:           get('nombre'),
-        descripcion:      get('descripcion'),
-        fecha_inicio:     get('fecha_inicio'),
-        fecha_fin:        get('fecha_fin'),
-        ubicacion:        get('ubicacion'),
-        provincia:        get('provincia'),
-        imagen_portada:   get('imagen_portada'),
-        horario_imagen:   get('horario_imagen'),
-        mapa_embed:       get('mapa_embed'),
-        tipo_venta:       get('tipo_venta'),
+        nombre: get('nombre'),
+        descripcion: get('descripcion'),
+        fecha_inicio: get('fecha_inicio'),
+        fecha_fin: get('fecha_fin'),
+        ubicacion: get('ubicacion'),
+        provincia: get('provincia'),
+        imagen_portada: get('imagen_portada'),
+        horario_imagen: get('horario_imagen'),
+        mapa_embed: get('mapa_embed'),
+        tipo_venta: get('tipo_venta'),
         url_venta_online: get('url_venta_online'),
 
-        // ── Los 20 colores exactos de la BD ──────────────────────────────────
-        color_primario:         get('color_primario')         || '#C8102E',
-        color_secundario:       get('color_secundario')       || '#0033A0',
-        color_fondo:            get('color_fondo')            || '#f4e4c1',
-        color_texto:            get('color_texto')            || '#2c1a0e',
-        color_hero_overlay:     get('color_hero_overlay')     || 'rgba(62,42,31,0.7)',
-        color_titulo_seccion:   get('color_titulo_seccion')   || '#2c1a0e',
-        color_titulo_hero:      get('color_titulo_hero')      || '#ffffff',
+        // ── Los 20 colores exactos de la BD (sin buscador) ──────────────────
+        color_primario: get('color_primario') || '#C8102E',
+        color_secundario: get('color_secundario') || '#0033A0',
+        color_fondo: get('color_fondo') || '#f4e4c1',
+        color_texto: get('color_texto') || '#2c1a0e',
+        color_hero_overlay: get('color_hero_overlay') || 'rgba(62,42,31,0.7)',
+        color_titulo_seccion: get('color_titulo_seccion') || '#2c1a0e',
+        color_titulo_hero: get('color_titulo_hero') || '#ffffff',
         color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
-        color_fondo_fechas:     get('color_fondo_fechas')     || '#d4a373',
-        color_texto_fechas:     get('color_texto_fechas')     || '#8b5a2b',
-        color_menu_fondo:       get('color_menu_fondo')       || '#ffffff',
-        color_menu_texto:       get('color_menu_texto')       || '#ffffff',
+        color_fondo_fechas: get('color_fondo_fechas') || '#d4a373',
+        color_texto_fechas: get('color_texto_fechas') || '#8b5a2b',
+        color_menu_fondo: get('color_menu_fondo') || '#ffffff',
+        color_menu_texto: get('color_menu_texto') || '#ffffff',
         color_menu_fondo_hover: get('color_menu_fondo_hover') || '',
         color_menu_texto_hover: get('color_menu_texto_hover') || '',
-        color_titulo_h3:        get('color_titulo_h3')        || '#2c1a0e',
-        color_fondo_contacto:   get('color_fondo_contacto')   || '#f4e4c1',
-        color_texto_contacto:   get('color_texto_contacto')   || '#2c1a0e',
-        color_enlace_contacto:  get('color_enlace_contacto')  || '#8b5a2b',
-        color_fondo_footer:     get('color_fondo_footer')     || '#8b5a2b',
-        color_texto_footer:     get('color_texto_footer')     || '#ffffff'
+        color_titulo_h3: get('color_titulo_h3') || '#2c1a0e',
+        color_fondo_contacto: get('color_fondo_contacto') || '#f4e4c1',
+        color_texto_contacto: get('color_texto_contacto') || '#2c1a0e',
+        color_enlace_contacto: get('color_enlace_contacto') || '#8b5a2b',
+        color_fondo_footer: get('color_fondo_footer') || '#8b5a2b',
+        color_texto_footer: get('color_texto_footer') || '#ffffff'
     };
 
     // Precios: leer del data-precio de los botones editar
@@ -55,7 +55,7 @@ function construirDatosPreview() {
         .map(row => {
             const btn = row.querySelector('.btn-editar-precio');
             if (btn && btn.dataset.precio) {
-                try { return JSON.parse(btn.dataset.precio); } catch (_) {}
+                try { return JSON.parse(btn.dataset.precio); } catch (_) { }
             }
             return null;
         }).filter(Boolean);
@@ -75,7 +75,7 @@ function construirDatosPreview() {
                         } catch (_) { imagenes = a.imagen.trim() ? [a.imagen.trim()] : []; }
                     }
                     return { ...a, imagenes };
-                } catch (_) {}
+                } catch (_) { }
             }
             return null;
         }).filter(Boolean);
@@ -95,14 +95,14 @@ function construirDatosPreview() {
                         } catch (_) { imagenes = [e.imagen_logo]; }
                     }
                     return {
-                        nombre:      e.nombre,
-                        rubro:       e.rubro || '',
-                        ubicacion:   e.ubicacion || '',
+                        nombre: e.nombre,
+                        rubro: e.rubro || '',
+                        ubicacion: e.ubicacion || '',
                         descripcion: e.descripcion || '',
-                        imagenes:    imagenes,
-                        video:       e.video_url || ''
+                        imagenes: imagenes,
+                        video: e.video_url || ''
                     };
-                } catch (_) {}
+                } catch (_) { }
             }
             return null;
         }).filter(Boolean);
@@ -122,7 +122,7 @@ function construirDatosPreview() {
 function recargarPreview() {
     if (!eventoId && !getSlug()) return;
     const datos = construirDatosPreview();
-    const key   = 'preview_admin_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    const key = 'preview_admin_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem(key, JSON.stringify(datos));
     getIframe().src = `/evento.html?preview=1&dataKey=${encodeURIComponent(key)}`;
     previewSlug = getSlug();
@@ -149,7 +149,7 @@ function aplicarCambiosEnVivo() {
     if (infoCompleta) infoCompleta.innerText = get('descripcion');
 
     // Fechas hero
-    const fmt = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-CR', { day:'2-digit', month:'short', year:'numeric' }) : '?';
+    const fmt = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' }) : '?';
     const fi = get('fecha_inicio'), ff = get('fecha_fin');
 
     const eventoFechas = doc.getElementById('eventoFechas');
@@ -182,13 +182,13 @@ function aplicarCambiosEnVivo() {
 
     // ── CSS variables principales (igual que cargarEvento.js) ────────────────
     const r = doc.documentElement;
-    const colorPrimario   = get('color_primario')   || '#C8102E';
+    const colorPrimario = get('color_primario') || '#C8102E';
     const colorSecundario = get('color_secundario') || '#0033A0';
-    const colorFondo      = get('color_fondo')      || '#f4e4c1';
+    const colorFondo = get('color_fondo') || '#f4e4c1';
 
-    r.style.setProperty('--evento-primario',   colorPrimario);
+    r.style.setProperty('--evento-primario', colorPrimario);
     r.style.setProperty('--evento-secundario', colorSecundario);
-    r.style.setProperty('--evento-fondo',      colorFondo);
+    r.style.setProperty('--evento-fondo', colorFondo);
 
     // ── color_texto → body.style.color ──────────────────────────────────────
     const colorTexto = get('color_texto');
@@ -201,8 +201,8 @@ function aplicarCambiosEnVivo() {
     }
 
     // ── Hero: título, descripción, fechas ────────────────────────────────────
-    if (h1 && get('color_titulo_hero'))         h1.style.color = get('color_titulo_hero');
-    if (desc && get('color_descripcion_hero'))  desc.style.color = get('color_descripcion_hero');
+    if (h1 && get('color_titulo_hero')) h1.style.color = get('color_titulo_hero');
+    if (desc && get('color_descripcion_hero')) desc.style.color = get('color_descripcion_hero');
 
     const heroDates = doc.querySelector('.hero-dates');
     if (heroDates) {
@@ -244,7 +244,7 @@ function aplicarCambiosEnVivo() {
     // ── color_titulo_h3 → h3 en tarjetas info, actividades, expositores ──────
     if (get('color_titulo_h3')) {
         doc.querySelectorAll('.info-card h3, .actividad-card h3, .expositor-card h3')
-           .forEach(h => h.style.color = get('color_titulo_h3'));
+            .forEach(h => h.style.color = get('color_titulo_h3'));
     }
 
     // ── Imagen portada en hero si no hay galería ─────────────────────────────
@@ -275,11 +275,11 @@ function renderizarSeccionesEnIframe(doc) {
     const tablaPrecios = doc.getElementById('tablaPrecios');
     if (tablaPrecios) {
         if (datos.precios.length > 0) {
-            const fmt = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-CR', { weekday:'long', day:'numeric', month:'long' }) : '?';
+            const fmt = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long' }) : '?';
             let html = `<table class="tabla-precios-estilo"><thead><tr><th>Fecha</th><th>Precio normal</th><th>Promoción</th><th>Detalle</th></tr></thead><tbody>`;
             datos.precios.forEach(p => {
-                const precioFmt = new Intl.NumberFormat('es-CR', { style:'currency', currency:'CRC', minimumFractionDigits:0 }).format(parseFloat(p.precio_normal) || 0);
-                html += `<tr><td>${fmt(p.fecha ? p.fecha.slice(0,10) : '')}</td><td>${precioFmt}</td><td>${p.promocion || '—'}</td><td>${p.descripcion_promocion || '—'}</td></tr>`;
+                const precioFmt = new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(parseFloat(p.precio_normal) || 0);
+                html += `<tr><td>${fmt(p.fecha ? p.fecha.slice(0, 10) : '')}</td><td>${precioFmt}</td><td>${p.promocion || '—'}</td><td>${p.descripcion_promocion || '—'}</td></tr>`;
             });
             html += `</tbody></table>`;
             tablaPrecios.innerHTML = html;
@@ -292,7 +292,7 @@ function renderizarSeccionesEnIframe(doc) {
     const actGrid = doc.getElementById('actividadesGrid');
     if (actGrid) {
         if (datos.actividades.length > 0) {
-            const fmt = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-CR', { day:'2-digit', month:'short' }) : '?';
+            const fmt = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-CR', { day: '2-digit', month: 'short' }) : '?';
             let html = '';
             datos.actividades.forEach(act => {
                 const imgs = act.imagenes || [];
@@ -302,12 +302,12 @@ function renderizarSeccionesEnIframe(doc) {
                     <div class="mini-carrusel">
                         <button class="mini-btn mini-prev" style="display:${showButtons};">❮</button>
                         <div class="mini-carrusel-track">
-                            ${imgs.map((src, i) => `<div class="mini-slide ${i===0?'activa':''}" style="width:100%;"><img src="${src}" style="width:100%; height:200px; object-fit:cover;"></div>`).join('')}
+                            ${imgs.map((src, i) => `<div class="mini-slide ${i === 0 ? 'activa' : ''}" style="width:100%;"><img src="${src}" style="width:100%; height:200px; object-fit:cover;"></div>`).join('')}
                         </div>
                         <button class="mini-btn mini-next" style="display:${showButtons};">❯</button>
                     </div>`
                     : '<div class="placeholder-img" style="height:200px; background:#f0f0f0;"></div>';
-                
+
                 const descHtml = doc.defaultView.formatDescription ? doc.defaultView.formatDescription(act.descripcion) : `<p class="descripcion">${act.descripcion || ''}</p>`;
 
                 html += `<div class="actividad-card">
@@ -315,7 +315,7 @@ function renderizarSeccionesEnIframe(doc) {
                     <div class="card-content">
                         <h3>${act.titulo}</h3>
                         <p class="tipo"><strong>Tipo:</strong> ${act.tipo || '—'}</p>
-                        <p class="fecha"><strong>Fecha:</strong> ${fmt(act.fecha ? act.fecha.slice(0,10) : '')} ${act.hora ? act.hora.slice(0,5) : ''}</p>
+                        <p class="fecha"><strong>Fecha:</strong> ${fmt(act.fecha ? act.fecha.slice(0, 10) : '')} ${act.hora ? act.hora.slice(0, 5) : ''}</p>
                         <p class="lugar"><strong>Lugar:</strong> ${act.lugar || '—'}</p>
                         ${descHtml}
                         <p class="gratuito">${act.es_gratis ? '<strong>✓ Gratis</strong>' : '<strong>Requiere entrada</strong>'}</p>
@@ -342,12 +342,12 @@ function renderizarSeccionesEnIframe(doc) {
                     <div class="mini-carrusel">
                         <button class="mini-btn mini-prev" style="display:${showButtons};">❮</button>
                         <div class="mini-carrusel-track">
-                            ${imgs.map((src, i) => `<div class="mini-slide ${i===0?'activa':''}" style="width:100%;"><img src="${src}" style="width:100%; height:150px; object-fit:cover;"></div>`).join('')}
+                            ${imgs.map((src, i) => `<div class="mini-slide ${i === 0 ? 'activa' : ''}" style="width:100%;"><img src="${src}" style="width:100%; height:150px; object-fit:cover;"></div>`).join('')}
                         </div>
                         <button class="mini-btn mini-next" style="display:${showButtons};">❯</button>
                     </div>`
                     : '<div class="placeholder-img" style="height:150px; background:#f0f0f0;"></div>';
-                
+
                 const descHtml = doc.defaultView.formatDescription ? doc.defaultView.formatDescription(exp.descripcion) : `<p class="descripcion">${exp.descripcion || ''}</p>`;
 
                 html += `<div class="expositor-card">
@@ -377,13 +377,13 @@ function renderizarSeccionesEnIframe(doc) {
                 const div = doc.createElement('div');
                 div.className = 'hero-slide';
                 Object.assign(div.style, {
-                    backgroundImage:    `url('${g.imagen_url}')`,
-                    backgroundSize:     'cover',
+                    backgroundImage: `url('${g.imagen_url}')`,
+                    backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    width:    '100%',
-                    height:   '100%',
+                    width: '100%',
+                    height: '100%',
                     position: 'absolute',
-                    display:  idx === 0 ? 'block' : 'none'
+                    display: idx === 0 ? 'block' : 'none'
                 });
                 slides.appendChild(div);
             });
@@ -393,7 +393,7 @@ function renderizarSeccionesEnIframe(doc) {
 
 // ─── Cuando el iframe termina de cargar ──────────────────────────────────────
 function onIframeLoad() {
-    const slug   = getSlug();
+    const slug = getSlug();
     const urlBar = document.getElementById('previewUrlBar');
     if (urlBar && slug) urlBar.textContent = `/evento.html?slug=${slug}`;
 
@@ -404,7 +404,7 @@ function onIframeLoad() {
     setTimeout(() => {
         aplicarCambiosEnVivo();
         renderizarSeccionesEnIframe(doc);
-        
+
         // Inicializar mini-carruseles inyectados dinámicamente
         doc.querySelectorAll('.actividad-carousel').forEach(car => {
             const slides = car.querySelectorAll('.actividad-slide');
@@ -434,8 +434,8 @@ function programarRecarga() {
 
 // ─── Botón toggle panel ───────────────────────────────────────────────────────
 function togglePreview() {
-    const panel  = document.getElementById('previewPanel');
-    const btn    = document.getElementById('btnTogglePreview');
+    const panel = document.getElementById('previewPanel');
+    const btn = document.getElementById('btnTogglePreview');
     const layout = document.getElementById('formLayout');
     previewAbierto = !previewAbierto;
     if (previewAbierto) {
@@ -456,7 +456,7 @@ export function initPreview() {
 
     document.querySelectorAll('#formBasicos input, #formBasicos textarea, #formBasicos select')
         .forEach(el => {
-            el.addEventListener('input',  programarRecarga);
+            el.addEventListener('input', programarRecarga);
             el.addEventListener('change', programarRecarga);
         });
 
@@ -471,4 +471,11 @@ export function initPreview() {
 // Recarga completa desde exterior (botón guardar, etc.)
 export function refrescarPreview() {
     recargarPreview();
+}
+
+document.getElementById('btnTogglePreview')?.addEventListener('click', togglePreview);
+
+if (eventoId) {
+    previewAbierto = false;
+    togglePreview();
 }

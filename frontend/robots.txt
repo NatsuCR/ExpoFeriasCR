@@ -1,0 +1,8 @@
+# Robots.txt for ExpoFeriasCR
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/auth/
+Disallow: /mi-cuenta.html
+
+Sitemap: https://expoferiascr.site/sitemap.xml

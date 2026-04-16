@@ -1,6 +1,25 @@
-// admin-common.js
-const token = localStorage.getItem('token');
-if (!token) window.location.href = 'login.html';
+// admin-common.js - Interceptor global para renovación de tokens
+(function() {
+    const originalFetch = window.fetch;
+    window.fetch = async function(...args) {
+        const response = await originalFetch(...args);
+        const newToken = response.headers.get('X-New-Token');
+        if (newToken) {
+            localStorage.setItem('token', newToken);
+        }
+        return response;
+    };
+})();
+
+// Helpers globales para descripciones (Eliminados: se usan los de helpers.js)
+
+function getToken() {
+    return localStorage.getItem('token');
+}
+
+if (!getToken()) {
+    window.location.href = 'login.html';
+}
 
 let eventoId = null;
 const urlParams = new URLSearchParams(window.location.search);
@@ -8,11 +27,26 @@ const idParam = urlParams.get('id');
 if (idParam) eventoId = parseInt(idParam);
 
 async function fetchAPI(url, options = {}) {
+    const currentToken = getToken();
     const res = await fetch(url, {
         ...options,
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+        headers: { 
+            'Authorization': `Bearer ${currentToken}`, 
+            'Content-Type': 'application/json',
+            ...(options.headers || {})
+        }
     });
-    if (res.status === 401) { localStorage.clear(); window.location.href = 'login.html'; }
+
+    // Capturar renovación de token
+    const newToken = res.headers.get('X-New-Token');
+    if (newToken) {
+        localStorage.setItem('token', newToken);
+    }
+
+    if (res.status === 401) { 
+        localStorage.clear(); 
+        window.location.href = 'login.html'; 
+    }
     return res.json();
 }
 
@@ -32,7 +66,7 @@ async function uploadImage(fileInput, targetInputId) {
     try {
         const response = await fetch('/api/admin/upload', {
             method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}` },
+            headers: { 'Authorization': `Bearer ${getToken()}` },
             body: formData
         });
         const data = await response.json();
@@ -69,7 +103,7 @@ async function uploadImageToLista(fileInput, listaId) {
     try {
         const response = await fetch('/api/admin/upload', {
             method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}` },
+            headers: { 'Authorization': `Bearer ${getToken()}` },
             body: formData
         });
         const data = await response.json();

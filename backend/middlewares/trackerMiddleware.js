@@ -7,8 +7,10 @@ const trackerMiddleware = async (req, res, next) => {
   // Ignorar peticiones de API que no sean navegaciones (opcional)
   // O rastrear todo. Basado en StatsController, rastreamos visitas generales.
   
-  // No rastrear recursos estáticos típicos si es middleware global
-  const isStatic = req.url.includes('.') && !req.url.endsWith('.html');
+  // No rastrear recursos estáticos típicos (imágenes, js, css)
+  // Extraemos la ruta sin los parámetros de consulta para verificar la extensión
+  const pathWithoutQuery = req.url.split('?')[0];
+  const isStatic = pathWithoutQuery.includes('.') && !pathWithoutQuery.endsWith('.html');
   if (isStatic) return next();
 
   try {

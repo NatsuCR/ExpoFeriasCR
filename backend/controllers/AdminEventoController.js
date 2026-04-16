@@ -86,7 +86,8 @@ class AdminEventoController {
       color_enlace_contacto || '#8b5a2b',
       color_fondo_footer || '#8b5a2b',
       color_texto_footer || '#ffffff',
-      color_titulo_h3 || '#2c1a0e'
+      color_titulo_h3 || '#2c1a0e',
+      color_fondo_share || 'rgba(255, 255, 255, 0.5)'
     ];
 
     const query = `
@@ -100,7 +101,8 @@ class AdminEventoController {
         color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
         color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
         color_fondo_footer, color_texto_footer,
-        color_titulo_h3
+        color_titulo_h3,
+        color_fondo_share
       ) VALUES (${values.map(() => '?').join(', ')})
     `;
 
@@ -208,6 +210,7 @@ class AdminEventoController {
           color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
           color_fondo_footer = ?, color_texto_footer = ?,
           color_titulo_h3 = ?,
+          color_fondo_share = ?,
           updated_at = NOW()
         WHERE id = ?`,
         [
@@ -221,6 +224,7 @@ class AdminEventoController {
           color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
           color_fondo_footer, color_texto_footer,
           color_titulo_h3,
+          color_fondo_share || 'rgba(255, 255, 255, 0.5)',
           id
         ]
       );

@@ -13,7 +13,7 @@ import {
   abrirModalImagen, cerrarModalImagen, agregarImagenDelModal
 } from './modalsManager.js';
 import {
-  togglePreview, programarActualizacion, guardarDatosPreview, getIframe, getSlug, actualizarUrlBar, 
+  togglePreview, programarActualizacion, guardarDatosPreview, getIframe, getSlug, actualizarUrlBar,
   abrirPreview, cerrarPreview, aplicarCambiosEnVivo
 } from './previewManager.js';
 
@@ -58,11 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // Listeners de colores
 function initColorListeners() {
   const colorCampos = ['color_primario', 'color_secundario', 'color_fondo', 'color_titulo_hero', 'color_fondo_footer'];
-  
+
   colorCampos.forEach(id => {
     const input = document.getElementById(id);
     const valueDisplay = document.getElementById(id + '_value');
-    
+
     if (input && valueDisplay) {
       input.addEventListener('input', () => {
         valueDisplay.textContent = input.value;

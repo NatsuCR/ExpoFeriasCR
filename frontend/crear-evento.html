@@ -36,15 +36,47 @@
                 <div class="crear-evento-header" style="text-align:center;">
                     <h1>🎉 Crea tu Evento</h1>
                     <p>Completa todos los detalles. Una vez enviado, nuestro equipo lo revisará en 24-72 horas.</p>
-                    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:15px;">
-                        <button type="button" id="btnEliminarEvento" class="btn-danger" style="display:none; padding:8px 16px; border:none; border-radius:6px; cursor:pointer;" onclick="if(confirm('¿Seguro que deseas eliminar este evento permanentemente?')) { this.dispatchEvent(new CustomEvent('eliminar-evento', {bubbles:true})); }">
-                            <i class="fas fa-trash"></i> Eliminar Evento
+
+                    <style>
+                        .btn-preview-unificado {
+                            height: 44px !important;
+                            padding: 0 20px !important;
+                            border: none !important;
+                            border-radius: 8px !important;
+                            cursor: pointer !important;
+                            font-weight: 600 !important;
+                            font-size: 14px !important;
+                            display: inline-flex !important;
+                            align-items: center !important;
+                            justify-content: center !important;
+                            gap: 10px !important;
+                            transition: all 0.2s !important;
+                            box-sizing: border-box !important;
+                            color: white !important;
+                            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                            margin: 0 !important; /* Forzar margen cero para alineación perfecta */
+                        }
+                        .btn-preview-unificado:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+                        }
+                        #btnTogglePreview.btn-preview-unificado {
+                            background: #0033A0 !important;
+                        }
+                        #btn-preview-portada.btn-preview-unificado {
+                            background: #002677 !important;
+                        }
+                    </style>
+
+                    <div class="admin-action-container" style="display:flex; justify-content:center; align-items:center; gap:15px; flex-wrap:wrap; margin-top:25px;">
+                        <!-- Botón Vista Previa Evento -->
+                        <button type="button" id="btnTogglePreview" class="btn-toggle-preview btn-preview-unificado">
+                            <i class="fas fa-eye"></i> <span>Vista previa (Evento)</span>
                         </button>
-                        <button type="button" id="btnTogglePreview" class="btn-toggle-preview" style="padding:8px 16px;">
-                            <i class="fas fa-eye"></i> Vista previa (Evento)
-                        </button>
-                        <button type="button" id="btn-preview-portada" class="btn-primary" style="background:#0033A0; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-                            <i class="fas fa-image"></i> Vista previa (Portada Index)
+
+                        <!-- Botón Vista Previa Portada -->
+                        <button type="button" id="btn-preview-portada" class="btn-primary btn-preview-unificado">
+                            <i class="fas fa-image"></i> <span>Vista previa (Portada Index)</span>
                         </button>
                     </div>
                 </div>
@@ -213,6 +245,7 @@
                                     <div class="form-group"><label>Color Descripción Hero</label><input type="color" id="color_descripcion_hero" value="#FFFFFF"></div>
                                     <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#d4a373"></div>
                                     <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#8b5a2b"></div>
+                                    <div class="form-group"><label>Color Fondo Share</label><input type="color" id="color_fondo_share" value="rgba(255, 255, 255, 0.5)"></div>
                                 </div>
 
                                 <!-- Colores del Menú -->
@@ -323,7 +356,7 @@
                             </div>
                             <div class="form-section">
                                 <table id="tabla-galeria" class="tabla-eventos">
-                                    <thead><tr><th>Vista</th><th>URL de Imagen</th><th>Orden</th><th>Acción</th></tr></thead>
+                                    <thead><tr><th>Vista</th><th>URL de Imagen</th><th>Acción</th></tr></thead>
                                     <tbody id="galeria-rows"></tbody>
                                 </table>
                                 <button type="button" id="btn-agregar-imagen" class="btn-secondary">+ Agregar Imagen</button>
@@ -535,7 +568,7 @@
                     <img id="preview-galeria-img" src="" alt="Vista previa"
                          style="max-width:100%;max-height:160px;border-radius:8px;object-fit:cover;border:1px solid #eee;">
                 </div>
-                <div class="form-group"><label>Orden</label><input type="number" id="imagen-orden" placeholder="1" value="0" min="0"></div>
+
             </form>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="cerrarModalImagen()">Cancelar</button>

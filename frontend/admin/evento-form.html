@@ -37,15 +37,24 @@
                 <div class="crear-evento-header" style="text-align:center;">
                     <h1>Editando (admin)</h1>
                     <p>edita los campos y luego presiona confirmar</p>
-                    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:15px;">
-                        <button type="button" id="btnEliminarEvento" class="btn-danger" style="display:none; padding:8px 16px; border:none; border-radius:6px; cursor:pointer;" onclick="if(confirm('¿Seguro que deseas eliminar este evento permanentemente?')) { this.dispatchEvent(new CustomEvent('eliminar-evento', {bubbles:true})); }">
-                            <i class="fas fa-trash"></i> Eliminar Evento
+                    <div class="admin-action-container" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:20px;">
+                        <!-- Botón Eliminar -->
+                        <button type="button" id="btnEliminarEvento" class="btn-danger" 
+                                style="display:none; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; display:flex; align-items:center; gap:8px; transition: all 0.2s;"
+                                onclick="if(confirm('¿Seguro que deseas eliminar este evento permanentemente?')) { this.dispatchEvent(new CustomEvent('eliminar-evento', {bubbles:true})); }">
+                            <i class="fas fa-trash"></i> <span>Eliminar Evento</span>
                         </button>
-                        <button type="button" id="btnTogglePreview" class="btn-toggle-preview" style="padding:8px 16px;">
-                            <i class="fas fa-eye"></i> Vista previa (Evento)
+
+                        <!-- Botón Vista Previa Evento -->
+                        <button type="button" id="btnTogglePreview" class="btn-toggle-preview" 
+                                style="padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; display:flex; align-items:center; gap:8px; transition: all 0.2s;">
+                            <i class="fas fa-eye"></i> <span>Vista previa (Evento)</span>
                         </button>
-                        <button type="button" id="btn-preview-portada" class="btn-primary" style="background:#0033A0; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-                            <i class="fas fa-image"></i> Vista previa (Portada Index)
+
+                        <!-- Botón Vista Previa Portada -->
+                        <button type="button" id="btn-preview-portada" class="btn-primary" 
+                                style="background:#0033A0; color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; display:flex; align-items:center; gap:8px; transition: all 0.2s;">
+                            <i class="fas fa-image"></i> <span>Vista previa (Portada Index)</span>
                         </button>
                     </div>
                 </div>
@@ -212,6 +221,7 @@
                                     <div class="form-group"><label>Color Descripción Hero</label><input type="color" id="color_descripcion_hero" value="#FFFFFF"></div>
                                     <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#d4a373"></div>
                                     <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#8b5a2b"></div>
+                                    <div class="form-group"><label>Color Fondo Share</label><input type="color" id="color_fondo_share" value="rgba(255, 255, 255, 0.5)"></div>
                                 </div>
 
                                 <!-- Colores del Menú -->
@@ -230,7 +240,6 @@
                                     <div class="form-group"><label>Color enlace contacto</label><input type="color" id="color_enlace_contacto" value="#8b5a2b"></div>
                                     <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
                                     <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
-                                    <div class="form-group"><label>Color fondo compartir</label><input type="color" id="color_fondo_share" value="#f9f9f9"></div>
                                     <div class="form-group"><label>Color texto compartir</label><input type="color" id="color_texto_share" value="#2c1a0e"></div>
                                 </div>
                             </div>

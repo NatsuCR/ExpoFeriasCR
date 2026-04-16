@@ -12,7 +12,7 @@ export function cargarCarruselFondo(slug) {
         .then(imagenes => {
             imagenesFondo = imagenes;
             if (imagenesFondo.length === 0) {
-                slidesContainer.innerHTML = `<div class="hero-carrusel-slide" style="background-image: url('assets/images/default-feria.jpg');"></div>`;
+                slidesContainer.innerHTML = `<div class="hero-carrusel-slide" style="background-image: url('assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');"></div>`;
                 return;
             }
             slidesContainer.innerHTML = '';
@@ -36,7 +36,7 @@ export function cargarCarruselFondo(slug) {
         })
         .catch(err => {
             console.error('Error cargando galería:', err);
-            slidesContainer.innerHTML = `<div class="hero-carrusel-slide" style="background-image: url('assets/images/default-feria.jpg');"></div>`;
+            slidesContainer.innerHTML = `<div class="hero-carrusel-slide" style="background-image: url('assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');"></div>`;
         });
 
     function mostrarSlideFondo(index) {

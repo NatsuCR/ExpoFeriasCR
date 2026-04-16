@@ -24,7 +24,7 @@ function createEventoCard(evento, isLive = false) {
         card.appendChild(badge);
     }
     card.innerHTML += `
-        <img src="${evento.imagenPortada || 'assets/images/default-feria.jpg'}" alt="${evento.nombre}">
+        <img src="${evento.imagenPortada || 'assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png'}" alt="${evento.nombre}">
         <h3>${evento.nombre}</h3>
         <p>${new Date(evento.fechaInicio).toLocaleDateString()} - ${new Date(evento.fechaFin).toLocaleDateString()}</p>
         <p>${evento.ubicacion}</p>

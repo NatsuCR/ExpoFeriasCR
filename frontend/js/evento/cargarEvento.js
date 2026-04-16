@@ -63,7 +63,8 @@ export async function cargarEvento(slug) {
             }
 
             if (src && src !== 'null' && src !== 'undefined') {
-                horarioDiv.innerHTML = `<img src="${src}" class="horario-img" style="max-width:100%; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);" loading="lazy">`;
+                const altText = `Horario oficial y cronograma de ${nombre}`;
+                horarioDiv.innerHTML = `<img src="${src}" alt="${altText}" class="horario-img" style="max-width:100%; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);" loading="lazy">`;
             } else {
                 horarioDiv.innerHTML = '<p style="color:#999; font-style:italic;">Horario no disponible en este momento</p>';
             }

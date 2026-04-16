@@ -1,4 +1,4 @@
-﻿/**
+/**
  * crearEventoMain.js
  * Clase principal para gestionar la creación de eventos
  */
@@ -516,7 +516,7 @@ simularPortada() {
   const ubicacion = document.getElementById('ubicacion').value || 'Ubicación';
   const fecha_inicio = document.getElementById('fecha_inicio').value || new Date().toISOString().split('T')[0];
   const fecha_fin = document.getElementById('fecha_fin').value || new Date().toISOString().split('T')[0];
-  let imagen_portada = document.getElementById('imagen_portada').value || '/assets/images/default-feria.jpg';
+  let imagen_portada = document.getElementById('imagen_portada').value || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
   if (imagen_portada && !imagen_portada.startsWith('http') && !imagen_portada.startsWith('/')) {
     imagen_portada = '/' + imagen_portada;
   }

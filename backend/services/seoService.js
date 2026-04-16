@@ -5,7 +5,7 @@
 
 class SEOService {
   /**
-   * Genera el bloque JSON-LD para un evento
+   * Genera el bloque JSON-LD para un evento incluyendo BreadcrumbList
    * @param {Object} evento - Objeto de evento desde la DB
    * @returns {string} - Tag de script con JSON-LD
    */
@@ -18,7 +18,7 @@ class SEOService {
       imagenUrl = `${baseUrl}${imagenUrl}`;
     }
 
-    const schema = {
+    const eventSchema = {
       "@context": "https://schema.org",
       "@type": "Event",
       "name": evento.nombre,
@@ -41,21 +41,46 @@ class SEOService {
       "organizer": {
         "@type": "Organization",
         "name": "ExpoFeriasCR",
-        "url": baseUrl
+        "url": baseUrl,
+        "logo": `${baseUrl}/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png`
       }
     };
 
     // Agregar oferta si hay información de venta online
     if (evento.url_venta_online || evento.urlVentaOnline) {
-      schema.offers = {
+      eventSchema.offers = {
         "@type": "Offer",
         "url": evento.url_venta_online || evento.urlVentaOnline,
+        "priceCurrency": "CRC",
         "availability": "https://schema.org/InStock",
         "validFrom": evento.fechaInicio || evento.fecha_inicio
       };
     }
 
-    return `<script type="application/ld+json">${JSON.stringify(schema)}</script>`;
+    // BreadcrumbList para mejorar la navegación en Google
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Inicio",
+          "item": baseUrl
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": evento.nombre,
+          "item": `${baseUrl}/evento.html?slug=${evento.slug}`
+        }
+      ]
+    };
+
+    return `
+      <script type="application/ld+json">${JSON.stringify(eventSchema)}</script>
+      <script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}</script>
+    `;
   }
 
   /**
@@ -88,8 +113,8 @@ class SEOService {
       imagenUrl = `https://expoferiascr.site${imagenUrl}`;
     }
 
-    // Generar keywords dinámicas
-    const keywords = `ferias, costa rica, eventos, fiestas, ${evento.nombre}, ${evento.provincia}, ${evento.ubicacion}`;
+    // Generar keywords dinámicas más ricas
+    const keywords = `ferias costa rica, fiestas civicas costa rica, eventos costa rica, ${evento.nombre}, ${evento.provincia}, ${evento.ubicacion}, actividades ${evento.provincia}, expo feria ${evento.nombre}`;
 
     return html
       .replace(/{{EVENT_NAME}}/g, evento.nombre)

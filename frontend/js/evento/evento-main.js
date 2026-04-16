@@ -32,9 +32,9 @@ window.toggleDesc = function (btn, isShow) {
     }
 };
 
-window.formatDescription = function(text, forceFull = false) {
+window.formatDescription = function (text, forceFull = false) {
     if (!text) return '';
-    
+
     // Si se fuerza completa, no truncamos
     if (forceFull || text.length <= 100) {
         return `
@@ -261,7 +261,7 @@ function cargarEventoDesdePreview(datos) {
             h3.style.color = datos.color_titulo_h3;
         });
     }
-    
+
     // Color buscador y borde
     if (datos.color_buscador_expositores || datos.color_borde_buscador_expositores) {
         const searchBar = document.querySelector('.expositor-search-bar');
@@ -294,7 +294,8 @@ function cargarEventoDesdePreview(datos) {
         if (tablaPrecios) {
             let html = `<table class="tabla-precios-estilo"><thead><tr><th>Fecha</th><th>Precio normal</th><th>Promoción</th><th>Detalle</th></tr></thead><tbody>`;
             datos.precios.forEach(p => {
-                const fecha = new Date(p.fecha).toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long' });
+                const fechaStr = p.fecha.includes('T') ? p.fecha : p.fecha + 'T12:00:00';
+                const fecha = new Date(fechaStr).toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long' });
                 const precioNum = parseFloat(p.precio_normal);
                 const precioFormateado = isNaN(precioNum) ? '₡0' : new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(precioNum);
                 const promocion = p.promocion || '—';

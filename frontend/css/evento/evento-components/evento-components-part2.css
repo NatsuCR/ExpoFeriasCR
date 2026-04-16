@@ -54,6 +54,16 @@
 .mini-prev { left: 8px; }
 .mini-next { right: 8px; }
 
+@media (max-width: 768px) {
+    .mini-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
+    .mini-prev { left: 3px; }
+    .mini-next { right: 3px; }
+}
+
 /* Puntos indicadores */
 .mini-dots {
     position: absolute;

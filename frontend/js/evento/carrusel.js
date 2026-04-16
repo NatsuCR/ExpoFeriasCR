@@ -134,15 +134,29 @@ export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId,
 
     function updateDimensions() {
         const viewportWidth = wrapper.clientWidth;
-
-        itemsVisible = Math.max(1, Math.floor(viewportWidth / cardWidth));
+        const isMobile = window.innerWidth <= 768;
 
         const firstCard = track.children[0];
-        if (!firstCard) return;
+        const secondCard = track.children[1];
 
-        const trackStyle = window.getComputedStyle(track);
-        const gap = parseFloat(trackStyle.gap || trackStyle.columnGap) || 0;
-        step = firstCard.offsetWidth + gap;
+        if (isMobile) {
+            itemsVisible = 1;
+            // Medición de precisión: distancia real entre el inicio de card 1 y card 2
+            if (firstCard && secondCard) {
+                step = secondCard.offsetLeft - firstCard.offsetLeft;
+            } else if (firstCard) {
+                step = firstCard.offsetWidth;
+            } else {
+                step = viewportWidth;
+            }
+        } else {
+            itemsVisible = Math.max(1, Math.floor(viewportWidth / cardWidth));
+            if (firstCard && secondCard) {
+                step = secondCard.offsetLeft - firstCard.offsetLeft;
+            } else if (firstCard) {
+                step = firstCard.offsetWidth;
+            }
+        }
 
         maxIndex = Math.max(0, totalItems - itemsVisible);
         if (currentIndex > maxIndex) currentIndex = maxIndex;
@@ -175,7 +189,11 @@ export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId,
     if (nextBtn) nextBtn.addEventListener('click', goNext);
 
     window.addEventListener('resize', updateDimensions);
-    updateDimensions();
+    
+    // Pequeña espera para asegurar que el navegador haya pintado y calculado anchos reales
+    requestAnimationFrame(() => {
+        updateDimensions();
+    });
 
     function iniciarAutoplay() {
         if (!autoPlayEnabled) return;

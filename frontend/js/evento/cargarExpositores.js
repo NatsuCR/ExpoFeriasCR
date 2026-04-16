@@ -56,8 +56,8 @@ function buildMiniCarrusel(imagenes, altText) {
     return `
         <div class="mini-carrusel">
             <div class="mini-carrusel-track">${slides}</div>
-            <button class="mini-btn mini-prev" style="display: ${imagenes.length > 1 ? 'flex' : 'none'}" aria-label="Anterior">&#10094;</button>
-            <button class="mini-btn mini-next" style="display: ${imagenes.length > 1 ? 'flex' : 'none'}" aria-label="Siguiente">&#10095;</button>
+            <button class="mini-btn mini-prev" style="display: ${imagenes.length > 1 ? 'flex' : 'none'}" aria-label="Anterior">❮</button>
+            <button class="mini-btn mini-next" style="display: ${imagenes.length > 1 ? 'flex' : 'none'}" aria-label="Siguiente">❯</button>
             <div class="mini-dots">
                 ${imagenes.map((_, i) => `<span class="mini-dot${i === 0 ? ' activo' : ''}"></span>`).join('')}
             </div>
@@ -158,11 +158,10 @@ export function renderExpositores(lista) {
 
     container.innerHTML = html;
 
-    // Re-obtener todas las categorías renderizadas para inicializar carruseles
+    // Inicializar carruseles para cada categoría renderizada
     const todasLasCategorias = [...ORDEN_CATEGORIAS, ...Object.keys(grupos)];
-
     todasLasCategorias.forEach(cat => {
-        const catId = cat.toLowerCase().replace(/\s+/g, '-');
+        const catId = slugify(cat);
         const wrapper = document.getElementById(`wrapper-${catId}`);
         if (wrapper) {
             initResponsiveCarousel(`wrapper-${catId}`, `track-${catId}`, `prev-${catId}`, `next-${catId}`, 300);
@@ -174,15 +173,30 @@ export function renderExpositores(lista) {
 }
 
 /**
+ * Función para generar IDs seguros (sin acentos ni espacios)
+ */
+function slugify(text) {
+    if (!text) return 'sin-categoria';
+    return text.toString().toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]+/g, '')
+        .replace(/--+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+}
+
+/**
  * Función auxiliar para generar el bloque HTML de una categoría
  */
 function generarHTMLCategoria(cat, expositores) {
-    const catId = cat.toLowerCase().replace(/\s+/g, '-');
+    const catId = slugify(cat);
     return `
         <div class="categoria-grupo" id="grupo-${catId}">
             <h3 class="categoria-titulo">${cat} <span style="font-size: 1rem; font-family: sans-serif; opacity: 0.6;">(${expositores.length})</span></h3>
             <div class="expositores-carrusel-wrapper" id="wrapper-${catId}">
-                <button class="expositores-btn prev" id="prev-${catId}">&#10094;</button>
+                <button class="expositores-btn prev" id="prev-${catId}">❮</button>
                 <div class="expositores-carrusel-viewport">
                     <div class="expositores-carrusel-track" id="track-${catId}">
                         ${expositores.map(e => {
@@ -210,7 +224,7 @@ function generarHTMLCategoria(cat, expositores) {
     }).join('')}
                     </div>
                 </div>
-                <button class="expositores-btn next" id="next-${catId}">&#10095;</button>
+                <button class="expositores-btn next" id="next-${catId}">❯</button>
             </div>
         </div>`;
 }

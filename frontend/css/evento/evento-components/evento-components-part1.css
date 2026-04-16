@@ -146,6 +146,8 @@
 .expositores-carrusel-viewport {
     overflow: hidden;
     width: 100%;
+    position: relative;
+    box-sizing: border-box;
 }
 
 .actividades-carrusel-track,
@@ -165,40 +167,77 @@
     box-sizing: border-box;
 }
 
-/* Botones prev/next */
+/* Botones prev/next principales */
 .actividades-btn,
 .expositores-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    font-size: 1.5rem;
-    width: 40px;
-    height: 40px;
+    background-color: var(--evento-secundario, #0033A0) !important;
+    color: white !important;
+    border: 2px solid white !important;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 45px;
+    height: 45px;
     cursor: pointer;
-    z-index: 10;
+    z-index: 100;
     border-radius: 50%;
-    transition: background 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .actividades-btn:hover,
 .expositores-btn:hover {
-    background-color: rgba(0,0,0,0.8);
+    background-color: var(--evento-secundario, #0033A0) !important;
+    transform: translateY(-50%) scale(1.1);
+    opacity: 1;
 }
 
 .actividades-btn.prev,
 .expositores-btn.prev {
-    left: 5px;
+    left: 10px;
 }
 
 .actividades-btn.next,
 .expositores-btn.next {
-    right: 5px;
+    right: 10px;
+}
+
+@media (max-width: 768px) {
+    .actividades-btn,
+    .expositores-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .actividades-btn.prev,
+    .expositores-btn.prev {
+        left: 0px;
+    }
+    
+    .actividades-btn.next,
+    .expositores-btn.next {
+        right: 0px;
+    }
+
+    /* Forzar ancho completo de cards en carrusel móvil */
+    .actividades-carrusel-track,
+    .expositores-carrusel-track {
+        gap: 0 !important;
+    }
+
+    .actividades-carrusel-track .actividad-card,
+    .expositores-carrusel-track .expositor-card {
+        flex: 0 0 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0; /* Opcional: para que se vea más fluido de borde a borde */
+    }
 }
 
 

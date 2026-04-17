@@ -295,9 +295,7 @@ function cargarEventoDesdePreview(datos) {
         if (searchInput && datos.color_borde_buscador_expositores) searchInput.style.borderColor = datos.color_borde_buscador_expositores;
     }
 
-    const contacto = document.querySelector('.contacto');
-    if (contacto) {
-    // Estilos de contacto gestionados vía variables CSS en r.style.setProperty
+
 
 
     // ──── ENTRADAS (PREVIEW) ────

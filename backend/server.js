@@ -56,10 +56,10 @@ app.get('/evento.html', async (req, res) => {
   try {
     const evento = await eventoService.obtenerEventoPorSlug(slug);
     let html = fs.readFileSync(filePath, 'utf8');
-    
+
     // Inyectar metadatos
     html = seoService.inyectarMetadatos(html, evento);
-    
+
     res.send(html);
   } catch (error) {
     console.error('[SEO] Error inyectando metadatos:', error);
@@ -73,7 +73,7 @@ app.get('/sitemap.xml', async (req, res) => {
     const eventos = await eventoService.obtenerTodosActivos();
     const slugs = eventos.map(e => e.slug);
     const xml = seoService.generarSitemapXML(slugs);
-    
+
     res.header('Content-Type', 'application/xml');
     res.send(xml);
   } catch (error) {
@@ -92,7 +92,7 @@ app.use(express.static(path.join(process.cwd(), 'frontend')));
 // 🧪 HEALTH CHECK
 // =======================
 app.get('/api/health', (req, res) => {
-  res.json({ 
+  res.json({
     status: 'OK',
     bootTime: SERVER_BOOT_TIME
   });

@@ -72,6 +72,11 @@ class MiCuenta {
       window.location.href = '/index.html';
     });
 
+    // Eliminar Cuenta
+    document.getElementById('btn-eliminar-cuenta')?.addEventListener('click', () => {
+        this.handleEliminarCuenta();
+    });
+
     // Cerrar modal eventos
     document.getElementById('btn-cerrar-modal-evento').addEventListener('click', () => {
       document.getElementById('modal-evento-detalles').style.display = 'none';
@@ -437,6 +442,39 @@ class MiCuenta {
 
     // TODO: Implementar cambio de contraseña desde Mi Cuenta
     this.mostrarMensajePassword('Usa "Olvidé contraseña" en el login para cambiarla', 'info', mensajeDiv);
+  }
+
+  async handleEliminarCuenta() {
+    if (!confirm('¿ESTÁS SEGURO? Esta acción eliminará permanentemente tu cuenta y todos tus eventos creados. Esta acción no se puede deshacer.')) {
+        return;
+    }
+
+    if (!confirm('¿Confirmas que deseas eliminar TODO definitivamente?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/eliminar-cuenta', {
+            method: 'DELETE',
+            headers: { 
+                'Authorization': `Bearer ${this.getToken()}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            alert('Tu cuenta ha sido eliminada. Lamentamos verte partir.');
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
+            window.location.href = '/index.html';
+        } else {
+            const data = await response.json();
+            throw new Error(data.error || 'Error al eliminar la cuenta');
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+        console.error('Error al eliminar cuenta:', error);
+    }
   }
 
   mostrarMensajePassword(mensaje, tipo, div) {

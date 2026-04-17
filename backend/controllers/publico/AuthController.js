@@ -81,6 +81,63 @@ class AuthController {
   async logout(req, res) {
     res.json({ message: 'Logout exitoso' });
   }
+
+  /**
+   * Eliminar cuenta del usuario autenticado
+   * DELETE /api/auth/eliminar-cuenta
+   */
+  async eliminarCuenta(req, res) {
+    const usuarioId = req.user.id;
+
+    if (!usuarioId) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    const connection = await pool.getConnection();
+    try {
+      await connection.beginTransaction();
+
+      // 1. Obtener IDs de eventos del usuario
+      const [eventos] = await connection.query(
+        'SELECT id FROM eventos WHERE usuario_id = ?',
+        [usuarioId]
+      );
+
+      if (eventos.length > 0) {
+        const eventoIds = eventos.map(e => e.id);
+
+        // 2. Eliminar relaciones de esos eventos
+        await connection.query('DELETE FROM precios_entrada WHERE evento_id IN (?)', [eventoIds]);
+        await connection.query('DELETE FROM actividades WHERE evento_id IN (?)', [eventoIds]);
+        await connection.query('DELETE FROM expositores WHERE evento_id IN (?)', [eventoIds]);
+        await connection.query('DELETE FROM evento_galeria WHERE evento_id IN (?)', [eventoIds]);
+        
+        // 3. Eliminar los eventos
+        await connection.query('DELETE FROM eventos WHERE usuario_id = ?', [usuarioId]);
+      }
+
+      // 4. Eliminar el usuario
+      const [result] = await connection.query(
+        'DELETE FROM usuarios WHERE id = ?',
+        [usuarioId]
+      );
+
+      if (result.affectedRows === 0) {
+        await connection.rollback();
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      await connection.commit();
+      res.json({ message: 'Cuenta eliminada exitosamente' });
+
+    } catch (error) {
+      if (connection) await connection.rollback();
+      console.error('Error al eliminar cuenta:', error);
+      res.status(500).json({ error: 'Error al eliminar la cuenta' });
+    } finally {
+      if (connection) connection.release();
+    }
+  }
 }
 
 module.exports = AuthController;

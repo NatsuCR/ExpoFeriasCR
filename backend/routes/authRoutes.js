@@ -15,5 +15,6 @@ router.post('/registro', registroLimiter, authController.registro.bind(authContr
 
 // 🔐 Ruta protegida
 router.post('/logout', authMiddleware, authController.logout.bind(authController));
+router.delete('/eliminar-cuenta', authMiddleware, authController.eliminarCuenta.bind(authController));
 
 module.exports = router;

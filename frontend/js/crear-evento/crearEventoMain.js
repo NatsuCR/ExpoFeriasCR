@@ -834,9 +834,11 @@ export class CrearEvento {
       const hidden = document.getElementById(hiddenId);
       if (!slider || !hidden) return;
       slider.addEventListener('input', (e) => {
-        const val = e.target.value;
+        const val = parseFloat(e.target.value);
         if (label) label.innerText = `${textPrefix}: ${Math.round(val * 100)}%`;
-        hidden.value = val;
+        // Para "Oscuridad", la opacidad real de la imagen es 1 - oscuridad
+        const opacityResult = (1 - val).toFixed(2);
+        hidden.value = opacityResult;
         hidden.dispatchEvent(new Event('input', { bubbles: true }));
       });
     };
@@ -850,13 +852,11 @@ export class CrearEvento {
     const textPrefix = 'Oscuridad';
     if (hidden && slider) {
       let val = parseFloat(hidden.value);
-      if (hidden.value && hidden.value.toString().includes('rgba')) {
-        const parts = hidden.value.split(',');
-        val = parseFloat(parts[parts.length - 1]);
-      }
       if (!isNaN(val)) {
-        slider.value = val;
-        if (label) label.innerText = `${textPrefix}: ${Math.round(val * 100)}%`;
+        // Invertimos para mostrar la "Oscuridad" en el slider
+        const darknessVal = (1 - val).toFixed(2);
+        slider.value = darknessVal;
+        if (label) label.innerText = `${textPrefix}: ${Math.round(darknessVal * 100)}%`;
       }
     }
   }

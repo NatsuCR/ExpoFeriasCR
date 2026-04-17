@@ -841,27 +841,23 @@ export class CrearEvento {
       });
     };
     handleSlider('opacidad_hero_slider', 'opacidad_hero_label', 'color_hero_overlay', 'Oscuridad');
-    handleSlider('opacidad_share_slider', 'opacidad_share_label', 'color_fondo_share', 'Opacidad');
   }
 
   actualizarTodosLosSliders() {
-    ['color_hero_overlay', 'color_fondo_share'].forEach(id => {
-      const hidden = document.getElementById(id);
-      const prefix = id === 'color_hero_overlay' ? 'opacidad_hero' : 'opacidad_share';
-      const slider = document.getElementById(prefix + '_slider');
-      const label = document.getElementById(prefix + '_label');
-      const textPrefix = id === 'color_hero_overlay' ? 'Oscuridad' : 'Opacidad';
-      if (hidden && slider) {
-        let val = parseFloat(hidden.value);
-        if (hidden.value && hidden.value.toString().includes('rgba')) {
-          const parts = hidden.value.split(',');
-          val = parseFloat(parts[parts.length - 1]);
-        }
-        if (!isNaN(val)) {
-          slider.value = val;
-          if (label) label.innerText = `${textPrefix}: ${Math.round(val * 100)}%`;
-        }
+    const hidden = document.getElementById('color_hero_overlay');
+    const slider = document.getElementById('opacidad_hero_slider');
+    const label = document.getElementById('opacidad_hero_label');
+    const textPrefix = 'Oscuridad';
+    if (hidden && slider) {
+      let val = parseFloat(hidden.value);
+      if (hidden.value && hidden.value.toString().includes('rgba')) {
+        const parts = hidden.value.split(',');
+        val = parseFloat(parts[parts.length - 1]);
       }
-    });
+      if (!isNaN(val)) {
+        slider.value = val;
+        if (label) label.innerText = `${textPrefix}: ${Math.round(val * 100)}%`;
+      }
+    }
   }
 }

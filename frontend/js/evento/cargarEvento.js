@@ -138,32 +138,18 @@ export async function cargarEvento(slug) {
         if (cf) document.documentElement.style.setProperty('--evento-fondo', cf);
         if (ct) document.body.style.color = ct;
 
-        // Color Fondo y Texto Share
-        const cfs = evento.colorFondoShare || evento.color_fondo_share || '0.5';
-        const ctshare = evento.colorTextoShare || evento.color_texto_share || '#2c1a0e';
-        
-        if (!isNaN(parseFloat(cfs)) && !cfs.toString().includes('rgba')) {
-            document.documentElement.style.setProperty('--color-fondo-share', `rgba(0,0,0,${cfs})`); // Por defecto negro transparente
-        } else {
-            document.documentElement.style.setProperty('--color-fondo-share', cfs);
-        }
+        // Color Fondo y Texto Share - Ahora color sólido
+        const cfs = evento.color_fondo_share || evento.colorFondoShare || '#ffffff';
+        const ctshare = evento.color_texto_share || evento.colorTextoShare || '#2c1a0e';
+        document.documentElement.style.setProperty('--color-fondo-share', cfs);
         document.documentElement.style.setProperty('--color-texto-share', ctshare);
 
-        // Overlay Hero / Opacidad Imagen
-        const cho = evento.color_hero_overlay || evento.colorHeroOverlay || '0.7';
-        if (!isNaN(parseFloat(cho)) && !cho.toString().includes('rgba')) {
-            // Caso: es solo un valor de opacidad numérico
+        // Opacidad Imagen Hero
+        const cho = parseFloat(evento.color_hero_overlay || evento.colorHeroOverlay || '0.7');
+        if (!isNaN(cho)) {
             document.documentElement.style.setProperty('--hero-img-opacity', cho);
             const overlay = document.querySelector('.hero-overlay');
-            if (overlay) overlay.style.display = 'none'; // Ocultar overlay de color
-        } else {
-            // Caso: es un color RGBA (compatibilidad con eventos antiguos)
-            const overlay = document.querySelector('.hero-overlay');
-            if (overlay) {
-                overlay.style.display = 'block';
-                overlay.style.backgroundColor = cho;
-            }
-            document.documentElement.style.setProperty('--hero-img-opacity', '1');
+            if (overlay) overlay.style.display = 'none';
         }
 
         // Hero: título, descripción, fechas

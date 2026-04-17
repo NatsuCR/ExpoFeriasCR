@@ -239,13 +239,8 @@ function cargarEventoDesdePreview(datos) {
 
     if (datos.color_texto) document.body.style.color = datos.color_texto;
 
-    // Color Fondo y Texto Share (Preview)
-    const cfs = datos.color_fondo_share || '0.5';
-    if (!isNaN(parseFloat(cfs)) && !cfs.toString().includes('rgba')) {
-        r.style.setProperty('--color-fondo-share', `rgba(0,0,0,${cfs})`);
-    } else {
-        r.style.setProperty('--color-fondo-share', cfs);
-    }
+    // Color Fondo y Texto Share (Preview) - Ahora color sólido, sin opacidad
+    if (datos.color_fondo_share) r.style.setProperty('--color-fondo-share', datos.color_fondo_share);
     r.style.setProperty('--color-texto-share', datos.color_texto_share || '#2c1a0e');
     
     // Contacto y Footer (Preview)
@@ -255,19 +250,15 @@ function cargarEventoDesdePreview(datos) {
     if (datos.color_fondo_footer) r.style.setProperty('--footer-fondo', datos.color_fondo_footer);
     if (datos.color_texto_footer) r.style.setProperty('--footer-texto', datos.color_texto_footer);
 
-    // Overlay Hero / Opacidad Imagen (Preview)
-    const cho = datos.color_hero_overlay || '0.7';
-    if (!isNaN(parseFloat(cho)) && !cho.toString().includes('rgba')) {
-        r.style.setProperty('--hero-img-opacity', cho);
-        const overlay = document.querySelector('.hero-overlay');
-        if (overlay) overlay.style.display = 'none';
-    } else {
-        const overlay = document.querySelector('.hero-overlay');
-        if (overlay) {
-            overlay.style.display = 'block';
-            overlay.style.backgroundColor = cho;
-        }
+    // Opacidad Imagen Hero (Preview)
+    const opaHero = parseFloat(datos.color_hero_overlay);
+    if (!isNaN(opaHero)) {
+        r.style.setProperty('--hero-img-opacity', opaHero);
     }
+    
+    // Ocultar overlay de color si se usa opacidad directa (opcional, para diseño limpio)
+    const overlay = document.querySelector('.hero-overlay');
+    if (overlay) overlay.style.display = 'none';
 
     const h1 = document.getElementById('eventoNombre');
     const desc = document.getElementById('eventoDescripcion');

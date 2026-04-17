@@ -217,11 +217,10 @@ export async function cargarEvento(slug) {
 
         const contactoSection = document.querySelector('.contacto');
         if (contactoSection) {
-            if (cfc) contactoSection.style.backgroundColor = cfc;
-            if (ctc) contactoSection.style.color = ctc;
-            if (cec) {
-                contactoSection.querySelectorAll('a').forEach(enlace => enlace.style.color = cec);
-            }
+            const r = document.documentElement;
+            if (cfc) r.style.setProperty('--contacto-fondo', cfc);
+            if (ctc) r.style.setProperty('--contacto-texto', ctc);
+            if (cec) r.style.setProperty('--contacto-enlace', cec);
         }
 
         // Footer
@@ -229,11 +228,9 @@ export async function cargarEvento(slug) {
         const ctfoot = evento.color_texto_footer || evento.colorTextoFooter;
         const footer = document.querySelector('footer');
         if (footer) {
-            if (cffoot) footer.style.backgroundColor = cffoot;
-            if (ctfoot) {
-                footer.style.color = ctfoot;
-                footer.querySelectorAll('p').forEach(p => p.style.color = ctfoot);
-            }
+            const r = document.documentElement;
+            if (cffoot) r.style.setProperty('--footer-fondo', cffoot);
+            if (ctfoot) r.style.setProperty('--footer-texto', ctfoot);
         }
 
     } catch (err) {

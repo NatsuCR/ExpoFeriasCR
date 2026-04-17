@@ -61,7 +61,7 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: var(--hero-img-opacity, 0.7); /* Opacidad dinámica */
+    opacity: var(--hero-img-opacity, 0.7);
 }
 .hero-overlay {
     position: absolute;
@@ -152,8 +152,8 @@ h2 {
 
 /* Footer */
 footer {
-    background-color: var(--evento-primario);
-    color: white;
+    background-color: var(--footer-fondo, var(--evento-primario));
+    color: var(--footer-texto, white);
     text-align: center;
     padding: 1.5rem 0;
     margin-top: 2rem;

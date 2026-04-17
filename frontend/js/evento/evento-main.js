@@ -247,6 +247,13 @@ function cargarEventoDesdePreview(datos) {
         r.style.setProperty('--color-fondo-share', cfs);
     }
     r.style.setProperty('--color-texto-share', datos.color_texto_share || '#2c1a0e');
+    
+    // Contacto y Footer (Preview)
+    if (datos.color_fondo_contacto) r.style.setProperty('--contacto-fondo', datos.color_fondo_contacto);
+    if (datos.color_texto_contacto) r.style.setProperty('--contacto-texto', datos.color_texto_contacto);
+    if (datos.color_enlace_contacto) r.style.setProperty('--contacto-enlace', datos.color_enlace_contacto);
+    if (datos.color_fondo_footer) r.style.setProperty('--footer-fondo', datos.color_fondo_footer);
+    if (datos.color_texto_footer) r.style.setProperty('--footer-texto', datos.color_texto_footer);
 
     // Overlay Hero / Opacidad Imagen (Preview)
     const cho = datos.color_hero_overlay || '0.7';

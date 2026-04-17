@@ -103,12 +103,13 @@
 /* Contacto */
 .contacto {
     text-align: center;
-    background-color: var(--evento-fondo);
+    background-color: var(--contacto-fondo, var(--evento-fondo));
+    color: var(--contacto-texto, #2c1a0e);
     padding: 2rem 0;
 }
 
 .contacto a {
-    color: var(--evento-primario);
+    color: var(--contacto-enlace, var(--evento-primario));
     text-decoration: none;
 }
 

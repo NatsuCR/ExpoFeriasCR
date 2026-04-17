@@ -190,7 +190,14 @@ export async function cargarEvento(slug) {
             });
         }
 
-        // ELIMINADO: Buscador de expositores personalizado (se usa estilo fijo)
+        // Color buscador y borde
+        const cbf = evento.color_buscador_expositores || evento.colorBuscadorExpositores;
+        const cbb = evento.color_borde_buscador_expositores || evento.colorBordeBuscadorExpositores;
+
+        const searchContainer = document.getElementById('expositorSearchContainer');
+        const searchInput = document.getElementById('expositorSearch');
+        if (searchContainer && cbf) searchContainer.style.backgroundColor = cbf;
+        if (searchInput && cbb) searchInput.style.borderColor = cbb;
 
         // Contacto
         const cfc = evento.color_fondo_contacto || evento.colorFondoContacto;

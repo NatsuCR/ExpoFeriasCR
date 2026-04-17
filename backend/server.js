@@ -11,6 +11,7 @@ const app = express();
 // =======================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', 1);
 
 // Registrar tiempo de inicio del servidor para forzar re-login al reiniciar
 const SERVER_BOOT_TIME = Date.now().toString();

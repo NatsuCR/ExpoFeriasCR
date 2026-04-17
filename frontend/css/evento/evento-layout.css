@@ -42,9 +42,9 @@
 /* Hero con carrusel de fondo */
 .hero-carrusel {
     position: relative;
-    height: 80vh;
+    height: 100vh;
     overflow: hidden;
-    background-color: #000; /* Fondo negro para que la opacidad oscurezca */
+    background-color: #000; /* Fondo negro para que la opacidad genere oscuridad */
 }
 .hero-carrusel-slides {
     position: absolute;
@@ -61,7 +61,10 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: var(--hero-img-opacity, 0.7) !important;
+}
+.hero-carrusel-slide img, .hero-slide img {
+    opacity: var(--hero-img-opacity, 0.7);
+    transition: opacity 0.3s ease;
 }
 .hero-overlay {
     position: absolute;

@@ -76,7 +76,7 @@ class StatsController {
                         WHEN page_url = '/' OR page_url LIKE '/index.html%' THEN 'Página Principal'
                         WHEN page_url LIKE '%slug=%' THEN (
                             COALESCE(
-                                (SELECT nombre FROM eventos WHERE slug = SUBSTRING_INDEX(SUBSTRING_INDEX(v.page_url, 'slug=', -1), '&', 1) LIMIT 1),
+                                (SELECT nombre FROM eventos WHERE slug = SUBSTRING_INDEX(SUBSTRING_INDEX(v.page_url, 'slug=', -1), '&', 1) COLLATE utf8mb4_unicode_ci LIMIT 1),
                                 CONCAT('Evento: ', SUBSTRING_INDEX(SUBSTRING_INDEX(v.page_url, 'slug=', -1), '&', 1))
                             )
                         )

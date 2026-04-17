@@ -24,10 +24,7 @@ async function reparar() {
     const eventCols = [
       { name: 'color_hero_overlay', type: 'varchar(30) DEFAULT "0.7"' },
       { name: 'color_fondo_share', type: 'varchar(30) DEFAULT "0.5"' },
-      { name: 'color_texto_share', type: 'varchar(30) DEFAULT "#2c1a0e"' },
-      { name: 'es_en_vivo', type: 'tinyint(4) DEFAULT 0' },
-      { name: 'url_en_vivo', type: 'text DEFAULT NULL' },
-      { name: 'borrador_cambios', type: 'longtext DEFAULT NULL' }
+      { name: 'color_texto_share', type: 'varchar(30) DEFAULT "#2c1a0e"' }
     ];
 
     for (const c of eventCols) {

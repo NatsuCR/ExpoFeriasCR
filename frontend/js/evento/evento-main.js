@@ -297,12 +297,7 @@ function cargarEventoDesdePreview(datos) {
 
     const contacto = document.querySelector('.contacto');
     if (contacto) {
-        if (datos.color_fondo_contacto) contacto.style.backgroundColor = datos.color_fondo_contacto;
-        if (datos.color_texto_contacto) contacto.style.color = datos.color_texto_contacto;
-        if (datos.color_enlace_contacto) {
-            contacto.querySelectorAll('a').forEach(a => a.style.color = datos.color_enlace_contacto);
-        }
-    }
+    // Estilos de contacto gestionados vía variables CSS en r.style.setProperty
 
 
     // ──── ENTRADAS (PREVIEW) ────
@@ -324,14 +319,7 @@ function cargarEventoDesdePreview(datos) {
         entradasParrafo.innerHTML = textoEntradas;
     }
 
-    const footer = document.querySelector('footer');
-    if (footer) {
-        if (datos.color_fondo_footer) footer.style.backgroundColor = datos.color_fondo_footer;
-        if (datos.color_texto_footer) {
-            footer.style.color = datos.color_texto_footer;
-            footer.querySelectorAll('p').forEach(p => p.style.color = datos.color_texto_footer);
-        }
-    }
+    // Estilos de footer gestionados vía variables CSS en r.style.setProperty
 
     // ──── PRECIOS ────
     if (datos.precios && datos.precios.length > 0) {

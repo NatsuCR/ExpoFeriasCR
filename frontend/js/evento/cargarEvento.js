@@ -175,11 +175,7 @@ export async function cargarEvento(slug) {
             document.querySelectorAll('h2').forEach(h2 => h2.style.color = ctseccion);
         }
 
-        // Menú
-        const cmf = evento.color_menu_fondo || evento.colorMenuFondo;
-        const cmt = evento.color_menu_texto || evento.colorMenuTexto;
-        const cmfh = evento.color_menu_fondo_hover || evento.colorMenuFondoHover;
-        const cmth = evento.color_menu_texto_hover || evento.colorMenuTextoHover;
+        // Menú gestionado vía variables CSS
 
         if (cmf) document.documentElement.style.setProperty('--color-menu-fondo', cmf);
         if (cmt) document.documentElement.style.setProperty('--color-menu-texto', cmt);
@@ -204,6 +200,10 @@ export async function cargarEvento(slug) {
         const contactoSection = document.querySelector('.contacto');
         if (contactoSection) {
             const r = document.documentElement;
+            // Limpiar estilos inline previos para dejar que las variables actúen
+            contactoSection.style.backgroundColor = '';
+            contactoSection.style.color = '';
+            
             if (cfc) r.style.setProperty('--contacto-fondo', cfc);
             if (ctc) r.style.setProperty('--contacto-texto', ctc);
             if (cec) r.style.setProperty('--contacto-enlace', cec);
@@ -215,6 +215,10 @@ export async function cargarEvento(slug) {
         const footer = document.querySelector('footer');
         if (footer) {
             const r = document.documentElement;
+            // Limpiar estilos inline previos para permitir personalización
+            footer.style.backgroundColor = '';
+            footer.style.color = '';
+            
             if (cffoot) r.style.setProperty('--footer-fondo', cffoot);
             if (ctfoot) r.style.setProperty('--footer-texto', ctfoot);
         }

@@ -59,7 +59,7 @@ export function guardarDatosPreview() {
         color_texto_footer: get('color_texto_footer') || '#ffffff',
         color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
         color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
-        color_fondo_share: get('color_fondo_share') || '0.5',
+        color_fondo_share: get('color_fondo_share') || '#ffffff',
         color_texto_share: get('color_texto_share') || '#2c1a0e'
     };
 

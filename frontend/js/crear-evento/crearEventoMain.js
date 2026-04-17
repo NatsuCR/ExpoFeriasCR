@@ -835,8 +835,9 @@ export class CrearEvento {
       if (!slider || !hidden) return;
       slider.addEventListener('input', (e) => {
         const val = parseFloat(e.target.value);
+        // Mostrar oscuridad (ej: 0.65 -> 65%)
         if (label) label.innerText = `${textPrefix}: ${Math.round(val * 100)}%`;
-        // Para "Oscuridad", la opacidad real de la imagen es 1 - oscuridad
+        // La opacidad real es el inverso (ej: 1 - 0.65 = 0.35)
         const opacityResult = (1 - val).toFixed(2);
         hidden.value = opacityResult;
         hidden.dispatchEvent(new Event('input', { bubbles: true }));
@@ -853,7 +854,7 @@ export class CrearEvento {
     if (hidden && slider) {
       let val = parseFloat(hidden.value);
       if (!isNaN(val)) {
-        // Invertimos para mostrar la "Oscuridad" en el slider
+        // La oscuridad guardada es 1 - opacidad (ej: 1 - 0.35 = 0.65)
         const darknessVal = (1 - val).toFixed(2);
         slider.value = darknessVal;
         if (label) label.innerText = `${textPrefix}: ${Math.round(darknessVal * 100)}%`;

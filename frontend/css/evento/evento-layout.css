@@ -66,6 +66,20 @@
     opacity: var(--hero-img-opacity, 0.7);
     transition: opacity 0.3s ease;
 }
+
+/* Soporte para imágenes de fondo si no se usa etiqueta img */
+.hero-carrusel-slide:not(:has(img)), .hero-slide:not(:has(img)) {
+    position: relative;
+}
+
+.hero-carrusel-slide:not(:has(img))::after, .hero-slide:not(:has(img))::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0,0,0, calc(1 - var(--hero-img-opacity, 0.7)));
+    z-index: 1;
+    pointer-events: none;
+}
 .hero-overlay {
     position: absolute;
     top: 0;

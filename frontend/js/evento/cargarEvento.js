@@ -176,6 +176,10 @@ export async function cargarEvento(slug) {
         }
 
         // Menú gestionado vía variables CSS
+        const cmf = evento.color_menu_fondo || evento.colorMenuFondo;
+        const cmt = evento.color_menu_texto || evento.colorMenuTexto;
+        const cmfh = evento.color_menu_fondo_hover || evento.colorMenuFondoHover;
+        const cmth = evento.color_menu_texto_hover || evento.colorMenuTextoHover;
 
         if (cmf) document.documentElement.style.setProperty('--color-menu-fondo', cmf);
         if (cmt) document.documentElement.style.setProperty('--color-menu-texto', cmt);

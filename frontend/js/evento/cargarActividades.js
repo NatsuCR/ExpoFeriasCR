@@ -133,7 +133,14 @@ export async function cargarActividades(slug) {
 
         const carruselControl = initResponsiveCarousel('actividadesWrapper', 'actividadesGrid', 'actividadesPrev', 'actividadesNext', 280, 10000);
 
-        // Toggle descripción (ELIMINADO: ahora se maneja vía onclick centralizado en helpers.js)
+        // Escuchar expansión de descripciones para pausar el carrusel
+        document.addEventListener('descToggle', (e) => {
+            if (e.detail.expanded) {
+                carruselControl.detener();
+            } else {
+                carruselControl.reanudar();
+            }
+        });
     } catch (err) {
         console.error(err);
         container.innerHTML = '<p>Error al cargar actividades.</p>';

@@ -98,7 +98,7 @@ function initHeroCarousel() {
     }
 
     function updateSlides() {
-        const slides = slidesWrap.querySelectorAll('.hero-slide');
+        const slides = slidesWrap.querySelectorAll('.hero-carrusel-slide');
         slides.forEach((s, i) => s.style.display = (i === galleryCarouselIndex) ? 'block' : 'none');
     }
 
@@ -108,7 +108,7 @@ function initHeroCarousel() {
     }
 
     function next() {
-        const slides = slidesWrap.querySelectorAll('.hero-slide');
+        const slides = slidesWrap.querySelectorAll('.hero-carrusel-slide');
         if (slides.length <= 1) return;
         galleryCarouselIndex = (galleryCarouselIndex + 1) % slides.length;
         updateSlides();
@@ -116,7 +116,7 @@ function initHeroCarousel() {
     }
 
     if (prevBtn) prevBtn.addEventListener('click', () => {
-        const slides = slidesWrap.querySelectorAll('.hero-slide');
+        const slides = slidesWrap.querySelectorAll('.hero-carrusel-slide');
         if (slides.length <= 1) return;
         galleryCarouselIndex = (galleryCarouselIndex - 1 + slides.length) % slides.length;
         updateSlides();
@@ -225,7 +225,7 @@ function cargarEventoDesdePreview(datos) {
     if (datos.imagen_portada) {
         const slides = document.getElementById('heroSlides');
         if (slides) {
-            slides.innerHTML = `<div class="hero-slide active" style="background-image:url('${datos.imagen_portada}');background-size:cover;background-position:center;width:100%;height:100%;position:absolute;">
+            slides.innerHTML = `<div class="hero-carrusel-slide active" style="background-image:url('${datos.imagen_portada}');">
                 <img src="${datos.imagen_portada}" alt="${datos.nombre}" style="display:none;" loading="lazy">
             </div>`;
         }
@@ -240,12 +240,26 @@ function cargarEventoDesdePreview(datos) {
     if (datos.color_texto) document.body.style.color = datos.color_texto;
 
     // Color Fondo y Texto Share (Preview)
-    r.style.setProperty('--color-fondo-share', datos.color_fondo_share || 'rgba(255, 255, 255, 0.5)');
+    const cfs = datos.color_fondo_share || '0.5';
+    if (!isNaN(parseFloat(cfs)) && !cfs.toString().includes('rgba')) {
+        r.style.setProperty('--color-fondo-share', `rgba(0,0,0,${cfs})`);
+    } else {
+        r.style.setProperty('--color-fondo-share', cfs);
+    }
     r.style.setProperty('--color-texto-share', datos.color_texto_share || '#2c1a0e');
 
-    if (datos.color_hero_overlay) {
+    // Overlay Hero / Opacidad Imagen (Preview)
+    const cho = datos.color_hero_overlay || '0.7';
+    if (!isNaN(parseFloat(cho)) && !cho.toString().includes('rgba')) {
+        r.style.setProperty('--hero-img-opacity', cho);
         const overlay = document.querySelector('.hero-overlay');
-        if (overlay) overlay.style.backgroundColor = datos.color_hero_overlay;
+        if (overlay) overlay.style.display = 'none';
+    } else {
+        const overlay = document.querySelector('.hero-overlay');
+        if (overlay) {
+            overlay.style.display = 'block';
+            overlay.style.backgroundColor = cho;
+        }
     }
 
     const h1 = document.getElementById('eventoNombre');
@@ -450,7 +464,7 @@ function cargarEventoDesdePreview(datos) {
             const sorted = datos.galeria.slice(); // Ya no ordenamos por campo 'orden'
             sorted.forEach((g, idx) => {
                 const div = document.createElement('div');
-                div.className = 'hero-slide';
+                div.className = 'hero-carrusel-slide';
                 div.style.backgroundImage = `url('${g.imagen_url}')`;
                 div.style.backgroundSize = 'cover';
                 div.style.backgroundPosition = 'center';

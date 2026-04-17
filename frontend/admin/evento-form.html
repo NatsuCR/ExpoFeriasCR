@@ -212,7 +212,16 @@
                                     <div class="form-group"><label>Color Secundario</label><input type="color" id="color_secundario" value="#0033A0"></div>
                                     <div class="form-group"><label>Color Fondo</label><input type="color" id="color_fondo" value="#f4e4c1"></div>
                                     <div class="form-group"><label>Color Texto</label><input type="color" id="color_texto" value="#2c1a0e"></div>
-                                    <div class="form-group"><label>Overlay Hero</label><input type="text" id="color_hero_overlay" placeholder="rgba(62,42,31,0.7)"></div>
+                                    <div class="form-group">
+                                        <label>Opacidad de Imágenes Hero</label>
+                                        <div class="opacity-slider-wrapper">
+                                            <input type="range" id="opacidad_hero_slider" min="0" max="1" step="0.05" value="0.7">
+                                            <div class="opacity-labels">
+                                                <span id="opacidad_hero_label">Oscuridad: 70%</span>
+                                            </div>
+                                            <input type="hidden" id="color_hero_overlay" value="0.7">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Colores de Títulos -->
@@ -222,7 +231,22 @@
                                     <div class="form-group"><label>Color Descripción Hero</label><input type="color" id="color_descripcion_hero" value="#FFFFFF"></div>
                                     <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#d4a373"></div>
                                     <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#8b5a2b"></div>
-                                    <div class="form-group"><label>Color Fondo Share</label><input type="color" id="color_fondo_share" value="rgba(255, 255, 255, 0.5)"></div>
+                                    <div class="form-group"><label>Fondo Contacto</label><input type="color" id="color_fondo_contacto" value="#f4e4c1"></div>
+                                    <div class="form-group"><label>Texto Contacto</label><input type="color" id="color_texto_contacto" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Enlace Contacto</label><input type="color" id="color_enlace_contacto" value="#8b5a2b"></div>
+                                    <div class="form-group"><label>Fondo Footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
+                                    <div class="form-group"><label>Texto Footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
+                                    <div class="form-group">
+                                        <label>Opacidad Fondo Compartir</label>
+                                        <div class="opacity-slider-wrapper">
+                                            <input type="range" id="opacidad_share_slider" min="0" max="1" step="0.05" value="0.5">
+                                            <div class="opacity-labels">
+                                                <span id="opacidad_share_label">Opacidad: 50%</span>
+                                            </div>
+                                            <input type="hidden" id="color_fondo_share" value="0.5">
+                                        </div>
+                                    </div>
+                                    <div class="form-group"><label>Texto Compartir</label><input type="color" id="color_texto_share" value="#2c1a0e"></div>
                                 </div>
 
                                 <!-- Colores del Menú -->

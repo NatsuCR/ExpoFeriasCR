@@ -41,6 +41,7 @@ export class CrearEvento {
     this.mensajeDiv = document.getElementById('mensaje-estado');
 
     this.init();
+    this.initOpacitySliders(); // Control de opacidad simplificado
     this.initUploads();
     this.initPreviewListeners();
 
@@ -132,6 +133,9 @@ export class CrearEvento {
           el.value = value;
         }
       });
+
+      // Sincronizar sliders de opacidad
+      this.actualizarTodosLosSliders();
 
       // CORRECCIÓN: Mostrar u ocultar el campo de URL de entradas según el modo cargado
       const tipoVenta = document.getElementById('tipo_venta')?.value;
@@ -822,5 +826,42 @@ export class CrearEvento {
     if (tipo !== 'error') {
       setTimeout(() => { this.mensajeDiv.style.display = 'none'; }, 8000);
     }
+  }
+  initOpacitySliders() {
+    const handleSlider = (sliderId, labelId, hiddenId, textPrefix) => {
+      const slider = document.getElementById(sliderId);
+      const label = document.getElementById(labelId);
+      const hidden = document.getElementById(hiddenId);
+      if (!slider || !hidden) return;
+      slider.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (label) label.innerText = `${textPrefix}: ${Math.round(val * 100)}%`;
+        hidden.value = val;
+        hidden.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+    };
+    handleSlider('opacidad_hero_slider', 'opacidad_hero_label', 'color_hero_overlay', 'Oscuridad');
+    handleSlider('opacidad_share_slider', 'opacidad_share_label', 'color_fondo_share', 'Opacidad');
+  }
+
+  actualizarTodosLosSliders() {
+    ['color_hero_overlay', 'color_fondo_share'].forEach(id => {
+      const hidden = document.getElementById(id);
+      const prefix = id === 'color_hero_overlay' ? 'opacidad_hero' : 'opacidad_share';
+      const slider = document.getElementById(prefix + '_slider');
+      const label = document.getElementById(prefix + '_label');
+      const textPrefix = id === 'color_hero_overlay' ? 'Oscuridad' : 'Opacidad';
+      if (hidden && slider) {
+        let val = parseFloat(hidden.value);
+        if (hidden.value && hidden.value.toString().includes('rgba')) {
+          const parts = hidden.value.split(',');
+          val = parseFloat(parts[parts.length - 1]);
+        }
+        if (!isNaN(val)) {
+          slider.value = val;
+          if (label) label.innerText = `${textPrefix}: ${Math.round(val * 100)}%`;
+        }
+      }
+    });
   }
 }

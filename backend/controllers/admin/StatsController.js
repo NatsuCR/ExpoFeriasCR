@@ -146,8 +146,8 @@ class StatsController {
                 chartType: chartType
             });
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ success: false, error: 'Error al obtener estadísticas' });
+            console.error('[StatsController.getStats]', error.stack);
+            res.status(500).json({ success: false, error: 'Error al obtener estadísticas', detail: error.message });
         }
     }
 
@@ -175,7 +175,7 @@ class StatsController {
             res.setHeader('Content-Disposition', 'attachment; filename=visitas.csv');
             res.send(csvContent);
         } catch (error) {
-            console.error(error);
+            console.error('[StatsController.exportVisits]', error.stack);
             res.status(500).json({ error: 'Error al exportar datos' });
         }
     }
@@ -216,7 +216,7 @@ class StatsController {
             res.setHeader('Content-Disposition', 'attachment; filename=resumen_visitas.csv');
             res.send(csvContent);
         } catch (error) {
-            console.error(error);
+            console.error('[StatsController.exportSummary]', error.stack);
             res.status(500).json({ error: 'Error al exportar resumen' });
         }
     }
@@ -287,7 +287,7 @@ class StatsController {
             res.setHeader('Content-Disposition', `attachment; filename=${filenamePrefix}.zip`);
             res.send(zipBuffer);
         } catch (error) {
-            console.error(error);
+            console.error('[StatsController.exportZip]', error.stack);
             res.status(500).json({ error: 'Error al generar el archivo ZIP' });
         }
     }

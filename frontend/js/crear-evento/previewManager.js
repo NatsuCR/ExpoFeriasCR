@@ -41,7 +41,7 @@ export function guardarDatosPreview() {
         color_secundario: get('color_secundario') || '#d4a373',
         color_fondo: get('color_fondo') || '#f4e4c1',
         color_texto: get('color_texto') || '#2c1a0e',
-        color_hero_overlay: get('color_hero_overlay') || 'rgba(62,42,31,0.7)',
+        color_hero_overlay: get('color_hero_overlay') || '0.7',
         color_titulo_seccion: get('color_titulo_seccion') || '#2c1a0e',
         color_titulo_hero: get('color_titulo_hero') || '#ffffff',
         color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
@@ -59,7 +59,7 @@ export function guardarDatosPreview() {
         color_texto_footer: get('color_texto_footer') || '#ffffff',
         color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
         color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
-        color_fondo_share: get('color_fondo_share') || 'rgba(255, 255, 255, 0.5)',
+        color_fondo_share: get('color_fondo_share') || '0.5',
         color_texto_share: get('color_texto_share') || '#2c1a0e'
     };
 

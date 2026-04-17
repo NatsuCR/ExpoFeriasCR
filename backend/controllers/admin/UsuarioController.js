@@ -7,6 +7,7 @@ class AdminUsuarioController {
       const [rows] = await pool.query('SELECT id, nombre, email, rol, activo, created_at FROM usuarios ORDER BY id');
       res.json(rows);
     } catch (error) {
+      console.error('[AdminUsuarioController.listar]', error.stack);
       res.status(500).json({ error: 'Error al listar usuarios' });
     }
   }
@@ -29,6 +30,7 @@ class AdminUsuarioController {
       const [newUser] = await pool.query('SELECT id, nombre, email, rol, activo FROM usuarios WHERE id = ?', [result.insertId]);
       res.status(201).json(newUser[0]);
     } catch (error) {
+      console.error('[AdminUsuarioController.crear]', error.stack);
       res.status(500).json({ error: 'Error al crear usuario' });
     }
   }
@@ -43,6 +45,7 @@ class AdminUsuarioController {
       if (result.affectedRows === 0) return res.status(404).json({ error: 'Usuario no encontrado' });
       res.json({ message: 'Usuario eliminado' });
     } catch (error) {
+      console.error('[AdminUsuarioController.eliminar]', error.stack);
       res.status(500).json({ error: 'Error al eliminar usuario' });
     }
   }

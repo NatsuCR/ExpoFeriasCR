@@ -44,6 +44,7 @@
     position: relative;
     height: 80vh;
     overflow: hidden;
+    background-color: #000; /* Fondo negro para que la opacidad oscurezca */
 }
 .hero-carrusel-slides {
     position: absolute;
@@ -54,12 +55,13 @@
     display: flex;
     transition: transform 0.5s ease-in-out;
 }
-.hero-carrusel-slide {
+.hero-carrusel-slide, .hero-slide {
     min-width: 100%;
     height: 100%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    opacity: var(--hero-img-opacity, 0.7); /* Opacidad dinámica */
 }
 .hero-overlay {
     position: absolute;

@@ -8,8 +8,8 @@ class AdminEventoController {
       const [rows] = await pool.query('SELECT * FROM eventos ORDER BY fecha_inicio DESC');
       res.json(rows);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al listar eventos' });
+      console.error('[EventoController.listar]', error.stack);
+      res.status(500).json({ error: 'Error al listar eventos', detail: error.message });
     }
   }
 
@@ -59,6 +59,9 @@ class AdminEventoController {
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
       color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
+      color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
+      color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
+      color_fondo_share, color_texto_share, es_en_vivo, url_en_vivo,
       precios, actividades, expositores, galeria
     } = req.body;
 
@@ -67,7 +70,7 @@ class AdminEventoController {
       imagen_portada || null, activo === undefined ? 1 : (activo ? 1 : 0),
       horario_imagen || null, mapa_embed || null,
       color_primario || '#8b5a2b', color_secundario || '#d4a373', color_fondo || '#f4e4c1',
-      color_texto || '#2c1a0e', color_hero_overlay || 'rgba(62,42,31,0.7)',
+      color_texto || '#2c1a0e', color_hero_overlay || '0.7',
       tipo_venta || 'taquilla', url_venta_online || null,
       color_titulo_hero || '#ffffff', color_descripcion_hero || '#ffffff',
       color_fondo_fechas || '#d4a373', color_texto_fechas || '#8b5a2b',
@@ -77,7 +80,12 @@ class AdminEventoController {
       color_fondo_contacto || '#f4e4c1', color_texto_contacto || '#2c1a0e',
       color_enlace_contacto || '#8b5a2b', color_fondo_footer || '#8b5a2b',
       color_texto_footer || '#ffffff', color_titulo_h3 || '#2c1a0e',
-      color_buscador_expositores || '#ffffff', color_borde_buscador_expositores || '#eee'
+      color_buscador_expositores || '#ffffff', color_borde_buscador_expositores || '#eee',
+      color_card_fondo || '#ffffff', color_card_borde || '#f0f0f0',
+      color_rubro_fondo || '#f0f0f0', color_rubro_texto || '#000000',
+      color_buscador_fondo || '#ffffff', color_buscador_borde || '#eeeeee',
+      color_btn_ver_mas || '#C8102E', color_fondo_share || '0.5',
+      color_texto_share || '#2c1a0e', es_en_vivo || 0, url_en_vivo || null
     ];
 
     const query = `
@@ -91,7 +99,10 @@ class AdminEventoController {
         color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
         color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
         color_fondo_footer, color_texto_footer,
-        color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores
+        color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
+        color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
+        color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
+        color_fondo_share, color_texto_share, es_en_vivo, url_en_vivo
       ) VALUES (${values.map(() => '?').join(', ')})
     `;
 
@@ -122,7 +133,10 @@ class AdminEventoController {
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
-      color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores
+      color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
+      color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
+      color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
+      color_fondo_share, color_texto_share, es_en_vivo, url_en_vivo
     } = data;
 
     try {
@@ -138,6 +152,9 @@ class AdminEventoController {
           color_fondo_contacto=?, color_texto_contacto=?, color_enlace_contacto=?,
           color_fondo_footer=?, color_texto_footer=?,
           color_titulo_h3=?, color_buscador_expositores=?, color_borde_buscador_expositores=?,
+          color_card_fondo=?, color_card_borde=?, color_rubro_fondo=?, color_rubro_texto=?,
+          color_buscador_fondo=?, color_buscador_borde=?, color_btn_ver_mas=?,
+          color_fondo_share=?, color_texto_share=?, es_en_vivo=?, url_en_vivo=?,
           estado='aprobado', borrador_cambios=NULL, updated_at=NOW()
         WHERE id = ?`,
         [
@@ -151,6 +168,9 @@ class AdminEventoController {
           color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
           color_fondo_footer, color_texto_footer,
           color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
+          color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
+          color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
+          color_fondo_share, color_texto_share, es_en_vivo, url_en_vivo,
           id
         ]
       );
@@ -218,6 +238,9 @@ class AdminEventoController {
           color_titulo_h3=?, color_buscador_expositores=?, color_borde_buscador_expositores=?,
           color_fondo_contacto=?, color_texto_contacto=?, color_enlace_contacto=?,
           color_fondo_footer=?, color_texto_footer=?,
+          color_card_fondo=?, color_card_borde=?, color_rubro_fondo=?, color_rubro_texto=?,
+          color_buscador_fondo=?, color_buscador_borde=?, color_btn_ver_mas=?,
+          color_fondo_share=?, color_texto_share=?, es_en_vivo=?, url_en_vivo=?,
           estado='aprobado', borrador_cambios=NULL, razon_rechazo=NULL, updated_at=NOW()
         WHERE id=?`,
         [
@@ -229,7 +252,13 @@ class AdminEventoController {
           body.color_menu_fondo || '#ffffff', body.color_menu_texto || '#ffffff', body.color_menu_fondo_hover || '', body.color_menu_texto_hover || '',
           body.color_titulo_h3 || '#2c1a0e', body.color_buscador_expositores || '#ffffff', body.color_borde_buscador_expositores || '#eeeeee',
           body.color_fondo_contacto || '#f4e4c1', body.color_texto_contacto || '#2c1a0e', body.color_enlace_contacto || '#8b5a2b',
-          body.color_fondo_footer || '#8b5a2b', body.color_texto_footer || '#ffffff', id
+          body.color_fondo_footer || '#8b5a2b', body.color_texto_footer || '#ffffff',
+          body.color_card_fondo || '#ffffff', body.color_card_borde || '#f0f0f0',
+          body.color_rubro_fondo || '#f0f0f0', body.color_rubro_texto || '#000000',
+          body.color_buscador_fondo || '#ffffff', body.color_buscador_borde || '#eeeeee',
+          body.color_btn_ver_mas || '#C8102E', body.color_fondo_share || 'rgba(255, 255, 255, 0.5)',
+          body.color_texto_share || '#2c1a0e', body.es_en_vivo || 0, body.url_en_vivo || null,
+          id
         ]
       );
       await relatedTables.actualizarTodo(id, body);

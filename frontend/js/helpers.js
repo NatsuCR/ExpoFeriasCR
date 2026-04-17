@@ -34,6 +34,11 @@ window.toggleDesc = function (btn) {
         short.style.setProperty('display', '-webkit-box', 'important');
         btn.innerHTML = 'Ver más';
     }
+
+    // Emitir evento para que otros componentes (como el carrusel) reaccionen
+    document.dispatchEvent(new CustomEvent('descToggle', { 
+        detail: { expanded: isFullHidden } 
+    }));
 };
 
 window.formatDescription = function (text, forceFull = false) {

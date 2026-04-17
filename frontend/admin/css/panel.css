@@ -297,3 +297,44 @@ body.admin-body {
 .btn-volver:hover {
     background-color: #5a6268;
 }
+
+/* ============================================
+   Control de Opacidad Simplificado
+   ============================================ */
+.opacity-slider-wrapper {
+    background: #f8f9fa;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.opacity-slider-wrapper input[type="range"] {
+    width: 100% !important;
+    height: 6px;
+    background: linear-gradient(to right, #ccc, var(--admin-primario));
+    border-radius: 5px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.opacity-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--admin-primario);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.opacity-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 500;
+    color: #444;
+}

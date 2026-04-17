@@ -102,8 +102,10 @@ app.get('/api/health', (req, res) => {
 // =======================
 // 🚀 SERVIDOR
 // =======================
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9090;
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Servidor listo en:`);
+  console.log(`- Local:   http://localhost:${PORT}`);
+  console.log(`- Red:     http://192.168.1.18:${PORT} (Si es tu IP local)`);
 });

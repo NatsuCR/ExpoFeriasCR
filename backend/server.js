@@ -104,8 +104,16 @@ app.get('/api/health', (req, res) => {
 // =======================
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Servidor listo en:`);
   console.log(`- Local:   http://localhost:${PORT}`);
   console.log(`- Red:     http://192.168.1.18:${PORT} (Si es tu IP local)`);
+});
+
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`❌ El puerto ${PORT} ya está siendo usado por otro programa.`);
+  } else {
+    console.error('❌ Error inesperado en el servidor:', error);
+  }
 });

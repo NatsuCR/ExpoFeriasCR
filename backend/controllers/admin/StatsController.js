@@ -11,10 +11,10 @@ class StatsController {
         try {
             const { date } = req.query; // Formato YYYY-MM-DD
             const filter = StatsController.PUBLIC_PAGES_FILTER;
-            
+
             let dateCondition = "";
             let dailyCondition = "visit_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
-            
+
             if (date) {
                 // Validar formato de fecha simple
                 if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
@@ -108,9 +108,9 @@ class StatsController {
                     GROUP BY HOUR(visit_date)
                     ORDER BY hour ASC
                 `);
-                
+
                 // Mapear a 24 horas para asegurar que todas las horas existan en el gráfico
-                chartData = Array.from({length: 24}, (_, i) => {
+                chartData = Array.from({ length: 24 }, (_, i) => {
                     const found = hourlyResult.find(r => r.hour === i);
                     return { label: `${i}:00`, total: found ? found.total : 0 };
                 });
@@ -202,7 +202,7 @@ class StatsController {
             const headers = ['Fecha', 'Visitas Totales', 'Visitantes Únicos', 'Visitas Index', 'Visitas Evento'];
             const csvRows = [headers.join(',')];
             for (const row of rows) {
-                const fecha = new Date(row.fecha).toISOString().slice(0,10);
+                const fecha = new Date(row.fecha).toISOString().slice(0, 10);
                 csvRows.push([
                     fecha,
                     row.total_visitas,
@@ -227,10 +227,10 @@ class StatsController {
             const { date } = req.query;
             const zip = new AdmZip();
             const filter = StatsController.PUBLIC_PAGES_FILTER;
-            
+
             let dateCondition = "";
             let filenamePrefix = "estadisticas_globales";
-            
+
             if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
                 dateCondition = ` AND DATE(visit_date) = '${date}'`;
                 filenamePrefix = `estadisticas_${date}`;
@@ -259,7 +259,7 @@ class StatsController {
             `);
             let dailyCsv = '\uFEFFFecha,Visitas Totales,Visitantes Únicos,Visitas Index,Visitas Evento\n';
             for (const row of dailyRows) {
-                const f = new Date(row.fecha).toISOString().slice(0,10);
+                const f = new Date(row.fecha).toISOString().slice(0, 10);
                 dailyCsv += `${f},${row.total_visitas},${row.visitantes_unicos},${row.visitas_index},${row.visitas_evento}\n`;
             }
             zip.addFile('resumen_diario.csv', Buffer.from(dailyCsv, 'utf8'));
@@ -293,4 +293,4 @@ class StatsController {
     }
 }
 
-module.exports = new AdminStatsController();
+module.exports = StatsController;

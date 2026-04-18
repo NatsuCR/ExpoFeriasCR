@@ -216,8 +216,8 @@ class AdminEventosPendientesController {
             await pool.query('DELETE FROM expositores WHERE evento_id = ?', [eventoId]);
             for (const e of b.expositores) {
               if (e.nombre) await pool.query('INSERT INTO expositores (evento_id, nombre, tipo_expositor, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [eventoId, e.nombre, e.tipo_expositor || e.rubro || null, e.ubicacion || null, e.descripcion || null, 
-                  Array.isArray(e.logo) ? JSON.stringify(e.logo) : e.logo || null, 
+                [eventoId, e.nombre, e.tipo_expositor || e.rubro || null, e.ubicacion || null, e.descripcion || null,
+                  Array.isArray(e.logo) ? JSON.stringify(e.logo) : e.logo || null,
                   e.video || null]);
             }
           }
@@ -351,4 +351,4 @@ class AdminEventosPendientesController {
   }
 }
 
-module.exports = new AdminEventosPendientesController();
+module.exports = AdminEventosPendientesController;

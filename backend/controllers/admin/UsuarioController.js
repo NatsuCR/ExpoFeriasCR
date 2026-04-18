@@ -51,4 +51,4 @@ class AdminUsuarioController {
   }
 }
 
-module.exports = new AdminUsuarioController();
+module.exports = AdminUsuarioController;

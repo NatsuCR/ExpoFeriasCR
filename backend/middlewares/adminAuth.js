@@ -1,18 +1,31 @@
 /**
  * Middleware para restringir el acceso solo a usuarios con rol 'admin'.
- * Debe usarse DESPUÉS del authMiddleware (que es el que extrae el usuario del token).
+ * Debe usarse DESPUÉS del authMiddleware.
  */
 const adminOnly = (req, res, next) => {
-    if (!req.user) {
-        return res.status(401).json({ error: 'No autenticado.' });
-    }
+    try {
+        if (!req.user) {
+            return res.status(401).json({ error: 'Sesión no iniciada o token inválido.' });
+        }
 
-    if (req.user.rol !== 'admin') {
-        console.warn(`[SEGURIDAD] Intento de acceso no autorizado de: ${req.user.email} con rol: ${req.user.rol}`);
-        return res.status(403).json({ error: 'Acceso prohibido. Se requieren permisos de administrador.' });
-    }
+        // Si el rol es nulo o no es admin, denegar acceso
+        if (!req.user.rol || req.user.rol !== 'admin') {
+            const userEmail = req.user.email || 'Usuario desconocido';
+            const userRol = req.user.rol || 'sin rol';
+            console.warn(`[SEGURIDAD] Acceso denegado: ${userEmail} (Rol: ${userRol}) intentó acceder a ruta administrativa.`);
+            
+            return res.status(403).json({ 
+                error: 'Acceso prohibido.', 
+                message: 'Se requieren permisos de administrador para realizar esta acción.' 
+            });
+        }
 
-    next();
+        next();
+    } catch (error) {
+        console.error('[adminAuth Middleware Error]:', error);
+        res.status(500).json({ error: 'Error interno en la validación de permisos.' });
+    }
 };
 
 module.exports = adminOnly;
+

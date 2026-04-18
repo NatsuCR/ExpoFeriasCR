@@ -144,6 +144,9 @@ function escapeHtml(str) {
 }
 
 btnCrearUsuario.addEventListener('click', async () => {
+    const nombre = document.getElementById('nombre').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
     const rol = document.getElementById('rol').value;
 
     if (!nombre || !email || !password) {

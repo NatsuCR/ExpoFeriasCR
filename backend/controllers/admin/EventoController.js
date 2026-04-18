@@ -281,4 +281,4 @@ class AdminEventoController {
   }
 }
 
-module.exports = AdminEventoController;
+module.exports = new AdminEventoController();

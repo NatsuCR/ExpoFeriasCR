@@ -14,7 +14,7 @@ const UploadController = require('../controllers/admin/UploadController');
 
 const router = express.Router();
 const uploadController = new UploadController();
-const adminEvento = new AdminEventoController();
+const adminEvento = AdminEventoController;
 const adminEventosPendientes = new AdminEventosPendientesController();
 const adminPrecio = new AdminPrecioController();
 const adminActividad = new AdminActividadController();

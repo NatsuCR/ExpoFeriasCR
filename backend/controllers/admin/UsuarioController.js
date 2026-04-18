@@ -49,6 +49,28 @@ class AdminUsuarioController {
       res.status(500).json({ error: 'Error al eliminar usuario' });
     }
   }
+
+  async eliminarVarios(req, res) {
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'No se enviaron IDs para eliminar' });
+    }
+
+    // Evitar que el administrador se elimine a sí mismo
+    const idsFiltrados = ids.filter(id => parseInt(id) !== req.user.id);
+    
+    if (idsFiltrados.length === 0) {
+      return res.status(400).json({ error: 'No puedes eliminarte a ti mismo' });
+    }
+
+    try {
+      const [result] = await pool.query('DELETE FROM usuarios WHERE id IN (?)', [idsFiltrados]);
+      res.json({ message: `${result.affectedRows} usuario(s) eliminado(s)` });
+    } catch (error) {
+      console.error('[AdminUsuarioController.eliminarVarios]', error.stack);
+      res.status(500).json({ error: 'Error al eliminar usuarios seleccionados' });
+    }
+  }
 }
 
 module.exports = new AdminUsuarioController();

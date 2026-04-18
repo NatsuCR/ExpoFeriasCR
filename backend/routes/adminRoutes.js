@@ -76,6 +76,7 @@ router.delete('/galeria/:id', adminGaleria.eliminar.bind(adminGaleria));
 // ========== Rutas para Usuarios ==========
 router.get('/usuarios', adminUsuario.listar.bind(adminUsuario));
 router.post('/usuarios', adminUsuario.crear.bind(adminUsuario));
+router.post('/usuarios/bulk-delete', adminUsuario.eliminarVarios.bind(adminUsuario));
 router.delete('/usuarios/:id', adminUsuario.eliminar.bind(adminUsuario));
 
 // ========== Rutas para Estadísticas ==========

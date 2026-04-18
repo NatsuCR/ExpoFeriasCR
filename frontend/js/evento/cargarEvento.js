@@ -139,10 +139,35 @@ export async function cargarEvento(slug) {
         if (ct) document.body.style.color = ct;
 
         // Color Fondo y Texto Share - Ahora color sólido
-        const cfs = evento.color_fondo_share || evento.colorFondoShare || '#ffffff';
+        const cfs = evento.color_fondo_share || evento.colorFondoShare || 'rgba(255, 255, 255, 0.5)';
         const ctshare = evento.color_texto_share || evento.colorTextoShare || '#2c1a0e';
         document.documentElement.style.setProperty('--color-fondo-share', cfs);
         document.documentElement.style.setProperty('--color-texto-share', ctshare);
+
+        // Lógica de compartir automática (v5.9)
+        const currentUrl = encodeURIComponent(window.location.href);
+        const eventTitle = encodeURIComponent(`¡Mira este evento en ExpoFeriasCR: ${nombre}!`);
+
+        const btnWa = document.getElementById('shareWhatsapp');
+        const btnFb = document.getElementById('shareFacebook');
+        const btnTg = document.getElementById('shareTelegram');
+        const btnTw = document.getElementById('shareTwitter');
+        const btnCopy = document.getElementById('shareCopy');
+
+        if (btnWa) btnWa.href = `https://api.whatsapp.com/send?text=${eventTitle}%20${currentUrl}`;
+        if (btnFb) btnFb.href = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+        if (btnTg) btnTg.href = `https://t.me/share/url?url=${currentUrl}&text=${eventTitle}`;
+        if (btnTw) btnTw.href = `https://twitter.com/intent/tweet?text=${eventTitle}&url=${currentUrl}`;
+
+        if (btnCopy) {
+            btnCopy.onclick = () => {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    const originalHtml = btnCopy.innerHTML;
+                    btnCopy.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => { btnCopy.innerHTML = originalHtml; }, 2000);
+                });
+            };
+        }
 
         // Opacidad Imagen Hero
         const cho = parseFloat(evento.color_hero_overlay || evento.colorHeroOverlay || '0.7');

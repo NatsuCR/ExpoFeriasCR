@@ -15,6 +15,7 @@ class UsuarioEventsController {
       color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
       color_titulo_h3, color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
+      color_fondo_share, color_texto_share,
       precios, actividades, expositores, galeria
     } = body;
 
@@ -35,8 +36,10 @@ class UsuarioEventsController {
           color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
           color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
           color_titulo_h3, color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
-          color_fondo_footer, color_texto_footer, estado, activo
-        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pendiente',0)`,
+          color_fondo_footer, color_texto_footer, 
+          color_fondo_share, color_texto_share,
+          estado, activo
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pendiente',0)`,
         [
           usuarioId, slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
           imagen_portada, horario_imagen, mapa_embed, tipo_venta, url_venta_online,
@@ -45,7 +48,8 @@ class UsuarioEventsController {
           color_titulo_hero || '#ffffff', color_descripcion_hero || '#ffffff', color_fondo_fechas || '#d4a373', color_texto_fechas || '#8b5a2b',
           color_menu_fondo || '#ffffff', color_menu_texto || '#ffffff', color_menu_fondo_hover || '', color_menu_texto_hover || '',
           color_titulo_h3 || '#2c1a0e', color_fondo_contacto || '#f4e4c1', color_texto_contacto || '#2c1a0e', color_enlace_contacto || '#8b5a2b',
-          color_fondo_footer || '#8b5a2b', color_texto_footer || '#ffffff'
+          color_fondo_footer || '#8b5a2b', color_texto_footer || '#ffffff',
+          color_fondo_share || 'rgba(255, 255, 255, 0.5)', color_texto_share || '#2c1a0e'
         ]
       );
 

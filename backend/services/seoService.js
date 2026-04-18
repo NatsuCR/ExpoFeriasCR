@@ -94,7 +94,7 @@ class SEOService {
       const defaultTitle = 'Evento No Encontrado | ExpoFeriasCR';
       const defaultDesc = 'Lo sentimos, este evento no existe o fue eliminado.';
       const defaultImg = 'https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
-      
+
       return html
         .replace(/{{EVENT_NAME}}/g, 'Evento No Encontrado')
         .replace(/{{EVENT_DESC}}/g, defaultDesc)
@@ -103,8 +103,8 @@ class SEOService {
         .replace('{{{EVENT_JSON_LD}}}', '');
     }
 
-    const descBreve = evento.descripcion.length > 155 
-      ? evento.descripcion.substring(0, 152).trim() + '...' 
+    const descBreve = evento.descripcion.length > 155
+      ? evento.descripcion.substring(0, 152).trim() + '...'
       : evento.descripcion;
 
     let imagenUrl = evento.imagenPortada || evento.imagen_portada || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';

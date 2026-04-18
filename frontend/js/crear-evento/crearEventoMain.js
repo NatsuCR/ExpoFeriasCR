@@ -427,7 +427,8 @@ export class CrearEvento {
       'color_titulo_h3',
       'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
       'color_fondo_footer', 'color_texto_footer',
-      'color_fondo_share', 'color_texto_share'
+      'color_fondo_share', 'color_texto_share',
+      'color_buscador_expositores', 'color_borde_buscador_expositores'
     ];
     camposWatch.forEach(id => {
       const el = document.getElementById(id);
@@ -663,6 +664,8 @@ export class CrearEvento {
       color_texto_footer: get('color_texto_footer') || '#ffffff',
       color_fondo_share: get('color_fondo_share') || 'rgba(255, 255, 255, 0.5)',
       color_texto_share: get('color_texto_share') || '#2c1a0e',
+      color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
+      color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
       activo: document.getElementById('activo')?.checked ? 1 : 0
     };
 

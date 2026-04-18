@@ -98,13 +98,13 @@ class RelatedTablesController {
           [
             eventoId,
             e.nombre,
-            e.tipo_expositor || 'Administración',
+            e.tipo_expositor || e.rubro || 'Administración',
             e.ubicacion || null,
             e.descripcion || null,
-            Array.isArray(e.logo)
-              ? JSON.stringify(e.logo)
-              : e.logo || null,
-            e.video || null
+            Array.isArray(e.imagen_logo)
+              ? JSON.stringify(e.imagen_logo)
+              : (Array.isArray(e.logo) ? JSON.stringify(e.logo) : (e.imagen_logo || e.logo || null)),
+            e.video_url || e.video || null
           ]
         );
       }

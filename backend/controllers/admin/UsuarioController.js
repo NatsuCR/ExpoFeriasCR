@@ -59,7 +59,7 @@ class AdminUsuarioController {
 
     // Evitar que el administrador se elimine a sí mismo
     const idsFiltrados = ids.filter(id => parseInt(id) !== req.user.id);
-    
+
     if (idsFiltrados.length === 0) {
       return res.status(400).json({ error: 'No puedes eliminarte a ti mismo' });
     }

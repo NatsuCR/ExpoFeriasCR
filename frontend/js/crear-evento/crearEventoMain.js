@@ -54,7 +54,7 @@ export class CrearEvento {
   }
 
   getUsuarioStorage() {
-    let uAdmin = JSON.parse(localStorage.getItem('user') || 'null');
+    let uAdmin = JSON.parse(localStorage.getItem('usuario') || 'null');
     let uNormal = JSON.parse(localStorage.getItem('usuario') || 'null');
     if (window.location.pathname.includes('/admin/')) {
       return uAdmin || uNormal;
@@ -81,7 +81,6 @@ export class CrearEvento {
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
-        localStorage.removeItem('user');
         alert('Tu sesión expiró. Por favor inicia sesión nuevamente.');
         window.location.href = '/index.html';
         return;
@@ -375,7 +374,7 @@ export class CrearEvento {
   actualizarBotonSubmit() {
     const btn = document.getElementById('btn-confirmar-cambios') || document.getElementById('btn-enviar-revision');
     if (btn) {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const user = JSON.parse(localStorage.getItem('usuario') || '{}');
       const isAdmin = user.rol === 'admin';
 
       if (this.eventoId) {
@@ -739,7 +738,11 @@ export class CrearEvento {
         const esAprobadoOEnRevision = ['aprobado', 'edicion_pendiente'].includes(this.eventoEstado);
         if (esAprobadoOEnRevision && !this.formDirty) {
           if (btn) { this.actualizarBotonSubmit(); btn.disabled = false; }
-          this.mostrarMensaje('ℹ️ No has hecho ningún cambio. Modifica algún campo antes de enviar a revisión.', 'info');
+        const user = JSON.parse(localStorage.getItem('usuario') || '{}');
+        const msg = (user.rol === 'admin') 
+          ? 'ℹ️ No has hecho ningún cambio. Modifica algún campo antes de guardar.' 
+          : 'ℹ️ No has hecho ningún cambio. Modifica algún campo antes de enviar a revisión.';
+        this.mostrarMensaje(msg, 'info');
           window.scrollTo({ top: 0, behavior: 'smooth' });
           return;
         }

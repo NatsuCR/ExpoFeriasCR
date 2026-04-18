@@ -46,11 +46,13 @@ class SEOService {
       }
     };
 
-    // Agregar oferta si hay información de venta online
-    if (evento.url_venta_online || evento.urlVentaOnline) {
+    // Agregar oferta si hay información de venta online o es gratis
+    const tipoVenta = evento.tipo_venta || evento.tipoVenta;
+    if (evento.url_venta_online || evento.urlVentaOnline || tipoVenta === 'gratis') {
       eventSchema.offers = {
         "@type": "Offer",
-        "url": evento.url_venta_online || evento.urlVentaOnline,
+        "url": evento.url_venta_online || evento.urlVentaOnline || `${baseUrl}/evento.html?slug=${evento.slug}`,
+        "price": tipoVenta === 'gratis' ? "0" : undefined,
         "priceCurrency": "CRC",
         "availability": "https://schema.org/InStock",
         "validFrom": evento.fechaInicio || evento.fecha_inicio

@@ -311,6 +311,9 @@ function cargarEventoDesdePreview(datos) {
             case 'ambos':
                 textoEntradas = `Entradas en taquilla y en línea: <a href="${urlVentaOnline}" target="_blank">Comprar en línea</a>`;
                 break;
+            case 'gratis':
+                textoEntradas = '🎟️ <strong>Entrada Gratuita</strong>';
+                break;
             default:
                 textoEntradas = 'Entradas solo en taquilla del campo ferial';
         }

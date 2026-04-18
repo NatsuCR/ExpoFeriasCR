@@ -141,7 +141,7 @@ export class CrearEvento {
       const urlGroup = document.getElementById('urlVentaGroup');
       if (urlGroup && (tipoVenta === 'online' || tipoVenta === 'ambos')) {
         urlGroup.style.display = 'block';
-      } else if (urlGroup) {
+      } else {
         urlGroup.style.display = 'none';
       }
 

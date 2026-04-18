@@ -17,7 +17,7 @@ class AdminExpositorController {
       const [result] = await pool.query(
         `INSERT INTO expositores (evento_id, nombre, tipo_expositor, descripcion, ubicacion, es_pagado, imagen_logo, sitio_web, video_url)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [evento_id, nombre, tipo_expositor || rubro, descripcion, ubicacion, es_pagado, imagen_logo, sitio_web, video_url]
+        [evento_id, nombre, tipo_expositor || rubro || 'Administración', descripcion, ubicacion, es_pagado, imagen_logo || req.body.logo, sitio_web, video_url || req.body.video]
       );
       const [newExpo] = await pool.query('SELECT * FROM expositores WHERE id = ?', [result.insertId]);
       res.status(201).json(newExpo[0]);
@@ -33,7 +33,7 @@ class AdminExpositorController {
       const [result] = await pool.query(
         `UPDATE expositores SET nombre=?, tipo_expositor=?, descripcion=?, ubicacion=?, es_pagado=?, imagen_logo=?, sitio_web=?, video_url=?, updated_at=NOW()
          WHERE id = ?`,
-        [nombre, tipo_expositor || rubro, descripcion, ubicacion, es_pagado, imagen_logo, sitio_web, video_url, id]
+        [nombre, tipo_expositor || rubro || 'Administración', descripcion, ubicacion, es_pagado, imagen_logo || req.body.logo, sitio_web, video_url || req.body.video, id]
       );
       if (result.affectedRows === 0) return res.status(404).json({ error: 'Expositor no encontrado' });
       const [updated] = await pool.query('SELECT * FROM expositores WHERE id = ?', [id]);

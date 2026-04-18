@@ -70,7 +70,7 @@ window.formatDescription = function (text, forceFull = false) {
  * Muestra un modal de confirmación premium asíncrono.
  * Retorna una Promesa que resuelve en true (confirmado) o false (cancelado).
  */
-window.confirmarAccion = function(titulo = '¿Estás seguro?', mensaje = 'Esta acción no se puede deshacer.') {
+window.confirmarAccion = function(titulo = '¿Estás seguro?', mensaje = 'Esta acción no se puede deshacer.', textoOk = 'Confirmar', claseOk = 'confirm-btn-danger') {
     return new Promise((resolve) => {
         // 1. Asegurar que el modal existe en el DOM
         let overlay = document.getElementById('custom-confirm-modal');
@@ -80,26 +80,38 @@ window.confirmarAccion = function(titulo = '¿Estás seguro?', mensaje = 'Esta a
             overlay.className = 'confirm-modal-overlay';
             overlay.innerHTML = `
                 <div class="confirm-modal-content">
-                    <div class="confirm-modal-icon">
+                    <div class="confirm-modal-icon" id="confirm-modal-icon">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div class="confirm-modal-title" id="confirm-modal-title"></div>
                     <div class="confirm-modal-message" id="confirm-modal-message"></div>
                     <div class="confirm-modal-actions">
                         <button class="confirm-btn confirm-btn-cancel" id="confirm-btn-cancel">Cancelar</button>
-                        <button class="confirm-btn confirm-btn-danger" id="confirm-btn-ok">Eliminar</button>
+                        <button class="confirm-btn" id="confirm-btn-ok"></button>
                     </div>
                 </div>
             `;
             document.body.appendChild(overlay);
         }
 
-        // 2. Configurar contenido
+        // 2. Configurar contenido y estilos
         document.getElementById('confirm-modal-title').innerText = titulo;
         document.getElementById('confirm-modal-message').innerText = mensaje;
-
+        
         const btnOk = document.getElementById('confirm-btn-ok');
         const btnCancel = document.getElementById('confirm-btn-cancel');
+        const modalIcon = document.getElementById('confirm-modal-icon');
+
+        btnOk.innerText = textoOk;
+        // Limpiar clases previas de color y añadir la nueva
+        btnOk.className = 'confirm-btn ' + claseOk;
+        
+        // Cambiar icono según el tipo (éxito vs advertencia)
+        if (claseOk.includes('success')) {
+            modalIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
+        } else {
+            modalIcon.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i>';
+        }
 
         // 3. Mostrar modal
         overlay.classList.add('active');

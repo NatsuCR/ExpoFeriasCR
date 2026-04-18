@@ -110,7 +110,9 @@ async function eliminarUsuariosSeleccionados() {
 
     const confirmado = await window.confirmarAccion(
         '¿Eliminar seleccionados?',
-        `Se eliminarán permanentemente ${ids.length} usuario(s). Esta acción no se puede deshacer.`
+        `Se eliminarán permanentemente ${ids.length} usuario(s). Esta acción no se puede deshacer.`,
+        'Eliminar',
+        'confirm-btn-danger'
     );
     if (!confirmado) return;
 

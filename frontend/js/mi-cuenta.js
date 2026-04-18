@@ -31,10 +31,27 @@ class MiCuenta {
     this.init();
   }
 
-  init() {
+  async init() {
+    await this.sincronizarPerfil();
     this.cargarPerfil();
     this.cargarEventos();
     this.setupEventListeners();
+  }
+
+  async sincronizarPerfil() {
+    try {
+      const response = await fetch('/api/auth/me', {
+        headers: { 'Authorization': `Bearer ${this.getToken()}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        // Actualizar datos en memoria y en localStorage
+        this.usuario = data.user;
+        localStorage.setItem('usuario', JSON.stringify(data.user));
+      }
+    } catch (error) {
+      console.warn('Error al sincronizar perfil:', error);
+    }
   }
 
   setupEventListeners() {
@@ -155,7 +172,9 @@ class MiCuenta {
 
   async cargarEventos() {
     try {
-      const response = await fetch('/api/eventos/mis-eventos', {
+      // Cache busting: añadir timestamp para forzar descarga desde el servidor
+      const t = Date.now();
+      const response = await fetch(`/api/eventos/mis-eventos?t=${t}`, {
         headers: { 'Authorization': `Bearer ${this.getToken()}` },
         cache: 'no-store'
       });

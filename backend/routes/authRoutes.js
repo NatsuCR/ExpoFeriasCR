@@ -11,6 +11,7 @@ const authController = new AuthController();
 
 // 🔓 Rutas públicas
 router.post('/login', loginLimiter, authController.login.bind(authController));
+router.get('/me', authMiddleware, (req, res) => authController.obtenerPerfil(req, res));
 router.post('/registro', registroLimiter, authController.registro.bind(authController));
 
 // 🔐 Ruta protegida

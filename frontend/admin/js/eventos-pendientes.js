@@ -24,8 +24,10 @@ class AdminEventosPendientes {
   verificarAutenticacion() {
     const usuario = JSON.parse(localStorage.getItem('user') || 'null');
     if (!usuario || usuario.rol !== 'admin') {
-      alert('Acceso denegado. Se requieren permisos de administrador');
-      window.location.href = '/admin/login.html';
+      mostrarMensaje('Acceso denegado. Se requieren permisos de administrador', 'error');
+      setTimeout(() => {
+        window.location.href = '/admin/login.html';
+      }, 2000);
     }
   }
 
@@ -65,7 +67,7 @@ class AdminEventosPendientes {
     } catch (error) {
       console.error('Error:', error);
       document.getElementById('mensaje-cargando').style.display = 'none';
-      alert('Error al cargar eventos: ' + error.message);
+      mostrarMensaje('Error al cargar eventos: ' + error.message, 'error');
     }
   }
 
@@ -182,9 +184,10 @@ class AdminEventosPendientes {
     try {
       const evento = this.eventos.find(e => e.id === eventoId);
       if (!evento) {
-        alert('Evento no encontrado');
+        mostrarMensaje('Evento no encontrado', 'error');
         return;
       }
+      this.eventoActualModal = evento;
 
       // Fetch full event info to show everything including carousels and images
       const token = localStorage.getItem('token');
@@ -329,12 +332,19 @@ class AdminEventosPendientes {
       document.getElementById('modal-evento-preview').style.display = 'flex';
     } catch (error) {
       console.error('Error:', error);
-      alert('Error al cargar evento: ' + error.message);
+      mostrarMensaje('Error al cargar evento: ' + error.message, 'error');
     }
   }
 
   async aprobarEvento(eventoId) {
-    if (!confirm('¿Estás seguro de que deseas aprobar este evento?')) return;
+    const confirmado = await window.confirmarAccion(
+      '¿Aprobar este evento?',
+      'Se enviará un correo de notificación al organizador indicando que su evento ya está disponible en el sitio.',
+      'Aprobar',
+      'confirm-btn-success'
+    );
+
+    if (!confirmado) return;
 
     try {
       this.eventosAprobar = eventoId;
@@ -349,12 +359,19 @@ class AdminEventosPendientes {
         throw new Error(data.error || 'Error al aprobar evento');
       }
 
-      alert('✓ Evento aprobado exitosamente. Email enviado al usuario.');
+      mostrarMensaje('✓ Evento aprobado exitosamente. Email enviado al usuario.', 'success');
+      
+      // Cerrar inmediatamente la vista previa para evitar que se quede estática
       cerrarModalPreview();
       this.cargarEventos();
+      
+      // Recargar la página después de un momento para actualizar contadores globales
+      setTimeout(() => {
+        location.reload();
+      }, 1500);
     } catch (error) {
       console.error('Error:', error);
-      alert('Error: ' + error.message);
+      mostrarMensaje('Error: ' + error.message, 'error');
     }
   }
 
@@ -375,9 +392,18 @@ class AdminEventosPendientes {
     const razon = document.getElementById('razon-rechazo').value.trim();
 
     if (!razon) {
-      alert('Por favor ingresa una razón para rechazar el evento');
+      mostrarMensaje('Por favor ingresa una razón para rechazar el evento', 'error');
       return;
     }
+
+    const confirmado = await window.confirmarAccion(
+      '¿Confirmar rechazo?',
+      'Se enviará el motivo del rechazo al usuario y el evento dejará de estar pendiente.',
+      'Rechazar',
+      'confirm-btn-danger'
+    );
+
+    if (!confirmado) return;
 
     try {
       const token = localStorage.getItem('token');
@@ -395,12 +421,20 @@ class AdminEventosPendientes {
         throw new Error(data.error || 'Error al rechazar evento');
       }
 
-      alert('✓ Evento rechazado. Email enviado al usuario con la razón.');
+      mostrarMensaje('✓ Evento rechazado. Email enviado al usuario con la razón.', 'success');
+      
+      // Cerrar tanto el modal de rechazo como la vista previa si estaba abierta
       cerrarModalRechazo();
+      cerrarModalPreview();
       this.cargarEventos();
+
+      // Recargar la página después de un momento para actualizar contadores globales
+      setTimeout(() => {
+        location.reload();
+      }, 1500);
     } catch (error) {
       console.error('Error:', error);
-      alert('Error: ' + error.message);
+      mostrarMensaje('Error: ' + error.message, 'error');
     }
   }
 

@@ -65,6 +65,9 @@ class UsuarioEventsController {
     const usuarioId = req.user.id;
     try {
       const [rows] = await pool.query(`SELECT * FROM eventos WHERE usuario_id = ? ORDER BY created_at DESC`, [usuarioId]);
+      
+      // Evitar caché de base de datos o navegador
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
       res.json({ eventos: rows });
     } catch (error) {
       console.error(error);

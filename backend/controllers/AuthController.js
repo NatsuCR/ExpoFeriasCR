@@ -34,6 +34,7 @@ class AuthController {
         { expiresIn: '3h' }
       );
 
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
       res.json({
         token,
         user: {
@@ -274,6 +275,24 @@ class AuthController {
    */
   async logout(req, res) {
     res.json({ message: 'Sesión cerrada' });
+  }
+
+  /**
+   * Obtener perfil actual sincronizado
+   */
+  async obtenerPerfil(req, res) {
+    try {
+      const [rows] = await pool.query('SELECT id, nombre, email, rol, email_verificado FROM usuarios WHERE id = ?', [req.user.id]);
+      if (rows.length === 0) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+      res.json({ user: rows[0] });
+    } catch (error) {
+      console.error('Error en obtenerPerfil:', error);
+      res.status(500).json({ error: 'Error al obtener perfil' });
+    }
   }
 }
 

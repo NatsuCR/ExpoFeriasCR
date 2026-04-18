@@ -134,10 +134,30 @@ function actualizarNavbarAuth() {
   }
 }
 
+async function sincronizarPerfilNavbar() {
+  const token = localStorage.getItem('token');
+  if (!token) return;
+
+  try {
+    const response = await fetch('/api/auth/me', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem('usuario', JSON.stringify(data.user));
+    }
+  } catch (error) {
+    console.warn('Error sincronizando navbar:', error);
+  }
+}
+
 // Inicializar cuando DOM esté listo
 document.addEventListener('DOMContentLoaded', async () => {
   // Verificar si hubo reinicio para desloguear (cerrar sesión)
   await verificarReinicioServidor();
+
+  // Sincronizar perfil antes de renderizar navbar
+  await sincronizarPerfilNavbar();
 
   // Cargar modal
   await cargarModalAuth();

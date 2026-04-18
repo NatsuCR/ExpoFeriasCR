@@ -33,13 +33,13 @@ function mostrarMensaje(texto, tipo) {
 async function cargarUsuarios() {
     const usuarios = await fetchAPI('/api/admin/usuarios');
     usuariosGlobal = usuarios;
-    
+
     const divAdmins = document.getElementById('listaAdmins');
     const divRegulares = document.getElementById('listaRegulares');
 
     if (usuarios.length === 0) {
-        if(divAdmins) divAdmins.innerHTML = '<p>No hay usuarios registrados.</p>';
-        if(divRegulares) divRegulares.innerHTML = '<p>No hay usuarios registrados.</p>';
+        if (divAdmins) divAdmins.innerHTML = '<p>No hay usuarios registrados.</p>';
+        if (divRegulares) divRegulares.innerHTML = '<p>No hay usuarios registrados.</p>';
         return;
     }
 
@@ -74,14 +74,14 @@ async function cargarUsuarios() {
         return html;
     };
 
-    if(divAdmins) divAdmins.innerHTML = generateTable(admins);
-    if(divRegulares) divRegulares.innerHTML = generateTable(regulares);
+    if (divAdmins) divAdmins.innerHTML = generateTable(admins);
+    if (divRegulares) divRegulares.innerHTML = generateTable(regulares);
 
     // Evento para "Seleccionar todos"
     document.querySelectorAll('.selectAllCheckbox').forEach(selectAll => {
         selectAll.addEventListener('change', (e) => {
             const table = e.target.closest('table');
-            if(table) {
+            if (table) {
                 table.querySelectorAll('.user-check').forEach(cb => {
                     cb.checked = e.target.checked;
                 });
@@ -107,15 +107,19 @@ async function eliminarUsuariosSeleccionados() {
     const checkboxes = document.querySelectorAll('.user-check:checked');
     const ids = Array.from(checkboxes).map(cb => cb.dataset.id);
     if (ids.length === 0) return;
-    const confirmar = confirm(`¿Eliminar ${ids.length} usuario(s) seleccionado(s)? Esta acción es irreversible.`);
-    if (!confirmar) return;
-    
+
+    const confirmado = await window.confirmarAccion(
+        '¿Eliminar seleccionados?',
+        `Se eliminarán permanentemente ${ids.length} usuario(s). Esta acción no se puede deshacer.`
+    );
+    if (!confirmado) return;
+
     try {
         const result = await fetchAPI('/api/admin/usuarios/bulk-delete', {
             method: 'POST',
             body: JSON.stringify({ ids })
         });
-        
+
         if (result.error) {
             mostrarMensaje(result.error, 'error');
         } else {
@@ -129,7 +133,7 @@ async function eliminarUsuariosSeleccionados() {
 
 function escapeHtml(str) {
     if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
+    return str.replace(/[&<>]/g, function (m) {
         if (m === '&') return '&amp;';
         if (m === '<') return '&lt;';
         if (m === '>') return '&gt;';

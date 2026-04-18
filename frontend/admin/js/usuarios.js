@@ -107,13 +107,24 @@ async function eliminarUsuariosSeleccionados() {
     const checkboxes = document.querySelectorAll('.user-check:checked');
     const ids = Array.from(checkboxes).map(cb => cb.dataset.id);
     if (ids.length === 0) return;
-    const confirmar = confirm(`¿Eliminar ${ids.length} usuario(s) seleccionados? Esta acción es irreversible.`);
+    const confirmar = confirm(`¿Eliminar ${ids.length} usuario(s) seleccionado(s)? Esta acción es irreversible.`);
     if (!confirmar) return;
-    for (const id of ids) {
-        await fetchAPI(`/api/admin/usuarios/${id}`, { method: 'DELETE' });
+    
+    try {
+        const result = await fetchAPI('/api/admin/usuarios/bulk-delete', {
+            method: 'POST',
+            body: JSON.stringify({ ids })
+        });
+        
+        if (result.error) {
+            mostrarMensaje(result.error, 'error');
+        } else {
+            mostrarMensaje(result.message || `${ids.length} usuario(s) eliminado(s)`, 'success');
+            cargarUsuarios();
+        }
+    } catch (err) {
+        mostrarMensaje('Error al eliminar usuarios', 'error');
     }
-    mostrarMensaje(`${ids.length} usuario(s) eliminado(s)`, 'success');
-    cargarUsuarios(); // Recargar la lista
 }
 
 function escapeHtml(str) {

@@ -55,4 +55,4 @@ class AdminPrecioController {
   }
 }
 
-module.exports = AdminPrecioController;
+module.exports = new AdminPrecioController();

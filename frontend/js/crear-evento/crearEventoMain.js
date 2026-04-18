@@ -375,10 +375,19 @@ export class CrearEvento {
   actualizarBotonSubmit() {
     const btn = document.getElementById('btn-confirmar-cambios') || document.getElementById('btn-enviar-revision');
     if (btn) {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const isAdmin = user.rol === 'admin';
+
       if (this.eventoId) {
-        btn.innerHTML = '<i class="fas fa-check"></i> Confirmar cambios';
+        // Modo Edición
+        btn.innerHTML = isAdmin 
+          ? '<i class="fas fa-save"></i> Guardar Cambios' 
+          : '<i class="fas fa-check"></i> Confirmar cambios';
       } else {
-        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar a Revisión';
+        // Modo Creación
+        btn.innerHTML = isAdmin 
+          ? '<i class="fas fa-plus-circle"></i> Crear Evento' 
+          : '<i class="fas fa-paper-plane"></i> Enviar a Revisión';
       }
     }
   }

@@ -85,7 +85,7 @@ class AdminEventoController {
       color_rubro_fondo || '#f0f0f0', color_rubro_texto || '#000000',
       color_buscador_fondo || '#ffffff', color_buscador_borde || '#eeeeee',
       color_btn_ver_mas || '#C8102E', color_fondo_share || '0.5',
-      color_texto_share || '#2c1a0e'
+      color_texto_share || '#2c1a0e', 'aprobado'
     ];
 
     const query = `
@@ -102,7 +102,7 @@ class AdminEventoController {
         color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
         color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
         color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
-        color_fondo_share, color_texto_share
+        color_fondo_share, color_texto_share, estado
       ) VALUES (${values.map(() => '?').join(', ')})
     `;
 

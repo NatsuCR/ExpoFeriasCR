@@ -13,7 +13,8 @@ class AdminUsuarioController {
   }
 
   async crear(req, res) {
-    const { nombre, email, password, rol = 'admin' } = req.body;
+    const { nombre, email, password, rol = 'user' } = req.body;
+
     if (!nombre || !email || !password) {
       return res.status(400).json({ error: 'Nombre, email y contraseña son obligatorios' });
     }

@@ -65,7 +65,7 @@ async function cargarUsuarios() {
                     <td>${u.id}</td>
                     <td>${escapeHtml(u.nombre)}</td>
                     <td>${escapeHtml(u.email)}</td>
-                    <td>${u.rol}</td>
+                    <td><span class="badge ${u.rol === 'admin' ? 'badge-admin' : 'badge-user'}">${u.rol.toUpperCase()}</span></td>
                     <td>${u.activo ? 'Sí' : 'No'}</td>
                 </tr>
             `;
@@ -144,9 +144,8 @@ function escapeHtml(str) {
 }
 
 btnCrearUsuario.addEventListener('click', async () => {
-    const nombre = document.getElementById('nombre').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
+    const rol = document.getElementById('rol').value;
+
     if (!nombre || !email || !password) {
         mostrarMensaje('Todos los campos son obligatorios', 'error');
         return;
@@ -154,7 +153,7 @@ btnCrearUsuario.addEventListener('click', async () => {
     try {
         const result = await fetchAPI('/api/admin/usuarios', {
             method: 'POST',
-            body: JSON.stringify({ nombre, email, password, rol: 'admin' })
+            body: JSON.stringify({ nombre, email, password, rol })
         });
         if (result.error) {
             mostrarMensaje(result.error, 'error');

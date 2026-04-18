@@ -37,4 +37,4 @@ class UploadController {
     }
 }
 
-module.exports = UploadController;
+module.exports = new UploadController();

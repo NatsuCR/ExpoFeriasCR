@@ -1,0 +1,100 @@
+/* confirm-modal.css */
+.confirm-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: none; /* Se activa vía JS */
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.confirm-modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.confirm-modal-content {
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    color: #ffffff;
+}
+
+.confirm-modal-overlay.active .confirm-modal-content {
+    transform: translateY(0);
+}
+
+.confirm-modal-icon {
+    font-size: 50px;
+    color: #ff4d4d;
+    margin-bottom: 20px;
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.confirm-modal-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.confirm-modal-message {
+    font-size: 15px;
+    color: #cccccc;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+.confirm-modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.confirm-btn {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.confirm-btn-cancel {
+    background: #333333;
+    color: #ffffff;
+}
+
+.confirm-btn-cancel:hover {
+    background: #444444;
+}
+
+.confirm-btn-danger {
+    background: #ff4d4d;
+    color: #ffffff;
+}
+
+.confirm-btn-danger:hover {
+    background: #ff3333;
+    box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
+}

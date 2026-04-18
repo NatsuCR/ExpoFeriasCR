@@ -177,7 +177,8 @@ function actualizarBotonEliminarSeleccionados() {
 }
 
 async function eliminarEvento(id) {
-    if (confirm('¿Eliminar este evento? Se borrarán también precios, actividades, expositores y galería.')) {
+    const confirmado = await window.confirmarAccion('¿Eliminar evento?', 'Se borrarán también precios, actividades, expositores y galería. Esta acción es irreversible.');
+    if (confirmado) {
         await fetchAPI(`/api/admin/eventos/${id}`, { method: 'DELETE' });
         cargarEventos();
     }
@@ -187,7 +188,9 @@ async function eliminarSeleccionados() {
     const checks = document.querySelectorAll('.evento-check:checked');
     const ids = Array.from(checks).map(cb => cb.dataset.id);
     if (ids.length === 0) return;
-    if (confirm(`¿Eliminar ${ids.length} evento(s) seleccionados? Esta acción es irreversible.`)) {
+    
+    const confirmado = await window.confirmarAccion('¿Eliminar seleccionados?', `Se eliminarán permanentemente ${ids.length} evento(s).`);
+    if (confirmado) {
         for (const id of ids) await fetchAPI(`/api/admin/eventos/${id}`, { method: 'DELETE' });
         cargarEventos();
     }
@@ -205,7 +208,9 @@ async function eliminarPorFecha() {
     });
 
     if (eventosAEliminar.length === 0) { alert('No hay eventos en ese rango de fechas.'); return; }
-    if (!confirm(`Se eliminarán ${eventosAEliminar.length} evento(s). ¿Continuar?`)) return;
+    
+    const confirmado = await window.confirmarAccion('¿Eliminar rango?', `Se eliminarán permanentemente ${eventosAEliminar.length} evento(s) en este rango de fechas.`);
+    if (!confirmado) return;
 
     for (const e of eventosAEliminar)
         await fetchAPI(`/api/admin/eventos/${e.id}`, { method: 'DELETE' });

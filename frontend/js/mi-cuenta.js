@@ -385,8 +385,9 @@ class MiCuenta {
       window.location.href = `/crear-evento.html?id=${evento.id}`;
     };
 
-    btnEliminar.onclick = () => {
-      if (confirm('¿Estás seguro de que quieres eliminar este evento?')) {
+    btnEliminar.onclick = async () => {
+      const confirmado = await window.confirmarAccion('¿Eliminar evento?', '¿Estás seguro de que quieres eliminar este evento permanentemente? Esta acción no se puede deshacer.');
+      if (confirmado) {
         this.eliminarEvento(evento.id);
       }
     };
@@ -445,13 +446,9 @@ class MiCuenta {
   }
 
   async handleEliminarCuenta() {
-    if (!confirm('¿ESTÁS SEGURO? Esta acción eliminará permanentemente tu cuenta y todos tus eventos creados. Esta acción no se puede deshacer.')) {
-        return;
-    }
+    const confirmado = await window.confirmarAccion('¿CERRAR CUENTA?', 'ADVERTENCIA FINAL: Esta acción eliminará permanentemente tu cuenta y todos tus eventos registrados. Esta operación NO se puede deshacer. ¿Deseas continuar?');
+    if (!confirmado) return;
 
-    if (!confirm('¿Confirmas que deseas eliminar TODO definitivamente?')) {
-        return;
-    }
 
     try {
         const response = await fetch('/api/auth/eliminar-cuenta', {

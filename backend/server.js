@@ -2,13 +2,34 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
+const helmet = require('helmet'); // 🛡️ Protección de cabeceras
+const rateLimit = require('express-rate-limit'); // 🛡️ Límite de peticiones
 const trackerMiddleware = require('./middlewares/trackerMiddleware');
 
 const app = express();
 
 // =======================
+// 🛡️ SEGURIDAD GLOBAL
+// =======================
+app.use(helmet({
+  contentSecurityPolicy: false, // Desactivado para permitir scripts externos (CDNs) sin conflicto inmediato
+  crossOriginEmbedderPolicy: false
+}));
+
+// Límite de velocidad para login y registro (Evitar fuerza bruta)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 15, // 15 intentos por IP
+  message: { error: 'Demasiados intentos desde esta IP, por favor intenta en 15 minutos.' }
+});
+
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/registro', authLimiter);
+
+// =======================
 // 🔧 MIDDLEWARES
 // =======================
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('trust proxy', 1);

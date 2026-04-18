@@ -18,7 +18,22 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage, limits: { fileSize: 100 * 1024 * 1024 } }); // 100MB máximo
+const upload = multer({ 
+    storage, 
+    limits: { fileSize: 10 * 1024 * 1024 }, // Bajamos el límite a 10MB (más que suficiente para imágenes de alta calidad)
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = /jpeg|jpg|png|webp/;
+        const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = allowedTypes.test(file.mimetype);
+
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            cb(new Error('Solo se permiten imágenes (JPG, PNG, WEBP)'));
+        }
+    }
+}); 
+
 
 class UploadController {
     async uploadFile(req, res) {

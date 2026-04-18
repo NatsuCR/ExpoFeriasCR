@@ -1,5 +1,6 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/auth');
+const adminAuth = require('../middlewares/adminAuth'); // 🛡️ Nuevo escudo de roles
 const AdminEventoController = require('../controllers/admin/EventoController');
 const AdminEventosPendientesController = require('../controllers/admin/PendientesController');
 const AdminPrecioController = require('../controllers/admin/PrecioController');
@@ -23,8 +24,10 @@ const adminGaleria = AdminGaleriaController;
 const adminUsuario = AdminUsuarioController;
 const statsController = StatsController;
 
-// Todas las rutas requieren autenticación
+// 🛡️ REGLA DE ORO: Todas las rutas requieren estar conectado Y ser administrador
 router.use(authMiddleware);
+router.use(adminAuth);
+
 
 router.post('/upload', uploadController.uploadFile.bind(uploadController));
 

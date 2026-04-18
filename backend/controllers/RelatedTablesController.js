@@ -98,7 +98,7 @@ class RelatedTablesController {
           [
             eventoId,
             e.nombre,
-            e.tipo_expositor || e.rubro || 'Administración',
+            e.tipo_expositor || 'Administración',
             e.ubicacion || null,
             e.descripcion || null,
             Array.isArray(e.logo)

@@ -31,7 +31,7 @@ export async function cargarEvento(slug) {
 
         document.title = nombre;
         document.getElementById('eventoNombre').innerText = nombre;
-        document.getElementById('eventoDescripcion').innerText = descripcion;
+        document.getElementById('eventoDescripcion').innerHTML = typeof window.formatDescription === 'function' ? window.formatDescription(descripcion) : descripcion;
 
         const fmt = (dStr) => {
             if (!dStr || dStr === 'Invalid Date') return '—';

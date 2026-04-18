@@ -127,3 +127,16 @@
     }
 }
 
+
+/* ============================================
+   Sobrescritura para escritorio (Hero)
+   ============================================ */
+@media (min-width: 769px) {
+    .hero-content .desc-short, 
+    .hero-content .btn-ver-mas {
+        display: none !important;
+    }
+    .hero-content .desc-full {
+        display: block !important;
+    }
+}

@@ -91,12 +91,12 @@ class SEOService {
    */
   inyectarMetadatos(html, evento) {
     if (!evento) {
-      const defaultTitle = 'Evento No Encontrado | ExpoFeriasCR';
-      const defaultDesc = 'Lo sentimos, este evento no existe o fue eliminado.';
+      const defaultTitle = 'Detalle de Evento | ExpoFeriasCR';
+      const defaultDesc = 'Consulta toda la información sobre este evento en ExpoFeriasCR.';
       const defaultImg = 'https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
 
       return html
-        .replace(/{{EVENT_NAME}}/g, 'Evento No Encontrado')
+        .replace(/{{EVENT_NAME}}/g, 'Detalle de Evento')
         .replace(/{{EVENT_DESC}}/g, defaultDesc)
         .replace(/{{EVENT_IMAGE}}/g, defaultImg)
         .replace(/{{EVENT_SLUG}}/g, '')

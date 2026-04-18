@@ -73,13 +73,13 @@ app.get('/evento.html', async (req, res) => {
   const { slug } = req.query;
   const filePath = path.join(process.cwd(), 'frontend', 'evento.html');
 
-  if (!slug) return res.sendFile(filePath);
-
   try {
-    const evento = await eventoService.obtenerEventoPorSlug(slug);
     let html = fs.readFileSync(filePath, 'utf8');
+    
+    // Si hay slug, buscamos el evento. Si no, pasamos null para que el servicio limpie los tags.
+    const evento = slug ? await eventoService.obtenerEventoPorSlug(slug) : null;
 
-    // Inyectar metadatos
+    // Inyectar metadatos (o limpiar placeholders)
     html = seoService.inyectarMetadatos(html, evento);
 
     res.send(html);

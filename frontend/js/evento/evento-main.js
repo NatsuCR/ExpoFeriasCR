@@ -196,7 +196,7 @@ function initSocialShare() {
 function cargarEventoDesdePreview(datos) {
     if (datos.nombre) document.getElementById('eventoNombre').innerText = datos.nombre;
     if (datos.descripcion) {
-        document.getElementById('eventoDescripcion').innerText = datos.descripcion.length > 80 ? datos.descripcion.substring(0, 80) + '...' : datos.descripcion;
+        document.getElementById('eventoDescripcion').innerHTML = typeof window.formatDescription === 'function' ? window.formatDescription(datos.descripcion) : datos.descripcion;
         const infoCompleta = document.getElementById('eventoInfoCompleta');
         if (infoCompleta) {
             infoCompleta.innerHTML = window.formatDescription(datos.descripcion, true);

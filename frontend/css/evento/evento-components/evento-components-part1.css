@@ -278,7 +278,8 @@
 }
 
 .actividad-card .btn-ver-mas,
-.expositor-card .btn-ver-mas {
+.expositor-card .btn-ver-mas,
+.hero-content .btn-ver-mas {
     background: none;
     border: none;
     color: var(--evento-primario, #C8102E);
@@ -290,6 +291,30 @@
     display: block;
     text-align: center;
     width: 100%;
+}
+
+/* Ajustes específicos para el Hero */
+.hero-content .btn-ver-mas {
+    color: inherit; /* Seguir el color de la descripción del hero */
+    text-decoration: underline;
+    margin: 0.8rem auto;
+    font-size: 0.95rem;
+    text-align: center;
+    width: 100%;
+    opacity: 0.8;
+}
+
+.hero-content .desc-container p {
+    text-align: center;
+    justify-content: center;
+}
+
+.hero-content .btn-ver-mas:hover {
+    opacity: 1;
+}
+
+.hero-content .desc-container {
+    margin-bottom: 1rem;
 }
 /* ══════════════════════════════════════════
    MINI-CARRUSEL dentro de cards

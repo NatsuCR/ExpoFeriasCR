@@ -351,4 +351,4 @@ class AdminEventosPendientesController {
   }
 }
 
-module.exports = AdminEventosPendientesController;
+module.exports = new AdminEventosPendientesController();

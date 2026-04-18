@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 18, 2026 at 02:39 AM
+-- Generation Time: Apr 18, 2026 at 04:57 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -50,13 +50,13 @@ CREATE TABLE `actividades` (
 --
 
 INSERT INTO `actividades` (`id`, `evento_id`, `titulo`, `tipo`, `descripcion`, `fecha`, `hora`, `lugar`, `precio_extra`, `requiere_entrada_online`, `enlace_venta`, `es_gratis`, `imagen`, `created_at`, `updated_at`) VALUES
-(9, 74, 'Rodeo Eliminatorias Nacionales', 'Rodeo', 'Vive la emoción de las eliminatorias nacionales del rodeo internacional en la expo liberia 2026, solo con pagar la entrada general al campo ferial podras disfrutar de este evento', '2026-04-11', NULL, 'Redondel de la Expo Liberia Internacional 2026', NULL, 0, NULL, 1, '/assets/uploads/upload-1775898003870-656609687.jpg', '2026-04-11 09:00:32', '2026-04-11 21:20:21'),
 (360, 1, 'Tope Nocturno', 'Tope', 'Disfruta del tradicional tope nocturno como parte de las actividades de la Expo San Carlos Internacional. Este evento reúne caballos, música y ambiente festivo para toda la familia. Incluida con la entrada general a la Expo (evento gratuito dentro del recinto)', '2026-04-16', '19:00:00', 'Campo ferial - Parte Trasera', 0.00, 0, NULL, 1, '[\"/assets/uploads/upload-1775883031619-894469616.jpg\"]', '2026-04-17 12:55:16', '2026-04-17 12:55:16'),
 (361, 1, 'Festival de Bandas', 'Festival', 'Te esperamos el próximo 17 de abril a las 5:00 P.M. ¡No te perdás este espectáculo increíble que inicia con desfile por el campo ferial y finaliza con un show en El Ring, con las mejores bandas del país: Banda Comunal de La Fortuna, Banda 506, Banda de Zarcero y La Banda de Platanar de Florencia', '2026-04-17', '17:00:00', 'Campo ferial - Expo San Carlos Internacional', 0.00, 0, NULL, 1, '[\"/assets/uploads/upload-1775898633605-169295706.jpg\"]', '2026-04-17 12:55:16', '2026-04-17 12:55:16'),
 (362, 1, 'Concierto Kapo', 'concierto', 'Disfruta del concierto de Kapo en la Expo San Carlos Internacional. Al adquirir tu entrada a través de Smarticket, podrás disfrutar no solo del concierto, sino también del acceso al campo ferial.Los niños menores de +12 años SOLO en la Gramilla VIP de menores, deben de estar acompañado de un encargado legal, NO SE PERMITE EL CONSUMO DE LICOR en la Gramilla VIP de menores y mayores de +18 años se les tiene PROHIBIDO la entrada a la Gramilla VIP de menores.Con la compra de la entrada del concierto de kapo, usted podra disfrutar del resto de enventos del campo ferial (no incluye parqueo)', '2026-04-18', '18:00:00', 'Campo ferial - Parte Trasera', 0.00, 1, 'https://smarticket.net', 0, '[\"/assets/images/ExpoSanCarlos2026/ExpoSanCarlosKapo2026.jpeg\",\"/assets/uploads/upload-1775967157999-895144965.png\",\"/assets/uploads/upload-1775968532433-322219732.jpeg\",\"/assets/uploads/upload-1775969523102-464248423.jpeg\"]', '2026-04-17 12:55:16', '2026-04-17 12:55:16'),
 (363, 1, 'Concierto Los Karkis', 'concierto', 'Disfruta en vivo del concierto de Los Karkis, una agrupación reconocida por su música tropical que pondrá a bailar a todos los asistentes en la Expo San Carlos Internacional.🎟️ Entrada:Evento gratuito con la compra de la entrada general al campo ferial. No tiene costo adicional.', '2026-04-24', '19:00:00', 'Campo ferial - Parte Trasera', 0.00, 0, NULL, 1, '[\"/assets/images/ExpoSanCarlos2026/ExpoSanCarlosLosKarkis2026.jpeg\"]', '2026-04-17 12:55:16', '2026-04-17 12:55:16'),
 (364, 1, 'Tope Nacional', 'Tope', 'Disfruta del tradicional Tope Nacional de la Expo San Carlos Internacional, uno de los eventos más esperados, donde participan caballistas de todo el país en un ambiente lleno de cultura, tradición y entretenimiento.Si deseas disfrutar de una mejor experiencia, puedes reservar un espacio exclusivo para ver el evento con mayor comodidad.📞 Reservaciones:8473-6292🎟️ Entrada:Incluida con la entrada general a la Expo', '2026-04-25', '13:00:00', 'Entrada del Campo Ferial', 0.00, 0, NULL, 1, '[\"assets/images/ExpoSanCarlos2026/TopeInternacionalExpo2026.jpg\"]', '2026-04-17 12:55:16', '2026-04-17 12:55:16'),
-(365, 1, 'Verano Toreado', 'rodeo', 'Verano toreado de su teletica', '2026-04-25', '20:00:00', 'Redondel de la Expo San Carlos Internacional', 0.00, 0, NULL, 0, '[\"assets\\\\images\\\\ExpoSanCarlos2026\\\\Expositores2026\\\\verandoToreadoExpo2026.jpg\"]', '2026-04-17 12:55:16', '2026-04-17 12:55:16');
+(365, 1, 'Verano Toreado', 'rodeo', 'Verano toreado de su teletica', '2026-04-25', '20:00:00', 'Redondel de la Expo San Carlos Internacional', 0.00, 0, NULL, 0, '[\"assets\\\\images\\\\ExpoSanCarlos2026\\\\Expositores2026\\\\verandoToreadoExpo2026.jpg\"]', '2026-04-17 12:55:16', '2026-04-17 12:55:16'),
+(366, 153, '1234', '1234', '12341234', '2026-04-17', '00:34:00', '12341234', 0.00, 0, NULL, 1, '[]', '2026-04-18 00:58:40', '2026-04-18 00:58:40');
 
 -- --------------------------------------------------------
 
@@ -130,22 +130,7 @@ CREATE TABLE `eventos` (
 
 INSERT INTO `eventos` (`id`, `usuario_id`, `estado`, `razon_rechazo`, `fecha_envio_revision`, `slug`, `nombre`, `descripcion`, `fecha_inicio`, `fecha_fin`, `ubicacion`, `imagen_portada`, `activo`, `horario_imagen`, `mapa_embed`, `tipo_venta`, `url_venta_online`, `color_primario`, `color_secundario`, `color_fondo`, `color_texto`, `color_hero_overlay`, `color_titulo_hero`, `color_descripcion_hero`, `color_fondo_fechas`, `color_texto_fechas`, `created_at`, `updated_at`, `color_titulo_seccion`, `provincia`, `color_menu_fondo`, `color_menu_texto`, `color_menu_fondo_hover`, `color_menu_texto_hover`, `color_fondo_contacto`, `color_texto_contacto`, `color_enlace_contacto`, `color_fondo_footer`, `color_texto_footer`, `color_titulo_h3`, `color_expositor_header`, `borrador_cambios`, `color_buscador_expositores`, `fecha_aprobacion`, `fecha_rechazo`, `color_borde_buscador_expositores`, `color_card_fondo`, `color_card_borde`, `color_rubro_fondo`, `color_rubro_texto`, `color_buscador_fondo`, `color_buscador_borde`, `color_btn_ver_mas`, `color_fondo_share`, `color_texto_share`, `es_en_vivo`, `url_en_vivo`) VALUES
 (1, NULL, 'aprobado', NULL, '2026-04-15 03:46:29', 'expo-san-carlos-internacional-2026', 'Expo San Carlos Internacional 2026', 'La feria ganadera y cultural más importante de la zona norte de Costa Rica. Conciertos, rodeos, exposiciones, juegos y mucho más.\nEste año, la expo san carlos internacional 2026, contará con internet en todo su campo ferial', '2026-04-16', '2026-04-27', 'Cámara de Ganaderos San Carlos, Platanar, Alajuela, Costa Rica', '/assets/images/ExpoSanCarlos2026/ExpoSanCarlosLogo2026.jpeg', 1, '/assets/images/ExpoSanCarlos2026/ExpoSanCarlosHorarioGeneral2026.jpeg', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5753.723471566428!2d-84.46625556251665!3d10.440400752165207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa07036dc9a7551%3A0x71aae73e035ab310!2sC%C3%A1mara%20de%20Ganaderos%20de%20San%20Carlos!5e1!3m2!1ses-419!2scr!4v1775694355473!5m2!1ses-419!2scr\" width=\"100%\" height=\"350\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\"></iframe>', 'taquilla', NULL, '#ff00b3', '#000000', '#dedede', '#3e2723', 'rgba(62, 42, 31, 0.6)', '#ffffff', '#ffffff', '#b000c7', '#ffffff', '2026-04-09 19:09:46', '2026-04-17 12:55:16', '#000000', 'Alajuela', '#000000', '#ffffff', '#ffffff', '#000000', '#ffffff', '#000000', '#0e0aff', '#000000', '#ffffff', '#000000', '#000000', NULL, NULL, '2026-04-16 19:10:37', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '#ffffff', '#2c1a0e', NULL, NULL),
-(74, NULL, 'aprobado', NULL, NULL, 'expo-liberia-internacional-2026', 'Expo Liberia Internacional 2026', 'La feria ganadera y cultural más importante de la de Liberia de Costa Rica. Conciertos, rodeos, exposiciones, juegos y mucho más.', '2026-07-15', '2026-07-27', 'Cámara de Ganaderos de Liberia, Provincia de Guanacaste, Liberia, El Capulín', '/assets/uploads/upload-1775896951578-148187060.jpg', 1, '/assets/uploads/upload-1775897703008-189353795.jpg', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1437.5894007849033!2d-85.45801621059104!3d10.620760129251817!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f757d18e6490523%3A0x2accc8641143eb43!2sExpo%20Liberia%20Internacional!5e1!3m2!1ses-419!2scr!4v1775896702392!5m2!1ses-419!2scr\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', 'taquilla', NULL, '#39d600', '#000000', '#dee3e1', '#000000', 'rgba(0, 0, 0, 0.5)', '#ffffff', '#e1ff00', '#ffffff', '#000000', '2026-04-11 08:42:40', '2026-04-17 01:02:04', '#000000', 'Guanacaste', '#000000', '#ffffff', '#000000', '#11fa00', '#ffffff', '#000000', '#004cff', '#000000', '#ffffff', '#2c1a0e', '#000000', NULL, '#ffffff', NULL, NULL, '#eee', '#ffffff', '#f0f0f0', '#f0f0f0', '#000000', '#ffffff', '#eeeeee', '#C8102E', '#ffffff', '#2c1a0e', 0, NULL),
-(152, NULL, 'aprobado', NULL, NULL, 'test-event-1776428492618', 'Test Event', 'Description312', '2026-05-01', '2026-05-10', 'San Jose', NULL, 1, NULL, NULL, 'taquilla', NULL, '#8b5a2b', '#d4a373', '#f4e4c1', '#2c1a0e', 'rgba(62,42,31,0.7)', '#ffffff', '#ffffff', '#d4a373', '#8b5a2b', '2026-04-17 12:21:32', '2026-04-17 12:22:19', '#2c1a0e', 'San José', '#ffffff', '#ffffff', '#000000', '#000000', '#f4e4c1', '#2c1a0e', '#8b5a2b', '#8b5a2b', '#ffffff', '#2c1a0e', '#000000', NULL, NULL, NULL, NULL, NULL, '#ffffff', '#f0f0f0', '#f0f0f0', '#000000', '#ffffff', '#eeeeee', '#C8102E', 'rgba(255, 255, 255, 0.5)', '#2c1a0e', 0, NULL),
-(153, NULL, 'aprobado', NULL, NULL, 'mi-evento-2026', 'mi evento 2026', '2133', '2026-04-17', '2026-04-18', '123123', NULL, 1, NULL, NULL, 'taquilla', NULL, '#c8102e', '#0033a0', '#f4e4c1', '#2c1a0e', 'rgba(62,42,31,0.7)', '#ffffff', '#ffffff', '#d4a373', '#8b5a2b', '2026-04-17 12:22:35', '2026-04-17 12:22:35', '#2c1a0e', 'Alajuela', '#ffffff', '#ffffff', '#000000', '#000000', '#f4e4c1', '#2c1a0e', '#8b5a2b', '#8b5a2b', '#ffffff', '#2c1a0e', '#000000', NULL, '#ffffff', NULL, NULL, '#eee', '#ffffff', '#f0f0f0', '#f0f0f0', '#000000', '#ffffff', '#eeeeee', '#C8102E', 'rgba(255, 255, 255, 0.5)', '#2c1a0e', 0, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `evento_compartir`
---
-
-CREATE TABLE `evento_compartir` (
-  `id` int(11) NOT NULL,
-  `evento_id` int(11) NOT NULL,
-  `color_fondo_share` varchar(30) DEFAULT 'rgba(255, 255, 255, 0.5)',
-  `color_texto_share` varchar(30) DEFAULT '#2c1a0e'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(153, NULL, 'aprobado', NULL, NULL, 'mi-evento-2026', 'mi evento 2026', '2133', '2026-04-17', '2026-04-18', '123123', NULL, 1, NULL, NULL, 'taquilla', NULL, '#c8102e', '#0033a0', '#f4e4c1', '#2c1a0e', 'rgba(62,42,31,0.7)', '#ffffff', '#ffffff', '#d4a373', '#8b5a2b', '2026-04-17 12:22:35', '2026-04-18 00:58:40', '#2c1a0e', 'Alajuela', '#ffffff', '#ffffff', '#000000', '#000000', '#f4e4c1', '#2c1a0e', '#8b5a2b', '#8b5a2b', '#ffffff', '#2c1a0e', '#000000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '#ffffff', '#82604a', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -166,9 +151,6 @@ CREATE TABLE `evento_galeria` (
 --
 
 INSERT INTO `evento_galeria` (`id`, `evento_id`, `imagen_url`, `orden`, `created_at`) VALUES
-(6, 74, '/assets/uploads/upload-1775897573710-865823011.jpg', 0, '2026-04-11 08:52:55'),
-(7, 74, '/assets/uploads/upload-1775898077699-533489950.jpg', 0, '2026-04-11 09:01:22'),
-(8, 74, '/assets/uploads/upload-1775898174906-383586915.jpg', 0, '2026-04-11 09:02:55'),
 (320, 1, '/assets/images/ExpoSanCarlos2026/CampoFerial/ExpoSanCarlosCampoFerial2026Foto1.jpg', 0, '2026-04-17 12:55:16'),
 (321, 1, '/assets/images/ExpoSanCarlos2026/CampoFerial/ExpoSanCarlosCampoFerial2026Foto2.jpg', 0, '2026-04-17 12:55:16'),
 (322, 1, '/assets/images/ExpoSanCarlos2026/CampoFerial/ExpoSanCarlosCampoFerial2026Foto3.jpg', 0, '2026-04-17 12:55:16'),
@@ -202,7 +184,8 @@ CREATE TABLE `expositores` (
 
 INSERT INTO `expositores` (`id`, `evento_id`, `nombre`, `tipo_expositor`, `descripcion`, `ubicacion`, `es_pagado`, `imagen_logo`, `sitio_web`, `video_url`, `created_at`, `updated_at`) VALUES
 (153, 1, 'Chicharrones y Parrillada Vindas', 'Comidas y Bebidas', 'CHICHARRONES Y PARRILLADA VINDAS 🔥 ¡VOLVEMOS! 🔥Por segundo año consecutivo estaremos en Expo San Carlos 🤩Vení a disfrutar de:🥓 Los mejores chicharrones🍖 La mejor costilla bbq🌯 Nuestro súper cono mixto… ¡una verdadera delicia!😎 Y sí… somos los mejores(No lo decimos nosotros… ¡lo dicen ustedes!)📍 Te esperamos en Expo San Carlos🔥 ¡No te quedés sin probarlos!', '-no especifica-', 0, '[\"/assets/uploads/upload-1776312164517-803129485.png\"]', NULL, NULL, '2026-04-17 12:55:16', '2026-04-17 12:55:16'),
-(154, 1, 'El Chante Imperial', 'Toldos', 'Los mejores eventos en Expo San Carlos los encontrarás en El Chante.•Los Ajenos.•Gimario DJ Chaves.•Vara Blanca Band •La Kuarta-DJ Tokio.•Toledo.•La Cámara del Despecho (Ramzi-Kike-Arlenne E)•Jose Fuentes-Rey G.•Matiz.🗣No te lo puedes perder.', '-no especifica-', 0, '[\"/assets/uploads/upload-1776312213255-80169801.png\",\"/assets/uploads/upload-1776312218993-778399243.png\"]', NULL, NULL, '2026-04-17 12:55:16', '2026-04-17 12:55:16');
+(154, 1, 'El Chante Imperial', 'Toldos', 'Los mejores eventos en Expo San Carlos los encontrarás en El Chante.•Los Ajenos.•Gimario DJ Chaves.•Vara Blanca Band •La Kuarta-DJ Tokio.•Toledo.•La Cámara del Despecho (Ramzi-Kike-Arlenne E)•Jose Fuentes-Rey G.•Matiz.🗣No te lo puedes perder.', '-no especifica-', 0, '[\"/assets/uploads/upload-1776312213255-80169801.png\",\"/assets/uploads/upload-1776312218993-778399243.png\"]', NULL, NULL, '2026-04-17 12:55:16', '2026-04-17 12:55:16'),
+(155, 153, '134', 'Toldos', '12341234', '13241234', 0, '[\"/assets/uploads/upload-1776473843719-605844430.jpeg\"]', NULL, NULL, '2026-04-18 00:58:40', '2026-04-18 00:58:40');
 
 -- --------------------------------------------------------
 
@@ -6691,7 +6674,204 @@ INSERT INTO `visitas` (`id`, `ip_address`, `page_url`, `visit_date`) VALUES
 (6358, '::1', '/mi-cuenta.html', '2026-04-17 18:36:24'),
 (6359, '::1', '/api/eventos/mis-eventos', '2026-04-17 18:36:24'),
 (6360, '::1', '/crear-evento.html', '2026-04-17 18:36:25'),
-(6361, '::1', '/evento.html?preview=1&dataKey=preview_1776472586845_kujpowt7h', '2026-04-17 18:36:26');
+(6361, '::1', '/evento.html?preview=1&dataKey=preview_1776472586845_kujpowt7h', '2026-04-17 18:36:26'),
+(6362, '127.0.0.1', '/', '2026-04-17 18:50:05'),
+(6363, '127.0.0.1', '/api/health', '2026-04-17 18:50:05'),
+(6364, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 18:50:05'),
+(6365, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 18:50:05'),
+(6366, '127.0.0.1', '/api/eventos', '2026-04-17 18:50:05'),
+(6367, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 18:50:05'),
+(6368, '127.0.0.1', '/', '2026-04-17 18:50:06'),
+(6369, '127.0.0.1', '/modal-auth.html', '2026-04-17 18:50:06'),
+(6370, '127.0.0.1', '/api/health', '2026-04-17 18:50:06'),
+(6371, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 18:50:06'),
+(6372, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 18:50:06'),
+(6373, '127.0.0.1', '/api/eventos', '2026-04-17 18:50:06'),
+(6374, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 18:50:06'),
+(6375, '127.0.0.1', '/modal-auth.html', '2026-04-17 18:50:06'),
+(6376, '127.0.0.1', '/evento.html?slug=expo-san-carlos-internacional-2026', '2026-04-17 18:50:07'),
+(6377, '127.0.0.1', '/api/eventos/expo-san-carlos-internacional-2026', '2026-04-17 18:50:07'),
+(6378, '127.0.0.1', '/api/actividades/expo-san-carlos-internacional-2026', '2026-04-17 18:50:07'),
+(6379, '127.0.0.1', '/api/precios/expo-san-carlos-internacional-2026', '2026-04-17 18:50:07'),
+(6380, '127.0.0.1', '/api/expositores/expo-san-carlos-internacional-2026', '2026-04-17 18:50:07'),
+(6381, '127.0.0.1', '/api/galeria/expo-san-carlos-internacional-2026', '2026-04-17 18:50:07'),
+(6382, '127.0.0.1', '/api/eventos/expo-san-carlos-internacional-2026', '2026-04-17 18:50:07'),
+(6383, '127.0.0.1', '/', '2026-04-17 18:50:12'),
+(6384, '127.0.0.1', '/api/health', '2026-04-17 18:50:12'),
+(6385, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 18:50:12'),
+(6386, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 18:50:12'),
+(6387, '127.0.0.1', '/api/eventos', '2026-04-17 18:50:12'),
+(6388, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 18:50:12'),
+(6389, '127.0.0.1', '/modal-auth.html', '2026-04-17 18:50:12'),
+(6390, '127.0.0.1', '/api/auth/login', '2026-04-17 18:50:19'),
+(6391, '127.0.0.1', '/', '2026-04-17 18:50:20'),
+(6392, '127.0.0.1', '/api/health', '2026-04-17 18:50:20'),
+(6393, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 18:50:20'),
+(6394, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 18:50:20'),
+(6395, '127.0.0.1', '/api/eventos', '2026-04-17 18:50:20'),
+(6396, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 18:50:20'),
+(6397, '127.0.0.1', '/modal-auth.html', '2026-04-17 18:50:20'),
+(6398, '127.0.0.1', '/evento.html?preview=1&dataKey=preview_1776473432902_7z17pwlvf', '2026-04-17 18:50:32'),
+(6399, '127.0.0.1', '/', '2026-04-17 18:54:47'),
+(6400, '127.0.0.1', '/api/health', '2026-04-17 18:54:48'),
+(6401, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 18:54:48'),
+(6402, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 18:54:48'),
+(6403, '127.0.0.1', '/api/eventos', '2026-04-17 18:54:48'),
+(6404, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 18:54:48'),
+(6405, '127.0.0.1', '/modal-auth.html', '2026-04-17 18:54:48'),
+(6406, '127.0.0.1', '/api/auth/login', '2026-04-17 18:54:55'),
+(6407, '127.0.0.1', '/', '2026-04-17 18:54:56'),
+(6408, '127.0.0.1', '/api/health', '2026-04-17 18:54:56'),
+(6409, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 18:54:56'),
+(6410, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 18:54:56'),
+(6411, '127.0.0.1', '/api/eventos', '2026-04-17 18:54:56'),
+(6412, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 18:54:56'),
+(6413, '127.0.0.1', '/modal-auth.html', '2026-04-17 18:54:56'),
+(6414, '127.0.0.1', '/mi-cuenta.html', '2026-04-17 18:54:58'),
+(6415, '127.0.0.1', '/api/eventos/mis-eventos', '2026-04-17 18:54:58'),
+(6416, '127.0.0.1', '/evento.html?preview=1&dataKey=preview_1776473701744_flfstwoyv', '2026-04-17 18:55:01'),
+(6417, '127.0.0.1', '/evento.html?preview=1&dataKey=preview_1776474330703_g2clebojj', '2026-04-17 19:05:30'),
+(6418, '127.0.0.1', '/evento.html?preview=1&dataKey=preview_1776474462407_1iutfn18j', '2026-04-17 19:07:42'),
+(6419, '127.0.0.1', '/evento.html?preview=1&dataKey=preview_1776475001124_3iq6qmvw0', '2026-04-17 19:16:41'),
+(6420, '127.0.0.1', '/', '2026-04-17 20:06:43'),
+(6421, '127.0.0.1', '/api/health', '2026-04-17 20:06:43'),
+(6422, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:06:43'),
+(6423, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:06:43'),
+(6424, '127.0.0.1', '/api/eventos', '2026-04-17 20:06:43'),
+(6425, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:06:43'),
+(6426, '127.0.0.1', '/', '2026-04-17 20:06:44'),
+(6427, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:06:44'),
+(6428, '127.0.0.1', '/api/health', '2026-04-17 20:06:44'),
+(6429, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:06:44'),
+(6430, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:06:44'),
+(6431, '127.0.0.1', '/api/eventos', '2026-04-17 20:06:44'),
+(6432, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:06:44'),
+(6433, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:06:44'),
+(6434, '127.0.0.1', '/evento.html?slug=expo-san-carlos-internacional-2026', '2026-04-17 20:06:46'),
+(6435, '127.0.0.1', '/api/eventos/expo-san-carlos-internacional-2026', '2026-04-17 20:06:46'),
+(6436, '127.0.0.1', '/api/actividades/expo-san-carlos-internacional-2026', '2026-04-17 20:06:46'),
+(6437, '127.0.0.1', '/api/precios/expo-san-carlos-internacional-2026', '2026-04-17 20:06:46'),
+(6438, '127.0.0.1', '/api/expositores/expo-san-carlos-internacional-2026', '2026-04-17 20:06:46'),
+(6439, '127.0.0.1', '/api/galeria/expo-san-carlos-internacional-2026', '2026-04-17 20:06:46'),
+(6440, '127.0.0.1', '/api/eventos/expo-san-carlos-internacional-2026', '2026-04-17 20:06:46'),
+(6441, '127.0.0.1', '/', '2026-04-17 20:06:49'),
+(6442, '127.0.0.1', '/api/health', '2026-04-17 20:06:49'),
+(6443, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:06:49'),
+(6444, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:06:49'),
+(6445, '127.0.0.1', '/api/eventos', '2026-04-17 20:06:49'),
+(6446, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:06:49'),
+(6447, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:06:49'),
+(6448, '127.0.0.1', '/evento.html?slug=expo-san-carlos-internacional-2026', '2026-04-17 20:06:50'),
+(6449, '127.0.0.1', '/api/eventos/expo-san-carlos-internacional-2026', '2026-04-17 20:06:51'),
+(6450, '127.0.0.1', '/api/actividades/expo-san-carlos-internacional-2026', '2026-04-17 20:06:51'),
+(6451, '127.0.0.1', '/api/precios/expo-san-carlos-internacional-2026', '2026-04-17 20:06:51'),
+(6452, '127.0.0.1', '/api/expositores/expo-san-carlos-internacional-2026', '2026-04-17 20:06:51'),
+(6453, '127.0.0.1', '/api/galeria/expo-san-carlos-internacional-2026', '2026-04-17 20:06:51'),
+(6454, '127.0.0.1', '/api/eventos/expo-san-carlos-internacional-2026', '2026-04-17 20:06:51'),
+(6455, '127.0.0.1', '/', '2026-04-17 20:07:34'),
+(6456, '127.0.0.1', '/api/health', '2026-04-17 20:07:34'),
+(6457, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:07:34'),
+(6458, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:07:34'),
+(6459, '127.0.0.1', '/api/eventos', '2026-04-17 20:07:34'),
+(6460, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:07:34'),
+(6461, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:07:34'),
+(6462, '127.0.0.1', '/api/auth/login', '2026-04-17 20:07:39'),
+(6463, '127.0.0.1', '/', '2026-04-17 20:07:40'),
+(6464, '127.0.0.1', '/api/health', '2026-04-17 20:07:40'),
+(6465, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:07:40'),
+(6466, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:07:40'),
+(6467, '127.0.0.1', '/api/eventos', '2026-04-17 20:07:40'),
+(6468, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:07:40'),
+(6469, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:07:40'),
+(6470, '127.0.0.1', '/', '2026-04-17 20:09:05'),
+(6471, '127.0.0.1', '/api/health', '2026-04-17 20:09:05'),
+(6472, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:09:05'),
+(6473, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:09:05'),
+(6474, '127.0.0.1', '/api/eventos', '2026-04-17 20:09:05'),
+(6475, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:09:05'),
+(6476, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:09:05'),
+(6477, '127.0.0.1', '/', '2026-04-17 20:09:05'),
+(6478, '127.0.0.1', '/api/health', '2026-04-17 20:09:05'),
+(6479, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:09:05'),
+(6480, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:09:05'),
+(6481, '127.0.0.1', '/api/eventos', '2026-04-17 20:09:05'),
+(6482, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:09:05'),
+(6483, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:09:05'),
+(6484, '127.0.0.1', '/api/auth/login', '2026-04-17 20:09:12'),
+(6485, '127.0.0.1', '/', '2026-04-17 20:09:13'),
+(6486, '127.0.0.1', '/api/health', '2026-04-17 20:09:13'),
+(6487, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:09:13'),
+(6488, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:09:13'),
+(6489, '127.0.0.1', '/api/eventos', '2026-04-17 20:09:13'),
+(6490, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:09:13'),
+(6491, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:09:13'),
+(6492, '127.0.0.1', '/evento.html?preview=1&dataKey=preview_1776478160082_uqzdls8uy', '2026-04-17 20:09:20'),
+(6493, '127.0.0.1', '/', '2026-04-17 20:12:41'),
+(6494, '127.0.0.1', '/api/health', '2026-04-17 20:12:41'),
+(6495, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:12:41'),
+(6496, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:12:41'),
+(6497, '127.0.0.1', '/api/eventos', '2026-04-17 20:12:41'),
+(6498, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:12:41'),
+(6499, '127.0.0.1', '/', '2026-04-17 20:12:41'),
+(6500, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:12:41'),
+(6501, '127.0.0.1', '/api/health', '2026-04-17 20:12:41'),
+(6502, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:12:41'),
+(6503, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:12:41'),
+(6504, '127.0.0.1', '/api/eventos', '2026-04-17 20:12:41'),
+(6505, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:12:41'),
+(6506, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:12:42'),
+(6507, '127.0.0.1', '/', '2026-04-17 20:13:28'),
+(6508, '127.0.0.1', '/api/health', '2026-04-17 20:13:28'),
+(6509, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:13:28'),
+(6510, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:13:28'),
+(6511, '127.0.0.1', '/api/eventos', '2026-04-17 20:13:28'),
+(6512, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:13:28'),
+(6513, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:13:28'),
+(6514, '127.0.0.1', '/', '2026-04-17 20:13:28'),
+(6515, '127.0.0.1', '/api/health', '2026-04-17 20:13:28'),
+(6516, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:13:28'),
+(6517, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:13:28'),
+(6518, '127.0.0.1', '/api/eventos', '2026-04-17 20:13:28'),
+(6519, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:13:28'),
+(6520, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:13:28'),
+(6521, '127.0.0.1', '/api/auth/login', '2026-04-17 20:13:33'),
+(6522, '127.0.0.1', '/', '2026-04-17 20:13:34'),
+(6523, '127.0.0.1', '/api/health', '2026-04-17 20:13:34'),
+(6524, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:13:34'),
+(6525, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:13:34'),
+(6526, '127.0.0.1', '/api/eventos', '2026-04-17 20:13:34'),
+(6527, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:13:34'),
+(6528, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:13:34'),
+(6529, '127.0.0.1', '/mi-cuenta.html', '2026-04-17 20:13:35'),
+(6530, '127.0.0.1', '/api/eventos/mis-eventos', '2026-04-17 20:13:35'),
+(6531, '127.0.0.1', '/index.html', '2026-04-17 20:13:37'),
+(6532, '127.0.0.1', '/api/health', '2026-04-17 20:13:37'),
+(6533, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:13:37'),
+(6534, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:13:37'),
+(6535, '127.0.0.1', '/api/eventos', '2026-04-17 20:13:37'),
+(6536, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:13:37'),
+(6537, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:13:37'),
+(6538, '127.0.0.1', '/', '2026-04-17 20:52:59'),
+(6539, '127.0.0.1', '/api/health', '2026-04-17 20:52:59'),
+(6540, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:52:59'),
+(6541, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:52:59'),
+(6542, '127.0.0.1', '/api/eventos', '2026-04-17 20:52:59'),
+(6543, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:52:59'),
+(6544, '127.0.0.1', '/', '2026-04-17 20:52:59'),
+(6545, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:52:59'),
+(6546, '127.0.0.1', '/api/health', '2026-04-17 20:52:59'),
+(6547, '127.0.0.1', '/api/eventos/hoy', '2026-04-17 20:52:59'),
+(6548, '127.0.0.1', '/api/eventos/en-progreso', '2026-04-17 20:52:59'),
+(6549, '127.0.0.1', '/api/eventos', '2026-04-17 20:52:59'),
+(6550, '127.0.0.1', '/api/eventos/finalizados', '2026-04-17 20:52:59'),
+(6551, '127.0.0.1', '/modal-auth.html', '2026-04-17 20:52:59'),
+(6552, '127.0.0.1', '/evento.html?slug=expo-san-carlos-internacional-2026', '2026-04-17 20:53:00'),
+(6553, '127.0.0.1', '/api/eventos/expo-san-carlos-internacional-2026', '2026-04-17 20:53:00'),
+(6554, '127.0.0.1', '/api/actividades/expo-san-carlos-internacional-2026', '2026-04-17 20:53:00'),
+(6555, '127.0.0.1', '/api/precios/expo-san-carlos-internacional-2026', '2026-04-17 20:53:00'),
+(6556, '127.0.0.1', '/api/expositores/expo-san-carlos-internacional-2026', '2026-04-17 20:53:00'),
+(6557, '127.0.0.1', '/api/galeria/expo-san-carlos-internacional-2026', '2026-04-17 20:53:00'),
+(6558, '127.0.0.1', '/api/eventos/expo-san-carlos-internacional-2026', '2026-04-17 20:53:00');
 
 --
 -- Indexes for dumped tables
@@ -6717,13 +6897,6 @@ ALTER TABLE `eventos`
   ADD KEY `idx_usuario_estado` (`usuario_id`,`estado`),
   ADD KEY `idx_estado_activo` (`estado`,`activo`),
   ADD KEY `idx_fecha_envio_revision` (`fecha_envio_revision`);
-
---
--- Indexes for table `evento_compartir`
---
-ALTER TABLE `evento_compartir`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_evento` (`evento_id`);
 
 --
 -- Indexes for table `evento_galeria`
@@ -6788,19 +6961,13 @@ ALTER TABLE `visitas`
 -- AUTO_INCREMENT for table `actividades`
 --
 ALTER TABLE `actividades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=366;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=367;
 
 --
 -- AUTO_INCREMENT for table `eventos`
 --
 ALTER TABLE `eventos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
-
---
--- AUTO_INCREMENT for table `evento_compartir`
---
-ALTER TABLE `evento_compartir`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
 
 --
 -- AUTO_INCREMENT for table `evento_galeria`
@@ -6812,7 +6979,7 @@ ALTER TABLE `evento_galeria`
 -- AUTO_INCREMENT for table `expositores`
 --
 ALTER TABLE `expositores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
 -- AUTO_INCREMENT for table `notificaciones`
@@ -6842,7 +7009,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `visitas`
 --
 ALTER TABLE `visitas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6362;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6559;
 
 --
 -- Constraints for dumped tables
@@ -6859,12 +7026,6 @@ ALTER TABLE `actividades`
 --
 ALTER TABLE `eventos`
   ADD CONSTRAINT `fk_eventos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `evento_compartir`
---
-ALTER TABLE `evento_compartir`
-  ADD CONSTRAINT `evento_compartir_ibfk_1` FOREIGN KEY (`evento_id`) REFERENCES `eventos` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `evento_galeria`

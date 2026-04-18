@@ -53,4 +53,4 @@ class AdminGaleriaController {
   }
 }
 
-module.exports = AdminGaleriaController;
+module.exports = new AdminGaleriaController();

@@ -55,4 +55,4 @@ class AdminExpositorController {
   }
 }
 
-module.exports = AdminExpositorController;
+module.exports = new AdminExpositorController();

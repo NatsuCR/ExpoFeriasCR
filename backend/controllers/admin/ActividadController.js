@@ -55,4 +55,4 @@ class AdminActividadController {
   }
 }
 
-module.exports = AdminActividadController;
+module.exports = new AdminActividadController();

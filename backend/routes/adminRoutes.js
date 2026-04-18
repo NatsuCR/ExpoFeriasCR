@@ -13,15 +13,15 @@ const UploadController = require('../controllers/admin/UploadController');
 
 
 const router = express.Router();
-const uploadController = new UploadController();
+const uploadController = UploadController;
 const adminEvento = AdminEventoController;
-const adminEventosPendientes = new AdminEventosPendientesController();
-const adminPrecio = new AdminPrecioController();
-const adminActividad = new AdminActividadController();
-const adminExpositor = new AdminExpositorController();
-const adminGaleria = new AdminGaleriaController();
-const adminUsuario = new AdminUsuarioController();
-const statsController = new StatsController();
+const adminEventosPendientes = AdminEventosPendientesController;
+const adminPrecio = AdminPrecioController;
+const adminActividad = AdminActividadController;
+const adminExpositor = AdminExpositorController;
+const adminGaleria = AdminGaleriaController;
+const adminUsuario = AdminUsuarioController;
+const statsController = StatsController;
 
 // Todas las rutas requieren autenticación
 router.use(authMiddleware);

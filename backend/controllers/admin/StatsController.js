@@ -293,4 +293,4 @@ class StatsController {
     }
 }
 
-module.exports = StatsController;
+module.exports = new StatsController();

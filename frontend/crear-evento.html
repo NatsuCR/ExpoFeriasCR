@@ -237,7 +237,18 @@
                                     <div class="form-group"><label>Color Primario <i class="fas fa-info-circle btn-help-icon" title="Botones y encabezados principales"></i></label><input type="color" id="color_primario" value="#C8102E"></div>
                                     <div class="form-group"><label>Color Secundario <i class="fas fa-info-circle btn-help-icon" title="Detalles y acentos"></i></label><input type="color" id="color_secundario" value="#0033A0"></div>
                                     <div class="form-group"><label>Fondo de Página</label><input type="color" id="color_fondo" value="#f4e4c1"></div>
-                                    <div class="form-group"><label>Texto General</label><input type="color" id="color_texto" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Color info-card</label><input type="color" id="color_texto" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Color descripción-texto</label><input type="color" id="color_descripcion_texto" value="#2c1a0e"></div>
+                                    <div class="form-group">
+                                        <label>Oscuridad Imagen (Hero/Galería)</label>
+                                        <div class="opacity-slider-wrapper">
+                                            <input type="range" id="opacidad_hero_slider" min="0" max="1" step="0.05" value="0.7">
+                                            <div class="opacity-labels">
+                                                <span id="opacidad_hero_label">Oscuridad: 70%</span>
+                                            </div>
+                                            <input type="hidden" id="color_hero_overlay" value="rgba(0, 0, 0, 0.7)">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Colores de Títulos -->

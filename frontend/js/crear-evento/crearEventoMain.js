@@ -104,7 +104,7 @@ export class CrearEvento {
         'slug', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin',
         'ubicacion', 'provincia', 'imagen_portada', 'horario_imagen',
         'mapa_embed', 'tipo_venta', 'url_venta_online',
-        'color_primario', 'color_secundario', 'color_fondo', 'color_texto',
+        'color_primario', 'color_secundario', 'color_fondo', 'color_texto', 'color_descripcion_texto',
         'color_hero_overlay', 'color_titulo_seccion',
         'color_titulo_hero', 'color_descripcion_hero', 'color_fondo_fechas', 'color_texto_fechas',
         'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
@@ -279,11 +279,6 @@ export class CrearEvento {
 
       programarActualizacion();
 
-      // El DOM ya está completamente poblado aquí (las tablas se llenaron sincrónicamente)
-      // Activar el watcher de cambios DESPUÉS de cargar para que no se marque dirty al cargar
-      this.formDirty = false;
-      this._iniciarWatcherCambios();
-
       if (evento.estado === 'aprobado') {
         this.mostrarMensaje('📝 Editando evento aprobado. Los cambios serán revisados por un admin antes de publicarse.', 'info');
       }
@@ -428,7 +423,7 @@ export class CrearEvento {
     const camposWatch = [
       'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin', 'ubicacion', 'provincia',
       'imagen_portada', 'horario_imagen', 'mapa_embed', 'tipo_venta', 'url_venta_online',
-      'color_primario', 'color_secundario', 'color_fondo', 'color_texto',
+      'color_primario', 'color_secundario', 'color_fondo', 'color_texto', 'color_descripcion_texto',
       'color_hero_overlay', 'color_titulo_seccion',
       'color_titulo_hero', 'color_descripcion_hero', 'color_fondo_fechas', 'color_texto_fechas',
       'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
@@ -443,10 +438,12 @@ export class CrearEvento {
       if (el) {
         el.addEventListener('input', () => {
           console.log(`[Event] Input changed: ${id} = ${el.value}`);
+          this.formDirty = true;
           programarActualizacion();
         });
         el.addEventListener('change', () => {
           console.log(`[Event] Change event: ${id} = ${el.value}`);
+          this.formDirty = true;
           programarActualizacion();
         });
       }
@@ -460,6 +457,7 @@ export class CrearEvento {
         if (urlGroup) {
           urlGroup.style.display = (valor === 'online' || valor === 'ambos') ? 'block' : 'none';
         }
+        this.formDirty = true;
         programarActualizacion();
       });
     }
@@ -473,6 +471,7 @@ export class CrearEvento {
       const table = document.getElementById(tableId);
       if (table) {
         const observer = new MutationObserver(() => {
+          this.formDirty = true;
           programarActualizacion();
         });
         observer.observe(table, { childList: true, subtree: true });
@@ -494,13 +493,18 @@ export class CrearEvento {
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = 'image/*';
+      fileInput.multiple = true; // Permitir selección múltiple
       fileInput.style.display = 'none';
       document.body.appendChild(fileInput);
       fileInput.addEventListener('change', async (e) => {
-        const f = e.target.files[0]; if (!f) { fileInput.remove(); return; }
+        const files = Array.from(e.target.files);
+        if (files.length === 0) { fileInput.remove(); return; }
+        
         const { subirImagen } = await import('./uploadManager.js');
-        const url = await subirImagen(f, 'feedback-actividad-img', null);
-        if (url) addActividadImageRow(url);
+        for (const f of files) {
+          const url = await subirImagen(f, 'feedback-actividad-img', null);
+          if (url) addActividadImageRow(url);
+        }
         fileInput.remove();
       });
       fileInput.click();
@@ -517,15 +521,18 @@ export class CrearEvento {
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = 'image/*';
+      fileInput.multiple = true; // Permitir selección múltiple
       fileInput.style.display = 'none';
       document.body.appendChild(fileInput);
       fileInput.addEventListener('change', async (e) => {
-        const f = e.target.files[0]; if (!f) { fileInput.remove(); return; }
+        const files = Array.from(e.target.files);
+        if (files.length === 0) { fileInput.remove(); return; }
+        
         const { subirImagen } = await import('./uploadManager.js');
-        const url = await subirImagen(f, 'feedback-expositor-img', null);
-        if (url) {
-          const { addExpositorImageRow } = await import('./modalsManager.js');
-          addExpositorImageRow(url);
+        const { addExpositorImageRow } = await import('./modalsManager.js');
+        for (const f of files) {
+          const url = await subirImagen(f, 'feedback-expositor-img', null);
+          if (url) addExpositorImageRow(url);
         }
         fileInput.remove();
       });
@@ -654,6 +661,7 @@ export class CrearEvento {
       color_secundario: get('color_secundario') || '#d4a373',
       color_fondo: get('color_fondo') || '#f4e4c1',
       color_texto: get('color_texto') || '#2c1a0e',
+      color_descripcion_texto: get('color_descripcion_texto') || '#2c1a0e',
       color_hero_overlay: get('color_hero_overlay') || 'rgba(62,42,31,0.7)',
       color_titulo_seccion: get('color_titulo_seccion') || '#2c1a0e',
       color_titulo_hero: get('color_titulo_hero') || '#ffffff',
@@ -685,10 +693,25 @@ export class CrearEvento {
           if (!el) return;
           if (key === 'precio_normal' || key === 'orden') obj[key] = parseInt(el.value) || 0;
           else if (key === 'imagen' || key === 'logo') {
-            try { obj[key] = JSON.parse(el.value || '[]'); } catch (e) { obj[key] = []; }
+            const val = (el.value || '').trim();
+            if (!val) {
+              obj[key] = [];
+            } else if (val.startsWith('[')) {
+              try {
+                const parsed = JSON.parse(val);
+                obj[key] = Array.isArray(parsed) ? parsed : [parsed];
+              } catch (e) {
+                obj[key] = [val]; // Fallback a string si falla el parseo
+              }
+            } else {
+              // Manejar el caso de una URL única o separada por comas
+              obj[key] = val.includes(',') ? val.split(',').map(s => s.trim()) : [val];
+            }
           } else if (key === 'es_gratis' || key === 'requiere_entrada_online') {
             obj[key] = el.dataset?.value === 'true' ? 1 : 0;
-          } else obj[key] = el.value || '';
+          } else {
+            obj[key] = el.value || '';
+          }
         });
         return obj;
       });
@@ -854,7 +877,8 @@ export class CrearEvento {
         if (label) label.innerText = `${textPrefix}: ${Math.round(val * 100)}%`;
         // La opacidad real es el inverso (ej: 1 - 0.65 = 0.35)
         const opacityResult = (1 - val).toFixed(2);
-        hidden.value = opacityResult;
+        // Guardar como RGBA para compatibilidad total
+        hidden.value = `rgba(0, 0, 0, ${opacityResult})`;
         hidden.dispatchEvent(new Event('input', { bubbles: true }));
       });
     };
@@ -867,9 +891,17 @@ export class CrearEvento {
     const label = document.getElementById('opacidad_hero_label');
     const textPrefix = 'Oscuridad';
     if (hidden && slider) {
-      let val = parseFloat(hidden.value);
+      let val;
+      const rawValue = hidden.value || "";
+      if (rawValue.includes('rgba')) {
+        const parts = rawValue.split(',');
+        val = parseFloat(parts[parts.length - 1]);
+      } else {
+        val = parseFloat(rawValue);
+      }
+
       if (!isNaN(val)) {
-        // La oscuridad guardada es 1 - opacidad (ej: 1 - 0.35 = 0.65)
+        // La oscuridad sombreada es 1 - opacidad (ej: 1 - 0.35 = 0.65)
         const darknessVal = (1 - val).toFixed(2);
         slider.value = darknessVal;
         if (label) label.innerText = `${textPrefix}: ${Math.round(darknessVal * 100)}%`;

@@ -140,7 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const previewData = JSON.parse(previewDataStr);
                 cargarEventoDesdePreview(previewData);
                 // Inicializar controles de carrusel y lightbox para preview
-                setTimeout(() => { initCarouselControls(); initHeroCarousel(); initLightbox(); }, 120);
+                setTimeout(() => { 
+                    initCarouselControls(); 
+                    initHeroCarousel(); 
+                    initLightbox(); 
+                }, 150);
             } catch (e) {
                 console.error('Error parsing preview data:', e);
             }
@@ -205,12 +209,11 @@ function cargarEventoDesdePreview(datos) {
 
     // Fechas
     if (datos.fecha_inicio || datos.fecha_fin) {
-        const fmt = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' }) : '?';
-        const fechaTexto = datos.fecha_inicio === datos.fecha_fin
-            ? fmt(datos.fecha_inicio)
-            : `${fmt(datos.fecha_inicio)} al ${fmt(datos.fecha_fin)}`;
+        const fi = window.formatDateCR(datos.fecha_inicio);
+        const ff = window.formatDateCR(datos.fecha_fin);
+        const fechaTexto = datos.fecha_inicio === datos.fecha_fin ? fi : `${fi} al ${ff}`;
         document.getElementById('eventoFechas').innerHTML = fechaTexto;
-        document.getElementById('infoFechas').innerHTML = `${fmt(datos.fecha_inicio)} - ${fmt(datos.fecha_fin)}`;
+        document.getElementById('infoFechas').innerHTML = `${fi} - ${ff}`;
     }
 
     // Ubicación
@@ -231,18 +234,20 @@ function cargarEventoDesdePreview(datos) {
         }
     }
 
-    // Aplicar colores
+    // Aplicar colores con acceso seguro
     const r = document.documentElement;
-    r.style.setProperty('--evento-primario', datos.color_primario || '#8b5a2b');
-    r.style.setProperty('--evento-secundario', datos.color_secundario || '#d4a373');
-    r.style.setProperty('--evento-fondo', datos.color_fondo || '#f4e4c1');
+    r.style.setProperty('--evento-primario', datos?.color_primario || '#8b5a2b');
+    r.style.setProperty('--evento-secundario', datos?.color_secundario || '#d4a373');
+    r.style.setProperty('--evento-fondo', datos?.color_fondo || '#f4e4c1');
 
-    if (datos.color_texto) document.body.style.color = datos.color_texto;
+    if (datos?.color_texto) document.body.style.color = datos.color_texto;
+    r.style.setProperty('--color-descripcion-texto', datos?.color_descripcion_texto || '#2c1a0e');
+    r.style.setProperty('--color-descripcion-hero', datos?.color_descripcion_hero || '#ffffff');
 
     // Color Fondo y Texto Share (Preview) - Ahora color sólido, sin opacidad
     if (datos.color_fondo_share) r.style.setProperty('--color-fondo-share', datos.color_fondo_share);
     r.style.setProperty('--color-texto-share', datos.color_texto_share || '#2c1a0e');
-    
+
     // Contacto y Footer (Preview)
     if (datos.color_fondo_contacto) r.style.setProperty('--contacto-fondo', datos.color_fondo_contacto);
     if (datos.color_texto_contacto) r.style.setProperty('--contacto-texto', datos.color_texto_contacto);
@@ -251,14 +256,18 @@ function cargarEventoDesdePreview(datos) {
     if (datos.color_texto_footer) r.style.setProperty('--footer-texto', datos.color_texto_footer);
 
     // Opacidad Imagen Hero (Preview)
-    const opaHero = parseFloat(datos.color_hero_overlay);
-    if (!isNaN(opaHero)) {
-        r.style.setProperty('--hero-img-opacity', opaHero);
-    }
-    
-    // Ocultar overlay de color si se usa opacidad directa (opcional, para diseño limpio)
+    const overlayVal = datos.color_hero_overlay || 'rgba(0, 0, 0, 0.7)';
     const overlay = document.querySelector('.hero-overlay');
-    if (overlay) overlay.style.display = 'none';
+    
+    if (overlay) {
+        // Si es un número (ej: "0.3"), convertirlo a RGBA negro
+        if (!isNaN(parseFloat(overlayVal)) && !overlayVal.includes('rgba')) {
+            overlay.style.backgroundColor = `rgba(0,0,0,${overlayVal})`;
+        } else {
+            overlay.style.backgroundColor = overlayVal;
+        }
+        overlay.style.display = 'block'; // Asegurar que sea visible
+    }
 
     const h1 = document.getElementById('eventoNombre');
     const desc = document.getElementById('eventoDescripcion');
@@ -328,8 +337,7 @@ function cargarEventoDesdePreview(datos) {
         if (tablaPrecios) {
             let html = `<table class="tabla-precios-estilo"><thead><tr><th>Fecha</th><th>Precio normal</th><th>Promoción</th><th>Detalle</th></tr></thead><tbody>`;
             datos.precios.forEach(p => {
-                const fechaStr = p.fecha.includes('T') ? p.fecha : p.fecha + 'T12:00:00';
-                const fecha = new Date(fechaStr).toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long' });
+                const fecha = window.formatDateCR(p.fecha);
                 const precioNum = parseFloat(p.precio_normal);
                 const precioFormateado = isNaN(precioNum) ? '₡0' : new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(precioNum);
                 const promocion = p.promocion || '—';
@@ -347,21 +355,31 @@ function cargarEventoDesdePreview(datos) {
         if (actividadesGrid) {
             actividadesGrid.innerHTML = '';
             datos.actividades.forEach((act, actIndex) => {
-                const fmt = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-CR', { day: '2-digit', month: 'short' }) : '?';
-                // imágenes: puede ser act.imagen (string) o act.imagenes (array)
+                const fechaFmt = window.formatDateCR(act.fecha, 'short');
+                
+                // --- Robust Image Parsing (Universal) ---
                 let images = [];
-                if (Array.isArray(act.imagenes) && act.imagenes.length) {
-                    images = act.imagenes.filter(u => u);
-                } else if (typeof act.imagen === 'string') {
-                    const trimmed = act.imagen.trim();
-                    if (trimmed.startsWith('[')) {
-                        try { images = JSON.parse(trimmed).filter(u => u); } catch (e) { images = [trimmed]; }
+                const rawImg = act.imagen || act.imagenes;
+                
+                if (Array.isArray(rawImg)) {
+                    images = rawImg.filter(u => u && u !== 'null');
+                } else if (typeof rawImg === 'string' && rawImg.trim()) {
+                    const trimmed = rawImg.trim();
+                    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+                        try { 
+                            images = JSON.parse(trimmed).filter(u => u && u !== 'null'); 
+                        } catch (e) { 
+                            images = [trimmed]; 
+                        }
                     } else if (trimmed.includes(',')) {
                         images = trimmed.split(',').map(s => s.trim()).filter(u => u && u !== 'null');
-                    } else if (trimmed) {
+                    } else {
                         images = [trimmed];
                     }
                 }
+                
+                // Asegurar que las rutas sean consistentes
+                images = images.map(src => src.replace(/\\/g, '/'));
 
                 // crear contenedor de imagenes (mini-carrusel)
                 const showButtons = images.length > 1 ? 'flex' : 'none';
@@ -381,7 +399,7 @@ function cargarEventoDesdePreview(datos) {
                     <div class="card-content">
                         <h3>${act.titulo}</h3>
                         <p class="tipo"><strong>Tipo:</strong> ${act.tipo}</p>
-                        <p class="fecha"><strong>Fecha:</strong> ${fmt(act.fecha)} ${act.hora ? act.hora : ''}</p>
+                        <p class="fecha"><strong>Fecha:</strong> ${fechaFmt} ${act.hora ? act.hora : ''}</p>
                         <p class="lugar"><strong>Lugar:</strong> ${act.lugar}</p>
                         ${window.formatDescription(act.descripcion)}
                         <p class="gratuito">${act.es_gratis ? '<strong>✓ Gratis</strong>' : '<strong>Requiere entrada</strong>'}</p>
@@ -398,11 +416,30 @@ function cargarEventoDesdePreview(datos) {
                 const prev = car.querySelector('.mini-prev');
                 const next = car.querySelector('.mini-next');
                 if (!prev || !next) return;
+                
                 function update() {
                     slides.forEach((s, l) => s.classList.toggle('activa', l === idx));
                 }
-                prev.onclick = (e) => { e.preventDefault(); idx = (idx - 1 + slides.length) % slides.length; update(); };
-                next.onclick = (e) => { e.preventDefault(); idx = (idx + 1) % slides.length; update(); };
+
+                // Usar addEventListener para evitar sobreescritura
+                const newPrev = prev.cloneNode(true);
+                prev.parentNode.replaceChild(newPrev, prev);
+                newPrev.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    idx = (idx - 1 + slides.length) % slides.length;
+                    update();
+                });
+
+                const newNext = next.cloneNode(true);
+                next.parentNode.replaceChild(newNext, next);
+                newNext.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    idx = (idx + 1) % slides.length;
+                    update();
+                });
+
                 update();
             });
         }

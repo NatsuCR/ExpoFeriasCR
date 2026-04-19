@@ -33,15 +33,7 @@ export async function cargarEvento(slug) {
         document.getElementById('eventoNombre').innerText = nombre;
         document.getElementById('eventoDescripcion').innerHTML = typeof window.formatDescription === 'function' ? window.formatDescription(descripcion) : descripcion;
 
-        const fmt = (dStr) => {
-            if (!dStr || dStr === 'Invalid Date') return '—';
-            try {
-                const clean = (typeof dStr === 'string' && dStr.includes('T')) ? dStr.split('T')[0] : dStr;
-                const d = new Date(clean + 'T12:00:00');
-                if (isNaN(d.getTime())) return '—';
-                return d.toLocaleDateString('es-CR', { day: '2-digit', month: 'long', year: 'numeric' });
-            } catch (e) { return '—'; }
-        };
+        const fmt = (d) => window.formatDateCR(d);
 
         const fechaRango = `${fmt(fechaInicio)} al ${fmt(fechaFin)}`;
         document.getElementById('eventoFechas').innerHTML = fechaRango;
@@ -130,22 +122,34 @@ export async function cargarEvento(slug) {
             entradasParrafo.innerHTML = videoHtml + textoEntradas;
         }
 
-        // Colores generales
-        const cp = evento.color_primario || evento.colorPrimario;
-        const cs = evento.color_secundario || evento.colorSecundario;
-        const cf = evento.color_fondo || evento.colorFondo;
-        const ct = evento.color_texto || evento.colorTexto;
+        // Colores y Estilos Dinámicos (v6.0)
+        const cp = evento?.color_primario || evento?.colorPrimario;
+        const cs = evento?.color_secundario || evento?.colorSecundario;
+        const cf = evento?.color_fondo || evento?.colorFondo;
+        const ct = evento?.color_texto || evento?.colorTexto;
+        const cdt = evento?.color_descripcion_texto || evento?.colorDescripcionTexto;
+        const cdh = evento?.color_descripcion_hero || evento?.colorDescripcionHero;
+        const cth = evento?.color_titulo_hero || evento?.colorTituloHero;
+        const cff = evento?.color_fondo_fechas || evento?.colorFondoFechas;
+        const ctf = evento?.color_texto_fechas || evento?.colorTextoFechas;
 
-        if (cp) document.documentElement.style.setProperty('--evento-primario', cp);
-        if (cs) document.documentElement.style.setProperty('--evento-secundario', cs);
-        if (cf) document.documentElement.style.setProperty('--evento-fondo', cf);
+        const r = document.documentElement;
+        
+        // CSS Variables Globales
+        if (cp) r.style.setProperty('--evento-primario', cp);
+        if (cs) r.style.setProperty('--evento-secundario', cs);
+        if (cf) r.style.setProperty('--evento-fondo', cf);
         if (ct) document.body.style.color = ct;
+        
+        // Inyección robusta de variables de descripción
+        r.style.setProperty('--color-descripcion-texto', cdt || '#2c1a0e');
+        r.style.setProperty('--color-descripcion-hero', cdh || '#ffffff');
 
-        // Color Fondo y Texto Share - Ahora color sólido
-        const cfs = evento.color_fondo_share || evento.colorFondoShare || 'rgba(255, 255, 255, 0.5)';
-        const ctshare = evento.color_texto_share || evento.colorTextoShare || '#2c1a0e';
-        document.documentElement.style.setProperty('--color-fondo-share', cfs);
-        document.documentElement.style.setProperty('--color-texto-share', ctshare);
+        // Color Fondo y Texto Share
+        const cfs = evento?.color_fondo_share || evento?.colorFondoShare || 'rgba(255, 255, 255, 0.5)';
+        const ctshare = evento?.color_texto_share || evento?.colorTextoShare || '#2c1a0e';
+        r.style.setProperty('--color-fondo-share', cfs);
+        r.style.setProperty('--color-texto-share', ctshare);
 
         // Lógica de compartir automática (v5.9)
         const currentUrl = encodeURIComponent(window.location.href);
@@ -172,20 +176,23 @@ export async function cargarEvento(slug) {
             };
         }
 
-        // Opacidad Imagen Hero
-        const cho = parseFloat(evento.color_hero_overlay || evento.colorHeroOverlay || '0.7');
-        if (!isNaN(cho)) {
-            document.documentElement.style.setProperty('--hero-img-opacity', cho);
-            const overlay = document.querySelector('.hero-overlay');
-            if (overlay) overlay.style.display = 'none';
+        // Opacidad Imagen Hero (Oscuridad)
+        const overlayVal = evento.color_hero_overlay || evento.colorHeroOverlay || 'rgba(0,0,0,0.7)';
+        const overlay = document.querySelector('.hero-overlay');
+        
+        if (overlay) {
+            // Si es un número (ej: "0.3"), convertirlo a RGBA negro
+            if (!isNaN(parseFloat(overlayVal)) && typeof overlayVal === 'string' && !overlayVal.includes('rgba')) {
+                overlay.style.backgroundColor = `rgba(0,0,0,${overlayVal})`;
+            } else if (typeof overlayVal === 'number') {
+                overlay.style.backgroundColor = `rgba(0,0,0,${overlayVal})`;
+            } else {
+                overlay.style.backgroundColor = overlayVal;
+            }
+            overlay.style.display = 'block'; // Asegurar que sea visible
         }
 
-        // Hero: título, descripción, fechas
-        const cth = evento.color_titulo_hero || evento.colorTituloHero;
-        const cdh = evento.color_descripcion_hero || evento.colorDescripcionHero;
-        const cff = evento.color_fondo_fechas || evento.colorFondoFechas;
-        const ctf = evento.color_texto_fechas || evento.colorTextoFechas;
-
+        // Hero: aplicar estilos a elementos específicos if any
         const tituloHero = document.getElementById('eventoNombre');
         const descripcionHero = document.getElementById('eventoDescripcion');
         const fechasHero = document.querySelector('.hero-dates');
@@ -242,7 +249,7 @@ export async function cargarEvento(slug) {
             // Limpiar estilos inline previos para dejar que las variables actúen
             contactoSection.style.backgroundColor = '';
             contactoSection.style.color = '';
-            
+
             if (cfc) r.style.setProperty('--contacto-fondo', cfc);
             if (ctc) r.style.setProperty('--contacto-texto', ctc);
             if (cec) r.style.setProperty('--contacto-enlace', cec);
@@ -257,7 +264,7 @@ export async function cargarEvento(slug) {
             // Limpiar estilos inline previos para permitir personalización
             footer.style.backgroundColor = '';
             footer.style.color = '';
-            
+
             if (cffoot) r.style.setProperty('--footer-fondo', cffoot);
             if (ctfoot) r.style.setProperty('--footer-texto', ctfoot);
         }

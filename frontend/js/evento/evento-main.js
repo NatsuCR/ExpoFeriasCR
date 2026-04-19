@@ -140,10 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const previewData = JSON.parse(previewDataStr);
                 cargarEventoDesdePreview(previewData);
                 // Inicializar controles de carrusel y lightbox para preview
-                setTimeout(() => { 
-                    initCarouselControls(); 
-                    initHeroCarousel(); 
-                    initLightbox(); 
+                setTimeout(() => {
+                    initCarouselControls();
+                    initHeroCarousel();
+                    initLightbox();
                 }, 150);
             } catch (e) {
                 console.error('Error parsing preview data:', e);
@@ -258,7 +258,7 @@ function cargarEventoDesdePreview(datos) {
     // Opacidad Imagen Hero (Preview)
     const overlayVal = datos.color_hero_overlay || 'rgba(0, 0, 0, 0.7)';
     const overlay = document.querySelector('.hero-overlay');
-    
+
     if (overlay) {
         // Si es un número (ej: "0.3"), convertirlo a RGBA negro
         if (!isNaN(parseFloat(overlayVal)) && !overlayVal.includes('rgba')) {
@@ -356,20 +356,20 @@ function cargarEventoDesdePreview(datos) {
             actividadesGrid.innerHTML = '';
             datos.actividades.forEach((act, actIndex) => {
                 const fechaFmt = window.formatDateCR(act.fecha, 'short');
-                
+
                 // --- Robust Image Parsing (Universal) ---
                 let images = [];
                 const rawImg = act.imagen || act.imagenes;
-                
+
                 if (Array.isArray(rawImg)) {
                     images = rawImg.filter(u => u && u !== 'null');
                 } else if (typeof rawImg === 'string' && rawImg.trim()) {
                     const trimmed = rawImg.trim();
                     if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-                        try { 
-                            images = JSON.parse(trimmed).filter(u => u && u !== 'null'); 
-                        } catch (e) { 
-                            images = [trimmed]; 
+                        try {
+                            images = JSON.parse(trimmed).filter(u => u && u !== 'null');
+                        } catch (e) {
+                            images = [trimmed];
                         }
                     } else if (trimmed.includes(',')) {
                         images = trimmed.split(',').map(s => s.trim()).filter(u => u && u !== 'null');
@@ -377,7 +377,7 @@ function cargarEventoDesdePreview(datos) {
                         images = [trimmed];
                     }
                 }
-                
+
                 // Asegurar que las rutas sean consistentes
                 images = images.map(src => src.replace(/\\/g, '/'));
 
@@ -416,7 +416,7 @@ function cargarEventoDesdePreview(datos) {
                 const prev = car.querySelector('.mini-prev');
                 const next = car.querySelector('.mini-next');
                 if (!prev || !next) return;
-                
+
                 function update() {
                     slides.forEach((s, l) => s.classList.toggle('activa', l === idx));
                 }

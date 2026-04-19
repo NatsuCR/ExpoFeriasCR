@@ -163,7 +163,7 @@ class AdminEventosPendientes {
       pendiente: '⏳',
       aprobado: '✓',
       rechazado: '✕',
-      edicion_pendiente: '⏳',
+      edicion_pendiente: '🔄',
       finalizado: '✓'
     };
 
@@ -171,7 +171,7 @@ class AdminEventosPendientes {
       pendiente: 'Pendiente',
       aprobado: 'Aprobado',
       rechazado: 'Rechazado',
-      edicion_pendiente: 'Edición en revisión',
+      edicion_pendiente: 'Actualización',
       finalizado: 'Finalizado'
     };
 

@@ -75,7 +75,7 @@ app.get('/evento.html', async (req, res) => {
 
   try {
     let html = fs.readFileSync(filePath, 'utf8');
-    
+
     // Si hay slug, buscamos el evento. Si no, pasamos null para que el servicio limpie los tags.
     const evento = slug ? await eventoService.obtenerEventoPorSlug(slug) : null;
 

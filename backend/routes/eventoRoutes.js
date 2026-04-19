@@ -23,7 +23,10 @@ router.get('/mi-evento/:id', authMiddleware, (req, res) => usuarioEventsControll
 router.put('/actualizar/:id', authMiddleware, (req, res) => usuarioEventsController.actualizarEvento(req, res));
 router.post('/:id/editar-aprobado', authMiddleware, (req, res) => usuarioEventsController.editarEventoAprobado(req, res));
 router.get('/estado/:id', authMiddleware, (req, res) => usuarioEventsController.obtenerEstadoEvento(req, res));
+
 router.delete('/:id', authMiddleware, (req, res) => usuarioEventsController.eliminarEvento(req, res));
+
+
 
 // Ruta pública
 router.get('/', eventoController.obtenerTodos.bind(eventoController));

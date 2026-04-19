@@ -374,13 +374,13 @@ export class CrearEvento {
 
       if (this.eventoId) {
         // Modo Edición
-        btn.innerHTML = isAdmin 
-          ? '<i class="fas fa-save"></i> Guardar Cambios' 
+        btn.innerHTML = isAdmin
+          ? '<i class="fas fa-save"></i> Guardar Cambios'
           : '<i class="fas fa-check"></i> Confirmar cambios';
       } else {
         // Modo Creación
-        btn.innerHTML = isAdmin 
-          ? '<i class="fas fa-plus-circle"></i> Crear Evento' 
+        btn.innerHTML = isAdmin
+          ? '<i class="fas fa-plus-circle"></i> Crear Evento'
           : '<i class="fas fa-paper-plane"></i> Enviar a Revisión';
       }
     }
@@ -499,7 +499,7 @@ export class CrearEvento {
       fileInput.addEventListener('change', async (e) => {
         const files = Array.from(e.target.files);
         if (files.length === 0) { fileInput.remove(); return; }
-        
+
         const { subirImagen } = await import('./uploadManager.js');
         for (const f of files) {
           const url = await subirImagen(f, 'feedback-actividad-img', null);
@@ -527,7 +527,7 @@ export class CrearEvento {
       fileInput.addEventListener('change', async (e) => {
         const files = Array.from(e.target.files);
         if (files.length === 0) { fileInput.remove(); return; }
-        
+
         const { subirImagen } = await import('./uploadManager.js');
         const { addExpositorImageRow } = await import('./modalsManager.js');
         for (const f of files) {
@@ -761,11 +761,11 @@ export class CrearEvento {
         const esAprobadoOEnRevision = ['aprobado', 'edicion_pendiente'].includes(this.eventoEstado);
         if (esAprobadoOEnRevision && !this.formDirty) {
           if (btn) { this.actualizarBotonSubmit(); btn.disabled = false; }
-        const user = JSON.parse(localStorage.getItem('usuario') || '{}');
-        const msg = (user.rol === 'admin') 
-          ? 'ℹ️ No has hecho ningún cambio. Modifica algún campo antes de guardar.' 
-          : 'ℹ️ No has hecho ningún cambio. Modifica algún campo antes de enviar a revisión.';
-        this.mostrarMensaje(msg, 'info');
+          const user = JSON.parse(localStorage.getItem('usuario') || '{}');
+          const msg = (user.rol === 'admin')
+            ? 'ℹ️ No has hecho ningún cambio. Modifica algún campo antes de guardar.'
+            : 'ℹ️ No has hecho ningún cambio. Modifica algún campo antes de enviar a revisión.';
+          this.mostrarMensaje(msg, 'info');
           window.scrollTo({ top: 0, behavior: 'smooth' });
           return;
         }

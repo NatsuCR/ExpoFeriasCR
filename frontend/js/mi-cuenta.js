@@ -1,23 +1,9 @@
-// Interceptor global para renovación de tokens
-(function() {
-    const originalFetch = window.fetch;
-    window.fetch = async function(...args) {
-        const response = await originalFetch(...args);
-        const newToken = response.headers.get('X-New-Token');
-        if (newToken) {
-            localStorage.setItem('token', newToken);
-        }
-        return response;
-    };
-})();
-
 /**
  * mi-cuenta.js - Gestión de cuenta y eventos del usuario
  */
 
 class MiCuenta {
   constructor() {
-    // Verificar autenticación
     this.usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     if (!this.usuario) {
       alert('Debes iniciar sesión');
@@ -31,6 +17,18 @@ class MiCuenta {
     this.init();
   }
 
+  /**
+   * Fetch interno que maneja renovación de token sin tocar window.fetch
+   */
+  async apiFetch(url, options = {}) {
+    const response = await fetch(url, options);
+    const newToken = response.headers.get('X-New-Token');
+    if (newToken) {
+      localStorage.setItem('token', newToken);
+    }
+    return response;
+  }
+
   async init() {
     await this.sincronizarPerfil();
     this.cargarPerfil();
@@ -40,12 +38,11 @@ class MiCuenta {
 
   async sincronizarPerfil() {
     try {
-      const response = await fetch('/api/auth/me', {
+      const response = await this.apiFetch('/api/auth/me', {
         headers: { 'Authorization': `Bearer ${this.getToken()}` }
       });
       if (response.ok) {
         const data = await response.json();
-        // Actualizar datos en memoria y en localStorage
         this.usuario = data.user;
         localStorage.setItem('usuario', JSON.stringify(data.user));
       }
@@ -55,17 +52,14 @@ class MiCuenta {
   }
 
   setupEventListeners() {
-    // Volver
     document.getElementById('btn-volver-cuenta').addEventListener('click', () => {
       window.location.href = '/index.html';
     });
 
-    // Crear evento
     document.getElementById('btn-crear-evento').addEventListener('click', () => {
       window.location.href = '/crear-evento.html';
     });
 
-    // Cambiar contraseña
     document.getElementById('btn-cambiar-password').addEventListener('click', () => {
       this.abrirModalPassword();
     });
@@ -82,65 +76,62 @@ class MiCuenta {
       this.handleCambiarPassword(e);
     });
 
-    // Logout
     document.getElementById('btn-logout').addEventListener('click', () => {
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
       window.location.href = '/index.html';
     });
 
-    // Eliminar Cuenta
     document.getElementById('btn-eliminar-cuenta')?.addEventListener('click', () => {
-        this.handleEliminarCuenta();
+      this.handleEliminarCuenta();
     });
 
-    // Cerrar modal eventos
     document.getElementById('btn-cerrar-modal-evento').addEventListener('click', () => {
       document.getElementById('modal-evento-detalles').style.display = 'none';
     });
 
-    // Listeners Panel Checkbox Múltiple
     document.getElementById('seleccionar-todos-eventos')?.addEventListener('change', (e) => {
-        document.querySelectorAll('.cb-evento-bulk').forEach(cb => { cb.checked = e.target.checked; });
-        this.verificarSeleccionados();
+      document.querySelectorAll('.cb-evento-bulk').forEach(cb => { cb.checked = e.target.checked; });
+      this.verificarSeleccionados();
     });
 
     document.getElementById('btn-eliminar-seleccionados')?.addEventListener('click', async () => {
-        const cbs = document.querySelectorAll('.cb-evento-bulk:checked');
-        const count = cbs.length;
-        if(count === 0) return;
-        
-        const confirmado = await window.confirmarAccion(
-            '¿Eliminar seleccionados?', 
-            `¿Estás seguro de que deseas eliminar ${count} evento(s)? Esta acción es permanente y no se puede deshacer.`
-        );
-        if(!confirmado) return;
+      const cbs = document.querySelectorAll('.cb-evento-bulk:checked');
+      const count = cbs.length;
+      if (count === 0) return;
 
-        const btn = document.getElementById('btn-eliminar-seleccionados');
-        const btnOrig = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Borrando...';
-        btn.disabled = true;
-        btn.style.opacity = '0.7';
-        
-        let borrados = 0;
-        for (const cb of cbs) {
-            const id = cb.dataset.id;
-            try {
-                const token = localStorage.getItem('token');
-                const res = await fetch(`/api/eventos/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if(res.ok) borrados++;
-            } catch(e) { console.error('Error al borrar', id); }
-        }
-        
-        btn.innerHTML = btnOrig;
-        btn.disabled = false;
-        this.cargarEventos();
+      const ids = Array.from(cbs).map(cb => cb.dataset.id);
+      const confirmado = await window.confirmarAccion(
+        '¿Eliminar seleccionados?',
+        `¿Estás seguro de que deseas eliminar ${count} evento(s) seleccionados? Esta acción no se puede deshacer.`
+      );
+      if (!confirmado) return;
+
+      const btn = document.getElementById('btn-eliminar-seleccionados');
+      const btnOrig = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Borrando...';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+      btn.style.pointerEvents = 'none';
+
+      for (const id of ids) {
+        try {
+          await this.apiFetch(`/api/eventos/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${this.getToken()}` }
+          });
+        } catch (e) { console.error('Error al borrar', id); }
+      }
+
+      btn.innerHTML = btnOrig;
+      btn.disabled = false;
+      btn.style.opacity = '0.5';
+      btn.style.pointerEvents = 'none';
+
+      await this.cargarEventos();
+      this.verificarSeleccionados();
     });
 
-    // Cerrar modales al hacer clic fuera
     window.addEventListener('click', (e) => {
       const modalPassword = document.getElementById('modal-cambiar-password');
       const modalEvento = document.getElementById('modal-evento-detalles');
@@ -157,8 +148,7 @@ class MiCuenta {
   cargarPerfil() {
     document.getElementById('perfil-nombre').textContent = this.usuario.nombre;
     document.getElementById('perfil-email').textContent = this.usuario.email;
-    
-    // Si es administrador, mostrar botón para ir al panel
+
     if (this.usuario.rol === 'admin') {
       const perfilAcciones = document.querySelector('.perfil-acciones');
       if (perfilAcciones) {
@@ -180,9 +170,8 @@ class MiCuenta {
 
   async cargarEventos() {
     try {
-      // Cache busting: añadir timestamp para forzar descarga desde el servidor
       const t = Date.now();
-      const response = await fetch(`/api/eventos/mis-eventos?t=${t}`, {
+      const response = await this.apiFetch(`/api/eventos/mis-eventos?t=${t}`, {
         headers: { 'Authorization': `Bearer ${this.getToken()}` },
         cache: 'no-store'
       });
@@ -288,19 +277,16 @@ class MiCuenta {
       </div>
     `;
 
-    // Botón de acción en la card
     card.querySelector('.btn-card-ver').addEventListener('click', (e) => {
       e.stopPropagation();
       this.mostrarDetallesEvento(evento);
     });
 
     card.addEventListener('click', (e) => {
-      // Ignorar click en el checkbox o en el botón de acción
-      if(e.target.type === 'checkbox') {
-          this.verificarSeleccionados();
-          return;
+      if (e.target.type === 'checkbox') {
+        this.verificarSeleccionados();
+        return;
       }
-
       this.mostrarDetallesEvento(evento);
     });
 
@@ -313,21 +299,16 @@ class MiCuenta {
     const btnEliminarPanel = document.getElementById('btn-eliminar-seleccionados');
     const selectAllCb = document.getElementById('seleccionar-todos-eventos');
 
-    if(checkedCbs.length > 0) {
-        btnEliminarPanel.style.opacity = '1';
-        btnEliminarPanel.style.pointerEvents = 'auto';
+    if (checkedCbs.length > 0) {
+      btnEliminarPanel.style.opacity = '1';
+      btnEliminarPanel.style.pointerEvents = 'auto';
     } else {
-        btnEliminarPanel.style.opacity = '0.5';
-        btnEliminarPanel.style.pointerEvents = 'none';
+      btnEliminarPanel.style.opacity = '0.5';
+      btnEliminarPanel.style.pointerEvents = 'none';
     }
 
-    // Sincronizar el checkbox de "Seleccionar todos"
     if (selectAllCb) {
-        if (totalCbs.length > 0 && totalCbs.length === checkedCbs.length) {
-            selectAllCb.checked = true;
-        } else {
-            selectAllCb.checked = false;
-        }
+      selectAllCb.checked = totalCbs.length > 0 && totalCbs.length === checkedCbs.length;
     }
   }
 
@@ -340,18 +321,16 @@ class MiCuenta {
 
     titulo.textContent = evento.nombre;
 
-    // Permitir editar todos los estados manejables
-    btnEditar.style.display = ['pendiente','aprobado','finalizado','rechazado','edicion_pendiente'].includes(evento.estado) ? 'block' : 'none';
-    // Solo permitir eliminar si está pendiente
-    btnEliminar.style.display = evento.estado === 'pendiente' ? 'block' : 'none';
+    btnEditar.style.display = ['pendiente', 'aprobado', 'finalizado', 'rechazado', 'edicion_pendiente'].includes(evento.estado) ? 'block' : 'none';
+    // ✅ Permitir eliminar en cualquier estado
+    btnEliminar.style.display = 'block';
 
-    // Contenido detallado
     const formatFecha = (iso) => {
       if (!iso) return '—';
       return new Date(iso).toLocaleDateString('es-CR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' });
     };
 
-    let estadoColor = {
+    const estadoColor = {
       aprobado: '#27ae60',
       pendiente: '#f39c12',
       rechazado: '#e74c3c',
@@ -359,7 +338,7 @@ class MiCuenta {
       finalizado: '#2980b9'
     }[evento.estado] || '#95a5a6';
 
-    let estadoTexto = {
+    const estadoTexto = {
       aprobado: 'Aprobado ✓',
       pendiente: 'En revisión ⏳',
       rechazado: 'Rechazado ✕',
@@ -392,33 +371,27 @@ class MiCuenta {
         <div style="display: inline-block; background-color: ${estadoColor}; color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600; margin-bottom: 15px;">
           ${estadoTexto}
         </div>
-
         <div style="margin-bottom: 15px;">
           <strong>Nombre:</strong><br>
           ${this.escapeHtml(evento.nombre)}
         </div>
-
         <div style="margin-bottom: 15px;">
           <strong>Fecha:</strong><br>
           ${formatFecha(evento.fecha_inicio)} al ${formatFecha(evento.fecha_fin)}
         </div>
-
         <div style="margin-bottom: 15px;">
           <strong>Ubicación:</strong><br>
           ${this.escapeHtml(evento.ubicacion || '—')}
         </div>
-
         <div style="margin-bottom: 15px;">
           <strong>Descripción:</strong><br>
           ${this.escapeHtml(evento.descripcion || '—')}
         </div>
-
         ${razonHtml}
         ${botoneAccion}
       </div>
     `;
 
-    // Event listeners para botones de acción
     btnEditar.onclick = () => {
       window.location.href = `/crear-evento.html?id=${evento.id}`;
     };
@@ -435,7 +408,7 @@ class MiCuenta {
 
   async eliminarEvento(eventoId) {
     try {
-      const response = await fetch(`/api/eventos/${eventoId}`, {
+      const response = await this.apiFetch(`/api/eventos/${eventoId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${this.getToken()}` }
       });
@@ -479,7 +452,6 @@ class MiCuenta {
       return;
     }
 
-    // TODO: Implementar cambio de contraseña desde Mi Cuenta
     this.mostrarMensajePassword('Usa "Olvidé contraseña" en el login para cambiarla', 'info', mensajeDiv);
   }
 
@@ -487,28 +459,27 @@ class MiCuenta {
     const confirmado = await window.confirmarAccion('¿CERRAR CUENTA?', 'ADVERTENCIA FINAL: Esta acción eliminará permanentemente tu cuenta y todos tus eventos registrados. Esta operación NO se puede deshacer. ¿Deseas continuar?');
     if (!confirmado) return;
 
-
     try {
-        const response = await fetch('/api/auth/eliminar-cuenta', {
-            method: 'DELETE',
-            headers: { 
-                'Authorization': `Bearer ${this.getToken()}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            alert('Tu cuenta ha sido eliminada. Lamentamos verte partir.');
-            localStorage.removeItem('token');
-            localStorage.removeItem('usuario');
-            window.location.href = '/index.html';
-        } else {
-            const data = await response.json();
-            throw new Error(data.error || 'Error al eliminar la cuenta');
+      const response = await this.apiFetch('/api/auth/eliminar-cuenta', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${this.getToken()}`,
+          'Content-Type': 'application/json'
         }
+      });
+
+      if (response.ok) {
+        alert('Tu cuenta ha sido eliminada. Lamentamos verte partir.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = '/index.html';
+      } else {
+        const data = await response.json();
+        throw new Error(data.error || 'Error al eliminar la cuenta');
+      }
     } catch (error) {
-        alert('Error: ' + error.message);
-        console.error('Error al eliminar cuenta:', error);
+      alert('Error: ' + error.message);
+      console.error('Error al eliminar cuenta:', error);
     }
   }
 

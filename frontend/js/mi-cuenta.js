@@ -110,25 +110,33 @@ class MiCuenta {
         const count = cbs.length;
         if(count === 0) return;
         
-        if(!confirm(`¿Estás seguro de que deseas eliminar ${count} evento(s)? Esta acción es permanente.`)) return;
+        const confirmado = await window.confirmarAccion(
+            '¿Eliminar seleccionados?', 
+            `¿Estás seguro de que deseas eliminar ${count} evento(s)? Esta acción es permanente y no se puede deshacer.`
+        );
+        if(!confirmado) return;
 
-        const btnOrig = document.getElementById('btn-eliminar-seleccionados').innerHTML;
-        document.getElementById('btn-eliminar-seleccionados').innerHTML = 'Borrando...';
+        const btn = document.getElementById('btn-eliminar-seleccionados');
+        const btnOrig = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Borrando...';
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
         
         let borrados = 0;
         for (const cb of cbs) {
             const id = cb.dataset.id;
             try {
                 const token = localStorage.getItem('token');
-                await fetch(`/api/eventos/${id}`, {
+                const res = await fetch(`/api/eventos/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                borrados++;
+                if(res.ok) borrados++;
             } catch(e) { console.error('Error al borrar', id); }
         }
         
-        document.getElementById('btn-eliminar-seleccionados').innerHTML = btnOrig;
+        btn.innerHTML = btnOrig;
+        btn.disabled = false;
         this.cargarEventos();
     });
 
@@ -300,15 +308,26 @@ class MiCuenta {
   }
 
   verificarSeleccionados() {
-    const checkboxes = document.querySelectorAll('.cb-evento-bulk:checked');
+    const totalCbs = document.querySelectorAll('.cb-evento-bulk');
+    const checkedCbs = document.querySelectorAll('.cb-evento-bulk:checked');
     const btnEliminarPanel = document.getElementById('btn-eliminar-seleccionados');
-    if(checkboxes.length > 0) {
+    const selectAllCb = document.getElementById('seleccionar-todos-eventos');
+
+    if(checkedCbs.length > 0) {
         btnEliminarPanel.style.opacity = '1';
         btnEliminarPanel.style.pointerEvents = 'auto';
     } else {
         btnEliminarPanel.style.opacity = '0.5';
         btnEliminarPanel.style.pointerEvents = 'none';
-        document.getElementById('seleccionar-todos-eventos').checked = false;
+    }
+
+    // Sincronizar el checkbox de "Seleccionar todos"
+    if (selectAllCb) {
+        if (totalCbs.length > 0 && totalCbs.length === checkedCbs.length) {
+            selectAllCb.checked = true;
+        } else {
+            selectAllCb.checked = false;
+        }
     }
   }
 

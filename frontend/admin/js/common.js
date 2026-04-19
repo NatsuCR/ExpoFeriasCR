@@ -18,6 +18,12 @@ async function fetchAPI(url, options = {}) {
 
 function mostrarMensaje(texto, tipo, contenedorId = 'globalMessage') {
     const div = document.getElementById(contenedorId);
+    if (!div) {
+        console.warn(`Contenedor de mensajes "${contenedorId}" no encontrado.`);
+        // Fallback simple por si es crítico
+        if (tipo === 'error') alert(texto);
+        return;
+    }
     div.className = `message message-${tipo}`;
     div.innerText = texto;
     div.style.display = 'block';

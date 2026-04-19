@@ -243,24 +243,31 @@
 
 
 
-.actividad-card .descripcion-texto,
-.actividad-card .descripcion,
-.expositor-card .descripcion-texto,
-.expositor-card .descripcion {
+.descripcion-texto,
+.descripcion {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: left; /* Alineación natural */
-    word-break: normal; /* No romper palabras a la mitad */
+    text-align: left;
+    word-break: normal;
     overflow-wrap: break-word;
     width: 100%;
     margin-bottom: 8px;
-    line-height: 1.6; /* Mejor interlineado */
-    color: #444; /* Color más suave */
+    line-height: 1.6;
+    color: var(--color-descripcion-texto, #444); /* Color para el cuerpo */
     font-size: 0.95rem;
+}
+
+/* Color específico para la descripción del Hero */
+.hero-content .descripcion-texto,
+.hero-content .descripcion {
+    color: var(--color-descripcion-hero, #ffffff);
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    display: block;
 }
 
 .actividad-card.expandida .descripcion-texto,

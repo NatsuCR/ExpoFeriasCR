@@ -22,23 +22,28 @@ let carruselControls = [];
 
 function parseImagenes(valor) {
     if (!valor) return [];
+    
     // Caso 1: Ya es un array
-    if (Array.isArray(valor)) return valor.filter(Boolean);
+    if (Array.isArray(valor)) return valor.filter(u => u && u !== 'null');
 
-    // Caso 2: Es un string JSON
-    if (typeof valor === 'string' && valor.trim().startsWith('[')) {
-        try {
-            const parsed = JSON.parse(valor);
-            if (Array.isArray(parsed)) return parsed.filter(Boolean);
-        } catch (_) { }
-    }
-
-    // Caso 3: Es un string con comas o por defecto
-    if (typeof valor === 'string') {
-        if (valor.includes(',')) {
-            return valor.split(',').map(s => s.trim()).filter(Boolean);
+    // Caso 2: Es un string
+    if (typeof valor === 'string' && valor.trim()) {
+        const trimmed = valor.trim();
+        // Caso JSON
+        if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+            try {
+                const parsed = JSON.parse(trimmed);
+                return (Array.isArray(parsed) ? parsed : [parsed]).filter(u => u && u !== 'null');
+            } catch (_) {
+                return [trimmed];
+            }
         }
-        return valor.trim() ? [valor.trim()] : [];
+        // Caso CSV
+        if (trimmed.includes(',')) {
+            return trimmed.split(',').map(s => s.trim()).filter(u => u && u !== 'null');
+        }
+        // Caso string único
+        return [trimmed];
     }
 
     return [];

@@ -31,7 +31,7 @@ function escapeHtml(str) {
 }
 
 function formatFecha(isoStr) {
-    return new Date(isoStr).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' });
+    return window.formatDateCR(isoStr);
 }
 
 function estadoEvento(e) {

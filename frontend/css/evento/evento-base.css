@@ -11,6 +11,7 @@
     --color-menu-texto: white;
     --color-menu-fondo-hover: var(--evento-secundario);
     --color-menu-texto-hover: var(--evento-primario);
+    --color-descripcion-texto: #2c1a0e;
 }
 
 * {

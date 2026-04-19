@@ -41,6 +41,7 @@ export function guardarDatosPreview() {
         color_secundario: get('color_secundario') || '#d4a373',
         color_fondo: get('color_fondo') || '#f4e4c1',
         color_texto: get('color_texto') || '#2c1a0e',
+        color_descripcion_texto: get('color_descripcion_texto') || '#2c1a0e',
         color_hero_overlay: get('color_hero_overlay') || '0.7',
         color_titulo_seccion: get('color_titulo_seccion') || '#2c1a0e',
         color_titulo_hero: get('color_titulo_hero') || '#ffffff',
@@ -79,7 +80,7 @@ export function guardarDatosPreview() {
         hora: row.querySelector('.act-hora')?.value || null,
         lugar: row.querySelector('.act-lugar')?.value || '',
         descripcion: row.querySelector('.act-descripcion')?.value || '',
-        imagenes: (() => {
+        imagen: (() => {
             try { return JSON.parse(row.querySelector('.act-imagenes')?.value || '[]'); }
             catch { return []; }
         })(),

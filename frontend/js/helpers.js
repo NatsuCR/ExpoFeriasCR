@@ -130,3 +130,37 @@ window.confirmarAccion = function(titulo = '¿Estás seguro?', mensaje = 'Esta a
     });
 };
 
+/**
+ * window.formatDateCR - Formateador universal de fechas para ExpoFeriasCR
+ * @param {string} dStr - Cadena de fecha (ISO, YYYY-MM-DD, etc.)
+ * @param {string} option - 'long' (default) o 'short'
+ */
+window.formatDateCR = function (dStr, option = 'long') {
+    if (!dStr || dStr === 'Invalid Date' || dStr === 'N/A' || dStr === 'null') return '—';
+    try {
+        let clean = String(dStr);
+        if (clean.includes('T')) clean = clean.split('T')[0];
+        if (clean.includes(' ')) clean = clean.split(' ')[0];
+        
+        const parts = clean.split('-');
+        if (parts.length !== 3) return '—';
+        
+        // Crear fecha local por componentes para evitar desfases de zona horaria
+        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+        if (isNaN(d.getTime())) return '—';
+        
+        if (option === 'short') {
+            return d.toLocaleDateString('es-CR', { day: '2-digit', month: 'short' });
+        }
+        
+        return d.toLocaleDateString('es-CR', { 
+            day: '2-digit', 
+            month: 'long', 
+            year: 'numeric' 
+        });
+    } catch (e) { 
+        console.error('[Helper] Error formateando fecha:', e);
+        return '—'; 
+    }
+};
+

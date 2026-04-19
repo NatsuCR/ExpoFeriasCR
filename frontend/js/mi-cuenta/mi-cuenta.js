@@ -160,10 +160,7 @@ class MiCuenta {
     const card = document.createElement('div');
     card.className = 'evento-card';
 
-    const formatFecha = (iso) => {
-      if (!iso) return '—';
-      return new Date(iso).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
-    };
+    const formatFecha = (iso) => window.formatDateCR(iso);
 
     const statusClass = {
       pendiente: 'pendiente',
@@ -270,10 +267,7 @@ class MiCuenta {
     btnEliminar.style.display = evento.estado === 'pendiente' ? 'block' : 'none';
 
     // Contenido detallado
-    const formatFecha = (iso) => {
-      if (!iso) return '—';
-      return new Date(iso).toLocaleDateString('es-CR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' });
-    };
+    const formatFecha = (iso) => window.formatDateCR(iso);
 
     let estadoColor = {
       aprobado: '#27ae60',

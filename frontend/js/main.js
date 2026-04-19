@@ -26,7 +26,7 @@ function createEventoCard(evento, isLive = false) {
     card.innerHTML += `
         <img src="${evento.imagenPortada || 'assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png'}" alt="${evento.nombre}">
         <h3>${evento.nombre}</h3>
-        <p>${new Date(evento.fechaInicio).toLocaleDateString()} - ${new Date(evento.fechaFin).toLocaleDateString()}</p>
+        <p>${window.formatDateCR(evento.fechaInicio)} - ${window.formatDateCR(evento.fechaFin)}</p>
         <p>${evento.ubicacion}</p>
         <a href="evento.html?slug=${evento.slug}" class="btn-ver">Ver más</a>
     `;

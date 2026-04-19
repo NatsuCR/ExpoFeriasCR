@@ -1,4 +1,5 @@
 const pool = require('../../db');
+const RelatedTablesController = require('../RelatedTablesController');
 const emailService = require('../../services/emailService');
 
 class AdminEventosPendientesController {
@@ -169,66 +170,42 @@ class AdminEventosPendientesController {
             `UPDATE eventos SET
               slug = ?, nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, ubicacion = ?, provincia = ?,
               imagen_portada = ?, horario_imagen = ?, mapa_embed = ?, tipo_venta = ?, url_venta_online = ?,
-              color_primario = ?, color_secundario = ?, color_fondo = ?, color_texto = ?,
+              color_primario = ?, color_secundario = ?, color_fondo = ?, color_texto = ?, color_descripcion_texto = ?,
               color_hero_overlay = ?, color_titulo_seccion = ?,
               color_titulo_hero = ?, color_descripcion_hero = ?, color_fondo_fechas = ?, color_texto_fechas = ?,
               color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
               color_titulo_h3 = ?,
               color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
-              color_fondo_footer = ?, color_texto_footer = ?, color_buscador_expositores = ?, color_borde_buscador_expositores = ?,
+              color_fondo_footer = ?, color_texto_footer = ?,
+              color_buscador_expositores = ?, color_borde_buscador_expositores = ?,
+              color_card_fondo = ?, color_card_borde = ?, color_rubro_fondo = ?, color_rubro_texto = ?,
+              color_buscador_fondo = ?, color_buscador_borde = ?, color_btn_ver_mas = ?,
+              color_fondo_share = ?, color_texto_share = ?,
+              es_en_vivo = ?, url_en_vivo = ?,
               estado = 'aprobado', activo = 1, razon_rechazo = NULL, borrador_cambios = NULL
              WHERE id = ?`,
             [
               b.slug || evento.slug, b.nombre || evento.nombre, b.descripcion, b.fecha_inicio, b.fecha_fin,
               b.ubicacion, b.provincia,
               b.imagen_portada, b.horario_imagen, b.mapa_embed, b.tipo_venta, b.url_venta_online,
-              b.color_primario || '#8b5a2b', b.color_secundario || '#d4a373', b.color_fondo || '#f4e4c1', b.color_texto || '#2c1a0e',
+              b.color_primario || '#8b5a2b', b.color_secundario || '#d4a373', b.color_fondo || '#f4e4c1', b.color_texto || '#2c1a0e', b.color_descripcion_texto || '#2c1a0e',
               b.color_hero_overlay || 'rgba(62,42,31,0.7)', b.color_titulo_seccion || '#2c1a0e',
               b.color_titulo_hero || '#ffffff', b.color_descripcion_hero || '#ffffff', b.color_fondo_fechas || '#d4a373', b.color_texto_fechas || '#8b5a2b',
               b.color_menu_fondo || '#ffffff', b.color_menu_texto || '#ffffff', b.color_menu_fondo_hover || '', b.color_menu_texto_hover || '',
               b.color_titulo_h3 || '#2c1a0e',
               b.color_fondo_contacto || '#f4e4c1', b.color_texto_contacto || '#2c1a0e', b.color_enlace_contacto || '#8b5a2b',
-              b.color_fondo_footer || '#8b5a2b', b.color_texto_footer || '#ffffff', b.color_buscador_expositores || '#ffffff', b.color_borde_buscador_expositores || '#eeeeee',
+              b.color_fondo_footer || '#8b5a2b', b.color_texto_footer || '#ffffff',
+              b.color_buscador_expositores || '#ffffff', b.color_borde_buscador_expositores || '#eeeeee',
+              b.color_card_fondo || '#ffffff', b.color_card_borde || '#f0f0f0', b.color_rubro_fondo || '#f0f0f0', b.color_rubro_texto || '#000000',
+              b.color_buscador_fondo || '#ffffff', b.color_buscador_borde || '#eeeeee', b.color_btn_ver_mas || '#C8102E',
+              b.color_fondo_share || 'rgba(255, 255, 255, 0.5)', b.color_texto_share || '#2c1a0e',
+              b.es_en_vivo || 0, b.url_en_vivo || null,
               eventoId
             ]
           );
 
-          // Promover precios
-          if (b.precios && Array.isArray(b.precios)) {
-            await pool.query('DELETE FROM precios_entrada WHERE evento_id = ?', [eventoId]);
-            for (const p of b.precios) {
-              if (p.fecha) await pool.query('INSERT INTO precios_entrada (evento_id, fecha, precio_normal, promocion, descripcion_promocion) VALUES (?, ?, ?, ?, ?)',
-                [eventoId, p.fecha, p.precio_normal || 0, p.promocion || null, p.descripcion_promocion || null]);
-            }
-          }
-          // Promover actividades
-          if (b.actividades && Array.isArray(b.actividades)) {
-            await pool.query('DELETE FROM actividades WHERE evento_id = ?', [eventoId]);
-            for (const a of b.actividades) {
-              if (a.titulo) await pool.query('INSERT INTO actividades (evento_id, titulo, tipo, fecha, hora, lugar, descripcion, imagen, es_gratis, requiere_entrada_online, enlace_venta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [eventoId, a.titulo, a.tipo || null, a.fecha || null, a.hora || null, a.lugar || null, a.descripcion || null,
-                  Array.isArray(a.imagen) ? JSON.stringify(a.imagen) : a.imagen || null,
-                  a.es_gratis || 0, a.requiere_entrada_online || 0, a.enlace_venta || null]);
-            }
-          }
-          // Promover expositores
-          if (b.expositores && Array.isArray(b.expositores)) {
-            await pool.query('DELETE FROM expositores WHERE evento_id = ?', [eventoId]);
-            for (const e of b.expositores) {
-              if (e.nombre) await pool.query('INSERT INTO expositores (evento_id, nombre, tipo_expositor, ubicacion, descripcion, imagen_logo, video_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [eventoId, e.nombre, e.tipo_expositor || e.rubro || null, e.ubicacion || null, e.descripcion || null,
-                  Array.isArray(e.logo) ? JSON.stringify(e.logo) : e.logo || null,
-                  e.video || null]);
-            }
-          }
-          // Promover galería
-          if (b.galeria && Array.isArray(b.galeria)) {
-            await pool.query('DELETE FROM evento_galeria WHERE evento_id = ?', [eventoId]);
-            for (const g of b.galeria) {
-              if (g.imagen_url) await pool.query('INSERT INTO evento_galeria (evento_id, imagen_url, orden) VALUES (?, ?, ?)',
-                [eventoId, g.imagen_url, g.orden || 0]);
-            }
-          }
+          // Promover tablas relacionadas usando el controlador unificado
+          await RelatedTablesController.actualizarTodo(eventoId, b);
         }
       } else {
         // Aprobación simple (pendiente sin borrador)

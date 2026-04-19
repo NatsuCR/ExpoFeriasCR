@@ -83,6 +83,29 @@ class AuthController {
   }
 
   /**
+   * Obtener perfil del usuario autenticado
+   * GET /api/auth/me
+   */
+  async obtenerPerfil(req, res) {
+    try {
+      const usuarioId = req.user.id;
+      const [users] = await pool.query(
+        'SELECT id, nombre, email, rol FROM usuarios WHERE id = ?',
+        [usuarioId]
+      );
+
+      if (users.length === 0) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      res.json({ user: users[0] });
+    } catch (error) {
+      console.error('Error al obtener perfil:', error);
+      res.status(500).json({ error: 'Error al obtener el perfil' });
+    }
+  }
+
+  /**
    * Eliminar cuenta del usuario autenticado
    * DELETE /api/auth/eliminar-cuenta
    */

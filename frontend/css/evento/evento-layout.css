@@ -91,7 +91,8 @@
 }
 .hero-content {
     position: relative;
-    z-index: 2;
+    z-index: 5;
+    pointer-events: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -102,7 +103,11 @@
 .hero-content h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
+    pointer-events: auto;
     text-shadow: 2px 2px 5px black;
+}
+.hero-content .desc-container, .hero-content .hero-dates {
+    pointer-events: auto;
 }
 .hero-content p {
     font-size: 1.2rem;
@@ -127,7 +132,7 @@
     font-size: 2rem;
     padding: 0.5rem 1rem;
     cursor: pointer;
-    z-index: 3;
+    z-index: 20;
     border-radius: 50%;
     transition: background 0.3s;
 }

@@ -237,6 +237,7 @@ class AdminEventosPendientes {
         color_fondo_footer: evento.color_fondo_footer || '#C8102E',
         color_texto_footer: evento.color_texto_footer || '#ffffff',
         color_titulo_h3: evento.color_titulo_h3 || '#2c1a0e',
+        color_descripcion_texto: evento.color_descripcion_texto || '#2c1a0e',
         precios: evento.precios || [],
         actividades: (evento.actividades || []).map(act => ({
           ...act,
@@ -254,13 +255,7 @@ class AdminEventosPendientes {
       const dataKey = 'preview_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       localStorage.setItem(dataKey, JSON.stringify(datosPreview));
 
-      const formatDate = (dateStr) => {
-        if (!dateStr) return 'N/A';
-        // Si ya es un ISO completo, tomamos solo la fecha
-        const cleanDate = dateStr.includes('T') ? dateStr.split('T')[0] : dateStr;
-        const d = new Date(cleanDate + 'T12:00:00');
-        return d.toLocaleDateString('es-CR');
-      };
+      const formatDate = (d) => window.formatDateCR(d);
 
       const buildCard = (isLive) => {
         const liveBadge = isLive ? `<div style="position:absolute; top:10px; right:10px; background:#e74c3c; color:white; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; z-index:10;">🔴 EN VIVO</div>` : '';
@@ -269,7 +264,7 @@ class AdminEventosPendientes {
         const cs = '#0033A0'; // Azul marca
         const imgUrl = (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/')) 
           ? '/' + evento.imagen_portada 
-          : (evento.imagen_portada || '/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');
+          : (evento.imagen_portada || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');
 
         return `
           <div class="evento-card" style="--color-primary: ${cp}; --color-secondary: ${cs}; width:250px; margin:0 auto; box-shadow:0 4px 10px rgba(0,0,0,0.1); border-top:5px solid ${cp}; border-radius:8px; overflow:hidden; background:white;">

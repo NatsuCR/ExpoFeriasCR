@@ -79,7 +79,7 @@ export async function cargarActividades(slug) {
             const imagenes = parseImagenes(a.imagen);
             const imagenesLimpias = imagenes.map(u => u.replace(/\\/g, '/'));
 
-            const fecha       = new Date(a.fecha).toLocaleDateString();
+            const fecha       = window.formatDateCR(a.fecha);
             const hora        = a.hora ? a.hora.slice(0, 5) : '';
             const lugar       = a.lugar || 'Campo ferial';
             const descripcion = a.descripcion || '';

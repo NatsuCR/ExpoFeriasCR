@@ -122,7 +122,8 @@ export function agregarActividadDelModal() {
     }
 
     filaEnEdicion.querySelector('.act-descripcion').value = descripcion;
-    filaEnEdicion.querySelector('.act-imagenes').value = JSON.stringify(imagenes);
+    const imgInpt = filaEnEdicion.querySelector('.act-imagenes');
+    if (imgInpt) imgInpt.value = JSON.stringify(imagenes);
     filaEnEdicion.querySelector('.act-requiere-online').setAttribute('data-value', reqOnline);
     filaEnEdicion.querySelector('.act-enlace').value = enlace;
   } else {
@@ -255,7 +256,8 @@ export function agregarExpositorDelModal() {
     filaEnEdicion.querySelector('.exp-tipo').value = rubro;
     filaEnEdicion.querySelector('.exp-ubicacion').value = ubicacion;
     filaEnEdicion.querySelector('.exp-descripcion').value = descripcion;
-    filaEnEdicion.querySelector('.exp-imagenes').value = imagenesJSON;
+    const imgInpt = filaEnEdicion.querySelector('.exp-imagenes');
+    if (imgInpt) imgInpt.value = imagenesJSON;
     filaEnEdicion.querySelector('.exp-video').value = video;
 
     // Actualizar descripción visible

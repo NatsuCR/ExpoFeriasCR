@@ -10,8 +10,7 @@ export async function cargarPrecios(slug) {
         }
         let html = `<table class="tabla-precios-estilo"><thead><tr><th>Fecha</th><th>Precio normal</th><th>Promoción</th><th>Detalle</th></tr></thead><tbody>`;
         precios.forEach(p => {
-            const fechaStr = p.fecha.includes('T') ? p.fecha : p.fecha + 'T12:00:00';
-            const fecha = new Date(fechaStr).toLocaleDateString('es-CR', { weekday: 'long', day: 'numeric', month: 'long' });
+            const fecha = window.formatDateCR(p.fecha);
             const precioNum = parseFloat(p.precio_normal);
             const precioFormateado = isNaN(precioNum) ? '₡0' : new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(precioNum);
             const promocion = p.promocion || '—';

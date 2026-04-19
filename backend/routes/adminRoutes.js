@@ -24,14 +24,14 @@ const adminGaleria = AdminGaleriaController;
 const adminUsuario = AdminUsuarioController;
 const statsController = StatsController;
 
-// 🛡️ REGLA DE ORO: Todas las rutas requieren estar conectado Y ser administrador
+// 🛡️ REGLA DE ORO: Todas las rutas requieren estar autenticadas
 router.use(authMiddleware);
-router.use(adminAuth);
 
-
-
-
+// 🛡️ Ruta de subida: Disponible para cualquier usuario autenticado (no solo admin)
 router.post('/upload', uploadController.uploadFile.bind(uploadController));
+
+// 🛡️ REGLA DE ORO: Todas las rutas de abajo requieren además ser administrador
+router.use(adminAuth);
 
 
 

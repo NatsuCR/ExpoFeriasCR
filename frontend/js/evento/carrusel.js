@@ -190,6 +190,18 @@ export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId,
 
     window.addEventListener('resize', updateDimensions);
     
+    // ResizeObserver para detectar cuando el elemento se vuelve visible (especialmente en modales)
+    if (window.ResizeObserver && wrapper) {
+        const ro = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                if (entry.contentRect.width > 0) {
+                    updateDimensions();
+                }
+            }
+        });
+        ro.observe(wrapper);
+    }
+    
     // Pequeña espera para asegurar que el navegador haya pintado y calculado anchos reales
     requestAnimationFrame(() => {
         updateDimensions();

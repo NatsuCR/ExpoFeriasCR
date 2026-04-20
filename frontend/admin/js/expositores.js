@@ -90,7 +90,7 @@ async function guardarExpositorModal() {
 async function cargarExpositores() {
     if (!eventoId) return;
     const expositores = await fetchAPI(`/api/admin/eventos/${eventoId}/expositores`);
-    const tbody = document.getElementById('tbodyExpositores');
+    const tbody = document.getElementById('expositores-rows');
     if (!tbody) return;
     if (expositores.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7">No hay expositores registrados.</td></tr>';

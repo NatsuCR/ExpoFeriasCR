@@ -22,16 +22,16 @@ document.getElementById('btnConfirmarPublicar').addEventListener('click', confir
 document.getElementById('btnCancelarPublicar').addEventListener('click', () => {
     document.getElementById('modalConfirmarPublicar').style.display = 'none';
 });
-document.getElementById('btnAgregarPrecio').addEventListener('click', () => abrirModalPrecio());
+document.getElementById('btn-agregar-precio').addEventListener('click', () => abrirModalPrecio());
 document.getElementById('guardarPrecioBtn').addEventListener('click', guardarPrecioModal);
 document.getElementById('cancelarPrecioBtn').addEventListener('click', cerrarModalPrecio);
-document.getElementById('btnAgregarActividad').addEventListener('click', () => abrirModalActividad());
+document.getElementById('btn-agregar-actividad').addEventListener('click', () => abrirModalActividad());
 document.getElementById('guardarActividadBtn').addEventListener('click', guardarActividadModal);
 document.getElementById('cancelarActividadBtn').addEventListener('click', cerrarModalActividad);
-document.getElementById('btnAgregarExpositor').addEventListener('click', () => abrirModalExpositor());
+document.getElementById('btn-agregar-expositor').addEventListener('click', () => abrirModalExpositor());
 document.getElementById('guardarExpositorBtn').addEventListener('click', guardarExpositorModal);
 document.getElementById('cancelarExpositorBtn').addEventListener('click', cerrarModalExpositor);
-document.getElementById('btnAgregarImagen').addEventListener('click', () => abrirModalGaleria());
+document.getElementById('btn-agregar-imagen').addEventListener('click', () => abrirModalGaleria());
 document.getElementById('guardarGaleriaBtn').addEventListener('click', guardarGaleriaModal);
 document.getElementById('cancelarGaleriaBtn').addEventListener('click', cerrarModalGaleria);
 

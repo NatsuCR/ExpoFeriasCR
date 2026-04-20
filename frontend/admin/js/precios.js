@@ -47,7 +47,7 @@ async function guardarPrecioModal() {
 async function cargarPrecios() {
     if (!eventoId) return;
     const precios = await fetchAPI(`/api/admin/eventos/${eventoId}/precios`);
-    const tbody = document.getElementById('tbodyPrecios');
+    const tbody = document.getElementById('precios-rows');
     if (precios.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5">No hay precios registrados.</td></tr>';
         return;

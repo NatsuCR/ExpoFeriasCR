@@ -98,7 +98,7 @@ async function guardarActividadModal() {
 async function cargarActividades() {
     if (!eventoId) return;
     const acts = await fetchAPI(`/api/admin/eventos/${eventoId}/actividades`);
-    const tbody = document.getElementById('tbodyActividades');
+    const tbody = document.getElementById('actividades-rows');
     if (acts.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7">No hay actividades registradas.</td></tr>';
         return;

@@ -45,7 +45,7 @@ async function cargarGaleria() {
     }
     try {
         const imagenes = await fetchAPI(`/api/admin/eventos/${eventoId}/galeria`);
-        const tbody = document.getElementById('tbodyGaleria');
+        const tbody = document.getElementById('galeria-rows');
         if (!tbody) return;
         // Limpiar tabla
         tbody.innerHTML = '';

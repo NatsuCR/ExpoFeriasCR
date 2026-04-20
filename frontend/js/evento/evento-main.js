@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             const tieneExpositores = (evento.tiene_expositores !== undefined && evento.tiene_expositores !== null) ? parseInt(evento.tiene_expositores) : 1;
-            if (tieneExpositores === 0) {
+            if (tieneExpositores === 1) {
                 cargarExpositores(slug);
             }
 
@@ -638,8 +638,8 @@ function cargarEventoDesdePreview(datos) {
     const sectionExpositores = document.getElementById('expositores');
     const linksExpositores = document.querySelectorAll('.nav-links a[href="#expositores"]');
 
-    if (vTieneExpositores === 1) { // 1 = NO tiene expositores
-        console.log('[Visibility Shield] Bloqueando sección de expositores (tiene_expositores=1)');
+    if (vTieneExpositores === 0) { // 0 = NO tiene expositores
+        console.log('[Visibility Shield] Bloqueando sección de expositores (tiene_expositores=0)');
         if (sectionExpositores) sectionExpositores.remove();
         linksExpositores.forEach(link => {
             const li = link.closest('li');

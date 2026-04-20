@@ -188,8 +188,12 @@ function toggleUrlVentaOnline() {
 function toggleExpositoresTab() {
     const tiene = document.getElementById('tiene_expositores').value;
     const btn = document.querySelector('.tab-btn[data-tab="expositores"]');
+    const content = document.getElementById('content-expositores');
     if (btn) {
         btn.style.display = (tiene === '1') ? 'inline-flex' : 'none';
+    }
+    if (content) {
+        content.style.display = (tiene === '1') ? 'block' : 'none';
     }
 }
 

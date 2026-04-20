@@ -25,13 +25,13 @@ window.toggleDesc = function (btn) {
 
     if (isFullHidden) {
         // Expandir
-        short.style.setProperty('display', 'none', 'important');
-        full.style.setProperty('display', 'block', 'important');
+        short.style.setProperty('display', 'none');
+        full.style.setProperty('display', 'block');
         btn.innerHTML = 'Ver menos';
     } else {
         // Colapsar
-        full.style.setProperty('display', 'none', 'important');
-        short.style.setProperty('display', '-webkit-box', 'important');
+        full.style.setProperty('display', 'none');
+        short.style.setProperty('display', '-webkit-box');
         btn.innerHTML = 'Ver más';
     }
 
@@ -49,7 +49,7 @@ window.formatDescription = function (text, forceFull = false) {
     if (forceFull || text.length <= 140) {
         return `
             <div class="desc-container">
-                <p class="descripcion-texto descripcion desc-full" style="display: block !important; white-space: pre-wrap;">${text}</p>
+                <p class="descripcion-texto descripcion desc-full" style="display: block; white-space: pre-wrap;">${text}</p>
             </div>
         `;
     }
@@ -59,8 +59,8 @@ window.formatDescription = function (text, forceFull = false) {
     
     return `
         <div class="desc-container">
-            <p class="descripcion-texto descripcion desc-short" style="display: -webkit-box !important;">${shortText}</p>
-            <p class="descripcion-texto descripcion desc-full" style="display: none !important; white-space: pre-wrap;">${text}</p>
+            <p class="descripcion-texto descripcion desc-short" style="display: -webkit-box;">${shortText}</p>
+            <p class="descripcion-texto descripcion desc-full" style="display: none; white-space: pre-wrap;">${text}</p>
             <button type="button" onclick="window.toggleDesc(this)" class="btn-ver-mas">Ver más</button>
         </div>
     `;

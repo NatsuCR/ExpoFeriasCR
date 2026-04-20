@@ -133,10 +133,13 @@
    ============================================ */
 @media (min-width: 769px) {
     .hero-content .desc-short, 
-    .hero-content .btn-ver-mas {
+    .hero-content .btn-ver-mas,
+    #eventoDescripcion .desc-short,
+    #eventoDescripcion .btn-ver-mas {
         display: none !important;
     }
-    .hero-content .desc-full {
+    .hero-content .desc-full,
+    #eventoDescripcion .desc-full {
         display: block !important;
     }
 }

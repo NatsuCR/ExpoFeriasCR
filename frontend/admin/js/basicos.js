@@ -48,7 +48,9 @@ async function cargarDatosEvento() {
     document.getElementById('color_buscador_borde').value = evento.color_buscador_borde || '#eeeeee';
     document.getElementById('color_btn_ver_mas').value = evento.color_btn_ver_mas || '#C8102E';
     document.getElementById('activo').checked = (evento.activo === 1);
-    document.getElementById('tiene_expositores').value = (evento.tiene_expositores !== undefined) ? evento.tiene_expositores : 1;
+    const tieneExpositoresVal = (evento.tiene_expositores != null) ? evento.tiene_expositores : 1;
+    document.getElementById('tiene_expositores').value = tieneExpositoresVal;
+    
     document.getElementById('formTitle').innerText = `Editando: ${evento.nombre}`;
 
     // Sincronizar visibilidad inicial
@@ -188,15 +190,18 @@ function toggleUrlVentaOnline() {
 function toggleExpositoresTab() {
     const selector = document.getElementById('tiene_expositores');
     if (!selector) return;
-    const tiene = selector.value;
+    const tiene = selector.value; // "1" o "0"
     const btn = document.querySelector('.tab-btn[data-tab="expositores"]');
     const content = document.getElementById('content-expositores');
     
-    // Si es 1 (Sí) -> mostrar. Si es 0 (No) -> ocultar.
-    const mostrar = (parseInt(tiene) === 1);
+    // Inversión manual: Si el usuario ve que el dropdown está al revés, 
+    // forzamos que el valor "1" (Sí) sea el que MUESTRA (block).
+    const mostrar = (tiene == "1"); 
     
-    if (btn) btn.style.display = mostrar ? 'inline-flex' : 'none';
-    if (content) content.style.display = mostrar ? 'block' : 'none';
+    if (btn) btn.style.setProperty('display', mostrar ? 'inline-flex' : 'none', 'important');
+    if (content) content.style.setProperty('display', mostrar ? 'block' : 'none', 'important');
+
+    console.log('[Admin Visibility] tiene_expositores:', tiene, '-> mostrar:', mostrar);
 }
 
 // Event Listeners para visibilidad

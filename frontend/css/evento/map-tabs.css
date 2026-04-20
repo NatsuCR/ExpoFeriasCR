@@ -1,0 +1,236 @@
+/**
+ * map-tabs.css
+ * Styles for the dual map tab system and fallback card.
+ */
+
+.map-tabs-container {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #eeeeee;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+
+.map-tabs-header {
+    display: flex;
+    background: #ffffff;
+    padding: 8px;
+    gap: 8px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+
+.map-tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    color: var(--evento-primario, #8b5a2b);
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0.6;
+}
+
+.map-tab-btn i {
+    font-size: 1.1em;
+}
+
+.map-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0.8;
+}
+
+.map-tab-btn.active {
+    opacity: 1;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Colores de Marca Fijos (No personalizables) */
+.map-tab-btn[data-target="google"].active {
+    background: #ea4335 !important; /* Rojo Google */
+    color: white !important;
+}
+.map-tab-btn[data-target="google"]:hover:not(.active) {
+    background: rgba(234, 67, 53, 0.1);
+    color: #ea4335;
+}
+
+.map-tab-btn[data-target="waze"].active {
+    background: #33ccff !important; /* Celeste Waze */
+    color: #000 !important;
+}
+.map-tab-btn[data-target="waze"]:hover:not(.active) {
+    background: rgba(51, 204, 255, 0.1);
+    color: #33ccff;
+}
+
+
+.map-tabs-content {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 350px;
+}
+
+.map-tab-pane {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.map-tab-pane.active {
+    display: block;
+    opacity: 1;
+}
+
+.map-tab-pane iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+}
+
+/* Fallback Card */
+.mapa-fallback-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
+    margin: 10px 0;
+}
+
+.mapa-fallback-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.fallback-icon-wrap {
+    width: 60px;
+    height: 60px;
+    background: var(--evento-primario, #8b5a2b);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+/* Navigation Action Card (for links) */
+.nav-action-card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    text-align: center;
+    padding: 20px;
+}
+
+.nav-card-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-action-card:hover .nav-card-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.nav-action-card h3 {
+    font-size: 24px;
+    margin: 0 0 10px 0;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.nav-action-card p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    margin-bottom: 25px;
+    max-width: 300px;
+}
+
+.btn-nav-action {
+    padding: 14px 28px;
+    border-radius: 30px;
+    border: none;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Google Theme */
+.nav-google .nav-card-icon { color: #4285F4; }
+.btn-google {
+    background: #4285F4;
+    color: white;
+}
+.btn-google:hover {
+    background: #357abd;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+}
+
+/* Waze Theme */
+.nav-waze .nav-card-icon { color: #33CCFF; }
+.btn-waze {
+    background: #33CCFF;
+    color: #000;
+}
+.btn-waze:hover {
+    background: #2bb5e3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(51, 204, 255, 0.4);
+}
+
+.fallback-content h4 {
+    margin: 0 0 5px 0;
+    color: #2c1a0e;
+    font-size: 1.1em;
+}
+
+.fallback-content p {
+    margin: 0;
+    color: #888;
+    font-size: 0.9em;
+}
+
+@media (max-width: 600px) {
+    .map-tabs-header {
+        flex-direction: column;
+    }
+    .map-tab-btn {
+        padding: 10px;
+    }
+}

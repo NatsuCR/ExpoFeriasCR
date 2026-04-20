@@ -45,10 +45,9 @@ window.formatDescription = function (text, forceFull = false) {
     if (!text) return '';
 
     // Si el texto es corto o se fuerza completo, no truncamos
-    // v3: Truncamiento a 140 para confirmar visualmente la carga del nuevo script
     if (forceFull || text.length <= 140) {
         return `
-            <div class="desc-container">
+            <div class="desc-container" style="text-align: center;">
                 <p class="descripcion-texto descripcion desc-full" style="display: block; white-space: pre-wrap;">${text}</p>
             </div>
         `;
@@ -58,9 +57,9 @@ window.formatDescription = function (text, forceFull = false) {
     const shortText = text.substring(0, 140) + '...';
     
     return `
-        <div class="desc-container">
+        <div class="desc-container" style="text-align: center;">
             <p class="descripcion-texto descripcion desc-short">${shortText}</p>
-            <p class="descripcion-texto descripcion desc-full" style="white-space: pre-wrap;">${text}</p>
+            <p class="descripcion-texto descripcion desc-full" style="white-space: pre-wrap; display: none;">${text}</p>
             <button type="button" onclick="window.toggleDesc(this)" class="btn-ver-mas">Ver más</button>
         </div>
     `;
@@ -127,6 +126,57 @@ window.confirmarAccion = function(titulo = '¿Estás seguro?', mensaje = 'Esta a
         btnOk.onclick = () => cleanup(true);
         btnCancel.onclick = () => cleanup(false);
         overlay.onclick = (e) => { if(e.target === overlay) cleanup(false); };
+    });
+};
+
+/**
+ * Muestra una alerta premium de solo información (un botón).
+ */
+window.mostrarAlertaPremium = function(titulo = 'Atención', mensaje = '', textoBoton = 'Entendido', icono = 'fas fa-info-circle') {
+    return new Promise((resolve) => {
+        let overlay = document.getElementById('custom-confirm-modal');
+        if (!overlay) {
+            // Reutilizar el mismo contenedor si existe, o crearlo
+            overlay = document.createElement('div');
+            overlay.id = 'custom-confirm-modal';
+            overlay.className = 'confirm-modal-overlay';
+            overlay.innerHTML = `
+                <div class="confirm-modal-content">
+                    <div class="confirm-modal-icon" id="confirm-modal-icon"></div>
+                    <div class="confirm-modal-title" id="confirm-modal-title"></div>
+                    <div class="confirm-modal-message" id="confirm-modal-message"></div>
+                    <div class="confirm-modal-actions">
+                        <button class="confirm-btn confirm-btn-cancel" id="confirm-btn-cancel" style="display:none;"></button>
+                        <button class="confirm-btn confirm-btn-success" id="confirm-btn-ok"></button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        document.getElementById('confirm-modal-title').innerText = titulo;
+        document.getElementById('confirm-modal-message').innerText = mensaje;
+        
+        const btnOk = document.getElementById('confirm-btn-ok');
+        const btnCancel = document.getElementById('confirm-btn-cancel');
+        const modalIcon = document.getElementById('confirm-modal-icon');
+
+        btnOk.innerText = textoBoton;
+        btnOk.className = 'confirm-btn confirm-btn-success'; // Siempre verde para info/alerta
+        btnCancel.style.display = 'none'; // Ocultar cancelar para alertas de info
+        
+        modalIcon.innerHTML = `<i class="${icono}" style="color: #f1c40f;"></i>`;
+
+        overlay.classList.add('active');
+
+        const cleanup = () => {
+            overlay.classList.remove('active');
+            btnOk.onclick = null;
+            resolve();
+        };
+
+        btnOk.onclick = cleanup;
+        overlay.onclick = (e) => { if(e.target === overlay) cleanup(); };
     });
 };
 

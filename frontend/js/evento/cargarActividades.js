@@ -123,10 +123,19 @@ export async function cargarActividades(slug) {
         container.querySelectorAll('.mini-carrusel').forEach(carrusel => {
             carrusel.addEventListener('click', (e) => {
                 if (e.target.closest('.mini-btn') || e.target.closest('.mini-dots')) return;
-                const slideActiva = carrusel.querySelector('.mini-slide.activa img');
-                if (slideActiva) {
+                
+                const imgNodes = Array.from(carrusel.querySelectorAll('.mini-slide img'));
+                const slides = Array.from(carrusel.querySelectorAll('.mini-slide'));
+                const activeSlide = carrusel.querySelector('.mini-slide.activa');
+                const activeIdx = slides.indexOf(activeSlide);
+
+                if (activeIdx !== -1) {
                     e.stopPropagation();
-                    abrirLightbox(slideActiva.src, slideActiva.alt);
+                    const galleryData = imgNodes.map(img => ({ 
+                        src: img.src, 
+                        alt: img.alt 
+                    }));
+                    abrirLightbox(galleryData, activeIdx);
                 }
             });
         });

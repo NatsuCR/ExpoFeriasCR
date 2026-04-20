@@ -24,6 +24,8 @@ function construirDatosPreview() {
         imagen_portada: get('imagen_portada'),
         horario_imagen: get('horario_imagen'),
         mapa_embed: get('mapa_embed'),
+        mapa_waze_embed: get('mapa_waze_embed'),
+        tiene_expositores: parseInt(get('tiene_expositores')) || 0,
         tipo_venta: get('tipo_venta'),
         url_venta_online: get('url_venta_online'),
 
@@ -329,8 +331,19 @@ function renderizarSeccionesEnIframe(doc) {
         }
     }
 
-    // Expositores
     const expGrid = doc.getElementById('expositoresGrid');
+    const expSection = doc.getElementById('expositores');
+    const expLink = doc.querySelector('.nav-links a[href="#expositores"]');
+
+    if (datos.tiene_expositores == 0) {
+        if (expSection) expSection.style.display = 'none';
+        if (expLink) expLink.closest('li').style.display = 'none';
+        return;
+    } else {
+        if (expSection) expSection.style.display = 'block';
+        if (expLink) expLink.closest('li').style.display = 'block';
+    }
+
     if (expGrid) {
         if (datos.expositores.length > 0) {
             let html = '';

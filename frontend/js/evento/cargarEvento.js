@@ -1,4 +1,5 @@
 // frontend/js/evento/cargarEvento.js
+import { abrirLightbox } from './lightbox.js';
 
 // Las funciones window.toggleDesc y window.formatDescription se definen ahora centralmente en evento-main.js
 
@@ -20,14 +21,27 @@ export async function cargarEvento(slug) {
             evento = await res.json();
         }
 
-        // Normalizar nombres de propiedades (DB vs CamelCase)
+        // Normalizar nombres de propiedades (ESTÁNDAR: snake_case)
         const nombre = evento.nombre || '';
         const descripcion = evento.descripcion || '';
-        const fechaInicio = evento.fecha_inicio || evento.fechaInicio;
-        const fechaFin = evento.fecha_fin || evento.fechaFin;
+        const fecha_inicio = evento.fecha_inicio;
+        const fecha_fin = evento.fecha_fin;
         const ubicacion = evento.ubicacion || '';
-        const horarioImgUrl = evento.horario_imagen || evento.horarioImagen;
-        const mapaEmbed = evento.mapa_embed || evento.mapaEmbed;
+        const horario_imagen_url = evento.horario_imagen;
+        const mapa_embed = (evento.mapa_embed || '').trim();
+        const mapa_waze_embed = (evento.mapa_waze_embed || '').trim();
+        
+        // Manejo de tiene_expositores
+        const tiene_expositores = (evento.tiene_expositores !== undefined && evento.tiene_expositores !== null) 
+                                 ? parseInt(evento.tiene_expositores) 
+                                 : 1;
+
+        console.log('[cargarEvento] Config Normalizada (snake_case):', { 
+            tiene_expositores, 
+            has_google: mapa_embed.length > 5, 
+            has_waze: mapa_waze_embed.length > 5,
+            tipo_venta: evento.tipo_venta
+        });
 
         document.title = nombre;
         document.getElementById('eventoNombre').innerText = nombre;
@@ -35,18 +49,18 @@ export async function cargarEvento(slug) {
 
         const fmt = (d) => window.formatDateCR(d);
 
-        const fechaRango = `${fmt(fechaInicio)} al ${fmt(fechaFin)}`;
+        const fechaRango = `${fmt(fecha_inicio)} al ${fmt(fecha_fin)}`;
         document.getElementById('eventoFechas').innerHTML = fechaRango;
         document.getElementById('eventoInfoCompleta').innerHTML = typeof window.formatDescription === 'function' ? window.formatDescription(descripcion, true) : descripcion;
-        document.getElementById('infoFechas').innerHTML = `${fmt(fechaInicio)} - ${fmt(fechaFin)}`;
+        document.getElementById('infoFechas').innerHTML = `${fmt(fecha_inicio)} - ${fmt(fecha_fin)}`;
         document.getElementById('infoUbicacion').innerHTML = ubicacion;
         document.getElementById('ubicacionTexto').innerHTML = ubicacion;
 
         // Horario
+        const sectionHorario = document.getElementById('seccion-horario');
         const horarioDiv = document.getElementById('horarioContainer');
         if (horarioDiv) {
-            let src = horarioImgUrl;
-            // Manejar si viene como JSON de un array
+            let src = horario_imagen_url;
             if (typeof src === 'string' && src.startsWith('[')) {
                 try {
                     const parsed = JSON.parse(src);
@@ -54,33 +68,103 @@ export async function cargarEvento(slug) {
                 } catch (e) { }
             }
 
-            if (src && src !== 'null' && src !== 'undefined') {
+            if (src && src !== 'null' && src !== 'undefined' && src.trim() !== '') {
                 const altText = `Horario oficial y cronograma de ${nombre}`;
-                horarioDiv.innerHTML = `<img src="${src}" alt="${altText}" class="horario-img" style="max-width:100%; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);" loading="lazy">`;
+                horarioDiv.innerHTML = `<img src="${src}" alt="${altText}" class="horario-img" style="max-width:100%; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1); cursor:pointer;" loading="lazy">`;
+                
+                const img = horarioDiv.querySelector('img');
+                if (img) {
+                    img.addEventListener('click', () => abrirLightbox(src, altText));
+                }
+                if (sectionHorario) sectionHorario.style.display = 'block';
             } else {
-                horarioDiv.innerHTML = '<p style="color:#999; font-style:italic;">Horario no disponible en este momento</p>';
+                if (sectionHorario) sectionHorario.style.display = 'none';
             }
         }
 
-        // Mapa
+        // Mapa (Smart Detection System)
         const mapaDiv = document.getElementById('mapaIframe');
+
+        function renderMapContent(input, type) {
+            if (!input) return '';
+            if (input.toLowerCase().startsWith('<iframe')) return input;
+            
+            const isWaze = type === 'waze';
+            const icon = isWaze ? 'fab fa-waze' : 'fab fa-google';
+            const appName = isWaze ? 'Waze' : 'Google Maps';
+            const btnClass = isWaze ? 'btn-waze' : 'btn-google';
+            const navClass = isWaze ? 'nav-waze' : 'nav-google';
+            
+            return `
+                <div class="nav-action-card ${navClass}">
+                    <div class="nav-card-icon"><i class="${icon}"></i></div>
+                    <h3>${appName}</h3>
+                    <p>Enlace de navegación detectado. Toca el botón para abrir la ruta en tu dispositivo.</p>
+                    <a href="${input}" target="_blank" class="btn-nav-action ${btnClass}">
+                        <i class="fas fa-external-link-alt"></i> Ir a ${appName}
+                    </a>
+                </div>
+            `;
+        }
+
         if (mapaDiv) {
-            if (mapaEmbed) {
-                mapaDiv.innerHTML = mapaEmbed;
+            const hasGoogle = mapa_embed && mapa_embed.length > 5 && mapa_embed !== 'null';
+            const hasWaze = mapa_waze_embed && mapa_waze_embed.length > 5 && mapa_waze_embed !== 'null';
+
+            if (hasGoogle && hasWaze) {
+                mapaDiv.innerHTML = `
+                    <div class="map-tabs-container">
+                        <div class="map-tabs-header">
+                            <button class="map-tab-btn active" data-target="google">
+                                <i class="fab fa-google"></i> Google Maps
+                            </button>
+                            <button class="map-tab-btn" data-target="waze">
+                                <i class="fab fa-waze"></i> Waze
+                            </button>
+                        </div>
+                        <div class="map-tabs-content">
+                            <div class="map-tab-pane active" id="pane-google">${renderMapContent(mapa_embed, 'google')}</div>
+                            <div class="map-tab-pane" id="pane-waze">${renderMapContent(mapa_waze_embed, 'waze')}</div>
+                        </div>
+                    </div>
+                `;
+                const btns = mapaDiv.querySelectorAll('.map-tab-btn');
+                const panes = mapaDiv.querySelectorAll('.map-tab-pane');
+                btns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        btns.forEach(b => b.classList.remove('active'));
+                        panes.forEach(p => p.classList.remove('active'));
+                        btn.classList.add('active');
+                        const target = btn.getAttribute('data-target');
+                        mapaDiv.querySelector(`#pane-${target}`).classList.add('active');
+                    });
+                });
+            } else if (hasGoogle) {
+                mapaDiv.innerHTML = renderMapContent(mapa_embed, 'google');
+            } else if (hasWaze) {
+                mapaDiv.innerHTML = renderMapContent(mapa_waze_embed, 'waze');
             } else {
-                mapaDiv.innerHTML = '<p style="color:#999;">Mapa no disponible</p>';
+                mapaDiv.innerHTML = `
+                    <div class="mapa-fallback-card" onclick="window.open('https://www.google.com/maps/search/${encodeURIComponent(ubicacion)}', '_blank')">
+                        <div class="fallback-icon-wrap"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="fallback-content">
+                            <h4>${ubicacion}</h4>
+                            <p>Toca para abrir en el mapa</p>
+                        </div>
+                    </div>
+                `;
             }
         }
 
         // Entradas
         const entradasParrafo = document.getElementById('entradasTexto');
-        const tipoVenta = evento.tipo_venta || evento.tipoVenta;
-        const urlVentaOnline = evento.url_venta_online || evento.urlVentaOnline;
+        const tipo_venta = evento.tipo_venta || 'taquilla';
+        const url_venta_online = evento.url_venta_online || '';
 
         if (entradasParrafo) {
             let videoHtml = '';
-            if (evento.video_url || evento.video) {
-                const videoSrc = (evento.video_url || evento.video).trim();
+            if (evento.video_url) {
+                const videoSrc = (evento.video_url).trim();
                 const isLocalVideo = videoSrc.match(/\.(mp4|webm|ogg|mov)(\?.*)?$/i) || videoSrc.startsWith('/assets/uploads/');
 
                 if (isLocalVideo) {
@@ -90,7 +174,6 @@ export async function cargarEvento(slug) {
                         </div>
                     `;
                 } else {
-                    // YouTube / Vimeo
                     let embedUrl = videoSrc;
                     if (videoSrc.includes('youtube.com/watch?v=')) {
                         embedUrl = videoSrc.replace('watch?v=', 'embed/');
@@ -106,12 +189,12 @@ export async function cargarEvento(slug) {
             }
 
             let textoEntradas = '';
-            switch (tipoVenta) {
+            switch (tipo_venta) {
                 case 'online':
-                    textoEntradas = `Entradas en línea: <a href="${urlVentaOnline}" target="_blank">Comprar aquí</a>`;
+                    textoEntradas = `Entradas en línea: <a href="${url_venta_online}" target="_blank">Comprar aquí</a>`;
                     break;
                 case 'ambos':
-                    textoEntradas = `Entradas en taquilla y en línea: <a href="${urlVentaOnline}" target="_blank">Comprar en línea</a>`;
+                    textoEntradas = `Entradas en taquilla y en línea: <a href="${url_venta_online}" target="_blank">Comprar en línea</a>`;
                     break;
                 case 'gratis':
                     textoEntradas = '🎟️ <strong>Entrada Gratuita</strong>';
@@ -120,68 +203,71 @@ export async function cargarEvento(slug) {
                     textoEntradas = 'Entradas solo en taquilla del campo ferial';
             }
             entradasParrafo.innerHTML = videoHtml + textoEntradas;
+
+            // Ocultar card de entradas si es gratuito
+            const entradasCard = entradasParrafo.closest('.info-card');
+            if (entradasCard) {
+                entradasCard.style.display = (tipo_venta === 'gratis') ? 'none' : 'flex';
+            }
         }
 
-        // Colores y Estilos Dinámicos (v6.0)
-        const cp = evento?.color_primario || evento?.colorPrimario;
-        const cs = evento?.color_secundario || evento?.colorSecundario;
-        const cf = evento?.color_fondo || evento?.colorFondo;
-        const ct = evento?.color_texto || evento?.colorTexto;
-        const cdt = evento?.color_descripcion_texto || evento?.colorDescripcionTexto;
-        const cdh = evento?.color_descripcion_hero || evento?.colorDescripcionHero;
-        const cth = evento?.color_titulo_hero || evento?.colorTituloHero;
-        const cff = evento?.color_fondo_fechas || evento?.colorFondoFechas;
-        const ctf = evento?.color_texto_fechas || evento?.colorTextoFechas;
+        // Lógica de visibilidad Nav
+        const sectionPrecios = document.getElementById('precios');
+        const linkPrecios = document.querySelector('.nav-links a[href="#precios"]');
+        const linkUbicacion = document.querySelector('.nav-links a[href="#ubicacion"]');
+
+        if (tipo_venta === 'gratis') {
+            if (sectionPrecios) sectionPrecios.style.display = 'none';
+            if (linkPrecios) linkPrecios.closest('li').style.display = 'none';
+        } else {
+            if (sectionPrecios) sectionPrecios.style.display = 'block';
+            if (linkPrecios) linkPrecios.closest('li').style.display = 'block';
+            if (linkUbicacion) linkUbicacion.closest('li').style.display = 'block';
+        }
+
+        // Expositores
+        const sectionExpositores = document.getElementById('expositores');
+        const linkExpositores = document.querySelector('.nav-links a[href="#expositores"]');
+
+        if (tiene_expositores == 1) { // 1 = NO tiene expositores
+            if (sectionExpositores) sectionExpositores.style.display = 'none';
+            if (linkExpositores) linkExpositores.closest('li').style.display = 'none';
+        } else {
+            if (sectionExpositores) sectionExpositores.style.display = 'block';
+            if (linkExpositores) linkExpositores.closest('li').style.display = 'block';
+        }
+
+        // Estilos Dinámicos (SIEMPRE snake_case)
+        const cp = evento.color_primario;
+        const cs = evento.color_secundario;
+        const cf = evento.color_fondo;
+        const ct = evento.color_texto;
+        const cdt = evento.color_descripcion_texto;
+        const cdh = evento.color_descripcion_hero;
+        const cth = evento.color_titulo_hero;
+        const cff = evento.color_fondo_fechas;
+        const ctf = evento.color_texto_fechas;
 
         const r = document.documentElement;
         
-        // CSS Variables Globales
         if (cp) r.style.setProperty('--evento-primario', cp);
         if (cs) r.style.setProperty('--evento-secundario', cs);
         if (cf) r.style.setProperty('--evento-fondo', cf);
         if (ct) document.body.style.color = ct;
         
-        // Inyección robusta de variables de descripción
         r.style.setProperty('--color-descripcion-texto', cdt || '#2c1a0e');
         r.style.setProperty('--color-descripcion-hero', cdh || '#ffffff');
 
-        // Color Fondo y Texto Share
-        const cfs = evento?.color_fondo_share || evento?.colorFondoShare || 'rgba(255, 255, 255, 0.5)';
-        const ctshare = evento?.color_texto_share || evento?.colorTextoShare || '#2c1a0e';
+        // Share
+        const cfs = evento.color_fondo_share || 'rgba(255, 255, 255, 0.5)';
+        const ctshare = evento.color_texto_share || '#2c1a0e';
         r.style.setProperty('--color-fondo-share', cfs);
         r.style.setProperty('--color-texto-share', ctshare);
 
-        // Lógica de compartir automática (v5.9)
-        const currentUrl = encodeURIComponent(window.location.href);
-        const eventTitle = encodeURIComponent(`¡Mira este evento en ExpoFeriasCR: ${nombre}!`);
-
-        const btnWa = document.getElementById('shareWhatsapp');
-        const btnFb = document.getElementById('shareFacebook');
-        const btnTg = document.getElementById('shareTelegram');
-        const btnTw = document.getElementById('shareTwitter');
-        const btnCopy = document.getElementById('shareCopy');
-
-        if (btnWa) btnWa.href = `https://api.whatsapp.com/send?text=${eventTitle}%20${currentUrl}`;
-        if (btnFb) btnFb.href = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
-        if (btnTg) btnTg.href = `https://t.me/share/url?url=${currentUrl}&text=${eventTitle}`;
-        if (btnTw) btnTw.href = `https://twitter.com/intent/tweet?text=${eventTitle}&url=${currentUrl}`;
-
-        if (btnCopy) {
-            btnCopy.onclick = () => {
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    const originalHtml = btnCopy.innerHTML;
-                    btnCopy.innerHTML = '<i class="fas fa-check"></i>';
-                    setTimeout(() => { btnCopy.innerHTML = originalHtml; }, 2000);
-                });
-            };
-        }
-
-        // Opacidad Imagen Hero (Oscuridad)
-        const overlayVal = evento.color_hero_overlay || evento.colorHeroOverlay || 'rgba(0,0,0,0.7)';
+        // Oscuridad Hero
+        const overlayVal = evento.color_hero_overlay || 'rgba(0,0,0,0.7)';
         const overlay = document.querySelector('.hero-overlay');
-        
         if (overlay) {
-            // Si es un número (ej: "0.3"), convertirlo a RGBA negro
             if (!isNaN(parseFloat(overlayVal)) && typeof overlayVal === 'string' && !overlayVal.includes('rgba')) {
                 overlay.style.backgroundColor = `rgba(0,0,0,${overlayVal})`;
             } else if (typeof overlayVal === 'number') {
@@ -189,14 +275,13 @@ export async function cargarEvento(slug) {
             } else {
                 overlay.style.backgroundColor = overlayVal;
             }
-            overlay.style.display = 'block'; // Asegurar que sea visible
+            overlay.style.display = 'block';
         }
 
-        // Hero: aplicar estilos a elementos específicos if any
+        // Aplicar a elementos específicos
         const tituloHero = document.getElementById('eventoNombre');
         const descripcionHero = document.getElementById('eventoDescripcion');
         const fechasHero = document.querySelector('.hero-dates');
-
         if (tituloHero && cth) tituloHero.style.color = cth;
         if (descripcionHero && cdh) descripcionHero.style.color = cdh;
         if (fechasHero) {
@@ -204,70 +289,36 @@ export async function cargarEvento(slug) {
             if (ctf) fechasHero.style.color = ctf;
         }
 
-        // Títulos Sección (h2)
-        const ctseccion = evento.color_titulo_seccion || evento.colorTituloSeccion;
-        if (ctseccion) {
-            document.querySelectorAll('h2').forEach(h2 => h2.style.color = ctseccion);
-        }
+        // Títulos Sección y Menú
+        const ctseccion = evento.color_titulo_seccion;
+        if (ctseccion) document.querySelectorAll('h2').forEach(h2 => h2.style.color = ctseccion);
 
-        // Menú gestionado vía variables CSS
-        const cmf = evento.color_menu_fondo || evento.colorMenuFondo;
-        const cmt = evento.color_menu_texto || evento.colorMenuTexto;
-        const cmfh = evento.color_menu_fondo_hover || evento.colorMenuFondoHover;
-        const cmth = evento.color_menu_texto_hover || evento.colorMenuTextoHover;
+        if (evento.color_menu_fondo) r.style.setProperty('--color-menu-fondo', evento.color_menu_fondo);
+        if (evento.color_menu_texto) r.style.setProperty('--color-menu-texto', evento.color_menu_texto);
+        if (evento.color_menu_fondo_hover) r.style.setProperty('--color-menu-fondo-hover', evento.color_menu_fondo_hover);
+        if (evento.color_menu_texto_hover) r.style.setProperty('--color-menu-texto-hover', evento.color_menu_texto_hover);
 
-        if (cmf) document.documentElement.style.setProperty('--color-menu-fondo', cmf);
-        if (cmt) document.documentElement.style.setProperty('--color-menu-texto', cmt);
-        if (cmfh) document.documentElement.style.setProperty('--color-menu-fondo-hover', cmfh);
-        if (cmth) document.documentElement.style.setProperty('--color-menu-texto-hover', cmth);
+        // H3, Buscador, Contacto, Footer, etc
+        if (evento.color_titulo_h3) document.querySelectorAll('.info-card h3, .actividad-card h3, .expositor-card h3').forEach(h3 => h3.style.color = evento.color_titulo_h3);
+        if (evento.color_buscador_expositores) document.getElementById('expositorSearchContainer').style.backgroundColor = evento.color_buscador_expositores;
+        if (evento.color_borde_buscador_expositores) document.getElementById('expositorSearch').style.borderColor = evento.color_borde_buscador_expositores;
 
-        // Títulos H3
-        const cth3 = evento.color_titulo_h3 || evento.colorTituloH3;
-        if (cth3) {
-            document.querySelectorAll('.info-card h3, .actividad-card h3, .expositor-card h3').forEach(h3 => {
-                h3.style.color = cth3;
-            });
-        }
+        if (evento.color_fondo_contacto) r.style.setProperty('--contacto-fondo', evento.color_fondo_contacto);
+        if (evento.color_texto_contacto) r.style.setProperty('--contacto-texto', evento.color_texto_contacto);
+        if (evento.color_enlace_contacto) r.style.setProperty('--contacto-enlace', evento.color_enlace_contacto);
 
-        // Color buscador y borde
-        const cbf = evento.color_buscador_expositores || evento.colorBuscadorExpositores;
-        const cbb = evento.color_borde_buscador_expositores || evento.colorBordeBuscadorExpositores;
+        if (evento.color_fondo_footer) r.style.setProperty('--footer-fondo', evento.color_fondo_footer);
+        if (evento.color_texto_footer) r.style.setProperty('--footer-texto', evento.color_texto_footer);
 
-        const searchContainer = document.getElementById('expositorSearchContainer');
-        const searchInput = document.getElementById('expositorSearch');
-        if (searchContainer && cbf) searchContainer.style.backgroundColor = cbf;
-        if (searchInput && cbb) searchInput.style.borderColor = cbb;
+        if (evento.color_card_fondo) r.style.setProperty('--color-card-fondo', evento.color_card_fondo);
+        if (evento.color_card_borde) r.style.setProperty('--color-card-borde', evento.color_card_borde);
+        if (evento.color_rubro_fondo) r.style.setProperty('--color-rubro-fondo', evento.color_rubro_fondo);
+        if (evento.color_rubro_texto) r.style.setProperty('--color-rubro-texto', evento.color_rubro_texto);
+        if (evento.color_buscador_fondo) r.style.setProperty('--color-buscador-fondo', evento.color_buscador_fondo);
+        if (evento.color_buscador_borde) r.style.setProperty('--color-buscador-borde', evento.color_buscador_borde);
+        if (evento.color_btn_ver_mas) r.style.setProperty('--color-btn-ver-mas', evento.color_btn_ver_mas);
 
-        // Contacto
-        const cfc = evento.color_fondo_contacto || evento.colorFondoContacto;
-        const ctc = evento.color_texto_contacto || evento.colorTextoContacto;
-        const cec = evento.color_enlace_contacto || evento.colorEnlaceContacto;
-
-        const contactoSection = document.querySelector('.contacto');
-        if (contactoSection) {
-            const r = document.documentElement;
-            // Limpiar estilos inline previos para dejar que las variables actúen
-            contactoSection.style.backgroundColor = '';
-            contactoSection.style.color = '';
-
-            if (cfc) r.style.setProperty('--contacto-fondo', cfc);
-            if (ctc) r.style.setProperty('--contacto-texto', ctc);
-            if (cec) r.style.setProperty('--contacto-enlace', cec);
-        }
-
-        // Footer
-        const cffoot = evento.color_fondo_footer || evento.colorFondoFooter;
-        const ctfoot = evento.color_texto_footer || evento.colorTextoFooter;
-        const footer = document.querySelector('footer');
-        if (footer) {
-            const r = document.documentElement;
-            // Limpiar estilos inline previos para permitir personalización
-            footer.style.backgroundColor = '';
-            footer.style.color = '';
-
-            if (cffoot) r.style.setProperty('--footer-fondo', cffoot);
-            if (ctfoot) r.style.setProperty('--footer-texto', ctfoot);
-        }
+        return evento;
 
     } catch (err) {
         console.error('Error al cargar evento:', err);

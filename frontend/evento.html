@@ -42,7 +42,8 @@
 <link rel="stylesheet" href="css/evento/evento-base.css?v=2.7">
 <link rel="stylesheet" href="css/evento/evento-layout.css?v=2.7">
 <link rel="stylesheet" href="css/evento/evento-components.css?v=2.7">
-<link rel="stylesheet" href="css/evento/evento-responsive.css?v=2.7">
+<link rel="stylesheet" href="css/evento/map-tabs.css?v=1.1">
+<link rel="stylesheet" href="css/evento/evento-responsive.css?v=2.8">
     <script src="js/helpers.js?v=2.7"></script>
 </head>
 <body>
@@ -102,17 +103,17 @@
             <h2>Sobre el evento</h2>
             <p id="eventoInfoCompleta"></p>
             <div class="info-grid">
-                <div class="info-card">
+                <div class="info-card clickable-card" onclick="document.getElementById('seccion-horario').scrollIntoView({ behavior: 'smooth' })">
                     <i class="fas fa-calendar-alt"></i>
                     <h3>Fechas</h3>
                     <p id="infoFechas"></p>
                 </div>
-                <div class="info-card">
+                <div class="info-card clickable-card" onclick="document.getElementById('ubicacion').scrollIntoView({ behavior: 'smooth' })">
                     <i class="fas fa-map-marker-alt"></i>
                     <h3>Ubicación</h3>
                     <p id="infoUbicacion"></p>
                 </div>
-                <div class="info-card">
+                <div class="info-card clickable-card" onclick="document.getElementById('precios').scrollIntoView({ behavior: 'smooth' })">
                     <i class="fas fa-ticket-alt"></i>
                     <h3>Entradas</h3>
                     <p id="entradasTexto">En taquilla del campo ferial</p>
@@ -121,7 +122,7 @@
         </div>
     </section>
 
-    <section class="horario">
+    <section id="seccion-horario" class="horario">
         <div class="container">
             <h2>Horario General</h2>
             <div id="horarioContainer">Cargando...</div>
@@ -198,6 +199,6 @@
         </div>
     </footer>
 
-    <script type="module" src="js/evento/evento-main.js?v=1.8"></script>
+    <script type="module" src="js/evento/evento-main.js?v=1.9"></script>
 </body>
 </html>

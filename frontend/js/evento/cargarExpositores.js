@@ -101,8 +101,20 @@ function initCardListeners(container) {
         // Lightbox desde mini-carrusel
         carrusel.addEventListener('click', (e) => {
             if (e.target.closest('.mini-btn') || e.target.closest('.mini-dots')) return;
-            const img = carrusel.querySelector('.mini-slide.activa img');
-            if (img) abrirLightbox(img.src, img.alt);
+            
+            const imgNodes = Array.from(carrusel.querySelectorAll('.mini-slide img'));
+            const slides = Array.from(carrusel.querySelectorAll('.mini-slide'));
+            const activeSlide = carrusel.querySelector('.mini-slide.activa');
+            const activeIdx = slides.indexOf(activeSlide);
+
+            if (activeIdx !== -1) {
+                e.stopPropagation();
+                const galleryData = imgNodes.map(node => ({
+                    src: node.src,
+                    alt: node.alt
+                }));
+                abrirLightbox(galleryData, activeIdx);
+            }
         });
     });
 
@@ -212,7 +224,15 @@ function generarHTMLCategoria(cat, expositores) {
                     <div class="expositores-carrusel-track" id="track-${catId}">
                         ${expositores.map(e => {
         const imagenes = parseImagenes(e.logo || e.imagen_logo || e.imagenLogo);
-        const imagenesLimpias = imagenes.map(u => u.replace(/\\/g, '/'));
+        const imagenesLimpias = imagenes
+            .filter(u => typeof u === 'string' && u.trim() !== '')
+            .map(u => {
+                let path = u.replace(/\\/g, '/');
+                if (!path.startsWith('/') && !path.startsWith('http')) {
+                    path = '/' + path;
+                }
+                return path;
+            });
         const descripcion = e.descripcion || '';
         const shortDesc = descripcion.length > 100 ? descripcion.substring(0, 100) + '...' : descripcion;
 

@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="css/navbar-auth.css">
     <link rel="stylesheet" href="css/crear-evento/form.css">
     <link rel="stylesheet" href="css/crear-evento/preview.css">
+    <link rel="stylesheet" href="css/confirm-modal.css">
+    <script src="js/helpers.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -30,49 +32,77 @@
 
     <!-- Layout dividido: formulario | vista previa -->
     <div class="container crear-evento-container">
+        <style>
+            /* Forzar el layout de pantalla dividida cuando la previa está activa */
+            #formLayout.with-preview, 
+            #formLayout.crear-evento-split {
+                display: grid !important;
+                grid-template-columns: 1fr 480px !important;
+                gap: 24px !important;
+                align-items: start !important;
+            }
+            /* Forzar visibilidad del panel de vista previa */
+            #previewPanel.visible {
+                display: flex !important;
+            }
+            @media (max-width: 1200px) {
+                #formLayout.with-preview, 
+                #formLayout.crear-evento-split {
+                    grid-template-columns: 1fr 400px !important;
+                }
+            }
+            @media (max-width: 992px) {
+                #formLayout.with-preview, 
+                #formLayout.crear-evento-split {
+                    grid-template-columns: 1fr !important;
+                }
+                #previewPanel.visible {
+                    display: none !important;
+                }
+            }
+
+            /* Estilos de botones unificados */
+            .btn-preview-unificado {
+                height: 44px !important;
+                padding: 0 20px !important;
+                border: none !important;
+                border-radius: 8px !important;
+                cursor: pointer !important;
+                font-weight: 600 !important;
+                font-size: 14px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 10px !important;
+                transition: all 0.2s !important;
+                box-sizing: border-box !important;
+                color: white !important;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                margin: 0 !important;
+            }
+            .btn-preview-unificado:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            }
+            #btnTogglePreview.btn-preview-unificado {
+                background: #0033A0 !important;
+            }
+            #btn-preview-portada.btn-preview-unificado {
+                background: #002677 !important;
+            }
+        </style>
         <div id="formLayout">
 
             <!-- ══════════════ COLUMNA FORMULARIO ══════════════ -->
             <div id="formColumna">
-                <div class="crear-evento-header" style="text-align:center;">
+                <div class="crear-evento-header" style="text-align:center; margin-bottom:40px;">
                     <h1>🎉 Crea tu Evento</h1>
                     <p>Completa todos los detalles. Una vez enviado, nuestro equipo lo revisará en 24-72 horas.</p>
-
-                    <style>
-                        .btn-preview-unificado {
-                            height: 44px !important;
-                            padding: 0 20px !important;
-                            border: none !important;
-                            border-radius: 8px !important;
-                            cursor: pointer !important;
-                            font-weight: 600 !important;
-                            font-size: 14px !important;
-                            display: inline-flex !important;
-                            align-items: center !important;
-                            justify-content: center !important;
-                            gap: 10px !important;
-                            transition: all 0.2s !important;
-                            box-sizing: border-box !important;
-                            color: white !important;
-                            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                            margin: 0 !important; /* Forzar margen cero para alineación perfecta */
-                        }
-                        .btn-preview-unificado:hover {
-                            transform: translateY(-2px);
-                            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-                        }
-                        #btnTogglePreview.btn-preview-unificado {
-                            background: #0033A0 !important;
-                        }
-                        #btn-preview-portada.btn-preview-unificado {
-                            background: #002677 !important;
-                        }
-                    </style>
 
                     <div class="admin-action-container" style="display:flex; justify-content:center; align-items:center; gap:15px; flex-wrap:wrap; margin-top:25px;">
                         <!-- Botón Vista Previa Evento -->
                         <button type="button" id="btnTogglePreview" class="btn-toggle-preview btn-preview-unificado">
-                            <i class="fas fa-eye"></i> <span>Vista previa (Evento)</span>
+                            <i class="fas fa-eye"></i> <span>Vista previa</span>
                         </button>
 
                         <!-- Botón Vista Previa Portada -->
@@ -102,6 +132,12 @@
                             </button>
                             <button type="button" class="tab-btn" data-tab="galeria">
                                 <i class="fas fa-images"></i><span>Galería</span>
+                            </button>
+                            <button type="button" class="tab-btn" data-tab="colores">
+                                <i class="fas fa-palette"></i><span>Colores</span>
+                            </button>
+                            <button type="button" class="tab-btn" data-tab="vista-final">
+                                <i class="fas fa-eye"></i><span>Vista Final</span>
                             </button>
                         </div>
 
@@ -192,16 +228,22 @@
                                     <small>Imagen del horario del evento</small>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="mapa_embed">🗺️ Mapa Interactiva (Google Maps) <i class="fas fa-question-circle btn-help-icon" title="Pega aquí el código 'iframe' de Google Maps para que los usuarios vean el mapa real."></i></label>
-                                    <textarea id="mapa_embed" name="mapa_embed" placeholder='<iframe src="..."></iframe>' rows="3"></textarea>
-                                    <div class="help-box" style="margin-top:10px; margin-bottom:0; background:#ebf5fb; border-left-color:#3498db;">
-                                        <i class="fas fa-map-marked-alt" style="color:#3498db;"></i>
+                                <div class="form-group" style="margin-top: 20px;">
+                                    <label>🗺️ Mapas (Smart Support: Link o Iframe)</label>
+                                    <div class="help-box" style="margin-bottom:15px; background:#ebf5fb; border-left: 4px solid #3498db; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+                                        <i class="fas fa-info-circle" style="color:#3498db; font-size: 18px;"></i>
                                         <div class="help-box-content">
-                                            <p style="font-size:12.5px;"><strong>¿Cómo obtener el mapa?</strong><br>
-                                            1. Busca el lugar en <a href="https://www.google.com/maps" target="_blank" style="color:#2980b9; font-weight:bold;">Google Maps</a>.<br>
-                                            2. Haz clic en <strong>Compartir</strong> > <strong>Incorporar un mapa</strong>.<br>
-                                            3. Copia el código HTML y pégalo arriba.</p>
+                                            <p style="font-size:12px; color: #34495e; margin: 0;"><strong>💡 Recomendación:</strong> Puedes poner el &lt;iframe&gt; o el Link. Si pones ambos, se mostrarán pestañas.</p>
+                                        </div>
+                                    </div>
+                                    <div class="map-fields-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                        <div class="map-field">
+                                            <label for="mapa_embed"><i class="fab fa-google"></i> Google Maps</label>
+                                            <textarea id="mapa_embed" name="mapa_embed" placeholder='<iframe> o Link' rows="3"></textarea>
+                                        </div>
+                                        <div class="map-field">
+                                            <label for="mapa_waze_embed"><i class="fab fa-waze"></i> Waze</label>
+                                            <textarea id="mapa_waze_embed" name="mapa_waze_embed" placeholder='<iframe> o Link' rows="3"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -209,7 +251,7 @@
                                 <div class="form-group">
                                     <label for="tipo_venta">🎟️ Tipo de Venta de Entradas</label>
                                     <select id="tipo_venta" name="tipo_venta">
-                                        <option value="taquilla">Solo en taquilla (campo ferial)</option>
+                                        <option value="taquilla">Solo en taquilla</option>
                                         <option value="online">Solo en línea</option>
                                         <option value="ambos">Ambos (taquilla y en línea)</option>
                                         <option value="gratis">Entrada Gratuita</option>
@@ -221,17 +263,135 @@
                                     <input type="url" id="url_venta_online" name="url_venta_online" placeholder="https://ejemplo.com/entradas">
                                 </div>
 
-                                <hr>
-                                <div class="help-box" style="background:#f4ecf7; border-left-color:#8e44ad;">
-                                    <i class="fas fa-palette" style="color:#8e44ad;"></i>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-secondary" disabled>← Anterior</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente: Precios →</button>
+                            </div>
+                        </div>
+
+
+
+                        <!-- ══ TAB 2: PRECIOS ══ -->
+                        <div id="tab-precios" class="tab-content">
+                            <div class="tab-header"><h2>💰 Precios de Entrada</h2><p>Indica cuánto costará la entrada cada día.</p></div>
+                            <div class="help-box" style="background:#e8f8f5; border-left-color:#1abc9c;">
+                                <i class="fas fa-ticket-alt" style="color:#1abc9c;"></i>
+                                <div class="help-box-content">
+                                    <h4>¡Atrae a más gente!</h4>
+                                    <p>Si tienes días gratuitos o promociones de "2x1", asegúrate de indicarlo en el campo de <strong>Promoción</strong>.</p>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <table id="tabla-precios" class="tabla-eventos">
+                                    <thead><tr><th>Fecha</th><th>Precio Normal (₡)</th><th>Promoción</th><th>Descripción</th><th>Acción</th></tr></thead>
+                                    <tbody id="precios-rows"></tbody>
+                                </table>
+                                <button type="button" id="btn-agregar-precio" class="btn-secondary">+ Agregar Precio</button>
+                                <button type="button" id="btn-duplicar-precio" class="btn-secondary">📋 Copiar y sumar día</button>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente: Actividades →</button>
+                            </div>
+                        </div>
+
+                        <!-- ══ TAB 3: ACTIVIDADES ══ -->
+                        <div id="tab-actividades" class="tab-content">
+                            <div class="tab-header"><h2>🎭 Actividades del Evento</h2><p>¿Qué pasará en tu evento? Cuéntalo aquí.</p></div>
+                            
+                            <div class="help-box" style="background:#fef9e7; border-left-color:#f1c40f;">
+                                <i class="fas fa-star" style="color:#f1c40f;"></i>
+                                <div class="help-box-content">
+                                    <h4>💡 Consejo Pro</h4>
+                                    <p>Las actividades con <strong>imágenes y descripciones detalladas</strong> tienen un 40% más de interés por parte de los visitantes.</p>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <table id="tabla-actividades" class="tabla-eventos">
+                                    <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Descripción</th><th>Gratuito</th><th>Acción</th></tr></thead>
+                                    <tbody id="actividades-rows"></tbody>
+                                </table>
+                                <button type="button" id="btn-agregar-actividad" class="btn-secondary">+ Agregar Actividad</button>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente: Expositores →</button>
+                            </div>
+                        </div>
+
+                        <!-- ══ TAB 4: EXPOSITORES ══ -->
+                        <div id="tab-expositores" class="tab-content">
+                            <div class="tab-header"><h2>🤝 Expositores y Patrocinadores</h2><p>Dale visibilidad a las marcas que hacen posible tu evento.</p></div>
+                            
+                            <div class="form-group" style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
+                                <label for="tiene_expositores"><strong>¿Tu evento cuenta con expositores o patrocinadores?</strong></label>
+                                <select id="tiene_expositores" name="tiene_expositores" class="form-control" style="margin-top: 10px;">
+                                    <option value="1" selected>No, mi evento no tiene expositores</option>
+                                    <option value="0">Sí, mi evento tiene expositores</option>
+                                </select>
+                            </div>
+
+                            <div id="content-expositores" class="form-section">
+                                <div class="help-box" style="background:#eaeded; border-left-color:#7f8c8d; margin-bottom: 20px;">
+                                    <i class="fas fa-handshake" style="color:#7f8c8d;"></i>
                                     <div class="help-box-content">
-                                        <h4>🎨 Dale personalidad a tu evento</h4>
-                                        <p>Los colores definen el ambiente. Te recomendamos usar el <strong>Color Primario</strong> igual al de tu logotipo para coherencia visual.</p>
+                                        <h4>Por qué añadir expositores</h4>
+                                        <p>Tener una lista clara de expositores ayuda a que los patrocinadores se sientan valorados y a que el público sepa qué marcas encontrará.</p>
                                     </div>
                                 </div>
-                                <h3>Colores del Evento</h3>
-                                <p style="color:#666;font-size:13px;margin-bottom:16px;">Personaliza el diseño para que coincida con tu marca.</p>
+                                <table id="tabla-expositores" class="tabla-eventos">
+                                    <thead><tr><th>Nombre</th><th>Categoría</th><th>Ubicación</th><th>Descripción</th><th>Imágenes/Logos</th><th>Video</th><th>Acción</th></tr></thead>
+                                    <tbody id="expositores-rows"></tbody>
+                                </table>
+                                <button type="button" id="btn-agregar-expositor" class="btn-secondary">+ Agregar Expositor</button>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente: Galería →</button>
+                            </div>
+                        </div>
 
+                        <!-- ══ TAB 5: GALERÍA ══ -->
+                        <div id="tab-galeria" class="tab-content">
+                            <div class="tab-header"><h2>📸 Galería de Imágenes</h2><p>Las mejores fotos de tu evento para enamorar al público.</p></div>
+                            <div class="help-box" style="background:#f4f6f7; border-left-color:#34495e;">
+                                <i class="fas fa-camera-retro" style="color:#34495e;"></i>
+                                <div class="help-box-content">
+                                    <h4>📸 Calidad Visual</h4>
+                                    <p>Te recomendamos usar imágenes en alta resolución y de formato horizontal. Estas fotos aparecerán en el carrusel principal de tu evento.</p>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <table id="tabla-galeria" class="tabla-eventos">
+                                    <thead><tr><th>Vista</th><th>URL de Imagen</th><th>Acción</th></tr></thead>
+                                    <tbody id="galeria-rows"></tbody>
+                                </table>
+                                <button type="button" id="btn-agregar-imagen" class="btn-secondary">+ Agregar Imagen</button>
+                            </div>
+                            <div class="form-navigation">
+                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente: Colores →</button>
+                            </div>
+                        </div>
+
+                        <!-- ══ TAB 6: COLORES ══ -->
+                        <div id="tab-colores" class="tab-content">
+                            <div class="tab-header">
+                                <h2>Paleta de Colores</h2>
+                                <p>Personaliza el diseño para que coincida con tu marca.</p>
+                            </div>
+
+                            <div class="help-box" style="background:#f4ecf7; border-left-color:#8e44ad;">
+                                <i class="fas fa-palette" style="color:#8e44ad;"></i>
+                                <div class="help-box-content">
+                                    <h4>🎨 Dale personalidad a tu evento</h4>
+                                    <p>Los colores definen el ambiente. Te recomendamos usar el <strong>Color Primario</strong> igual al de tu logotipo para coherencia visual.</p>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3>Estilo General</h3>
                                 <!-- Colores Principales -->
                                 <div class="form-row">
                                     <div class="form-group"><label>Color Primario <i class="fas fa-info-circle btn-help-icon" title="Botones y encabezados principales"></i></label><input type="color" id="color_primario" value="#C8102E"></div>
@@ -258,7 +418,7 @@
                                     <div class="form-group"><label>Color Descripción Hero</label><input type="color" id="color_descripcion_hero" value="#FFFFFF"></div>
                                     <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#d4a373"></div>
                                     <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#8b5a2b"></div>
-                                    <div class="form-group"><label>Color Fondo Share</label><input type="color" id="color_fondo_share" value="rgba(255, 255, 255, 0.5)"></div>
+                                    <div class="form-group"><label>Color Fondo Share</label><input type="color" id="color_fondo_share" value="#ffffff"></div>
                                 </div>
 
                                 <!-- Colores del Menú -->
@@ -277,107 +437,42 @@
                                     <div class="form-group"><label>Color enlace contacto</label><input type="color" id="color_enlace_contacto" value="#8b5a2b"></div>
                                     <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
                                     <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
-                                    <div class="form-group"><label>Color buscador</label><input type="color" id="color_buscador_expositores" value="#ffffff"></div>
-                                    <div class="form-group"><label>Color borde buscador</label><input type="color" id="color_borde_buscador_expositores" value="#eeeeee"></div>
                                 </div>
-                            </div>
-                            <div class="form-navigation">
-                                <button type="button" class="btn-secondary" disabled>← Anterior</button>
-                                <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
-                            </div>
-                        </div>
-
-                        <!-- ══ TAB 2: PRECIOS ══ -->
-                        <div id="tab-precios" class="tab-content">
-                            <div class="tab-header"><h2>💰 Precios de Entrada</h2><p>Indica cuánto costará la entrada cada día.</p></div>
-                            <div class="help-box" style="background:#e8f8f5; border-left-color:#1abc9c;">
-                                <i class="fas fa-ticket-alt" style="color:#1abc9c;"></i>
-                                <div class="help-box-content">
-                                    <h4>¡Atrae a más gente!</h4>
-                                    <p>Si tienes días gratuitos o promociones de "2x1", asegúrate de indicarlo en el campo de <strong>Promoción</strong>.</p>
-                                </div>
-                            </div>
-                            <div class="form-section">
-                                <table id="tabla-precios" class="tabla-eventos">
-                                    <thead><tr><th>Fecha</th><th>Precio Normal (₡)</th><th>Promoción</th><th>Descripción</th><th>Acción</th></tr></thead>
-                                    <tbody id="precios-rows"></tbody>
-                                </table>
-                                <button type="button" id="btn-agregar-precio" class="btn-secondary">+ Agregar Precio</button>
                             </div>
                             <div class="form-navigation">
                                 <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
-                                <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
+                                <button type="button" class="btn-primary tab-next-btn">Siguiente: Vista Final →</button>
                             </div>
                         </div>
 
-                        <!-- ══ TAB 3: ACTIVIDADES ══ -->
-                        <div id="tab-actividades" class="tab-content">
-                            <div class="tab-header"><h2>🎭 Actividades del Evento</h2><p>¿Qué pasará en tu evento? Cuéntalo aquí.</p></div>
-                            
-                            <div class="help-box" style="background:#fef9e7; border-left-color:#f1c40f;">
-                                <i class="fas fa-star" style="color:#f1c40f;"></i>
-                                <div class="help-box-content">
-                                    <h4>💡 Consejo Pro</h4>
-                                    <p>Las actividades con <strong>imágenes y descripciones detalladas</strong> tienen un 40% más de interés por parte de los visitantes.</p>
-                                </div>
+                        <!-- ══ TAB 7: VISTA FINAL ══ -->
+                        <div id="tab-vista-final" class="tab-content">
+                            <div class="tab-header">
+                                <h2>Vista Final</h2>
+                                <p>Revisa cómo se ve tu evento antes de enviarlo.</p>
                             </div>
-                            <div class="form-section">
-                                <table id="tabla-actividades" class="tabla-eventos">
-                                    <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Descripción</th><th>Gratuito</th><th>Acción</th></tr></thead>
-                                    <tbody id="actividades-rows"></tbody>
-                                </table>
-                                <button type="button" id="btn-agregar-actividad" class="btn-secondary">+ Agregar Actividad</button>
-                            </div>
-                            <div class="form-navigation">
-                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
-                                <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
-                            </div>
-                        </div>
 
-                        <!-- ══ TAB 4: EXPOSITORES ══ -->
-                        <div id="tab-expositores" class="tab-content">
-                            <div class="tab-header"><h2>🤝 Expositores y Patrocinadores</h2><p>Dale visibilidad a las marcas que hacen posible tu evento.</p></div>
-                            <div class="help-box" style="background:#eaeded; border-left-color:#7f8c8d;">
-                                <i class="fas fa-handshake" style="color:#7f8c8d;"></i>
-                                <div class="help-box-content">
-                                    <h4>Por qué añadir expositores</h4>
-                                    <p>Tener una lista clara de expositores ayuda a que los patrocinadores se sientan valorados y a que el público sepa qué marcas encontrará.</p>
+                            <!-- Simulador de Dispositivo -->
+                            <div class="device-simulator-container">
+                                <div class="device-toggles">
+                                    <button type="button" class="device-btn active" data-device="pc">
+                                        <i class="fas fa-desktop"></i> PC
+                                    </button>
+                                    <button type="button" class="device-btn" data-device="mobile">
+                                        <i class="fas fa-mobile-alt"></i> Celular
+                                    </button>
                                 </div>
-                            </div>
-                            <div class="form-section">
-                                <table id="tabla-expositores" class="tabla-eventos">
-                                    <thead><tr><th>Nombre</th><th>Categoría</th><th>Ubicación</th><th>Descripción</th><th>Imágenes/Logos</th><th>Video</th><th>Acción</th></tr></thead>
-                                    <tbody id="expositores-rows"></tbody>
-                                </table>
-                                <button type="button" id="btn-agregar-expositor" class="btn-secondary">+ Agregar Expositor</button>
-                            </div>
-                            <div class="form-navigation">
-                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
-                                <button type="button" class="btn-primary tab-next-btn">Siguiente →</button>
-                            </div>
-                        </div>
 
-                        <!-- ══ TAB 5: GALERÍA ══ -->
-                        <div id="tab-galeria" class="tab-content">
-                            <div class="tab-header"><h2>📸 Galería de Imágenes</h2><p>Las mejores fotos de tu evento para enamorar al público.</p></div>
-                            <div class="help-box" style="background:#f4f6f7; border-left-color:#34495e;">
-                                <i class="fas fa-camera-retro" style="color:#34495e;"></i>
-                                <div class="help-box-content">
-                                    <h4>📸 Calidad Visual</h4>
-                                    <p>Te recomendamos usar imágenes en alta resolución y de formato horizontal. Estas fotos aparecerán en el carrusel principal de tu evento.</p>
+                                <div id="integratedPreview" class="integrated-preview">
+                                    <iframe id="finalPreviewIframe" src="about:blank"></iframe>
                                 </div>
                             </div>
-                            <div class="form-section">
-                                <table id="tabla-galeria" class="tabla-eventos">
-                                    <thead><tr><th>Vista</th><th>URL de Imagen</th><th>Acción</th></tr></thead>
-                                    <tbody id="galeria-rows"></tbody>
-                                </table>
-                                <button type="button" id="btn-agregar-imagen" class="btn-secondary">+ Agregar Imagen</button>
-                            </div>
-                            <div class="form-navigation">
-                                <button type="button" class="btn-primary tab-prev-btn">← Anterior</button>
-                                <button type="button" id="btn-enviar-revision" class="btn-success">
-                                    <i class="fas fa-paper-plane"></i> Enviar a Revisión
+
+                            <div class="form-navigation" style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px;">
+                                <button type="button" class="btn-primary tab-prev-btn">← Volver a Colores</button>
+                                
+                                <button type="button" id="btn-enviar-revision" class="btn-success btn-lg">
+                                    <i class="fas fa-paper-plane"></i> Enviar a Revisión Final
                                 </button>
                             </div>
                         </div>
@@ -573,7 +668,7 @@
                             <i class="fas fa-cloud-upload-alt"></i> Subir
                         </button>
                     </div>
-                    <input type="file" id="archivo-imagen-galeria" accept="image/*" style="display:none;">
+                    <input type="file" id="archivo-imagen-galeria" accept="image/*" multiple style="display:none;">
                     <div id="feedback-galeria" class="upload-feedback"></div>
                     <small>Pega una URL o sube una imagen desde tu equipo</small>
                 </div>
@@ -623,6 +718,6 @@
         </div>
     </div>
 
-    <script type="module" src="js/crear-evento/index.js"></script>
+    <script type="module" src="js/crear-evento/index.js?v=2.6"></script>
 </body>
 </html>

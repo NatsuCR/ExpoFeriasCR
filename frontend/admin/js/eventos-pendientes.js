@@ -24,7 +24,7 @@ class AdminEventosPendientes {
   verificarAutenticacion() {
     const usuario = JSON.parse(localStorage.getItem('user') || 'null');
     if (!usuario || usuario.rol !== 'admin') {
-      mostrarMensaje('Acceso denegado. Se requieren permisos de administrador', 'error');
+      window.mostrarMensaje('Acceso denegado. Se requieren permisos de administrador', 'error');
       setTimeout(() => {
         window.location.href = '/admin/login.html';
       }, 2000);
@@ -67,7 +67,7 @@ class AdminEventosPendientes {
     } catch (error) {
       console.error('Error:', error);
       document.getElementById('mensaje-cargando').style.display = 'none';
-      mostrarMensaje('Error al cargar eventos: ' + error.message, 'error');
+      window.mostrarMensaje('Error al cargar eventos: ' + error.message, 'error');
     }
   }
 
@@ -182,86 +182,92 @@ class AdminEventosPendientes {
 
   async verEvento(eventoId) {
     try {
-      const evento = this.eventos.find(e => e.id === eventoId);
-      if (!evento) {
-        mostrarMensaje('Evento no encontrado', 'error');
-        return;
-      }
-      this.eventoActualModal = evento;
-
-      // Fetch full event info to show everything including carousels and images
       const token = localStorage.getItem('token');
+      // Obtener detalle completo (incluyendo borrador mezclado)
       const res = await fetch(`/api/admin/eventos-pendientes/${eventoId}`, {
          headers: { 'Authorization': `Bearer ${token}` }
       });
-      if(res.ok) {
-          const fullData = await res.json();
-          // Combinar datos basicos con las colecciones y extras
-          // IMPORTANTE: el API devuelve { evento: {...}, actividades: [], ... }
-          if (fullData.evento) {
-            Object.assign(evento, fullData.evento);
-          }
-          evento.actividades = fullData.actividades || [];
-          evento.precios = fullData.precios || [];
-          evento.expositores = fullData.expositores || [];
-          evento.galeria = fullData.galeria || [];
-      }
+      
+      if(!res.ok) throw new Error('Error al cargar detalle del evento');
+      
+      const fullData = await res.json();
+      const evento = fullData.evento;
+      this.eventoActualModal = evento;
 
-      // Guardar datos del evento en localStorage con una clave única
+      // Normalizar datos para la vista previa (conviértelo todo a los campos que espera cargarEvento.js)
       const datosPreview = {
+        id: evento.id,
         nombre: evento.nombre,
         descripcion: evento.descripcion,
         fecha_inicio: evento.fecha_inicio,
         fecha_fin: evento.fecha_fin,
         ubicacion: evento.ubicacion,
         provincia: evento.provincia,
-        imagen_portada: (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/')) ? '/' + evento.imagen_portada : evento.imagen_portada,
-        mapa_embed: evento.mapa_embed,
-        color_primario: evento.color_primario || '#C8102E',
-        color_secundario: evento.color_secundario || '#0033A0',
-        color_fondo: evento.color_fondo || '#FFFFFF',
+        horario_imagen: evento.horario_imagen || evento.horarioImagen || '',
+        slug: evento.slug || '',
+        activo: (evento.activo !== undefined) ? parseInt(evento.activo) : 1,
+        imagen_portada: evento.imagen_portada || '',
+        mapa_embed: evento.mapa_embed || '',
+        mapa_waze_embed: evento.mapa_waze_embed || '',
+        color_primario: evento.color_primario || '#8b5a2b',
+        color_secundario: evento.color_secundario || '#d4a373',
+        color_fondo: evento.color_fondo || '#f4e4c1',
         color_texto: evento.color_texto || '#2c1a0e',
-        color_hero_overlay: evento.color_hero_overlay || 'rgba(0,0,0,0.4)',
+        color_descripcion_texto: evento.color_descripcion_texto || '#2c1a0e',
+        color_hero_overlay: evento.color_hero_overlay || 'rgba(62,42,31,0.7)',
+        color_titulo_seccion: evento.color_titulo_seccion || '#2c1a0e',
         color_titulo_hero: evento.color_titulo_hero || '#ffffff',
         color_descripcion_hero: evento.color_descripcion_hero || '#ffffff',
-        color_fondo_fechas: evento.color_fondo_fechas || '#0033A0',
-        color_texto_fechas: evento.color_texto_fechas || '#ffffff',
-        color_titulo_seccion: evento.color_titulo_seccion || '#C8102E',
+        color_fondo_fechas: evento.color_fondo_fechas || '#d4a373',
+        color_texto_fechas: evento.color_texto_fechas || '#8b5a2b',
         color_menu_fondo: evento.color_menu_fondo || '#ffffff',
-        color_menu_texto: evento.color_menu_texto || '#333333',
-        color_menu_fondo_hover: evento.color_menu_fondo_hover || '#C8102E',
-        color_menu_texto_hover: evento.color_menu_texto_hover || '#ffffff',
-        color_fondo_contacto: evento.color_fondo_contacto || '#f8f8f8',
-        color_texto_contacto: evento.color_texto_contacto || '#333333',
-        color_enlace_contacto: evento.color_enlace_contacto || '#C8102E',
-        color_fondo_footer: evento.color_fondo_footer || '#C8102E',
-        color_texto_footer: evento.color_texto_footer || '#ffffff',
+        color_menu_texto: evento.color_menu_texto || '#ffffff',
+        color_menu_fondo_hover: evento.color_menu_fondo_hover || '',
+        color_menu_texto_hover: evento.color_menu_texto_hover || '',
         color_titulo_h3: evento.color_titulo_h3 || '#2c1a0e',
-        color_descripcion_texto: evento.color_descripcion_texto || '#2c1a0e',
-        precios: evento.precios || [],
-        actividades: (evento.actividades || []).map(act => ({
+        color_fondo_contacto: evento.color_fondo_contacto || '#f4e4c1',
+        color_texto_contacto: evento.color_texto_contacto || '#2c1a0e',
+        color_enlace_contacto: evento.color_enlace_contacto || '#8b5a2b',
+        color_fondo_footer: evento.color_fondo_footer || '#8b5a2b',
+        color_texto_footer: evento.color_texto_footer || '#ffffff',
+        color_fondo_share: evento.color_fondo_share || 'rgba(255, 255, 255, 0.5)',
+        color_texto_share: evento.color_texto_share || '#2c1a0e',
+        color_buscador_expositores: evento.color_buscador_expositores || '#ffffff',
+        color_borde_buscador_expositores: evento.color_borde_buscador_expositores || '#eeeeee',
+        color_card_fondo: evento.color_card_fondo || '#ffffff',
+        color_card_borde: evento.color_card_borde || '#f0f0f0',
+        color_rubro_fondo: evento.color_rubro_fondo || '#f0f0f0',
+        color_rubro_texto: evento.color_rubro_texto || '#000000',
+        color_buscador_fondo: evento.color_buscador_fondo || '#ffffff',
+        color_buscador_borde: evento.color_buscador_borde || '#eeeeee',
+        color_btn_ver_mas: evento.color_btn_ver_mas || '#C8102E',
+        tiene_expositores: (evento.tiene_expositores !== undefined && evento.tiene_expositores !== null) ? parseInt(evento.tiene_expositores) : 0,
+        tipo_venta: evento.tipo_venta || 'taquilla',
+        url_venta_online: evento.url_venta_online || '',
+        precios: fullData.precios || [],
+        actividades: (fullData.actividades || []).map(act => ({
           ...act,
-          // Asegurar que imagen sea un array si viene como JSON string
           imagen: (typeof act.imagen === 'string' && act.imagen.startsWith('[')) ? JSON.parse(act.imagen) : act.imagen
         })),
-        expositores: (evento.expositores || []).map(exp => ({
+        expositores: (fullData.expositores || []).map(exp => ({
           ...exp,
-          logo: exp.imagen_logo || exp.logo, // Sincronizar nombre de columna
-          video: exp.video_url || exp.video   // Sincronizar nombre de columna
+          logo: exp.imagen_logo || exp.logo,
+          video: exp.video_url || exp.video
         })),
-        galeria: evento.galeria || []
+        galeria: fullData.galeria || []
       };
       
       const dataKey = 'preview_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       localStorage.setItem(dataKey, JSON.stringify(datosPreview));
 
-      const formatDate = (d) => window.formatDateCR(d);
+      const formatDate = (d) => window.formatDateCR ? window.formatDateCR(d) : d;
 
       const buildCard = (isLive) => {
         const liveBadge = isLive ? `<div style="position:absolute; top:10px; right:10px; background:#e74c3c; color:white; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; z-index:10;">🔴 EN VIVO</div>` : '';
-        // Usar colores por defecto del sitio para la simulación de portada (Red/Blue)
-        const cp = '#C8102E'; // Rojo marca
-        const cs = '#0033A0'; // Azul marca
+        const gratisBadge = datosPreview.tipo_venta === 'gratis' ? `<div style="position:absolute; top:10px; left:10px; background:#27ae60; color:white; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; z-index:10;">GRATIS</div>` : '';
+        
+        const cp = evento.color_primario || '#C8102E'; 
+        const cs = evento.color_secundario || '#0033A0'; 
         const imgUrl = (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/')) 
           ? '/' + evento.imagen_portada 
           : (evento.imagen_portada || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');
@@ -270,6 +276,7 @@ class AdminEventosPendientes {
           <div class="evento-card" style="--color-primary: ${cp}; --color-secondary: ${cs}; width:250px; margin:0 auto; box-shadow:0 4px 10px rgba(0,0,0,0.1); border-top:5px solid ${cp}; border-radius:8px; overflow:hidden; background:white;">
             <div style="position:relative;">
               ${liveBadge}
+              ${gratisBadge}
               <img src="${imgUrl}" alt="${this.escapeHtml(evento.nombre)}" style="width:100%; height:160px; object-fit:cover;">
             </div>
             <div style="padding:12px; text-align:left;">
@@ -282,7 +289,7 @@ class AdminEventosPendientes {
         `;
       };
 
-      // Mostrar iframe con evento.html en modo preview
+      // Inyectar el HTML del modal con el iframe apuntando a preview=1
       const html = `
         <div style="display:flex; gap: 20px; flex-wrap: wrap;">
           <div class="evento-preview-info" style="flex:1; min-width:300px;">
@@ -306,20 +313,15 @@ class AdminEventosPendientes {
                    <h5 style="margin: 0 0 10px 0; color: #333; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">En Vivo</h5>
                    ${buildCard(true)}
                 </div>
-                <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border-left: 5px solid #0033A0;">
-                   <h5 style="margin: 0 0 10px 0; color: #333; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Próximos Eventos</h5>
-                   ${buildCard(false)}
-                </div>
               </div>
             </div>
           </div>
-          <iframe src="/evento.html?preview=1&dataKey=${dataKey}" class="evento-preview-iframe" allowfullscreen style="flex:2; min-width:360px;"></iframe>
+          <iframe src="/evento.html?preview=1&dataKey=${dataKey}" class="evento-preview-iframe" allowfullscreen style="flex:2; min-width:360px; height: 80vh; border: 1px solid #ddd; border-radius: 8px;"></iframe>
         </div>
       `;
 
       document.getElementById('evento-preview-contenido').innerHTML = html;
 
-      // Mostrar/ocultar botones según estado (pendiente o edicion_pendiente pueden aprobarse/rechazarse)
       const puedeAccion = ['pendiente', 'edicion_pendiente'].includes(evento.estado);
       document.getElementById('btn-modal-aprobar').style.display = puedeAccion ? 'block' : 'none';
       document.getElementById('btn-modal-rechazar').style.display = puedeAccion ? 'block' : 'none';
@@ -327,7 +329,7 @@ class AdminEventosPendientes {
       document.getElementById('modal-evento-preview').style.display = 'flex';
     } catch (error) {
       console.error('Error:', error);
-      mostrarMensaje('Error al cargar evento: ' + error.message, 'error');
+      window.mostrarMensaje('Error al cargar evento: ' + error.message, 'error');
     }
   }
 
@@ -354,19 +356,17 @@ class AdminEventosPendientes {
         throw new Error(data.error || 'Error al aprobar evento');
       }
 
-      mostrarMensaje('✓ Evento aprobado exitosamente. Email enviado al usuario.', 'success');
+      window.mostrarMensaje('✓ Evento aprobado exitosamente. Email enviado al usuario.', 'success');
       
-      // Cerrar inmediatamente la vista previa para evitar que se quede estática
-      cerrarModalPreview();
+      this.cerrarModalPreview();
       this.cargarEventos();
       
-      // Recargar la página después de un momento para actualizar contadores globales
       setTimeout(() => {
         location.reload();
       }, 1500);
     } catch (error) {
       console.error('Error:', error);
-      mostrarMensaje('Error: ' + error.message, 'error');
+      window.mostrarMensaje('Error: ' + error.message, 'error');
     }
   }
 
@@ -387,7 +387,7 @@ class AdminEventosPendientes {
     const razon = document.getElementById('razon-rechazo').value.trim();
 
     if (!razon) {
-      mostrarMensaje('Por favor ingresa una razón para rechazar el evento', 'error');
+      window.mostrarMensaje('Por favor ingresa una razón para rechazar el evento', 'error');
       return;
     }
 
@@ -416,20 +416,18 @@ class AdminEventosPendientes {
         throw new Error(data.error || 'Error al rechazar evento');
       }
 
-      mostrarMensaje('✓ Evento rechazado. Email enviado al usuario con la razón.', 'success');
+      window.mostrarMensaje('✓ Evento rechazado. Email enviado al usuario con la razón.', 'success');
       
-      // Cerrar tanto el modal de rechazo como la vista previa si estaba abierta
-      cerrarModalRechazo();
-      cerrarModalPreview();
+      this.cerrarModalRechazo();
+      this.cerrarModalPreview();
       this.cargarEventos();
 
-      // Recargar la página después de un momento para actualizar contadores globales
       setTimeout(() => {
         location.reload();
       }, 1500);
     } catch (error) {
       console.error('Error:', error);
-      mostrarMensaje('Error: ' + error.message, 'error');
+      window.mostrarMensaje('Error: ' + error.message, 'error');
     }
   }
 
@@ -472,6 +470,18 @@ class AdminEventosPendientes {
     }
   }
 
+  cerrarModalPreview() {
+    const modal = document.getElementById('modal-evento-preview');
+    if (modal) modal.style.display = 'none';
+    const modalRec = document.getElementById('modal-rechazar');
+    if (modalRec) modalRec.style.display = 'none';
+  }
+
+  cerrarModalRechazo() {
+    const modal = document.getElementById('modal-rechazar');
+    if (modal) modal.style.display = 'none';
+  }
+
   escapeHtml(texto) {
     if (!texto) return '';
     const div = document.createElement('div');
@@ -482,18 +492,15 @@ class AdminEventosPendientes {
 
 // Funciones globales para callbacks
 function cerrarModalPreview() {
-  document.getElementById('modal-evento-preview').style.display = 'none';
-  document.getElementById('modal-rechazar').style.display = 'none';
+  if (admin) admin.cerrarModalPreview();
 }
 
 function cerrarModalRechazo() {
-  document.getElementById('modal-rechazar').style.display = 'none';
+  if (admin) admin.cerrarModalRechazo();
 }
 
 function abrirModalRechazo() {
-  document.getElementById('modal-evento-preview').style.display = 'none';
-  document.getElementById('modal-rechazar').style.display = 'flex';
-  document.getElementById('razon-rechazo').value = '';
+  if (admin) admin.abrirRechazar();
 }
 
 // Global instance

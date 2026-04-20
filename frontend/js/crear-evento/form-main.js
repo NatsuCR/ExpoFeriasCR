@@ -1,4 +1,4 @@
-﻿/**
+/**
  * crearEventoMain.js
  * Clase principal para gestionar la creación de eventos
  */
@@ -90,14 +90,14 @@ verificarAutenticacion() {
     const camposBasicos = [
       'slug', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin',
       'ubicacion', 'provincia', 'imagen_portada', 'horario_imagen',
-      'mapa_embed', 'tipo_venta', 'url_venta_online',
+      'mapa_embed', 'mapa_waze_embed', 'tipo_venta', 'url_venta_online',
       'color_primario', 'color_secundario', 'color_fondo', 'color_texto',
       'color_hero_overlay', 'color_titulo_seccion',
       'color_titulo_hero', 'color_descripcion_hero', 'color_fondo_fechas', 'color_texto_fechas',
       'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
       'color_titulo_h3',
       'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
-      'color_fondo_footer', 'color_texto_footer'
+      'color_fondo_footer', 'color_texto_footer', 'tiene_expositores'
     ];
 
     camposBasicos.forEach(k => {
@@ -158,6 +158,11 @@ verificarAutenticacion() {
               <td><input type="date" class="act-fecha" value="${a.fecha ? a.fecha.slice(0, 10) : ''}"></td>
               <td><input type="time" class="act-hora" value="${a.hora ? a.hora.slice(0, 5) : ''}"></td>
               <td><input type="text" class="act-lugar" value="${a.lugar || ''}"></td>
+              <td>
+                <div style="max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${(a.descripcion || '').replace(/"/g, '&quot;')}">
+                  ${a.descripcion || '<span style="color:#ccc;">-</span>'}
+                </div>
+              </td>
               <td style="text-align:center;font-size:18px;">
                 <span class="act-gratis" data-value="${a.es_gratis ? 'true' : 'false'}">${a.es_gratis ? '✅' : '❌'}</span>
               </td>
@@ -300,6 +305,15 @@ init() {
 
   getIframe()?.addEventListener('load', () => { setTimeout(programarActualizacion, 150); });
 
+  // Toggle de visibilidad de sección expositores
+  const tieneExpEl = document.getElementById('tiene_expositores');
+  const contentExp = document.getElementById('content-expositores');
+  if (tieneExpEl && contentExp) {
+    const act = () => { contentExp.style.display = tieneExpEl.value === '1' ? 'block' : 'none'; };
+    tieneExpEl.addEventListener('change', act);
+    act(); // Ejecutar al inicio por si venimos de edición
+  }
+
   document.getElementById('btn-preview-portada')?.addEventListener('click', () => {
     this.simularPortada();
   });
@@ -369,14 +383,14 @@ _iniciarWatcherCambios() {
 initPreviewListeners() {
   const camposWatch = [
     'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin', 'ubicacion', 'provincia',
-    'imagen_portada', 'horario_imagen', 'mapa_embed', 'tipo_venta', 'url_venta_online',
+    'imagen_portada', 'horario_imagen', 'mapa_embed', 'mapa_waze_embed', 'tipo_venta', 'url_venta_online',
     'color_primario', 'color_secundario', 'color_fondo', 'color_texto',
     'color_hero_overlay', 'color_titulo_seccion',
     'color_titulo_hero', 'color_descripcion_hero', 'color_fondo_fechas', 'color_texto_fechas',
     'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
     'color_titulo_h3',
     'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
-    'color_fondo_footer', 'color_texto_footer'
+    'color_fondo_footer', 'color_texto_footer', 'tiene_expositores'
   ];
   camposWatch.forEach(id => {
     const el = document.getElementById(id);
@@ -493,7 +507,7 @@ cambiarTab(index) {
 
 irSiguienteTab() {
   const cur = Array.from(this.tabContents).indexOf(document.querySelector('.tab-content.active'));
-  if (!this.validarTabActual()) { this.mostrarMensaje('Completa los campos obligatorios antes de continuar', 'error'); return; }
+  // Removida validación obligatoria para permitir navegación libre entre pestañas
   if (cur < this.tabContents.length - 1) this.cambiarTab(cur + 1);
 }
 
@@ -584,6 +598,7 @@ simularPortada() {
     imagen_portada: get('imagen_portada') || null,
     horario_imagen: get('horario_imagen') || null,
     mapa_embed: get('mapa_embed') || null,
+    mapa_waze_embed: get('mapa_waze_embed') || null,
     tipo_venta: get('tipo_venta') || 'taquilla',
     url_venta_online: get('url_venta_online') || null,
     color_primario: get('color_primario') || '#8b5a2b',
@@ -606,6 +621,7 @@ simularPortada() {
     color_enlace_contacto: get('color_enlace_contacto') || '#8b5a2b',
     color_fondo_footer: get('color_fondo_footer') || '#8b5a2b',
     color_texto_footer: get('color_texto_footer') || '#ffffff',
+    tiene_expositores: parseInt(get('tiene_expositores') || '1'),
     activo: document.getElementById('activo')?.checked ? 1 : 0
   };
 

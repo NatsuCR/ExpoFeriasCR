@@ -35,7 +35,12 @@ async function cargarDatosEvento() {
     document.getElementById('color_texto_footer').value = evento.color_texto_footer || '#ffffff';
     document.getElementById('color_titulo_h3').value = evento.color_titulo_h3 || '#2c1a0e';
     document.getElementById('activo').checked = evento.activo;
+    document.getElementById('tiene_expositores').value = (evento.tiene_expositores !== undefined) ? evento.tiene_expositores : 1;
     document.getElementById('formTitle').innerText = `Editando: ${evento.nombre}`;
+
+    // Sincronizar visibilidad inicial
+    toggleUrlVentaOnline();
+    toggleExpositoresTab();
 
     // Actualizar badge de estado
     actualizarBadgeEstado(evento.activo);
@@ -87,6 +92,7 @@ function construirData(activoValue) {
         color_fondo_footer: document.getElementById('color_fondo_footer').value,
         color_texto_footer: document.getElementById('color_texto_footer').value,
         color_titulo_h3: document.getElementById('color_titulo_h3').value,
+        tiene_expositores: parseInt(document.getElementById('tiene_expositores').value) || 0,
         activo: activoValue
     };
 }
@@ -144,3 +150,27 @@ async function confirmarPublicar() {
         mostrarMensaje('Error al publicar el evento', 'error');
     }
 }
+
+function toggleUrlVentaOnline() {
+    const tipo = document.getElementById('tipo_venta').value;
+    const group = document.getElementById('urlVentaGroup');
+    if (group) {
+        group.style.display = (tipo === 'online' || tipo === 'ambos') ? 'block' : 'none';
+    }
+}
+
+function toggleExpositoresTab() {
+    const tiene = document.getElementById('tiene_expositores').value;
+    const btn = document.querySelector('.tab-btn[data-tab="expositores"]');
+    if (btn) {
+        btn.style.display = (tiene === '1') ? 'inline-flex' : 'none';
+    }
+}
+
+// Event Listeners para visibilidad
+document.getElementById('tipo_venta').addEventListener('change', toggleUrlVentaOnline);
+document.getElementById('tiene_expositores').addEventListener('change', toggleExpositoresTab);
+
+// Ejecutar visibilidad inicial
+toggleUrlVentaOnline();
+toggleExpositoresTab();

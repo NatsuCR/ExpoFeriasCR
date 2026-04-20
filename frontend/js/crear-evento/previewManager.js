@@ -7,6 +7,12 @@
 let previewAbierto = false;
 let previewTimer = null;
 
+export function getIframes() { 
+    return [
+        document.getElementById('previewIframe'),
+        document.getElementById('finalPreviewIframe')
+    ].filter(i => i !== null); 
+}
 export function getIframe() { return document.getElementById('previewIframe'); }
 export function getSlug() { return (document.getElementById('slug')?.value || '').trim(); }
 
@@ -33,6 +39,7 @@ export function guardarDatosPreview() {
         imagen_portada: get('imagen_portada'),
         horario_imagen: get('horario_imagen'),
         mapa_embed: get('mapa_embed'),
+        mapa_waze_embed: get('mapa_waze_embed'),
         tipo_venta: get('tipo_venta'),
         url_venta_online: get('url_venta_online'),
 
@@ -42,7 +49,7 @@ export function guardarDatosPreview() {
         color_fondo: get('color_fondo') || '#f4e4c1',
         color_texto: get('color_texto') || '#2c1a0e',
         color_descripcion_texto: get('color_descripcion_texto') || '#2c1a0e',
-        color_hero_overlay: get('color_hero_overlay') || '0.7',
+        color_hero_overlay: get('color_hero_overlay') || 'rgba(62,42,31,0.7)',
         color_titulo_seccion: get('color_titulo_seccion') || '#2c1a0e',
         color_titulo_hero: get('color_titulo_hero') || '#ffffff',
         color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
@@ -52,6 +59,8 @@ export function guardarDatosPreview() {
         color_menu_texto: get('color_menu_texto') || '#ffffff',
         color_menu_fondo_hover: get('color_menu_fondo_hover') || '',
         color_menu_texto_hover: get('color_menu_texto_hover') || '',
+
+        tiene_expositores: (get('tiene_expositores') !== '') ? parseInt(get('tiene_expositores')) : 0,
         color_titulo_h3: get('color_titulo_h3') || '#2c1a0e',
         color_fondo_contacto: get('color_fondo_contacto') || '#f4e4c1',
         color_texto_contacto: get('color_texto_contacto') || '#2c1a0e',
@@ -60,7 +69,14 @@ export function guardarDatosPreview() {
         color_texto_footer: get('color_texto_footer') || '#ffffff',
         color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
         color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
-        color_fondo_share: get('color_fondo_share') || '#ffffff',
+        color_card_fondo: get('color_card_fondo') || '#ffffff',
+        color_card_borde: get('color_card_borde') || '#f0f0f0',
+        color_rubro_fondo: get('color_rubro_fondo') || '#f0f0f0',
+        color_rubro_texto: get('color_rubro_texto') || '#000000',
+        color_buscador_fondo: get('color_buscador_fondo') || '#ffffff',
+        color_buscador_borde: get('color_buscador_borde') || '#eeeeee',
+        color_btn_ver_mas: get('color_btn_ver_mas') || '#C8102E',
+        color_fondo_share: get('color_fondo_share') || 'rgba(255, 255, 255, 0.5)',
         color_texto_share: get('color_texto_share') || '#2c1a0e'
     };
 
@@ -81,8 +97,17 @@ export function guardarDatosPreview() {
         lugar: row.querySelector('.act-lugar')?.value || '',
         descripcion: row.querySelector('.act-descripcion')?.value || '',
         imagen: (() => {
-            try { return JSON.parse(row.querySelector('.act-imagenes')?.value || '[]'); }
-            catch { return []; }
+            let imgs = [];
+            try { 
+                const val = row.querySelector('.act-imagenes')?.value;
+                if (val) {
+                    if (val.startsWith('[')) imgs = JSON.parse(val);
+                    else imgs = [val];
+                }
+            } catch { imgs = []; }
+            return (Array.isArray(imgs) ? imgs : [imgs])
+                .flat(Infinity)
+                .filter(u => u && typeof u === 'string' && u !== 'null');
         })(),
         es_gratis: row.querySelector('.act-gratis')?.dataset.value === 'true' ? 1 : 0,
         requiere_entrada_online: row.querySelector('.act-requiere-online')?.dataset.value === 'true',
@@ -98,7 +123,7 @@ export function guardarDatosPreview() {
             try {
                 const val = logoInp.value.trim();
                 if (val.startsWith('[')) {
-                    imagenes = JSON.parse(val).filter(u => u);
+                    imagenes = JSON.parse(val);
                 } else if (val) {
                     imagenes = [val];
                 }
@@ -107,11 +132,16 @@ export function guardarDatosPreview() {
             }
         }
 
+        // Aplanar y limpiar profundamente
+        imagenes = (Array.isArray(imagenes) ? imagenes : [imagenes])
+            .flat(Infinity)
+            .filter(u => u && typeof u === 'string' && u !== 'null');
+
         const imagenLogo = imagenes.length > 0 ? imagenes[0] : '';
 
         return {
             nombre: row.querySelector('.exp-nombre')?.value || '',
-            rubro: row.querySelector('.exp-tipo')?.value || '',
+            rubro: row.querySelector('.exp-rubro')?.value || row.querySelector('.exp-tipo')?.value || '',
             ubicacion: row.querySelector('.exp-ubicacion')?.value || '',
             descripcion: row.querySelector('.exp-descripcion')?.value || '',
 
@@ -153,25 +183,28 @@ export function abrirPreview() {
 
     panel.classList.add('visible');
     layout.classList.add('with-preview');
+    layout.classList.add('crear-evento-split');
     previewAbierto = true;
 
     document.getElementById('btnTogglePreview').innerHTML =
         '<i class="fas fa-eye-slash"></i> Ocultar preview';
 
     const dataKey = guardarDatosPreview();
-    const iframe = getIframe();
+    const iframes = getIframes();
 
-    iframe.src = `/evento.html?preview=1&dataKey=${dataKey}`;
-
-    iframe.addEventListener('load', () => {
-        setTimeout(aplicarCambiosEnVivo, 300);
-    }, { once: true });
+    iframes.forEach(iframe => {
+        iframe.src = `/evento.html?preview=1&dataKey=${dataKey}`;
+        iframe.addEventListener('load', () => {
+            setTimeout(aplicarCambiosEnVivo, 300);
+        }, { once: true });
+    });
 }
 
 // ─── Cerrar preview ────────────────────────────────────────────────────────
 export function cerrarPreview() {
     document.getElementById('previewPanel').classList.remove('visible');
     document.getElementById('formLayout').classList.remove('with-preview');
+    document.getElementById('formLayout').classList.remove('crear-evento-split');
     previewAbierto = false;
 
     document.getElementById('btnTogglePreview').innerHTML =
@@ -186,28 +219,29 @@ export function togglePreview() {
 
 // ─── Aplicar cambios en iframe ─────────────────────────────────────────────
 export function aplicarCambiosEnVivo() {
-    const iframe = getIframe();
-    let win;
-
-    try { win = iframe.contentWindow; }
-    catch { return; }
-
-    if (!win || !win.cargarEventoDesdePreview) return;
-
+    const iframes = getIframes();
     const dataStr = localStorage.getItem(window.previewDataKey);
     if (!dataStr) return;
 
-    try {
-        const datos = JSON.parse(dataStr);
-        win.cargarEventoDesdePreview(datos);
+    iframes.forEach(iframe => {
+        let win;
+        try { win = iframe.contentWindow; }
+        catch { return; }
 
-        if (typeof win.initCarouselControls === 'function') win.initCarouselControls();
-        if (typeof win.initHeroCarousel === 'function') win.initHeroCarousel();
-        if (typeof win.initLightbox === 'function') win.initLightbox();
+        if (!win || !win.cargarEventoDesdePreview) return;
 
-    } catch (e) {
-        console.error('Error aplicando preview:', e);
-    }
+        try {
+            const datos = JSON.parse(dataStr);
+            win.cargarEventoDesdePreview(datos);
+
+            if (typeof win.initCarouselControls === 'function') win.initCarouselControls();
+            if (typeof win.initHeroCarousel === 'function') win.initHeroCarousel();
+            if (typeof win.initLightbox === 'function') win.initLightbox();
+
+        } catch (e) {
+            console.error('Error aplicando preview:', e);
+        }
+    });
 
     actualizarUrlBar();
 }

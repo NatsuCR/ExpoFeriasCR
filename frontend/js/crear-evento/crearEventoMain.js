@@ -25,8 +25,8 @@ import {
   abrirModalPrecio, cerrarModalPrecio, agregarPrecioDelModal,
   abrirModalActividad, cerrarModalActividad, agregarActividadDelModal, addActividadImageRow, editarActividad,
   abrirModalExpositor, cerrarModalExpositor, agregarExpositorDelModal, editarExpositor,
-  abrirModalImagen, cerrarModalImagen, agregarImagenDelModal, editarImagen,
-  editarPrecio, registrarOnModalConfirmado
+  abrirModalImagen, cerrarModalImagen, agregarImagenDelModal, editarImagen, addGalleryRow,
+  editarPrecio, registrarOnModalConfirmado, duplicarUltimoPrecio
 } from './modalsManager.js';
 
 export class CrearEvento {
@@ -103,7 +103,7 @@ export class CrearEvento {
       const camposBasicos = [
         'slug', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin',
         'ubicacion', 'provincia', 'imagen_portada', 'horario_imagen',
-        'mapa_embed', 'tipo_venta', 'url_venta_online',
+        'mapa_embed', 'mapa_waze_embed', 'tipo_venta', 'url_venta_online',
         'color_primario', 'color_secundario', 'color_fondo', 'color_texto', 'color_descripcion_texto',
         'color_hero_overlay', 'color_titulo_seccion',
         'color_titulo_hero', 'color_descripcion_hero', 'color_fondo_fechas', 'color_texto_fechas',
@@ -111,8 +111,11 @@ export class CrearEvento {
         'color_titulo_h3',
         'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
         'color_fondo_footer', 'color_texto_footer',
-        'color_fondo_share', 'color_texto_share'
-        // ELIMINADOS: color_buscador_expositores, color_borde_buscador_expositores
+        'color_fondo_share', 'color_texto_share',
+        'color_buscador_expositores', 'color_borde_buscador_expositores',
+        'color_card_fondo', 'color_card_borde', 'color_rubro_fondo', 'color_rubro_texto',
+        'color_buscador_fondo', 'color_buscador_borde', 'color_btn_ver_mas',
+        'tiene_expositores', 'activo'
       ];
 
       camposBasicos.forEach(k => {
@@ -150,6 +153,14 @@ export class CrearEvento {
         if (checkActivo) checkActivo.checked = Boolean(evento.activo);
       }
 
+      // Sincronizar visibilidad de pestaña Expositores al cargar
+      const tieneExpositoresEl = document.getElementById('tiene_expositores');
+      const contentExpositores = document.getElementById('content-expositores');
+      if (tieneExpositoresEl && contentExpositores) {
+        // CORRECCIÓN: 0 = SÍ tiene expositores -> mostrar formulario
+        contentExpositores.style.display = (tieneExpositoresEl.value === '0') ? 'block' : 'none';
+      }
+
       // Poblar precios
       if (data.precios && data.precios.length > 0) {
         const tbody = document.getElementById('precios-rows');
@@ -181,8 +192,19 @@ export class CrearEvento {
           data.actividades.forEach(a => {
             let imagenes = [];
             if (a.imagen) {
-              try { imagenes = JSON.parse(a.imagen); } catch (e) { imagenes = [a.imagen]; }
+              if (Array.isArray(a.imagen)) {
+                imagenes = a.imagen;
+              } else {
+                try { 
+                  imagenes = JSON.parse(a.imagen); 
+                } catch (e) { 
+                  imagenes = [a.imagen]; 
+                }
+              }
             }
+            // Limpieza y normalización de rutas
+            imagenes = (Array.isArray(imagenes) ? imagenes : [imagenes])
+              .filter(u => u && u !== 'null' && typeof u === 'string');
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -222,11 +244,25 @@ export class CrearEvento {
             const tr = document.createElement('tr');
 
             let imagenes = [];
-            try {
-              const rawLogo = e.imagen_logo || e.logo;
-              if (rawLogo && rawLogo.startsWith('[')) imagenes = JSON.parse(rawLogo);
-              else if (rawLogo) imagenes = [rawLogo];
-            } catch (err) { }
+            let rawLogo = e.imagen_logo || e.logo;
+            if (rawLogo) {
+              if (Array.isArray(rawLogo)) {
+                imagenes = rawLogo;
+              } else {
+                try {
+                  if (typeof rawLogo === 'string' && rawLogo.startsWith('[')) {
+                    imagenes = JSON.parse(rawLogo);
+                  } else {
+                    imagenes = [rawLogo];
+                  }
+                } catch (err) {
+                  imagenes = [rawLogo];
+                }
+              }
+            }
+            // Limpieza y normalización
+            imagenes = (Array.isArray(imagenes) ? imagenes : [imagenes])
+              .filter(u => u && u !== 'null' && typeof u === 'string');
 
             const numImg = imagenes.length;
             const imgBadge = numImg > 0 ? `<span class="badge" style="background:#27ae60; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">${numImg} img</span>` : '<span style="color:#ccc;">-</span>';
@@ -234,7 +270,7 @@ export class CrearEvento {
 
             tr.innerHTML = `
         <td><input type="text" value="${e.nombre || ''}"   class="exp-nombre"></td>
-        <td><input type="text" value="${e.tipo_expositor || e.rubro || ''}"    class="exp-tipo"></td>
+        <td><input type="text" value="${e.tipo_expositor || e.rubro || ''}"    class="exp-rubro"></td>
         <td><input type="text" value="${e.ubicacion || ''}"class="exp-ubicacion"></td>
         <td><div style="max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${e.descripcion || ''}">${e.descripcion || '-'}</div></td>
         <td style="text-align:center;">${imgBadge}</td>
@@ -351,10 +387,49 @@ export class CrearEvento {
       document.getElementById('modal-preview-portada').style.display = 'none';
     });
 
-    document.getElementById('btn-agregar-precio')?.addEventListener('click', abrirModalPrecio);
+    document.getElementById('btn-agregar-precio')?.addEventListener('click', () => {
+      const tipoVenta = document.getElementById('tipo_venta')?.value;
+      if (tipoVenta === 'gratis') {
+        window.mostrarAlertaPremium(
+          'Entrada Gratuita',
+          'El Tipo de Venta de Entradas es "Entrada Gratuita". Para agregar precios, por favor cambia el tipo de venta en la pestaña "Datos básicos".',
+          'Entendido',
+          'fas fa-ticket-alt'
+        );
+        return;
+      }
+      abrirModalPrecio();
+    });
+
+    document.getElementById('btn-duplicar-precio')?.addEventListener('click', () => {
+      const tipoVenta = document.getElementById('tipo_venta')?.value;
+      if (tipoVenta === 'gratis') {
+        window.mostrarAlertaPremium(
+          'Entrada Gratuita',
+          'El Tipo de Venta de Entradas es "Entrada Gratuita". No se pueden duplicar precios en un evento gratuito.',
+          'Entendido',
+          'fas fa-copy'
+        );
+        return;
+      }
+      duplicarUltimoPrecio();
+    });
     document.getElementById('btn-agregar-actividad')?.addEventListener('click', abrirModalActividad);
     document.getElementById('btn-agregar-expositor')?.addEventListener('click', abrirModalExpositor);
     document.getElementById('btn-agregar-imagen')?.addEventListener('click', abrirModalImagen);
+
+    // Device Toggles en Vista Final
+    document.querySelectorAll('.device-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const device = btn.dataset.device;
+        const previewWrap = document.getElementById('integratedPreview');
+        if (previewWrap) {
+          previewWrap.className = 'integrated-preview ' + device;
+        }
+      });
+    });
 
     document.getElementById('actividad-requiere-online')?.addEventListener('change', function () {
       document.getElementById('actividad-enlace-group').style.display = this.checked ? 'block' : 'none';
@@ -422,7 +497,7 @@ export class CrearEvento {
   initPreviewListeners() {
     const camposWatch = [
       'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin', 'ubicacion', 'provincia',
-      'imagen_portada', 'horario_imagen', 'mapa_embed', 'tipo_venta', 'url_venta_online',
+      'imagen_portada', 'horario_imagen', 'mapa_embed', 'mapa_waze_embed', 'tipo_venta', 'url_venta_online',
       'color_primario', 'color_secundario', 'color_fondo', 'color_texto', 'color_descripcion_texto',
       'color_hero_overlay', 'color_titulo_seccion',
       'color_titulo_hero', 'color_descripcion_hero', 'color_fondo_fechas', 'color_texto_fechas',
@@ -431,7 +506,9 @@ export class CrearEvento {
       'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
       'color_fondo_footer', 'color_texto_footer',
       'color_fondo_share', 'color_texto_share',
-      'color_buscador_expositores', 'color_borde_buscador_expositores'
+      'color_buscador_expositores', 'color_borde_buscador_expositores', 'color_card_fondo', 'color_card_borde',
+      'color_rubro_fondo', 'color_rubro_texto', 'color_buscador_fondo', 'color_buscador_borde', 'color_btn_ver_mas',
+      'tiene_expositores'
     ];
     camposWatch.forEach(id => {
       const el = document.getElementById(id);
@@ -460,6 +537,25 @@ export class CrearEvento {
         this.formDirty = true;
         programarActualizacion();
       });
+    }
+
+    const tieneExpositoresEl = document.getElementById('tiene_expositores');
+    if (tieneExpositoresEl) {
+      tieneExpositoresEl.addEventListener('change', () => {
+        const valor = tieneExpositoresEl.value;
+        const content = document.getElementById('content-expositores');
+        if (content) {
+          // 0 = SÍ tiene expositores -> mostrar formulario
+          content.style.display = (valor === '0') ? 'block' : 'none';
+        }
+        this.formDirty = true;
+        programarActualizacion();
+      });
+      // Inicializar estado tras carga
+      const content = document.getElementById('content-expositores');
+      if (content) {
+        content.style.display = (tieneExpositoresEl.value === '0') ? 'block' : 'none';
+      }
     }
 
     this.initTableObservers();
@@ -539,11 +635,41 @@ export class CrearEvento {
       fileInput.click();
     });
 
-    bindUpload('btn-subir-galeria', 'archivo-imagen-galeria', 'imagen-url', 'feedback-galeria', (url) => {
-      const img = document.getElementById('preview-galeria-img');
-      const wrap = document.getElementById('preview-galeria-img-wrap');
-      if (img && wrap) { img.src = url; wrap.style.display = 'block'; }
-    });
+    const btnSubirGal = document.getElementById('btn-subir-galeria');
+    const inputGal = document.getElementById('archivo-imagen-galeria');
+    if (btnSubirGal && inputGal) {
+      btnSubirGal.addEventListener('click', () => inputGal.click());
+      inputGal.addEventListener('change', async (e) => {
+        const { subirImagen } = await import('./uploadManager.js');
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        const originalBtnHtml = btnSubirGal.innerHTML;
+        btnSubirGal.disabled = true;
+        
+        let subidas = 0;
+        for (const [index, f] of files.entries()) {
+          btnSubirGal.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${index + 1}/${files.length}`;
+          const url = await subirImagen(f, 'feedback-galeria', null);
+          if (url) {
+            addGalleryRow(url);
+            subidas++;
+          }
+        }
+
+        btnSubirGal.innerHTML = originalBtnHtml;
+        btnSubirGal.disabled = false;
+        inputGal.value = '';
+
+        if (subidas > 0) {
+          programarActualizacion();
+          cerrarModalImagen();
+          if (window.mostrarAlertaPremium) {
+            window.mostrarAlertaPremium('Galería Actualizada', `Se han añadido ${subidas} imágenes correctamente.`, 'Entendido', 'fas fa-images');
+          }
+        }
+      });
+    }
 
     document.getElementById('imagen-url')?.addEventListener('input', (e) => {
       const url = e.target.value.trim();
@@ -560,11 +686,29 @@ export class CrearEvento {
     this.tabBtns.forEach((b, i) => b.classList.toggle('active', i === index));
     this.tabContents.forEach((c, i) => c.classList.toggle('active', i === index));
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 🔥 Autocarga del Preview Integrado si entramos a la "Vista Final"
+    const targetTab = this.tabBtns[index]?.dataset.tab;
+    if (targetTab === 'vista-final') {
+      const finalIframe = document.getElementById('finalPreviewIframe');
+      if (finalIframe) {
+        // Guardar datos actuales antes de cargar
+        const dataKey = guardarDatosPreview();
+        
+        // Si está en blanco, inicializar URL. Si ya tiene URL, refrescar datos.
+        if (finalIframe.src === 'about:blank' || !finalIframe.src || finalIframe.src === window.location.href) {
+          finalIframe.src = `/evento.html?preview=1&dataKey=${dataKey}`;
+        } else {
+          // Ya cargado, solo aplicamos los últimos cambios
+          programarActualizacion();
+        }
+      }
+    }
   }
 
   irSiguienteTab() {
     const cur = Array.from(this.tabContents).indexOf(document.querySelector('.tab-content.active'));
-    if (!this.validarTabActual()) { this.mostrarMensaje('Completa los campos obligatorios antes de continuar', 'error'); return; }
+    // Removida validación obligatoria para permitir navegación libre entre pestañas
     if (cur < this.tabContents.length - 1) this.cambiarTab(cur + 1);
   }
 
@@ -655,6 +799,7 @@ export class CrearEvento {
       imagen_portada: get('imagen_portada') || null,
       horario_imagen: get('horario_imagen') || null,
       mapa_embed: get('mapa_embed') || null,
+      mapa_waze_embed: get('mapa_waze_embed') || null,
       tipo_venta: get('tipo_venta') || 'taquilla',
       url_venta_online: get('url_venta_online') || null,
       color_primario: get('color_primario') || '#8b5a2b',
@@ -682,7 +827,15 @@ export class CrearEvento {
       color_texto_share: get('color_texto_share') || '#2c1a0e',
       color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
       color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
-      activo: document.getElementById('activo')?.checked ? 1 : 0
+      color_card_fondo: get('color_card_fondo') || '#ffffff',
+      color_card_borde: get('color_card_borde') || '#f0f0f0',
+      color_rubro_fondo: get('color_rubro_fondo') || '#f0f0f0',
+      color_rubro_texto: get('color_rubro_texto') || '#000000',
+      color_buscador_fondo: get('color_buscador_fondo') || '#ffffff',
+      color_buscador_borde: get('color_buscador_borde') || '#eeeeee',
+      color_btn_ver_mas: get('color_btn_ver_mas') || '#C8102E',
+      activo: document.getElementById('activo')?.checked ? 1 : 0,
+      tiene_expositores: parseInt(document.getElementById('tiene_expositores')?.value) || 0
     };
 
     const recolectarTabla = (selector, campos) => {
@@ -739,7 +892,7 @@ export class CrearEvento {
 
     const expositores = recolectarTabla('#expositores-rows tr', {
       nombre: '.exp-nombre',
-      rubro: '.exp-tipo',
+      rubro: '.exp-rubro',
       ubicacion: '.exp-ubicacion',
       descripcion: '.exp-descripcion',
       logo: '.exp-imagenes',
@@ -749,6 +902,9 @@ export class CrearEvento {
     const galeria = recolectarTabla('#galeria-rows tr', {
       imagen_url: '.gal-url'
     }).filter(g => g.imagen_url);
+
+    const formData = { ...datosBasicos, precios, actividades, expositores, galeria };
+    console.log('[CrearEvento] Enviando datos al servidor:', formData);
 
     if (btn) { btn.innerHTML = '<span class="uploading-spinner"></span> Enviando…'; btn.disabled = true; }
 
@@ -785,13 +941,13 @@ export class CrearEvento {
           response = await fetch(`/api/admin/eventos/${this.eventoId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
+            body: JSON.stringify(formData)
           });
         } else {
           response = await fetch('/api/admin/eventos', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
+            body: JSON.stringify(formData)
           });
         }
       } else {
@@ -805,13 +961,13 @@ export class CrearEvento {
           response = await fetch(`/api/eventos/${this.eventoId}/editar-aprobado`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
+            body: JSON.stringify(formData)
           });
         } else {
           response = await fetch('/api/eventos/crear', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ ...datosBasicos, precios, actividades, expositores, galeria })
+            body: JSON.stringify(formData)
           });
         }
       }

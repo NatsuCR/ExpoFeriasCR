@@ -38,27 +38,60 @@ export function agregarPrecioDelModal() {
     filaEnEdicion.querySelector('.precio-promocion').value = promo;
     filaEnEdicion.querySelector('.precio-descripcion').value = desc;
   } else {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td><input type="date" value="${fecha}" class="precio-fecha"></td>
-      <td><input type="number" value="${monto}" class="precio-monto"></td>
-      <td><input type="text" value="${promo}" class="precio-promocion" placeholder="ej: 2x1"></td>
-      <td><input type="text" value="${desc}" class="precio-descripcion" placeholder="Detalle"></td>
-      <td>
-        <div class="acciones-tabla">
-          <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
-          <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
-        </div>
-      </td>
-    `;
-    row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
-    row.querySelector('.btn-editar').addEventListener('click', () => editarPrecio(row));
-    document.getElementById('precios-rows').appendChild(row);
+    crearFilaPrecio(fecha, monto, promo, desc);
   }
 
   programarActualizacion();
   notificarConfirmacion();
   cerrarModalPrecio();
+}
+
+function crearFilaPrecio(fecha, monto, promo, desc) {
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td><input type="date" value="${fecha}" class="precio-fecha"></td>
+    <td><input type="number" value="${monto}" class="precio-monto"></td>
+    <td><input type="text" value="${promo}" class="precio-promocion" placeholder="ej: 2x1"></td>
+    <td><input type="text" value="${desc}" class="precio-descripcion" placeholder="Detalle"></td>
+    <td>
+      <div class="acciones-tabla">
+        <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
+        <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
+      </div>
+    </td>
+  `;
+  row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
+  row.querySelector('.btn-editar').addEventListener('click', () => editarPrecio(row));
+  document.getElementById('precios-rows').appendChild(row);
+}
+
+export function duplicarUltimoPrecio() {
+  const rows = document.querySelectorAll('#precios-rows tr');
+  if (rows.length === 0) {
+    alert('No hay precios que duplicar. Agrega uno primero.');
+    return;
+  }
+
+  const lastRow = rows[rows.length - 1];
+  const fechaStr = lastRow.querySelector('.precio-fecha').value;
+  const monto = lastRow.querySelector('.precio-monto').value;
+  const promo = lastRow.querySelector('.precio-promocion').value;
+  const desc = lastRow.querySelector('.precio-descripcion').value;
+
+  if (!fechaStr) {
+    alert('El último precio no tiene fecha.');
+    return;
+  }
+
+  // Sumar 1 día a la fecha
+  const date = new Date(fechaStr + 'T12:00:00');
+  date.setDate(date.getDate() + 1);
+  const nextDateStr = date.toISOString().split('T')[0];
+
+  crearFilaPrecio(nextDateStr, monto, promo, desc);
+  
+  programarActualizacion();
+  notificarConfirmacion();
 }
 
 export function editarPrecio(row) {
@@ -135,7 +168,7 @@ export function agregarActividadDelModal() {
       <td><input type="time" value="${hora}"   class="act-hora"></td>
       <td><input type="text" value="${lugar}"  class="act-lugar" placeholder="Lugar/escenario"></td>
       <td>
-        <div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion}">
+        <div style="max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion.replace(/"/g, '&quot;')}">
           ${descripcion || '<span style="color:#ccc;">-</span>'}
         </div>
       </td>
@@ -253,7 +286,7 @@ export function agregarExpositorDelModal() {
 
   if (filaEnEdicion) {
     filaEnEdicion.querySelector('.exp-nombre').value = nombre;
-    filaEnEdicion.querySelector('.exp-tipo').value = rubro;
+    filaEnEdicion.querySelector('.exp-rubro').value = rubro;
     filaEnEdicion.querySelector('.exp-ubicacion').value = ubicacion;
     filaEnEdicion.querySelector('.exp-descripcion').value = descripcion;
     const imgInpt = filaEnEdicion.querySelector('.exp-imagenes');
@@ -263,7 +296,7 @@ export function agregarExpositorDelModal() {
     // Actualizar descripción visible
     const descCell = filaEnEdicion.querySelectorAll('td')[3];
     if (descCell) {
-        descCell.innerHTML = `<div style="max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion}">${descripcion || '-'}</div>`;
+        descCell.innerHTML = `<div style="max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion.replace(/"/g, '&quot;')}">${descripcion || '-'}</div>`;
     }
 
     // Actualizar badges visuales
@@ -281,10 +314,10 @@ export function agregarExpositorDelModal() {
 
     row.innerHTML = `
       <td><input type="text" value="${nombre}"   class="exp-nombre"></td>
-      <td><input type="text" value="${rubro}"    class="exp-tipo"></td>
+      <td><input type="text" value="${rubro}"    class="exp-rubro"></td>
       <td><input type="text" value="${ubicacion}"class="exp-ubicacion"></td>
       <td>
-        <div style="max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion}">
+        <div style="max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${descripcion.replace(/"/g, '&quot;')}">
           ${descripcion || '<span style="color:#ccc;">-</span>'}
         </div>
       </td>
@@ -313,7 +346,7 @@ export function agregarExpositorDelModal() {
 export function editarExpositor(row) {
   filaEnEdicion = row;
   document.getElementById('expositor-nombre').value = row.querySelector('.exp-nombre').value;
-  document.getElementById('expositor-rubro').value = row.querySelector('.exp-tipo').value;
+  document.getElementById('expositor-rubro').value = row.querySelector('.exp-rubro').value;
   document.getElementById('expositor-ubicacion').value = row.querySelector('.exp-ubicacion').value;
   document.getElementById('expositor-descripcion').value = row.querySelector('.exp-descripcion').value;
   document.getElementById('expositor-video').value = row.querySelector('.exp-video').value;
@@ -384,27 +417,7 @@ export function agregarImagenDelModal() {
     const imgEl = filaEnEdicion.querySelector('img');
     if (imgEl) imgEl.src = url;
   } else {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>
-        <img src="${url}" alt="img"
-             style="width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #eee;"
-             onerror="this.style.display='none'">
-      </td>
-      <td><input type="text"   value="${url}"   class="gal-url"   style="width:100%;max-width:220px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
-      <td>
-        <div class="acciones-tabla">
-          <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
-          <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
-        </div>
-      </td>
-    `;
-    row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
-    row.querySelector('.btn-editar').addEventListener('click', () => editarImagen(row));
-    row.querySelector('.gal-url').addEventListener('input', (e) => {
-      row.querySelector('img').src = e.target.value;
-    });
-    document.getElementById('galeria-rows').appendChild(row);
+    addGalleryRow(url);
   }
   
   programarActualizacion();
@@ -424,4 +437,28 @@ export function editarImagen(row) {
   }
 
   document.getElementById('modal-imagen').style.display = 'flex';
+}
+
+export function addGalleryRow(url) {
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td>
+      <img src="${url}" alt="img"
+           style="width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #eee;"
+           onerror="this.style.display='none'">
+    </td>
+    <td><input type="text"   value="${url}"   class="gal-url"   style="width:100%;max-width:220px;padding:6px;border:1px solid #ddd;border-radius:4px;font-size:12px;"></td>
+    <td>
+      <div class="acciones-tabla">
+        <button type="button" class="btn-warning btn-editar" title="Editar"><i class="fas fa-pen"></i></button>
+        <button type="button" class="btn-danger btn-eliminar" title="Eliminar"><i class="fas fa-trash"></i></button>
+      </div>
+    </td>
+  `;
+  row.querySelector('.btn-eliminar').addEventListener('click', () => row.remove());
+  row.querySelector('.btn-editar').addEventListener('click', () => editarImagen(row));
+  row.querySelector('.gal-url').addEventListener('input', (e) => {
+    row.querySelector('img').src = e.target.value;
+  });
+  document.getElementById('galeria-rows').appendChild(row);
 }

@@ -24,9 +24,9 @@ function createEventoCard(evento, isLive = false) {
         card.appendChild(badge);
     }
     card.innerHTML += `
-        <img src="${evento.imagenPortada || 'assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png'}" alt="${evento.nombre}">
+        <img src="${evento.imagen_portada || 'assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png'}" alt="${evento.nombre}">
         <h3>${evento.nombre}</h3>
-        <p>${window.formatDateCR(evento.fechaInicio)} - ${window.formatDateCR(evento.fechaFin)}</p>
+        <p>${window.formatDateCR(evento.fecha_inicio)} - ${window.formatDateCR(evento.fecha_fin)}</p>
         <p>${evento.ubicacion}</p>
         <a href="evento.html?slug=${evento.slug}" class="btn-ver">Ver más</a>
     `;
@@ -171,7 +171,7 @@ async function cargarSeccion(endpoint, trackId, controlsId, isLive, provincia, t
         eventos = eventos.filter(e => {
             const enNombre = e.nombre.toLowerCase().includes(termLower);
             const enUbicacion = e.ubicacion.toLowerCase().includes(termLower);
-            const anioInicio = new Date(e.fechaInicio).getFullYear().toString();
+            const anioInicio = new Date(e.fecha_inicio).getFullYear().toString();
             const enAnio = anioInicio.includes(termLower);
             return enNombre || enUbicacion || enAnio;
         });
@@ -199,7 +199,7 @@ async function cargarProximos(provincia = '', termino = '') {
         eventos = eventos.filter(e => {
             const enNombre = e.nombre.toLowerCase().includes(termLower);
             const enUbicacion = e.ubicacion.toLowerCase().includes(termLower);
-            const anioInicio = new Date(e.fechaInicio).getFullYear().toString();
+            const anioInicio = new Date(e.fecha_inicio).getFullYear().toString();
             const enAnio = anioInicio.includes(termLower);
             return enNombre || enUbicacion || enAnio;
         });
@@ -240,7 +240,7 @@ async function cargarFinalizados(provincia = '', termino = '') {
         eventos = eventos.filter(e => {
             const enNombre    = e.nombre.toLowerCase().includes(termLower);
             const enUbicacion = e.ubicacion.toLowerCase().includes(termLower);
-            const anioInicio  = new Date(e.fechaInicio).getFullYear().toString();
+            const anioInicio  = new Date(e.fecha_inicio).getFullYear().toString();
             const enAnio      = anioInicio.includes(termLower);
             return enNombre || enUbicacion || enAnio;
         });

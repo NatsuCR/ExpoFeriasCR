@@ -4,7 +4,7 @@ import { cargarActividades } from './cargarActividades.js';
 import { cargarPrecios } from './cargarPrecios.js';
 import { cargarExpositores, renderExpositores } from './cargarExpositores.js';
 import { cargarCarruselFondo } from './carruselFondo.js';
-import { abrirLightbox } from './lightbox.js';
+import { abrirLightbox, initLightbox } from './lightbox.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const slug = urlParams.get('slug');
@@ -131,7 +131,7 @@ function initHeroCarousel() {
     startAutoPlay();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     if (isPreview && dataKey) {
         // En modo preview, cargar datos de localStorage usando la clave
         const previewDataStr = localStorage.getItem(dataKey);
@@ -155,12 +155,29 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = '/';
             return;
         }
-        cargarEvento(slug);
-        cargarActividades(slug);
-        cargarPrecios(slug);
-        cargarExpositores(slug);
-        cargarCarruselFondo(slug);
-        initSocialShare();
+        
+        try {
+            const evento = await cargarEvento(slug);
+            if (!evento) return;
+
+            // Cargar secciones según configuración
+            cargarActividades(slug);
+
+            const tipoVenta = evento.tipo_venta || 'taquilla';
+            if (tipoVenta !== 'gratis') {
+                cargarPrecios(slug);
+            }
+
+            const tieneExpositores = (evento.tiene_expositores !== undefined && evento.tiene_expositores !== null) ? parseInt(evento.tiene_expositores) : 1;
+            if (tieneExpositores === 0) {
+                cargarExpositores(slug);
+            }
+
+            cargarCarruselFondo(slug);
+            initSocialShare();
+        } catch (err) {
+            console.error('Error en inicialización de evento:', err);
+        }
     }
 });
 
@@ -207,13 +224,23 @@ function cargarEventoDesdePreview(datos) {
         }
     }
 
-    // Fechas
+    // Fechas y Metadatos
     if (datos.fecha_inicio || datos.fecha_fin) {
         const fi = window.formatDateCR(datos.fecha_inicio);
         const ff = window.formatDateCR(datos.fecha_fin);
         const fechaTexto = datos.fecha_inicio === datos.fecha_fin ? fi : `${fi} al ${ff}`;
         document.getElementById('eventoFechas').innerHTML = fechaTexto;
         document.getElementById('infoFechas').innerHTML = `${fi} - ${ff}`;
+    }
+
+    // Actualizar metadatos para Preview (SEO)
+    if (datos.slug) {
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) canonical.href = `${window.location.origin}/evento.html?slug=${datos.slug}`;
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if (ogUrl) ogUrl.setAttribute('content', `${window.location.origin}/evento.html?slug=${datos.slug}`);
+        const twitterUrl = document.querySelector('meta[property="twitter:url"]');
+        if (twitterUrl) twitterUrl.setAttribute('content', `${window.location.origin}/evento.html?slug=${datos.slug}`);
     }
 
     // Ubicación
@@ -327,7 +354,15 @@ function cargarEventoDesdePreview(datos) {
                 textoEntradas = 'Entradas solo en taquilla del campo ferial';
         }
         entradasParrafo.innerHTML = textoEntradas;
+        // Ocultar card de entradas si es gratuito
+        const entradasCard = entradasParrafo.closest('.info-card');
+        if (entradasCard) {
+            // Usar 'block' en lugar de 'flex' para evitar que se rompa el diseño de la tarjeta
+            entradasCard.style.display = (tipoVenta === 'gratis') ? 'none' : 'block';
+        }
     }
+
+    // (Visibility logic consolidated at the end of function)
 
     // Estilos de footer gestionados vía variables CSS en r.style.setProperty
 
@@ -378,8 +413,16 @@ function cargarEventoDesdePreview(datos) {
                     }
                 }
 
-                // Asegurar que las rutas sean consistentes
-                images = images.map(src => src.replace(/\\/g, '/'));
+                // Asegurar que las rutas sean consistentes, sean strings y empiecen con / si es necesario
+                images = images
+                    .filter(src => typeof src === 'string' && src.trim() !== '')
+                    .map(src => {
+                        let path = src.replace(/\\/g, '/');
+                        if (!path.startsWith('/') && !path.startsWith('http')) {
+                            path = '/' + path;
+                        }
+                        return path;
+                    });
 
                 // crear contenedor de imagenes (mini-carrusel)
                 const showButtons = images.length > 1 ? 'flex' : 'none';
@@ -399,7 +442,7 @@ function cargarEventoDesdePreview(datos) {
                     <div class="card-content">
                         <h3>${act.titulo}</h3>
                         <p class="tipo"><strong>Tipo:</strong> ${act.tipo}</p>
-                        <p class="fecha"><strong>Fecha:</strong> ${fechaFmt} ${act.hora ? act.hora : ''}</p>
+                        <p class="fecha"><strong>Fecha:</strong> ${fechaFmt} ${act.hora ? act.hora.slice(0, 5) : ''}</p>
                         <p class="lugar"><strong>Lugar:</strong> ${act.lugar}</p>
                         ${window.formatDescription(act.descripcion)}
                         <p class="gratuito">${act.es_gratis ? '<strong>✓ Gratis</strong>' : '<strong>Requiere entrada</strong>'}</p>
@@ -409,35 +452,43 @@ function cargarEventoDesdePreview(datos) {
                 actividadesGrid.appendChild(card);
             });
 
-            // inicializar mini-carruseles por actividad
+            // inicializar mini-carruseles por actividad y habilitar lightbox de galería
             actividadesGrid.querySelectorAll('.mini-carrusel').forEach(car => {
                 const slides = car.querySelectorAll('.mini-slide');
+                const imgNodes = Array.from(car.querySelectorAll('.mini-slide img'));
                 let idx = 0;
                 const prev = car.querySelector('.mini-prev');
                 const next = car.querySelector('.mini-next');
-                if (!prev || !next) return;
-
+                
                 function update() {
                     slides.forEach((s, l) => s.classList.toggle('activa', l === idx));
                 }
 
-                // Usar addEventListener para evitar sobreescritura
-                const newPrev = prev.cloneNode(true);
-                prev.parentNode.replaceChild(newPrev, prev);
-                newPrev.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    idx = (idx - 1 + slides.length) % slides.length;
-                    update();
-                });
+                if (prev && next) {
+                    const newPrev = prev.cloneNode(true);
+                    prev.parentNode.replaceChild(newPrev, prev);
+                    newPrev.addEventListener('click', (e) => {
+                        e.preventDefault(); e.stopPropagation();
+                        idx = (idx - 1 + slides.length) % slides.length;
+                        update();
+                    });
 
-                const newNext = next.cloneNode(true);
-                next.parentNode.replaceChild(newNext, next);
-                newNext.addEventListener('click', (e) => {
-                    e.preventDefault();
+                    const newNext = next.cloneNode(true);
+                    next.parentNode.replaceChild(newNext, next);
+                    newNext.addEventListener('click', (e) => {
+                        e.preventDefault(); e.stopPropagation();
+                        idx = (idx + 1) % slides.length;
+                        update();
+                    });
+                }
+
+                // Lightbox de Galería para Preview
+                car.style.cursor = 'zoom-in';
+                car.addEventListener('click', (e) => {
+                    if (e.target.closest('.mini-btn')) return;
                     e.stopPropagation();
-                    idx = (idx + 1) % slides.length;
-                    update();
+                    const galleryData = imgNodes.map(img => ({ src: img.src, alt: img.alt }));
+                    abrirLightbox(galleryData, idx);
                 });
 
                 update();
@@ -453,30 +504,161 @@ function cargarEventoDesdePreview(datos) {
     }
 
     // ──── HORARIO GENERAL ────
-    if (datos.horario_imagen) {
+    const sectionHorario = document.getElementById('seccion-horario');
+    if (datos.horario_imagen && datos.horario_imagen.trim() !== '' && datos.horario_imagen !== 'null') {
         const horarioDiv = document.getElementById('horarioContainer');
         if (horarioDiv) {
             horarioDiv.innerHTML = `<img src="${datos.horario_imagen}" alt="Horario del evento" style="max-width:100%; border-radius:8px;" loading="lazy">`;
+            if (sectionHorario) sectionHorario.style.display = 'block';
         }
     } else {
-        const horarioDiv = document.getElementById('horarioContainer');
-        if (horarioDiv) {
-            horarioDiv.innerHTML = '<p style="color:#999;">Horario no disponible</p>';
+        if (sectionHorario) sectionHorario.style.display = 'none';
+    }
+
+    // ──── LÓGICA DE MAPAS ────
+    const mapaContainer = document.getElementById('mapaIframe');
+    if (mapaContainer) {
+        // Estándar unificado: siempre snake_case
+        const mGoogle = (datos.mapa_embed || '').trim();
+        const mWaze = (datos.mapa_waze_embed || '').trim();
+        console.log('[Maps Debug] Google:', mGoogle ? 'SI' : 'NO', '| Waze:', mWaze ? 'SI' : 'NO');
+
+        const renderMapContent = (input, type) => {
+            if (!input) return '';
+            if (input.toLowerCase().startsWith('<iframe')) return input;
+            const isWaze = type === 'waze';
+            const app = isWaze ? 'Waze' : 'Google Maps';
+            const icon = isWaze ? 'waze' : 'google';
+            const navClass = isWaze ? 'nav-waze' : 'nav-google';
+            const btnClass = isWaze ? 'btn-waze' : 'btn-google';
+            
+            return `
+                <div class="nav-action-card ${navClass}">
+                    <div class="nav-card-icon"><i class="fab fa-${icon}"></i></div>
+                    <h3>${app}</h3>
+                    <p>Link detectado. Toca para navegar.</p>
+                    <button class="btn-nav-action ${btnClass}" onclick="window.open('${input}','_blank')">
+                        <i class="fas fa-external-link-alt"></i> Abrir ${app}
+                    </button>
+                </div>`;
+        };
+
+        // Forzado de pestañas si ambos campos tienen contenido
+        const hasGoogle = mGoogle.length > 5; // Longitud mínima para un iframe o link válido
+        const hasWaze = mWaze.length > 5;
+
+        if (hasGoogle && hasWaze) {
+            mapaContainer.innerHTML = `
+                <div class="map-tabs-container" style="display: block !important; visibility: visible !important;">
+                    <div class="map-tabs-header">
+                        <button class="map-tab-btn active" data-target="google"><i class="fab fa-google"></i> Google</button>
+                        <button class="map-tab-btn" data-target="waze"><i class="fab fa-waze"></i> Waze</button>
+                    </div>
+                    <div class="map-tabs-content">
+                        <div class="map-tab-pane active" id="pane-google">${renderMapContent(mGoogle, 'google')}</div>
+                        <div class="map-tab-pane" id="pane-waze">${renderMapContent(mWaze, 'waze')}</div>
+                    </div>
+                </div>`;
+            
+            const b = mapaContainer.querySelectorAll('.map-tab-btn');
+            const p = mapaContainer.querySelectorAll('.map-tab-pane');
+            b.forEach(btn => btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = btn.dataset.target;
+                b.forEach(x => x.classList.remove('active')); 
+                p.forEach(x => x.classList.remove('active'));
+                btn.classList.add('active');
+                const targetPane = mapaContainer.querySelector(`#pane-${target}`);
+                if (targetPane) targetPane.classList.add('active');
+            }));
+        } else if (hasGoogle) {
+            mapaContainer.innerHTML = renderMapContent(mGoogle, 'google');
+        } else if (hasWaze) {
+            mapaContainer.innerHTML = renderMapContent(mWaze, 'waze');
+        } else {
+            mapaContainer.innerHTML = `
+                <div class="help-box" style="margin-top:10px; background:#ebf5fb; border-left: 4px solid #3498db; padding: 15px; border-radius: 8px; display: flex; align-items: center; gap: 15px;">
+                    <i class="fas fa-map-marked-alt" style="color:#3498db; font-size: 24px;"></i>
+                    <div class="help-box-content">
+                        <p style="font-size:13px; color: #34495e; margin: 0;"><strong>💡 Ubicación:</strong> El evento no tiene mapas configurados todavía.</p>
+                    </div>
+                </div>`;
         }
     }
 
-    // ──── MAPA IFRAME ────
-    if (datos.mapa_embed) {
-        const mapaContainer = document.getElementById('mapaIframe');
-        if (mapaContainer) {
-            mapaContainer.innerHTML = datos.mapa_embed;
-        }
-    } else {
-        const mapaContainer = document.getElementById('mapaIframe');
-        if (mapaContainer) {
-            mapaContainer.innerHTML = '<p style="color:#999;">Mapa no disponible</p>';
+    // ──── LÓGICA DE VISIBILIDAD (PREVIEW/FINAL) ────
+    const vTipoVenta = datos.tipo_venta || 'taquilla';
+    
+    // Estándar unificado: siempre snake_case
+    const vTieneExpositores = (datos.tiene_expositores !== undefined && datos.tiene_expositores !== null) 
+                             ? parseInt(datos.tiene_expositores) 
+                             : 1;
+    
+    console.log('[Visibility Debug] Tipo Venta:', vTipoVenta, '| Expositores:', vTieneExpositores);
+
+    // Ocultar/Mostrar Precios y actualizar tarjeta de Entradas
+    const sectionPrecios = document.getElementById('precios');
+    const linkPrecios = document.querySelector('.nav-links a[href="#precios"]');
+    const cardEntradas = document.getElementById('entradasTexto')?.closest('.info-card');
+    const textoEntradas = document.getElementById('entradasTexto');
+
+    if (cardEntradas) {
+        cardEntradas.style.display = 'block';
+        if (vTipoVenta === 'gratis') {
+            cardEntradas.style.pointerEvents = 'none'; // No hay a donde scrollear
+            if (textoEntradas) textoEntradas.innerHTML = '🎟️ <strong>Entrada Gratuita</strong>';
+        } else {
+            cardEntradas.style.pointerEvents = 'auto';
+            if (textoEntradas) {
+                if (vTipoVenta === 'online') textoEntradas.innerText = 'Entradas solo en línea';
+                else if (vTipoVenta === 'ambos') textoEntradas.innerText = 'Entradas en taquilla y en línea';
+                else textoEntradas.innerText = 'Entradas solo en taquilla';
+            }
         }
     }
+
+    if (vTipoVenta === 'gratis') {
+        if (sectionPrecios) sectionPrecios.setAttribute('style', 'display: none !important');
+        if (linkPrecios) {
+            const li = linkPrecios.closest('li');
+            if (li) {
+                if (isPreview) li.remove(); 
+                else li.setAttribute('style', 'display: none !important');
+            }
+        }
+    } else {
+        if (sectionPrecios) sectionPrecios.style.display = 'block';
+        if (linkPrecios) {
+            const li = linkPrecios.closest('li');
+            if (li) li.style.display = 'block';
+        }
+    }
+
+    // 🛡️ BLINDAJE TOTAL DE VISIBILIDAD (SHIELD)
+    const sectionExpositores = document.getElementById('expositores');
+    const linksExpositores = document.querySelectorAll('.nav-links a[href="#expositores"]');
+
+    if (vTieneExpositores === 1) { // 1 = NO tiene expositores
+        console.log('[Visibility Shield] Bloqueando sección de expositores (tiene_expositores=1)');
+        if (sectionExpositores) sectionExpositores.remove();
+        linksExpositores.forEach(link => {
+            const li = link.closest('li');
+            if (li) li.remove();
+        });
+    } else {
+        if (sectionExpositores) sectionExpositores.style.setProperty('display', 'block', 'important');
+        linksExpositores.forEach(link => {
+            const li = link.closest('li');
+            if (li) li.style.setProperty('display', 'block', 'important');
+        });
+    }
+
+    // Blindaje de Ubicación (asegurar que no se oculte en eventos gratis)
+    const linksUbicacion = document.querySelectorAll('.nav-links a[href="#ubicacion"]');
+    linksUbicacion.forEach(link => {
+        const li = link.closest('li');
+        if (li) li.style.setProperty('display', 'block', 'important');
+    });
 
     // En preview, no cargar desde API
     document.title = datos.nombre || 'Preview - ExpoFeriasCR';
@@ -506,9 +688,11 @@ function cargarEventoDesdePreview(datos) {
 
 
 // Lightbox Functionality - Redirigido al modulo compartido
-const initLightbox = () => {
-    document.querySelectorAll('.card-img-principal, .expositor-img-principal, .mini-slide img').forEach(img => {
-        img.style.cursor = 'pointer';
+const runLightboxFallback = () => {
+    // Solo para imágenes que no están dentro de carruseles manejados por módulos específicos
+    document.querySelectorAll('.card-img-principal, .expositor-img-principal, .horario-img').forEach(img => {
+        if (img.closest('.mini-carrusel')) return; // Evitar duplicar listeners en carruseles
+        img.style.cursor = 'zoom-in';
         img.onclick = () => abrirLightbox(img.src, img.alt);
     });
 };
@@ -519,8 +703,9 @@ window.initCarouselControls = initCarouselControls;
 window.initHeroCarousel = initHeroCarousel;
 
 document.addEventListener('DOMContentLoaded', () => {
+    initLightbox(); // Crear el overlay del lightbox
     const u = new URLSearchParams(window.location.search);
     if (!u.get('preview')) {
-        setTimeout(initLightbox, 1500);
+        setTimeout(runLightboxFallback, 1500);
     }
 });

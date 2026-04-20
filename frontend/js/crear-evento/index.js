@@ -4,7 +4,7 @@
  * Importa todos los módulos y configura globales
  */
 
-import { CrearEvento } from './crearEventoMain.js';
+import { CrearEvento } from './crearEventoMain.js?v=2.2';
 import { subirImagen, bindUpload } from './uploadManager.js';
 import {
   abrirModalPrecio, cerrarModalPrecio, agregarPrecioDelModal,

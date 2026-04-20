@@ -104,13 +104,20 @@ class AdminEventosPendientesController {
       }
 
       if (borradorData) {
-        const eventoConBorrador = { ...evento, ...borradorData };
+        // Combinar con cuidado para no perder valores falsy como 0
+        const eventoConBorrador = { ...evento };
+        Object.keys(borradorData).forEach(key => {
+          if (borradorData[key] !== undefined) {
+            eventoConBorrador[key] = borradorData[key];
+          }
+        });
+
         res.json({
           evento: eventoConBorrador,
-          actividades: borradorData.actividades || actividades,
-          precios: borradorData.precios || precios,
-          expositores: borradorData.expositores || expositores,
-          galeria: borradorData.galeria || galeria,
+          actividades: (borradorData.actividades && borradorData.actividades.length > 0) ? borradorData.actividades : actividades,
+          precios: (borradorData.precios && borradorData.precios.length > 0) ? borradorData.precios : precios,
+          expositores: (borradorData.expositores && borradorData.expositores.length > 0) ? borradorData.expositores : expositores,
+          galeria: (borradorData.galeria && borradorData.galeria.length > 0) ? borradorData.galeria : galeria,
           tiene_borrador: true
         });
       } else {
@@ -155,7 +162,7 @@ class AdminEventosPendientesController {
       const usuario = usuarios[0];
 
       // Si tiene borrador, promoverlo a datos live antes de aprobar
-      if (evento.estado === 'edicion_pendiente' && evento.borrador_cambios) {
+      if (evento.borrador_cambios) {
         let borrador;
         try {
           borrador = typeof evento.borrador_cambios === 'string'
@@ -165,41 +172,77 @@ class AdminEventosPendientesController {
 
         if (borrador) {
           const b = borrador;
-          // Actualizar columnas principales del evento con datos del borrador
+          // Actualizar columnas principales del evento con datos del borrador siguiendo el órden MAESTRO de eventos.sql
           await pool.query(
             `UPDATE eventos SET
-              slug = ?, nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, ubicacion = ?, provincia = ?,
-              imagen_portada = ?, horario_imagen = ?, mapa_embed = ?, tipo_venta = ?, url_venta_online = ?,
-              color_primario = ?, color_secundario = ?, color_fondo = ?, color_texto = ?, color_descripcion_texto = ?,
-              color_hero_overlay = ?, color_titulo_seccion = ?,
-              color_titulo_hero = ?, color_descripcion_hero = ?, color_fondo_fechas = ?, color_texto_fechas = ?,
+              estado = 'aprobado', razon_rechazo = NULL, fecha_envio_revision = NULL,
+              slug = ?, nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, ubicacion = ?,
+              imagen_portada = ?, activo = 1, horario_imagen = ?, mapa_embed = ?, mapa_waze_embed = ?, 
+              tipo_venta = ?, url_venta_online = ?, 
+              color_primario = ?, color_secundario = ?, color_fondo = ?, color_texto = ?, 
+              color_hero_overlay = ?, color_titulo_hero = ?, color_descripcion_hero = ?, color_fondo_fechas = ?, color_texto_fechas = ?,
+              color_titulo_seccion = ?, provincia = ?, 
               color_menu_fondo = ?, color_menu_texto = ?, color_menu_fondo_hover = ?, color_menu_texto_hover = ?,
-              color_titulo_h3 = ?,
               color_fondo_contacto = ?, color_texto_contacto = ?, color_enlace_contacto = ?,
               color_fondo_footer = ?, color_texto_footer = ?,
-              color_buscador_expositores = ?, color_borde_buscador_expositores = ?,
-              color_card_fondo = ?, color_card_borde = ?, color_rubro_fondo = ?, color_rubro_texto = ?,
+              color_titulo_h3 = ?, color_expositor_header = ?, borrador_cambios = NULL,
+              color_buscador_expositores = ?, fecha_aprobacion = NOW(), fecha_rechazo = NULL,
+              color_borde_buscador_expositores = ?, color_card_fondo = ?, color_card_borde = ?, 
+              color_rubro_fondo = ?, color_rubro_texto = ?,
               color_buscador_fondo = ?, color_buscador_borde = ?, color_btn_ver_mas = ?,
               color_fondo_share = ?, color_texto_share = ?,
-              es_en_vivo = ?, url_en_vivo = ?,
-              estado = 'aprobado', activo = 1, razon_rechazo = NULL, borrador_cambios = NULL
+              es_en_vivo = ?, url_en_vivo = ?, color_descripcion_texto = ?, tiene_expositores = ?
              WHERE id = ?`,
             [
-              b.slug || evento.slug, b.nombre || evento.nombre, b.descripcion, b.fecha_inicio, b.fecha_fin,
-              b.ubicacion, b.provincia,
-              b.imagen_portada, b.horario_imagen, b.mapa_embed, b.tipo_venta, b.url_venta_online,
-              b.color_primario || '#8b5a2b', b.color_secundario || '#d4a373', b.color_fondo || '#f4e4c1', b.color_texto || '#2c1a0e', b.color_descripcion_texto || '#2c1a0e',
-              b.color_hero_overlay || 'rgba(62,42,31,0.7)', b.color_titulo_seccion || '#2c1a0e',
-              b.color_titulo_hero || '#ffffff', b.color_descripcion_hero || '#ffffff', b.color_fondo_fechas || '#d4a373', b.color_texto_fechas || '#8b5a2b',
-              b.color_menu_fondo || '#ffffff', b.color_menu_texto || '#ffffff', b.color_menu_fondo_hover || '', b.color_menu_texto_hover || '',
-              b.color_titulo_h3 || '#2c1a0e',
-              b.color_fondo_contacto || '#f4e4c1', b.color_texto_contacto || '#2c1a0e', b.color_enlace_contacto || '#8b5a2b',
-              b.color_fondo_footer || '#8b5a2b', b.color_texto_footer || '#ffffff',
-              b.color_buscador_expositores || '#ffffff', b.color_borde_buscador_expositores || '#eeeeee',
-              b.color_card_fondo || '#ffffff', b.color_card_borde || '#f0f0f0', b.color_rubro_fondo || '#f0f0f0', b.color_rubro_texto || '#000000',
-              b.color_buscador_fondo || '#ffffff', b.color_buscador_borde || '#eeeeee', b.color_btn_ver_mas || '#C8102E',
-              b.color_fondo_share || 'rgba(255, 255, 255, 0.5)', b.color_texto_share || '#2c1a0e',
-              b.es_en_vivo || 0, b.url_en_vivo || null,
+              b.slug || evento.slug, 
+              b.nombre || evento.nombre, 
+              b.hasOwnProperty('descripcion') ? b.descripcion : evento.descripcion, 
+              b.fecha_inicio || evento.fecha_inicio, 
+              b.fecha_fin || evento.fecha_fin,
+              b.ubicacion || evento.ubicacion, 
+              b.hasOwnProperty('imagen_portada') ? b.imagen_portada : evento.imagen_portada, 
+              b.hasOwnProperty('horario_imagen') ? b.horario_imagen : evento.horario_imagen, 
+              b.hasOwnProperty('mapa_embed') ? b.mapa_embed : evento.mapa_embed, 
+              b.hasOwnProperty('mapa_waze_embed') ? b.mapa_waze_embed : evento.mapa_waze_embed, 
+              b.hasOwnProperty('tipo_venta') ? b.tipo_venta : evento.tipo_venta, 
+              b.hasOwnProperty('url_venta_online') ? b.url_venta_online : evento.url_venta_online,
+              b.hasOwnProperty('color_primario') ? b.color_primario : evento.color_primario, 
+              b.hasOwnProperty('color_secundario') ? b.color_secundario : evento.color_secundario, 
+              b.hasOwnProperty('color_fondo') ? b.color_fondo : evento.color_fondo, 
+              b.hasOwnProperty('color_texto') ? b.color_texto : evento.color_texto, 
+              b.hasOwnProperty('color_hero_overlay') ? b.color_hero_overlay : evento.color_hero_overlay, 
+              b.hasOwnProperty('color_titulo_hero') ? b.color_titulo_hero : evento.color_titulo_hero, 
+              b.hasOwnProperty('color_descripcion_hero') ? b.color_descripcion_hero : evento.color_descripcion_hero, 
+              b.hasOwnProperty('color_fondo_fechas') ? b.color_fondo_fechas : evento.color_fondo_fechas, 
+              b.hasOwnProperty('color_texto_fechas') ? b.color_texto_fechas : evento.color_texto_fechas,
+              b.hasOwnProperty('color_titulo_seccion') ? b.color_titulo_seccion : evento.color_titulo_seccion,
+              b.hasOwnProperty('provincia') ? b.provincia : evento.provincia,
+              b.hasOwnProperty('color_menu_fondo') ? b.color_menu_fondo : evento.color_menu_fondo, 
+              b.hasOwnProperty('color_menu_texto') ? b.color_menu_texto : evento.color_menu_texto, 
+              b.hasOwnProperty('color_menu_fondo_hover') ? b.color_menu_fondo_hover : evento.color_menu_fondo_hover, 
+              b.hasOwnProperty('color_menu_texto_hover') ? b.color_menu_texto_hover : evento.color_menu_texto_hover,
+              b.hasOwnProperty('color_fondo_contacto') ? b.color_fondo_contacto : evento.color_fondo_contacto, 
+              b.hasOwnProperty('color_texto_contacto') ? b.color_texto_contacto : evento.color_texto_contacto, 
+              b.hasOwnProperty('color_enlace_contacto') ? b.color_enlace_contacto : evento.color_enlace_contacto,
+              b.hasOwnProperty('color_fondo_footer') ? b.color_fondo_footer : evento.color_fondo_footer, 
+              b.hasOwnProperty('color_texto_footer') ? b.color_texto_footer : evento.color_texto_footer,
+              b.hasOwnProperty('color_titulo_h3') ? b.color_titulo_h3 : evento.color_titulo_h3,
+              b.hasOwnProperty('color_expositor_header') ? b.color_expositor_header : evento.color_expositor_header,
+              b.hasOwnProperty('color_buscador_expositores') ? b.color_buscador_expositores : evento.color_buscador_expositores, 
+              b.hasOwnProperty('color_borde_buscador_expositores') ? b.color_borde_buscador_expositores : evento.color_borde_buscador_expositores,
+              b.hasOwnProperty('color_card_fondo') ? b.color_card_fondo : evento.color_card_fondo, 
+              b.hasOwnProperty('color_card_borde') ? b.color_card_borde : evento.color_card_borde,
+              b.hasOwnProperty('color_rubro_fondo') ? b.color_rubro_fondo : evento.color_rubro_fondo, 
+              b.hasOwnProperty('color_rubro_texto') ? b.color_rubro_texto : evento.color_rubro_texto,
+              b.hasOwnProperty('color_buscador_fondo') ? b.color_buscador_fondo : evento.color_buscador_fondo, 
+              b.hasOwnProperty('color_buscador_borde') ? b.color_buscador_borde : evento.color_buscador_borde, 
+              b.hasOwnProperty('color_btn_ver_mas') ? b.color_btn_ver_mas : evento.color_btn_ver_mas,
+              b.hasOwnProperty('color_fondo_share') ? b.color_fondo_share : evento.color_fondo_share, 
+              b.hasOwnProperty('color_texto_share') ? b.color_texto_share : evento.color_texto_share,
+              b.hasOwnProperty('es_en_vivo') ? b.es_en_vivo : (evento.es_en_vivo ?? 0),
+              b.hasOwnProperty('url_en_vivo') ? b.url_en_vivo : (evento.url_en_vivo ?? null),
+              b.hasOwnProperty('color_descripcion_texto') ? b.color_descripcion_texto : evento.color_descripcion_texto,
+              (b.hasOwnProperty('tiene_expositores')) ? parseInt(b.tiene_expositores) : (evento.tiene_expositores ?? 0),
               eventoId
             ]
           );
@@ -274,12 +317,19 @@ class AdminEventosPendientesController {
 
       const usuario = usuarios[0];
 
-      // 🔥 Si era edición pendiente, limpiar borrador también
+      // Determinar si volvemos a aprobado o marcamos como rechazado
+      let nuevoEstado = 'rechazado';
+      let activo = 0;
+      if (evento.estado === 'edicion_pendiente') {
+        nuevoEstado = 'aprobado';
+        activo = 1;
+      }
+
       await pool.query(
         `UPDATE eventos 
-       SET estado = ?, activo = 0, razon_rechazo = ?, borrador_cambios = NULL 
-       WHERE id = ?`,
-        ['rechazado', razonRechazo, eventoId]
+        SET estado = ?, activo = ?, razon_rechazo = ?, borrador_cambios = NULL 
+        WHERE id = ?`,
+        [nuevoEstado, activo, razonRechazo, eventoId]
       );
 
       // Enviar email

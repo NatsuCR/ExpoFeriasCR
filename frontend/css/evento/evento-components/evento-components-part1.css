@@ -23,6 +23,14 @@
     transform: translateY(-5px);
 }
 
+.clickable-card {
+    cursor: pointer;
+}
+
+.clickable-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
 .info-card i {
     font-size: 2.5rem;
     color: var(--evento-secundario);
@@ -357,6 +365,7 @@
 .mini-carrusel {
     position: relative;
     width: 100%;
+    height: 250px;
     margin-bottom: 1rem;
     border-radius: 8px;
     overflow: hidden;
@@ -366,6 +375,6 @@
 .mini-carrusel-track {
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 9;
-    height: 220px;
+    height: 100%;
+    transition: transform 0.5s ease;
 }

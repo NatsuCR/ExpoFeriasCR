@@ -638,18 +638,19 @@ function cargarEventoDesdePreview(datos) {
     const sectionExpositores = document.getElementById('expositores');
     const linksExpositores = document.querySelectorAll('.nav-links a[href="#expositores"]');
 
-    if (vTieneExpositores === 0) { // 0 = NO tiene expositores
+    if (vTieneExpositores === 1) { // 1 = MOSTRAR
+        console.log('[Visibility Shield] Mostrando sección de expositores (tiene_expositores=1)');
+        if (sectionExpositores) sectionExpositores.style.setProperty('display', 'block', 'important');
+        linksExpositores.forEach(link => {
+            const li = link.closest('li');
+            if (li) li.style.setProperty('display', 'block', 'important');
+        });
+    } else {
         console.log('[Visibility Shield] Bloqueando sección de expositores (tiene_expositores=0)');
         if (sectionExpositores) sectionExpositores.remove();
         linksExpositores.forEach(link => {
             const li = link.closest('li');
             if (li) li.remove();
-        });
-    } else {
-        if (sectionExpositores) sectionExpositores.style.setProperty('display', 'block', 'important');
-        linksExpositores.forEach(link => {
-            const li = link.closest('li');
-            if (li) li.style.setProperty('display', 'block', 'important');
         });
     }
 

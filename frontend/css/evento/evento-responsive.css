@@ -135,11 +135,14 @@
     .hero-content .desc-short, 
     .hero-content .btn-ver-mas,
     #eventoDescripcion .desc-short,
-    #eventoDescripcion .btn-ver-mas {
+    #eventoDescripcion .btn-ver-mas,
+    #eventoInfoCompleta .desc-short,
+    #eventoInfoCompleta .btn-ver-mas {
         display: none !important;
     }
     .hero-content .desc-full,
-    #eventoDescripcion .desc-full {
+    #eventoDescripcion .desc-full,
+    #eventoInfoCompleta .desc-full {
         display: block !important;
     }
 }

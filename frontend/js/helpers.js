@@ -49,7 +49,7 @@ window.formatDescription = function (text, forceFull = false) {
     if (forceFull || text.length <= 140) {
         return `
             <div class="desc-container">
-                <p class="descripcion-texto descripcion desc-full" style="white-space: pre-wrap;">${text}</p>
+                <p class="descripcion-texto descripcion desc-full" style="display: block; white-space: pre-wrap;">${text}</p>
             </div>
         `;
     }

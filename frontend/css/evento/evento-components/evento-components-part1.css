@@ -261,6 +261,23 @@
     font-size: 0.95rem;
 }
 
+/* Control de visibilidad para el sistema de Ver Más */
+.desc-short {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.desc-full {
+    display: none;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    overflow: visible !important;
+    width: 100%;
+}
+
 /* Color específico para la descripción del Hero */
 .hero-content .descripcion-texto,
 .hero-content .descripcion {

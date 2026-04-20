@@ -192,7 +192,8 @@ function toggleExpositoresTab() {
     const btn = document.querySelector('.tab-btn[data-tab="expositores"]');
     const content = document.getElementById('content-expositores');
     
-    const mostrar = (tiene === '1');
+    // Si es 1 (Sí) -> mostrar. Si es 0 (No) -> ocultar.
+    const mostrar = (parseInt(tiene) === 1);
     
     if (btn) btn.style.display = mostrar ? 'inline-flex' : 'none';
     if (content) content.style.display = mostrar ? 'block' : 'none';

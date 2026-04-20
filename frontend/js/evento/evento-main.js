@@ -638,9 +638,13 @@ function cargarEventoDesdePreview(datos) {
     const sectionExpositores = document.getElementById('expositores');
     const linksExpositores = document.querySelectorAll('.nav-links a[href="#expositores"]');
 
-    if (vTieneExpositores === 1) { // 1 = MOSTRAR
+    if (parseInt(vTieneExpositores) === 1) { // 1 = MOSTRAR
         console.log('[Visibility Shield] Mostrando sección de expositores (tiene_expositores=1)');
-        if (sectionExpositores) sectionExpositores.style.setProperty('display', 'block', 'important');
+        if (sectionExpositores) {
+            sectionExpositores.style.setProperty('display', 'block', 'important');
+            sectionExpositores.style.setProperty('visibility', 'visible', 'important');
+            sectionExpositores.style.setProperty('opacity', '1', 'important');
+        }
         linksExpositores.forEach(link => {
             const li = link.closest('li');
             if (li) li.style.setProperty('display', 'block', 'important');

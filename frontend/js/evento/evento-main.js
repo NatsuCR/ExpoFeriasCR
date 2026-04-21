@@ -636,16 +636,27 @@ function cargarEventoDesdePreview(datos) {
     const textoEntradas = document.getElementById('entradasTexto');
 
     if (cardEntradas) {
-        cardEntradas.style.display = 'block';
+        cardEntradas.style.display = 'flex'; // Usar flex para alineación correcta
         if (vTipoVenta === 'gratis') {
-            cardEntradas.style.pointerEvents = 'none'; // No hay a donde scrollear
-            if (textoEntradas) textoEntradas.innerHTML = '🎟️ <strong>Entrada Gratuita</strong>';
+            cardEntradas.style.pointerEvents = 'none';
+            if (textoEntradas) textoEntradas.innerHTML = '<i class="fas fa-ticket-alt" style="display:none"></i> 🎟️ <strong>Entrada Gratuita</strong>';
         } else {
             cardEntradas.style.pointerEvents = 'auto';
             if (textoEntradas) {
-                if (vTipoVenta === 'online') textoEntradas.innerText = 'Entradas solo en línea';
-                else if (vTipoVenta === 'ambos') textoEntradas.innerText = 'Entradas en taquilla y en línea';
-                else textoEntradas.innerText = 'Entradas solo en taquilla';
+                let htmlContent = '';
+                const ventaUrl = (datos.url_venta_online || '').trim();
+                
+                if (vTipoVenta === 'online') {
+                    htmlContent = 'Entradas solo en línea';
+                    if (ventaUrl) htmlContent += `<br><a href="${ventaUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar aquí</a>`;
+                } else if (vTipoVenta === 'ambos') {
+                    htmlContent = 'Entradas en taquilla y en línea';
+                    if (ventaUrl) htmlContent += `<br><a href="${ventaUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar aquí</a>`;
+                } else {
+                    htmlContent = 'Entradas solo en taquilla';
+                }
+                
+                textoEntradas.innerHTML = htmlContent;
             }
         }
     }

@@ -157,8 +157,8 @@ export class CrearEvento {
       const tieneExpositoresEl = document.getElementById('tiene_expositores');
       const contentExpositores = document.getElementById('content-expositores');
       if (tieneExpositoresEl && contentExpositores) {
-        // CORRECCIÓN: 0 = SÍ tiene expositores -> mostrar formulario
-        contentExpositores.style.display = (tieneExpositoresEl.value === '0') ? 'block' : 'none';
+        // 1 = SÍ tiene expositores -> mostrar formulario
+        contentExpositores.style.display = (tieneExpositoresEl.value === '1') ? 'block' : 'none';
       }
 
       // Poblar precios

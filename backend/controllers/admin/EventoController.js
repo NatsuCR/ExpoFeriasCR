@@ -73,8 +73,6 @@ class AdminEventoController {
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
       color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
-      color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
-      color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
       color_fondo_share, color_texto_share, color_descripcion_texto,
       tiene_expositores,
       precios, actividades, expositores, galeria
@@ -96,10 +94,7 @@ class AdminEventoController {
       color_enlace_contacto || '#8b5a2b', color_fondo_footer || '#8b5a2b',
       color_texto_footer || '#ffffff', color_titulo_h3 || '#2c1a0e',
       color_buscador_expositores || '#ffffff', color_borde_buscador_expositores || '#eee',
-      color_card_fondo || '#ffffff', color_card_borde || '#f0f0f0',
-      color_rubro_fondo || '#f0f0f0', color_rubro_texto || '#000000',
-      color_buscador_fondo || '#ffffff', color_buscador_borde || '#eeeeee',
-      color_btn_ver_mas || '#C8102E', color_fondo_share || '0.5',
+      color_fondo_share || '0.5',
       color_texto_share || '#2c1a0e', color_descripcion_texto || '#2c1a0e',
       tiene_expositores !== undefined ? tiene_expositores : 1,
       'aprobado'
@@ -117,8 +112,6 @@ class AdminEventoController {
         color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
         color_fondo_footer, color_texto_footer,
         color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
-        color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
-        color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
         color_fondo_share, color_texto_share, color_descripcion_texto, 
         tiene_expositores,
         estado
@@ -153,8 +146,6 @@ class AdminEventoController {
       color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
       color_fondo_footer, color_texto_footer,
       color_buscador_expositores, color_borde_buscador_expositores,
-      color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
-      color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
       color_fondo_share, color_texto_share,
       tiene_expositores
     } = data;
@@ -172,8 +163,6 @@ class AdminEventoController {
         color_fondo_contacto || '#f4e4c1', color_texto_contacto || '#2c1a0e', color_enlace_contacto || '#8b5a2b',
         color_fondo_footer || '#8b5a2b', color_texto_footer || '#ffffff',
         color_buscador_expositores || '#ffffff', color_borde_buscador_expositores || '#eeeeee',
-        color_card_fondo || '#ffffff', color_card_borde || '#f0f0f0', color_rubro_fondo || '#f0f0f0', color_rubro_texto || '#000000',
-        color_buscador_fondo || '#ffffff', color_buscador_borde || '#eeeeee', color_btn_ver_mas || '#C8102E',
         color_fondo_share || '0.5', color_texto_share || '#2c1a0e',
         (tiene_expositores !== undefined && tiene_expositores !== null) ? parseInt(tiene_expositores) : 0,
         id
@@ -191,8 +180,6 @@ class AdminEventoController {
           color_fondo_contacto=?, color_texto_contacto=?, color_enlace_contacto=?,
           color_fondo_footer=?, color_texto_footer=?,
           color_buscador_expositores=?, color_borde_buscador_expositores=?,
-          color_card_fondo=?, color_card_borde=?, color_rubro_fondo=?, color_rubro_texto=?,
-          color_buscador_fondo=?, color_buscador_borde=?, color_btn_ver_mas=?,
           color_fondo_share=?, color_texto_share=?,
           tiene_expositores=?, updated_at=NOW()
         WHERE id = ?`,
@@ -267,9 +254,7 @@ class AdminEventoController {
           color_fondo_footer = ?, color_texto_footer = ?,
           color_titulo_h3 = ?, color_expositor_header = ?, borrador_cambios = NULL,
           color_buscador_expositores = ?, fecha_aprobacion = NOW(), fecha_rechazo = NULL,
-          color_borde_buscador_expositores = ?, color_card_fondo = ?, color_card_borde = ?, 
-          color_rubro_fondo = ?, color_rubro_texto = ?,
-          color_buscador_fondo = ?, color_buscador_borde = ?, color_btn_ver_mas = ?,
+          color_borde_buscador_expositores = ?, 
           color_fondo_share = ?, color_texto_share = ?,
           color_descripcion_texto = ?, tiene_expositores = ?
         WHERE id = ?`,
@@ -286,10 +271,6 @@ class AdminEventoController {
           b.color_titulo_h3 ?? rows[0].color_titulo_h3, b.color_expositor_header ?? rows[0].color_expositor_header,
           b.color_buscador_expositores ?? rows[0].color_buscador_expositores,
           b.color_borde_buscador_expositores ?? rows[0].color_borde_buscador_expositores,
-          b.color_card_fondo ?? rows[0].color_card_fondo, b.color_card_borde ?? rows[0].color_card_borde,
-          b.color_rubro_fondo ?? rows[0].color_rubro_fondo, b.color_rubro_texto ?? rows[0].color_rubro_texto,
-          b.color_buscador_fondo ?? rows[0].color_buscador_fondo, b.color_buscador_borde ?? rows[0].color_buscador_borde,
-          b.color_btn_ver_mas ?? rows[0].color_btn_ver_mas,
           b.color_fondo_share ?? rows[0].color_fondo_share, b.color_texto_share ?? rows[0].color_texto_share,
           b.color_descripcion_texto ?? rows[0].color_descripcion_texto,
           (b.tiene_expositores !== undefined && b.tiene_expositores !== null) ? parseInt(b.tiene_expositores) : (rows[0].tiene_expositores ?? 0),

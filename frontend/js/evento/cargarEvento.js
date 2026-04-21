@@ -317,14 +317,6 @@ export async function cargarEvento(slug) {
         if (evento.color_fondo_footer) r.style.setProperty('--footer-fondo', evento.color_fondo_footer);
         if (evento.color_texto_footer) r.style.setProperty('--footer-texto', evento.color_texto_footer);
 
-        if (evento.color_card_fondo) r.style.setProperty('--color-card-fondo', evento.color_card_fondo);
-        if (evento.color_card_borde) r.style.setProperty('--color-card-borde', evento.color_card_borde);
-        if (evento.color_rubro_fondo) r.style.setProperty('--color-rubro-fondo', evento.color_rubro_fondo);
-        if (evento.color_rubro_texto) r.style.setProperty('--color-rubro-texto', evento.color_rubro_texto);
-        if (evento.color_buscador_fondo) r.style.setProperty('--color-buscador-fondo', evento.color_buscador_fondo);
-        if (evento.color_buscador_borde) r.style.setProperty('--color-buscador-borde', evento.color_buscador_borde);
-        if (evento.color_btn_ver_mas) r.style.setProperty('--color-btn-ver-mas', evento.color_btn_ver_mas);
-
         return evento;
 
     } catch (err) {

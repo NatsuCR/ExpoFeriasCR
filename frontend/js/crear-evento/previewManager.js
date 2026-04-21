@@ -69,13 +69,7 @@ export function guardarDatosPreview() {
         color_texto_footer: get('color_texto_footer') || '#ffffff',
         color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
         color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
-        color_card_fondo: get('color_card_fondo') || '#ffffff',
-        color_card_borde: get('color_card_borde') || '#f0f0f0',
-        color_rubro_fondo: get('color_rubro_fondo') || '#f0f0f0',
-        color_rubro_texto: get('color_rubro_texto') || '#000000',
-        color_buscador_fondo: get('color_buscador_fondo') || '#ffffff',
-        color_buscador_borde: get('color_buscador_borde') || '#eeeeee',
-        color_btn_ver_mas: get('color_btn_ver_mas') || '#C8102E',
+        color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
         color_fondo_share: get('color_fondo_share') || 'rgba(255, 255, 255, 0.5)',
         color_texto_share: get('color_texto_share') || '#2c1a0e'
     };

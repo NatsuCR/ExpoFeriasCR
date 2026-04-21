@@ -40,13 +40,7 @@ async function cargarDatosEvento() {
     document.getElementById('color_titulo_h3').value = evento.color_titulo_h3 || '#2c1a0e';
     document.getElementById('color_buscador_expositores').value = evento.color_buscador_expositores || '#ffffff';
     document.getElementById('color_borde_buscador_expositores').value = evento.color_borde_buscador_expositores || '#eeeeee';
-    document.getElementById('color_card_fondo').value = evento.color_card_fondo || '#ffffff';
-    document.getElementById('color_card_borde').value = evento.color_card_borde || '#f0f0f0';
-    document.getElementById('color_rubro_fondo').value = evento.color_rubro_fondo || '#f0f0f0';
-    document.getElementById('color_rubro_texto').value = evento.color_rubro_texto || '#000000';
-    document.getElementById('color_buscador_fondo').value = evento.color_buscador_fondo || '#ffffff';
-    document.getElementById('color_buscador_borde').value = evento.color_buscador_borde || '#eeeeee';
-    document.getElementById('color_btn_ver_mas').value = evento.color_btn_ver_mas || '#C8102E';
+    document.getElementById('color_borde_buscador_expositores').value = evento.color_borde_buscador_expositores || '#eeeeee';
     document.getElementById('activo').checked = (evento.activo === 1);
     const tieneExpositoresVal = (evento.tiene_expositores != null) ? evento.tiene_expositores : 1;
     document.getElementById('tiene_expositores').value = tieneExpositoresVal;
@@ -113,13 +107,7 @@ function construirData(activoValue) {
         color_titulo_h3: document.getElementById('color_titulo_h3').value,
         color_buscador_expositores: document.getElementById('color_buscador_expositores').value,
         color_borde_buscador_expositores: document.getElementById('color_borde_buscador_expositores').value,
-        color_card_fondo: document.getElementById('color_card_fondo').value,
-        color_card_borde: document.getElementById('color_card_borde').value,
-        color_rubro_fondo: document.getElementById('color_rubro_fondo').value,
-        color_rubro_texto: document.getElementById('color_rubro_texto').value,
-        color_buscador_fondo: document.getElementById('color_buscador_fondo').value,
-        color_buscador_borde: document.getElementById('color_buscador_borde').value,
-        color_btn_ver_mas: document.getElementById('color_btn_ver_mas').value,
+        color_borde_buscador_expositores: document.getElementById('color_borde_buscador_expositores').value,
         tiene_expositores: parseInt(document.getElementById('tiene_expositores').value) || 0,
         activo: activoValue
     };

@@ -43,13 +43,6 @@ class Evento {
     // Buscador y Cards
     this.color_buscador_expositores = data.color_buscador_expositores || '#ffffff';
     this.color_borde_buscador_expositores = data.color_borde_buscador_expositores || '#eeeeee';
-    this.color_card_fondo = data.color_card_fondo || '#ffffff';
-    this.color_card_borde = data.color_card_borde || '#f0f0f0';
-    this.color_rubro_fondo = data.color_rubro_fondo || '#f0f0f0';
-    this.color_rubro_texto = data.color_rubro_texto || '#000000';
-    this.color_buscador_fondo = data.color_buscador_fondo || '#ffffff';
-    this.color_buscador_borde = data.color_buscador_borde || '#eeeeee';
-    this.color_btn_ver_mas = data.color_btn_ver_mas || '#C8102E';
     this.color_fondo_share = data.color_fondo_share || 'rgba(255, 255, 255, 0.5)';
     this.color_texto_share = data.color_texto_share || '#2c1a0e';
 

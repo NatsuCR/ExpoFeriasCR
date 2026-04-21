@@ -35,11 +35,9 @@ class UsuarioEventsController {
          color_fondo_footer, color_texto_footer,
          color_titulo_h3, borrador_cambios,
          color_buscador_expositores, color_borde_buscador_expositores,
-         color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
-         color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
          color_fondo_share, color_texto_share,
          color_descripcion_texto, tiene_expositores)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           usuarioId, 'pendiente', null, null, slug, nombre, descripcion ?? body.descripcion, fecha_inicio, fecha_fin, ubicacion,
           imagen_portada ?? body.imagen_portada ?? null, 
@@ -73,13 +71,6 @@ class UsuarioEventsController {
           null, // borrador_cambios inicial es null
           body.color_buscador_expositores ?? '#ffffff', 
           body.color_borde_buscador_expositores ?? '#eeeeee',
-          body.color_card_fondo ?? '#ffffff', 
-          body.color_card_borde ?? '#f0f0f0', 
-          body.color_rubro_fondo ?? '#f0f0f0', 
-          body.color_rubro_texto ?? '#000000',
-          body.color_buscador_fondo ?? '#ffffff', 
-          body.color_buscador_borde ?? '#eeeeee', 
-          body.color_btn_ver_mas ?? '#c8102e',
           body.color_fondo_share ?? '#ffffff', 
           body.color_texto_share ?? '#2c1a0e',
           body.color_descripcion_texto ?? '#2c1a0e',

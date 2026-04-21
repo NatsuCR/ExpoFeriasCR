@@ -113,8 +113,6 @@ export class CrearEvento {
         'color_fondo_footer', 'color_texto_footer',
         'color_fondo_share', 'color_texto_share',
         'color_buscador_expositores', 'color_borde_buscador_expositores',
-        'color_card_fondo', 'color_card_borde', 'color_rubro_fondo', 'color_rubro_texto',
-        'color_buscador_fondo', 'color_buscador_borde', 'color_btn_ver_mas',
         'tiene_expositores', 'activo'
       ];
 
@@ -501,8 +499,7 @@ export class CrearEvento {
       'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
       'color_fondo_footer', 'color_texto_footer',
       'color_fondo_share', 'color_texto_share',
-      'color_buscador_expositores', 'color_borde_buscador_expositores', 'color_card_fondo', 'color_card_borde',
-      'color_rubro_fondo', 'color_rubro_texto', 'color_buscador_fondo', 'color_buscador_borde', 'color_btn_ver_mas',
+      'color_buscador_expositores', 'color_borde_buscador_expositores',
       'tiene_expositores'
     ];
     camposWatch.forEach(id => {
@@ -841,13 +838,6 @@ export class CrearEvento {
       color_texto_share: get('color_texto_share') || '#2c1a0e',
       color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
       color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
-      color_card_fondo: get('color_card_fondo') || '#ffffff',
-      color_card_borde: get('color_card_borde') || '#f0f0f0',
-      color_rubro_fondo: get('color_rubro_fondo') || '#f0f0f0',
-      color_rubro_texto: get('color_rubro_texto') || '#000000',
-      color_buscador_fondo: get('color_buscador_fondo') || '#ffffff',
-      color_buscador_borde: get('color_buscador_borde') || '#eeeeee',
-      color_btn_ver_mas: get('color_btn_ver_mas') || '#C8102E',
       activo: document.getElementById('activo')?.checked ? 1 : 0,
       tiene_expositores: parseInt(document.getElementById('tiene_expositores')?.value) || 0
     };

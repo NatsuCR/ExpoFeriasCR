@@ -188,20 +188,17 @@ function toggleUrlVentaOnline() {
 }
 
 function toggleExpositoresTab() {
-    const selector = document.getElementById('tiene_expositores');
-    if (!selector) return;
-    const tiene = selector.value; // "1" o "0"
+    const tiene = document.getElementById('tiene_expositores').value;
     const btn = document.querySelector('.tab-btn[data-tab="expositores"]');
     const content = document.getElementById('content-expositores');
     
-    // Inversión manual: Si el usuario ve que el dropdown está al revés, 
-    // forzamos que el valor "1" (Sí) sea el que MUESTRA (block).
-    const mostrar = (tiene == "1"); 
-    
-    if (btn) btn.style.setProperty('display', mostrar ? 'inline-flex' : 'none', 'important');
-    if (content) content.style.setProperty('display', mostrar ? 'block' : 'none', 'important');
-
-    console.log('[Admin Visibility] tiene_expositores:', tiene, '-> mostrar:', mostrar);
+    if (tiene == "1") {
+        if (btn) btn.style.setProperty('display', 'inline-flex', 'important');
+        if (content) content.style.setProperty('display', 'block', 'important');
+    } else {
+        if (btn) btn.style.setProperty('display', 'none', 'important');
+        if (content) content.style.setProperty('display', 'none', 'important');
+    }
 }
 
 // Event Listeners para visibilidad

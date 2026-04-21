@@ -64,6 +64,7 @@ class AdminEventoController {
 
   async crear(req, res) {
     const {
+      slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion,
       imagen_portada, activo, horario_imagen, mapa_embed, mapa_waze_embed,
       color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay,
       tipo_venta, url_venta_online,

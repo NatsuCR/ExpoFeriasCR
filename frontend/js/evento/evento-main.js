@@ -190,7 +190,7 @@ function aplicarVisibilidadExpositores(valor) {
     const linksExpositores = document.querySelectorAll('.nav-links a[href="#expositores"]');
     const vTiene = parseInt(valor);
 
-    console.log(`[Visibility Shield] Aplicando visibilidad: ${vTiene === 1 ? 'MOSTRAR' : 'OCULTAR'} (valor=${vTiene})`);
+
 
     if (vTiene === 1) {
         if (sectionExpositores) {
@@ -554,7 +554,7 @@ function cargarEventoDesdePreview(datos) {
         // Estándar unificado: siempre snake_case
         const mGoogle = (datos.mapa_embed || '').trim();
         const mWaze = (datos.mapa_waze_embed || '').trim();
-        console.log('[Maps Debug] Google:', mGoogle ? 'SI' : 'NO', '| Waze:', mWaze ? 'SI' : 'NO');
+
 
         const renderMapContent = (input, type) => {
             if (!input) return '';
@@ -627,7 +627,7 @@ function cargarEventoDesdePreview(datos) {
                              ? parseInt(datos.tiene_expositores) 
                              : 1;
     
-    console.log('[Visibility Debug] Tipo Venta:', vTipoVenta, '| Expositores:', vTieneExpositores);
+
 
     // Ocultar/Mostrar Precios y actualizar tarjeta de Entradas
     const sectionPrecios = document.getElementById('precios');

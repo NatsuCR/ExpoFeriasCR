@@ -4,7 +4,7 @@
  */
 
 window.toggleDesc = function (btn) {
-    console.log("toggleDesc (v3) FINAL ejecutado sobre:", btn);
+
     const container = btn.closest('.desc-container');
     
     if (!container) {

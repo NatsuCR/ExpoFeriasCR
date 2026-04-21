@@ -398,11 +398,11 @@ initPreviewListeners() {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('input', () => {
-        console.log(`[Event] Input changed: ${id} = ${el.value}`);
+
         programarActualizacion();
       });
       el.addEventListener('change', () => {
-        console.log(`[Event] Change event: ${id} = ${el.value}`);
+
         programarActualizacion();
       });
     }

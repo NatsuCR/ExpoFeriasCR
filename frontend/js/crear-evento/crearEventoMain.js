@@ -506,12 +506,12 @@ export class CrearEvento {
       const el = document.getElementById(id);
       if (el) {
         el.addEventListener('input', () => {
-          console.log(`[Event] Input changed: ${id} = ${el.value}`);
+
           this.formDirty = true;
           programarActualizacion();
         });
         el.addEventListener('change', () => {
-          console.log(`[Event] Change event: ${id} = ${el.value}`);
+
           this.formDirty = true;
           programarActualizacion();
         });

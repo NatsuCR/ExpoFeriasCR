@@ -650,11 +650,13 @@ function cargarEventoDesdePreview(datos) {
             if (li) li.style.setProperty('display', 'block', 'important');
         });
     } else {
-        console.log('[Visibility Shield] Bloqueando sección de expositores (tiene_expositores=0)');
-        if (sectionExpositores) sectionExpositores.remove();
+        console.log('[Visibility Shield] Ocultando sección de expositores (tiene_expositores=0)');
+        if (sectionExpositores) {
+            sectionExpositores.style.setProperty('display', 'none', 'important');
+        }
         linksExpositores.forEach(link => {
             const li = link.closest('li');
-            if (li) li.remove();
+            if (li) li.style.setProperty('display', 'none', 'important');
         });
     }
 

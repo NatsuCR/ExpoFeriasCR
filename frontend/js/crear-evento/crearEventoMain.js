@@ -545,8 +545,8 @@ export class CrearEvento {
         const valor = tieneExpositoresEl.value;
         const content = document.getElementById('content-expositores');
         if (content) {
-          // 0 = SÍ tiene expositores -> mostrar formulario
-          content.style.display = (valor === '0') ? 'block' : 'none';
+          // 1 = SÍ tiene expositores -> mostrar formulario
+          content.style.display = (valor === '1') ? 'block' : 'none';
         }
         this.formDirty = true;
         programarActualizacion();
@@ -554,7 +554,7 @@ export class CrearEvento {
       // Inicializar estado tras carga
       const content = document.getElementById('content-expositores');
       if (content) {
-        content.style.display = (tieneExpositoresEl.value === '0') ? 'block' : 'none';
+        content.style.display = (tieneExpositoresEl.value === '1') ? 'block' : 'none';
       }
     }
 

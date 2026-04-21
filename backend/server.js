@@ -121,6 +121,18 @@ app.get('/api/health', (req, res) => {
 });
 
 // =======================
+// 🛡️ MANEJADOR DE ERRORES GLOBAL
+// =======================
+app.use((err, req, res, next) => {
+  console.error('❌ [SERVER ERROR]:', err.stack);
+  res.status(500).json({ 
+    error: 'Error interno del servidor', 
+    message: err.message,
+    path: req.path
+  });
+});
+
+// =======================
 // 🚀 SERVIDOR
 // =======================
 const PORT = process.env.PORT || 3005;

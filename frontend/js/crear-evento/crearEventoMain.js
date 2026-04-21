@@ -16,11 +16,11 @@
   };
 })();
 
-import { bindUpload } from './uploadManager.js';
+import { bindUpload } from './uploadManager.js?v=6.0';
 import {
   togglePreview, programarActualizacion, guardarDatosPreview, getIframe, getSlug,
   actualizarUrlBar
-} from './previewManager.js';
+} from './previewManager.js?v=6.0';
 import {
   abrirModalPrecio, cerrarModalPrecio, agregarPrecioDelModal,
   abrirModalActividad, cerrarModalActividad, agregarActividadDelModal, addActividadImageRow, editarActividad,
@@ -153,13 +153,8 @@ export class CrearEvento {
         if (checkActivo) checkActivo.checked = Boolean(evento.activo);
       }
 
-      // Sincronizar visibilidad de pestaña Expositores al cargar
-      const tieneExpositoresEl = document.getElementById('tiene_expositores');
-      const contentExpositores = document.getElementById('content-expositores');
-      if (tieneExpositoresEl && contentExpositores) {
-        // 1 = SÍ tiene expositores -> mostrar formulario
-        contentExpositores.style.display = (tieneExpositoresEl.value === '1') ? 'block' : 'none';
-      }
+      // Sincronizar visibilidad de todo el formulario al finalizar la carga
+      this.syncVisibility();
 
       // Poblar precios
       if (data.precios && data.precios.length > 0) {
@@ -529,11 +524,7 @@ export class CrearEvento {
     const tipoVentaEl = document.getElementById('tipo_venta');
     if (tipoVentaEl) {
       tipoVentaEl.addEventListener('change', () => {
-        const valor = tipoVentaEl.value;
-        const urlGroup = document.getElementById('urlVentaGroup');
-        if (urlGroup) {
-          urlGroup.style.display = (valor === 'online' || valor === 'ambos') ? 'block' : 'none';
-        }
+        this.syncVisibility();
         this.formDirty = true;
         programarActualizacion();
       });
@@ -542,23 +533,46 @@ export class CrearEvento {
     const tieneExpositoresEl = document.getElementById('tiene_expositores');
     if (tieneExpositoresEl) {
       tieneExpositoresEl.addEventListener('change', () => {
-        const valor = tieneExpositoresEl.value;
-        const content = document.getElementById('content-expositores');
-        if (content) {
-          // 1 = SÍ tiene expositores -> mostrar formulario
-          content.style.display = (valor === '1') ? 'block' : 'none';
-        }
+        this.syncVisibility();
         this.formDirty = true;
         programarActualizacion();
       });
-      // Inicializar estado tras carga
-      const content = document.getElementById('content-expositores');
-      if (content) {
-        content.style.display = (tieneExpositoresEl.value === '1') ? 'block' : 'none';
-      }
     }
 
+    // Inicializar visibilidad
+    this.syncVisibility();
+
     this.initTableObservers();
+  }
+
+  /**
+   * Sincroniza la visibilidad de secciones dinámicas (Expositores, URL de Venta, etc.)
+   * basada en los valores actuales de los selectores.
+   */
+  syncVisibility() {
+    console.log('[Visibility] Sincronizando secciones...');
+    
+    // 1. Tipo de Venta / URL Online
+    const tipoVentaEl = document.getElementById('tipo_venta');
+    const urlGroup = document.getElementById('urlVentaGroup');
+    if (tipoVentaEl && urlGroup) {
+      const valor = tipoVentaEl.value;
+      urlGroup.style.display = (valor === 'online' || valor === 'ambos') ? 'block' : 'none';
+    }
+
+    // 2. Expositores
+    const tieneExpositoresEl = document.getElementById('tiene_expositores');
+    const contentExpositores = document.getElementById('content-expositores');
+    if (tieneExpositoresEl && contentExpositores) {
+      const valor = tieneExpositoresEl.value;
+      console.log(`[Visibility] Expositores value: ${valor}`);
+      // Forzar visibilidad. Usamos !important si es necesario mediante JS.
+      if (valor === '1') {
+        contentExpositores.setAttribute('style', 'display: block !important');
+      } else {
+        contentExpositores.setAttribute('style', 'display: none !important');
+      }
+    }
   }
 
   initTableObservers() {

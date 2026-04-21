@@ -188,26 +188,33 @@ export async function cargarEvento(slug) {
                 }
             }
 
-            let textoEntradas = '';
+            let htmlContent = '';
+            const ventaUrl = (url_venta_online || '').trim();
+
             switch (tipo_venta) {
                 case 'online':
-                    textoEntradas = `Entradas en línea: <a href="${url_venta_online}" target="_blank">Comprar aquí</a>`;
+                    htmlContent = `Entradas solo en línea`;
+                    if (ventaUrl) htmlContent += `<br><a href="${ventaUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar aquí</a>`;
                     break;
                 case 'ambos':
-                    textoEntradas = `Entradas en taquilla y en línea: <a href="${url_venta_online}" target="_blank">Comprar en línea</a>`;
+                    htmlContent = `Entradas en taquilla y en línea`;
+                    if (ventaUrl) htmlContent += `<br><a href="${ventaUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar en línea</a>`;
                     break;
                 case 'gratis':
-                    textoEntradas = '🎟️ <strong>Entrada Gratuita</strong>';
+                    htmlContent = '🎟️ <strong>Entrada Gratuita</strong>';
                     break;
                 default:
-                    textoEntradas = 'Entradas solo en taquilla del campo ferial';
+                    htmlContent = 'Entradas solo en taquilla del campo ferial';
             }
-            entradasParrafo.innerHTML = videoHtml + textoEntradas;
+            entradasParrafo.innerHTML = videoHtml + htmlContent;
 
-            // Ocultar card de entradas si es gratuito
+            // Asegurar que la tarjeta sea visible siempre
             const entradasCard = entradasParrafo.closest('.info-card');
             if (entradasCard) {
-                entradasCard.style.display = (tipo_venta === 'gratis') ? 'none' : 'flex';
+                entradasCard.style.display = 'flex'; 
+                // Si es gratis, quitamos el puntero de scroll ya que no hay sección de precios
+                if (tipo_venta === 'gratis') entradasCard.style.pointerEvents = 'none';
+                else entradasCard.style.pointerEvents = 'auto';
             }
         }
 

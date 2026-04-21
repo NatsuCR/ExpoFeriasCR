@@ -666,8 +666,7 @@ function cargarEventoDesdePreview(datos) {
         if (linkPrecios) {
             const li = linkPrecios.closest('li');
             if (li) {
-                if (isPreview) li.remove(); 
-                else li.setAttribute('style', 'display: none !important');
+                li.style.setProperty('display', 'none', 'important');
             }
         }
     } else {

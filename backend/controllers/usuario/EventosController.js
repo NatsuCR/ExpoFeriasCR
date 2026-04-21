@@ -38,8 +38,8 @@ class UsuarioEventsController {
          color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
          color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
          color_fondo_share, color_texto_share,
-         es_en_vivo, url_en_vivo, color_descripcion_texto, tiene_expositores)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         color_descripcion_texto, tiene_expositores)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           usuarioId, 'pendiente', null, null, slug, nombre, descripcion ?? body.descripcion, fecha_inicio, fecha_fin, ubicacion,
           imagen_portada ?? body.imagen_portada ?? null, 
@@ -82,8 +82,6 @@ class UsuarioEventsController {
           body.color_btn_ver_mas ?? '#c8102e',
           body.color_fondo_share ?? '#ffffff', 
           body.color_texto_share ?? '#2c1a0e',
-          0, // es_en_vivo
-          null, // url_en_vivo
           body.color_descripcion_texto ?? '#2c1a0e',
           parseInt(tiene_expositores) || 0
         ]

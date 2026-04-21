@@ -169,6 +169,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             const tieneExpositores = (evento.tiene_expositores !== undefined && evento.tiene_expositores !== null) ? parseInt(evento.tiene_expositores) : 1;
+            
+            // Aplicar visibilidad física de la sección
+            aplicarVisibilidadExpositores(tieneExpositores);
+
             if (tieneExpositores === 1) {
                 cargarExpositores(slug);
             }
@@ -180,6 +184,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 });
+
+function aplicarVisibilidadExpositores(valor) {
+    const sectionExpositores = document.getElementById('expositores');
+    const linksExpositores = document.querySelectorAll('.nav-links a[href="#expositores"]');
+    const vTiene = parseInt(valor);
+
+    console.log(`[Visibility Shield] Aplicando visibilidad: ${vTiene === 1 ? 'MOSTRAR' : 'OCULTAR'} (valor=${vTiene})`);
+
+    if (vTiene === 1) {
+        if (sectionExpositores) {
+            sectionExpositores.style.setProperty('display', 'block', 'important');
+            sectionExpositores.style.setProperty('visibility', 'visible', 'important');
+            sectionExpositores.style.setProperty('opacity', '1', 'important');
+        }
+        linksExpositores.forEach(link => {
+            const li = link.closest('li');
+            if (li) li.style.setProperty('display', 'block', 'important');
+        });
+    } else {
+        if (sectionExpositores) {
+            sectionExpositores.style.setProperty('display', 'none', 'important');
+            sectionExpositores.style.setProperty('visibility', 'hidden', 'important');
+        }
+        linksExpositores.forEach(link => {
+            const li = link.closest('li');
+            if (li) li.style.setProperty('display', 'none', 'important');
+        });
+    }
+}
 
 function initSocialShare() {
     const facebook = document.getElementById('shareFacebook');
@@ -635,30 +668,7 @@ function cargarEventoDesdePreview(datos) {
     }
 
     // 🛡️ BLINDAJE TOTAL DE VISIBILIDAD (SHIELD)
-    const sectionExpositores = document.getElementById('expositores');
-    const linksExpositores = document.querySelectorAll('.nav-links a[href="#expositores"]');
-
-    if (parseInt(vTieneExpositores) === 1) { // 1 = MOSTRAR
-        console.log('[Visibility Shield] Mostrando sección de expositores (tiene_expositores=1)');
-        if (sectionExpositores) {
-            sectionExpositores.style.setProperty('display', 'block', 'important');
-            sectionExpositores.style.setProperty('visibility', 'visible', 'important');
-            sectionExpositores.style.setProperty('opacity', '1', 'important');
-        }
-        linksExpositores.forEach(link => {
-            const li = link.closest('li');
-            if (li) li.style.setProperty('display', 'block', 'important');
-        });
-    } else {
-        console.log('[Visibility Shield] Ocultando sección de expositores (tiene_expositores=0)');
-        if (sectionExpositores) {
-            sectionExpositores.style.setProperty('display', 'none', 'important');
-        }
-        linksExpositores.forEach(link => {
-            const li = link.closest('li');
-            if (li) li.style.setProperty('display', 'none', 'important');
-        });
-    }
+    aplicarVisibilidadExpositores(vTieneExpositores);
 
     // Blindaje de Ubicación (asegurar que no se oculte en eventos gratis)
     const linksUbicacion = document.querySelectorAll('.nav-links a[href="#ubicacion"]');

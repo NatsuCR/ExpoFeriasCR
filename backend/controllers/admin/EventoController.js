@@ -75,7 +75,7 @@ class AdminEventoController {
       color_titulo_h3, color_buscador_expositores, color_borde_buscador_expositores,
       color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
       color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
-      color_fondo_share, color_texto_share, color_descripcion_texto, es_en_vivo, url_en_vivo,
+      color_fondo_share, color_texto_share, color_descripcion_texto,
       tiene_expositores,
       precios, actividades, expositores, galeria
     } = req.body;
@@ -156,13 +156,13 @@ class AdminEventoController {
       color_card_fondo, color_card_borde, color_rubro_fondo, color_rubro_texto,
       color_buscador_fondo, color_buscador_borde, color_btn_ver_mas,
       color_fondo_share, color_texto_share,
-      es_en_vivo, url_en_vivo, tiene_expositores
+      tiene_expositores
     } = data;
 
     try {
       const values = [
         slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
-        imagen_portada || null, activo === undefined ? 1 : (activo ? 1 : 0), horario_imagen || null, 
+        imagen_portada || null, activo === undefined ? 1 : (activo ? 1 : 0), horario_imagen || null,
         mapa_embed || null, mapa_waze_embed || null, tipo_venta || 'taquilla', url_venta_online || null,
         color_primario || '#c8102e', color_secundario || '#0033a0', color_fondo || '#f4e4c1', color_texto || '#2c1a0e', color_descripcion_texto || '#2c1a0e',
         color_hero_overlay || 'rgba(0,0,0,0.4)', color_titulo_seccion || '#2c1a0e',
@@ -174,7 +174,7 @@ class AdminEventoController {
         color_buscador_expositores || '#ffffff', color_borde_buscador_expositores || '#eeeeee',
         color_card_fondo || '#ffffff', color_card_borde || '#f0f0f0', color_rubro_fondo || '#f0f0f0', color_rubro_texto || '#000000',
         color_buscador_fondo || '#ffffff', color_buscador_borde || '#eeeeee', color_btn_ver_mas || '#C8102E',
-        es_en_vivo || 0, url_en_vivo || null,
+        color_fondo_share || '0.5', color_texto_share || '#2c1a0e',
         (tiene_expositores !== undefined && tiene_expositores !== null) ? parseInt(tiene_expositores) : 0,
         id
       ];
@@ -194,7 +194,7 @@ class AdminEventoController {
           color_card_fondo=?, color_card_borde=?, color_rubro_fondo=?, color_rubro_texto=?,
           color_buscador_fondo=?, color_buscador_borde=?, color_btn_ver_mas=?,
           color_fondo_share=?, color_texto_share=?,
-          es_en_vivo=?, url_en_vivo=?, tiene_expositores=?, updated_at=NOW()
+          tiene_expositores=?, updated_at=NOW()
         WHERE id = ?`,
         values
       );
@@ -271,7 +271,7 @@ class AdminEventoController {
           color_rubro_fondo = ?, color_rubro_texto = ?,
           color_buscador_fondo = ?, color_buscador_borde = ?, color_btn_ver_mas = ?,
           color_fondo_share = ?, color_texto_share = ?,
-          es_en_vivo = ?, url_en_vivo = ?, color_descripcion_texto = ?, tiene_expositores = ?
+          color_descripcion_texto = ?, tiene_expositores = ?
         WHERE id = ?`,
         [
           b.slug, b.nombre, b.descripcion ?? rows[0].descripcion, b.fecha_inicio, b.fecha_fin, b.ubicacion,
@@ -291,7 +291,6 @@ class AdminEventoController {
           b.color_buscador_fondo ?? rows[0].color_buscador_fondo, b.color_buscador_borde ?? rows[0].color_buscador_borde,
           b.color_btn_ver_mas ?? rows[0].color_btn_ver_mas,
           b.color_fondo_share ?? rows[0].color_fondo_share, b.color_texto_share ?? rows[0].color_texto_share,
-          b.es_en_vivo ?? rows[0].es_en_vivo ?? 0, b.url_en_vivo ?? rows[0].url_en_vivo ?? null,
           b.color_descripcion_texto ?? rows[0].color_descripcion_texto,
           (b.tiene_expositores !== undefined && b.tiene_expositores !== null) ? parseInt(b.tiene_expositores) : (rows[0].tiene_expositores ?? 0),
           id

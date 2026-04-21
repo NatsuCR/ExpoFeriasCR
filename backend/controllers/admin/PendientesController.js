@@ -191,7 +191,7 @@ class AdminEventosPendientesController {
               color_rubro_fondo = ?, color_rubro_texto = ?,
               color_buscador_fondo = ?, color_buscador_borde = ?, color_btn_ver_mas = ?,
               color_fondo_share = ?, color_texto_share = ?,
-              es_en_vivo = ?, url_en_vivo = ?, color_descripcion_texto = ?, tiene_expositores = ?
+              color_descripcion_texto = ?, tiene_expositores = ?
              WHERE id = ?`,
             [
               b.slug || evento.slug, 
@@ -239,8 +239,6 @@ class AdminEventosPendientesController {
               b.hasOwnProperty('color_btn_ver_mas') ? b.color_btn_ver_mas : evento.color_btn_ver_mas,
               b.hasOwnProperty('color_fondo_share') ? b.color_fondo_share : evento.color_fondo_share, 
               b.hasOwnProperty('color_texto_share') ? b.color_texto_share : evento.color_texto_share,
-              b.hasOwnProperty('es_en_vivo') ? b.es_en_vivo : (evento.es_en_vivo ?? 0),
-              b.hasOwnProperty('url_en_vivo') ? b.url_en_vivo : (evento.url_en_vivo ?? null),
               b.hasOwnProperty('color_descripcion_texto') ? b.color_descripcion_texto : evento.color_descripcion_texto,
               (b.hasOwnProperty('tiene_expositores')) ? parseInt(b.tiene_expositores) : (evento.tiene_expositores ?? 0),
               eventoId

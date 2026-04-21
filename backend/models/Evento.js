@@ -16,7 +16,7 @@ class Evento {
     this.tipo_venta = data.tipo_venta;
     this.url_venta_online = data.url_venta_online;
     this.provincia = data.provincia;
-    
+
     // Colores y Personalización
     this.color_primario = data.color_primario || '#8b5a2b';
     this.color_secundario = data.color_secundario || '#d4a373';
@@ -39,7 +39,7 @@ class Evento {
     this.color_enlace_contacto = data.color_enlace_contacto || '#8b5a2b';
     this.color_fondo_footer = data.color_fondo_footer || '#8b5a2b';
     this.color_texto_footer = data.color_texto_footer || '#ffffff';
-    
+
     // Buscador y Cards
     this.color_buscador_expositores = data.color_buscador_expositores || '#ffffff';
     this.color_borde_buscador_expositores = data.color_borde_buscador_expositores || '#eeeeee';
@@ -52,10 +52,9 @@ class Evento {
     this.color_btn_ver_mas = data.color_btn_ver_mas || '#C8102E';
     this.color_fondo_share = data.color_fondo_share || 'rgba(255, 255, 255, 0.5)';
     this.color_texto_share = data.color_texto_share || '#2c1a0e';
-    
+
     this.tiene_expositores = (data.tiene_expositores !== undefined && data.tiene_expositores !== null) ? parseInt(data.tiene_expositores) : 0;
     this.activo = (data.activo !== undefined && data.activo !== null) ? parseInt(data.activo) : 0;
-    this.es_en_vivo = (data.es_en_vivo !== undefined && data.es_en_vivo !== null) ? parseInt(data.es_en_vivo) : 0;
 
     this.estado = data.estado;
     this.razon_rechazo = data.razon_rechazo;

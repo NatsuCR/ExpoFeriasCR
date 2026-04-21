@@ -26,10 +26,22 @@
         gap: 1rem;
     }
     .actividad-card, .expositor-card {
-        padding: 1rem;
+        padding: 0; /* Quitar padding para que la imagen llene el ancho */
+        overflow: hidden;
     }
     .actividad-card img, .expositor-card img {
-        height: 150px;
+        width: 100%;
+        height: 280px; /* Igualar altura al mini-carrusel */
+        object-fit: cover;
+    }
+    /* Añadir padding solo al texto */
+    .actividad-card h3, .actividad-card p, .actividad-card a,
+    .expositor-card h3, .expositor-card p, .expositor-card a {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .actividad-card a, .expositor-card a {
+        margin-bottom: 1rem;
     }
     .tabla-precios th, .tabla-precios td {
         padding: 6px;

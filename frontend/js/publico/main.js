@@ -329,7 +329,31 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarFinalizados('', '');
     configurarBuscadores();
     initRevealAnimations();
+    initPatchNotes();
 });
+
+// ──── SISTEMA DE NOVEDADES (PATCH NOTES) ────
+function initPatchNotes() {
+    const btn = document.getElementById('patch-notes-btn');
+    const overlay = document.getElementById('patch-notes-overlay');
+    const closeBtn = document.getElementById('patch-close-btn');
+    const understoodBtn = document.getElementById('btn-entendido-patch');
+
+    if (!btn || !overlay) return;
+
+    const abrir = () => overlay.classList.add('active');
+    const cerrar = () => overlay.classList.remove('active');
+
+    btn.addEventListener('click', abrir);
+    
+    if (closeBtn) closeBtn.addEventListener('click', cerrar);
+    if (understoodBtn) understoodBtn.addEventListener('click', cerrar);
+
+    // Cerrar al tocar fuera del contenido
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) cerrar();
+    });
+}
 
 // ──── SISTEMA REVEAL (ANIMACIONES AL HACER SCROLL) ────
 function initRevealAnimations() {

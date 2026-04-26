@@ -5,7 +5,7 @@
 
 import { bindUpload, bindMultiUpload } from './uploadManager.js';
 import {
-  togglePreview, programarActualizacion, guardarDatosPreview, getIframe, actualizarUrlBar
+  togglePreview, programarActualizacion, guardarDatosPreview, getIframe, actualizarUrlBar, aplicarCambiosEnVivo
 } from './previewManager.js';
 import {
   abrirModalPrecio, abrirModalActividad, abrirModalExpositor, abrirModalImagen, duplicarUltimoPrecio,
@@ -112,36 +112,73 @@ export class CrearEvento {
         const iframe = document.getElementById('finalPreviewIframe');
         if (iframe) {
             const dataKey = guardarDatosPreview();
-            // Siempre forzamos la recarga o actualización
             if (!iframe.src.includes(`dataKey=${dataKey}`)) {
                 iframe.src = `/evento.html?preview=1&dataKey=${dataKey}`;
             } else {
-                // Si ya tiene el src, forzamos aplicación de cambios en vivo
                 setTimeout(() => aplicarCambiosEnVivo(), 150);
             }
+            // Dar un pequeño tiempo para que el tab sea visible antes de calcular escalas
+            setTimeout(() => {
+                const activeBtn = document.querySelector('.device-btn.active');
+                if (activeBtn) this.setIntegratedMode(activeBtn.dataset.device);
+            }, 180);
         }
     }
   }
 
   setupDeviceToggles() {
     const btns = document.querySelectorAll('.device-btn');
-    const preview = document.getElementById('integratedPreview');
-    if (!btns || !preview) return;
+    if (!btns.length) return;
 
     btns.forEach(btn => {
       btn.onclick = () => {
         btns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const device = btn.dataset.device;
-        if (device === 'mobile') {
-          preview.classList.add('mobile');
-          preview.classList.remove('pc');
-        } else {
-          preview.classList.remove('mobile');
-          preview.classList.add('pc');
-        }
+        this.setIntegratedMode(btn.dataset.device);
       };
     });
+  }
+
+  setIntegratedMode(mode) {
+    const preview = document.getElementById('integratedPreview');
+    const iframe = document.getElementById('finalPreviewIframe');
+    if (!preview || !iframe) return;
+
+    if (mode === 'mobile') {
+      preview.classList.add('mobile');
+      preview.classList.remove('pc');
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.transform = 'none';
+      if ('zoom' in iframe.style) iframe.style.zoom = 'normal';
+    } else {
+      preview.classList.remove('mobile');
+      preview.classList.add('pc');
+      
+      const containerWidth = preview.offsetWidth;
+      // Si el contenedor es pequeño (móvil), aplicamos truco de escalado para ver versión PC
+      if (containerWidth > 0 && containerWidth < 1000) {
+          const targetWidth = 1200;
+          const scale = (containerWidth - 4) / targetWidth; // -4 por el borde de 2px a cada lado
+          if ('zoom' in iframe.style) {
+              iframe.style.transform = 'none';
+              iframe.style.zoom = scale;
+              iframe.style.width = `${targetWidth}px`;
+              iframe.style.height = '100%'; // Permitir que el iframe maneje su propio scroll interno
+          } else {
+              iframe.style.width = `${targetWidth}px`;
+              iframe.style.transform = `scale(${scale})`;
+              iframe.style.transformOrigin = 'top left';
+              iframe.style.height = `${100 / scale}%`;
+          }
+      } else {
+          // En PC real no escalamos
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.style.transform = 'none';
+          if ('zoom' in iframe.style) iframe.style.zoom = 'normal';
+      }
+    }
   }
 
   irSiguienteTab() {

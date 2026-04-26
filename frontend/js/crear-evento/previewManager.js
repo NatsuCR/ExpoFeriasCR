@@ -7,11 +7,21 @@
 let previewAbierto = false;
 let previewTimer = null;
 
-export function getIframes() { 
+// Proactive cleanup: Borrar previews antiguos al cargar el script
+try {
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('preview_')) {
+            // Opcional: solo borrar si tienen más de 1 hora de antigüedad o borrar todos
+            localStorage.removeItem(key);
+        }
+    });
+} catch (e) { console.error('Error en limpieza inicial:', e); }
+
+export function getIframes() {
     return [
         document.getElementById('previewIframe'),
         document.getElementById('finalPreviewIframe')
-    ].filter(i => i !== null); 
+    ].filter(i => i !== null);
 }
 export function getIframe() { return document.getElementById('previewIframe'); }
 export function getSlug() { return (document.getElementById('slug')?.value || '').trim(); }
@@ -36,6 +46,8 @@ export function guardarDatosPreview() {
         fecha_fin: get('fecha_fin'),
         ubicacion: get('ubicacion'),
         provincia: get('provincia'),
+        canton: get('canton'),
+        distrito: get('distrito'),
         imagen_portada: get('imagen_portada'),
         horario_imagen: get('horario_imagen'),
         mapa_embed: get('mapa_embed'),
@@ -44,34 +56,34 @@ export function guardarDatosPreview() {
         url_venta_online: get('url_venta_online'),
 
         // Colores
-        color_primario: get('color_primario') || '#8b5a2b',
-        color_secundario: get('color_secundario') || '#d4a373',
-        color_fondo: get('color_fondo') || '#f4e4c1',
-        color_texto: get('color_texto') || '#2c1a0e',
-        color_descripcion_texto: get('color_descripcion_texto') || '#2c1a0e',
-        color_hero_overlay: get('color_hero_overlay') || 'rgba(62,42,31,0.7)',
-        color_titulo_seccion: get('color_titulo_seccion') || '#2c1a0e',
+        color_primario: get('color_primario') || '#C8102E',
+        color_secundario: get('color_secundario') || '#0033A0',
+        color_fondo: get('color_fondo') || '#fdfdfd',
+        color_texto: get('color_texto') || '#1a1a1a',
+        color_iconos: get('color_iconos') || '#C8102E',
+        color_descripcion_texto: get('color_descripcion_texto') || '#1a1a1a',
+        color_hero_overlay: get('color_hero_overlay') || 'rgba(0, 0, 0, 0.7)',
+        color_titulo_seccion: get('color_titulo_seccion') || '#1a1a1a',
         color_titulo_hero: get('color_titulo_hero') || '#ffffff',
         color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
-        color_fondo_fechas: get('color_fondo_fechas') || '#d4a373',
-        color_texto_fechas: get('color_texto_fechas') || '#8b5a2b',
-        color_menu_fondo: get('color_menu_fondo') || '#ffffff',
+        color_fondo_fechas: get('color_fondo_fechas') || '#0033a0',
+        color_texto_fechas: get('color_texto_fechas') || '#c8102e',
+        color_menu_fondo: get('color_menu_fondo') || '#C8102E',
         color_menu_texto: get('color_menu_texto') || '#ffffff',
-        color_menu_fondo_hover: get('color_menu_fondo_hover') || '',
-        color_menu_texto_hover: get('color_menu_texto_hover') || '',
+        color_menu_fondo_hover: get('color_menu_fondo_hover') || '#a50d26',
+        color_menu_texto_hover: get('color_menu_texto_hover') || '#ffffff',
 
         tiene_expositores: (get('tiene_expositores') !== '') ? parseInt(get('tiene_expositores')) : 0,
-        color_titulo_h3: get('color_titulo_h3') || '#2c1a0e',
-        color_fondo_contacto: get('color_fondo_contacto') || '#f4e4c1',
-        color_texto_contacto: get('color_texto_contacto') || '#2c1a0e',
-        color_enlace_contacto: get('color_enlace_contacto') || '#8b5a2b',
-        color_fondo_footer: get('color_fondo_footer') || '#8b5a2b',
+        color_titulo_h3: get('color_titulo_h3') || '#1a1a1a',
+        color_fondo_contacto: get('color_fondo_contacto') || '#fdfdfd',
+        color_texto_contacto: get('color_texto_contacto') || '#1a1a1a',
+        color_enlace_contacto: get('color_enlace_contacto') || '#c8102e',
+        color_fondo_footer: get('color_fondo_footer') || '#c8102e',
         color_texto_footer: get('color_texto_footer') || '#ffffff',
         color_buscador_expositores: get('color_buscador_expositores') || '#ffffff',
         color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
-        color_borde_buscador_expositores: get('color_borde_buscador_expositores') || '#eeeeee',
-        color_fondo_share: get('color_fondo_share') || 'rgba(255, 255, 255, 0.5)',
-        color_texto_share: get('color_texto_share') || '#2c1a0e'
+        color_fondo_share: get('color_fondo_share') || '#ffffff',
+        color_texto_share: get('color_texto_share') || '#1a1a1a'
     };
 
     // ─── Precios ─────────────────────────────────────────────────────────────
@@ -92,7 +104,7 @@ export function guardarDatosPreview() {
         descripcion: row.querySelector('.act-descripcion')?.value || '',
         imagen: (() => {
             let imgs = [];
-            try { 
+            try {
                 const val = row.querySelector('.act-imagenes')?.value;
                 if (val) {
                     if (val.startsWith('[')) imgs = JSON.parse(val);
@@ -105,7 +117,10 @@ export function guardarDatosPreview() {
         })(),
         es_gratis: row.querySelector('.act-gratis')?.dataset.value === 'true' ? 1 : 0,
         requiere_entrada_online: row.querySelector('.act-requiere-online')?.dataset.value === 'true',
-        enlace_venta: row.querySelector('.act-enlace')?.value || ''
+        solo_online: row.querySelector('.act-solo-online')?.dataset.value === 'true',
+        enlace_venta: row.querySelector('.act-enlace')?.value || '',
+        video_url: row.querySelector('.act-video')?.value || '',
+        video: row.querySelector('.act-video')?.value || ''
     })).filter(a => a.titulo);
 
     // ─── EXPO SITORES (FIX COMPLETO AQUÍ) ────────────────────────────────────
@@ -155,9 +170,35 @@ export function guardarDatosPreview() {
         orden: parseInt(row.querySelector('.gal-orden')?.value) || 0
     })).filter(g => g.imagen_url);
 
-    const previewKey = 'preview_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem(previewKey, JSON.stringify(datos));
-    window.previewDataKey = previewKey;
+    let previewKey = window.previewDataKey;
+    if (!previewKey) {
+        previewKey = 'preview_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        window.previewDataKey = previewKey;
+    }
+
+    const datosStr = JSON.stringify(datos);
+
+    try {
+        localStorage.setItem(previewKey, datosStr);
+    } catch (e) {
+        if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+            console.warn('QuotaExceededError: Limpiando localStorage...');
+            // 1. Borrar TODOS los previews antiguos
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('preview_')) {
+                    localStorage.removeItem(key);
+                }
+            });
+            // 2. Re-intentar guardar el actual
+            try {
+                localStorage.setItem(previewKey, datosStr);
+            } catch (e2) {
+                console.error('No se pudo guardar ni tras limpieza:', e2);
+            }
+        } else {
+            console.error('Error guardando en localStorage:', e);
+        }
+    }
     return previewKey;
 }
 
@@ -170,6 +211,74 @@ export function programarActualizacion() {
     }, 400);
 }
 
+// ─── Toggles de Dispositivo ────────────────────────────────────────────────
+export function setPreviewMode(mode) {
+    const panel = document.getElementById('previewPanel');
+    const layout = document.getElementById('formLayout');
+    const btns = document.querySelectorAll('.preview-btn-device');
+    const iframe = document.getElementById('previewIframe');
+
+    if (mode === 'pc') {
+        panel.classList.add('pc-mode');
+        panel.classList.remove('mobile-mode');
+        layout.classList.add('pc-mode');
+        layout.classList.remove('mobile-mode');
+
+        // Truco de escalado para forzar vista PC
+        if (iframe) {
+            const containerWidth = panel.offsetWidth || (window.innerWidth * 0.55);
+            const targetWidth = 1200; // Ancho virtual de PC
+            const scale = (containerWidth - 15) / targetWidth;
+
+            // Usamos zoom si está disponible (Chrome/Edge/Safari) porque es mucho más estable para la altura
+            if ('zoom' in iframe.style) {
+                iframe.style.transform = 'none';
+                iframe.style.zoom = scale;
+                iframe.style.width = `${targetWidth}px`;
+                iframe.style.height = `calc(100% / ${scale})`;
+            } else {
+                // Fallback para otros navegadores
+                iframe.style.width = `${targetWidth}px`;
+                iframe.style.height = `${150 / scale}vh`; // 150vh para asegurar que sobrepasa el fondo
+                iframe.style.transform = `scale(${scale})`;
+                iframe.style.transformOrigin = 'top left';
+            }
+
+            iframe.style.border = 'none';
+
+            // Asegurar fondo blanco y altura mínima dentro del iframe
+            try {
+                const injectStyle = () => {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    if (doc && doc.body) {
+                        doc.body.style.minHeight = '100vh';
+                        doc.documentElement.style.height = '100%';
+                    }
+                };
+                iframe.onload = injectStyle;
+                injectStyle();
+            } catch (e) { /* Cross-origin security might block this if not on same domain */ }
+        }
+    } else {
+        panel.classList.remove('pc-mode');
+        panel.classList.add('mobile-mode');
+        layout.classList.remove('pc-mode');
+        layout.classList.add('mobile-mode');
+
+        // Reset de escalado para móvil
+        if (iframe) {
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.transform = 'none';
+            if ('zoom' in iframe.style) iframe.style.zoom = 'normal'; // O '1' o unset
+        }
+    }
+
+    btns.forEach(b => {
+        b.classList.toggle('active', b.dataset.device === mode);
+    });
+}
+
 // ─── Abrir preview ─────────────────────────────────────────────────────────
 export function abrirPreview() {
     const panel = document.getElementById('previewPanel');
@@ -179,6 +288,19 @@ export function abrirPreview() {
     layout.classList.add('with-preview');
     layout.classList.add('crear-evento-split');
     previewAbierto = true;
+
+    // Determinar modo inicial: PC si la pantalla es ancha (> 1024px)
+    const initialMode = window.innerWidth > 1024 ? 'pc' : 'mobile';
+    setPreviewMode(initialMode);
+
+    // Configurar listeners de los botones (solo una vez)
+    const btns = document.querySelectorAll('.preview-btn-device');
+    btns.forEach(btn => {
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            setPreviewMode(btn.dataset.device);
+        };
+    });
 
     document.getElementById('btnTogglePreview').innerHTML =
         '<i class="fas fa-eye-slash"></i> Ocultar preview';
@@ -196,9 +318,18 @@ export function abrirPreview() {
 
 // ─── Cerrar preview ────────────────────────────────────────────────────────
 export function cerrarPreview() {
-    document.getElementById('previewPanel').classList.remove('visible');
-    document.getElementById('formLayout').classList.remove('with-preview');
-    document.getElementById('formLayout').classList.remove('crear-evento-split');
+    const panel = document.getElementById('previewPanel');
+    const layout = document.getElementById('formLayout');
+
+    panel.classList.remove('visible');
+    panel.classList.remove('pc-mode');
+    panel.classList.remove('mobile-mode');
+
+    layout.classList.remove('with-preview');
+    layout.classList.remove('crear-evento-split');
+    layout.classList.remove('pc-mode');
+    layout.classList.remove('mobile-mode');
+
     previewAbierto = false;
 
     document.getElementById('btnTogglePreview').innerHTML =
@@ -239,3 +370,5 @@ export function aplicarCambiosEnVivo() {
 
     actualizarUrlBar();
 }
+
+

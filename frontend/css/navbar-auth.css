@@ -166,29 +166,37 @@
   background-color: #fadbd8;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .nav-auth {
-    justify-content: flex-end;
-  }
-
-  .btn-navbar-auth {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-
+/* Responsive - Los estilos base de layout.css ya manejan el flujo del wrapper */
+@media (max-width: 900px) {
   .btn-navbar-auth i:first-child {
     display: none;
   }
 
   .btn-user-dropdown {
-    padding: 6px 10px;
-    font-size: 13px;
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    font-size: 15px;
   }
 
   .user-dropdown-menu {
-    right: 0;
-    left: auto;
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    margin-top: 10px;
+    border-radius: 12px;
+  }
+
+  .dropdown-item {
+    color: white;
+    justify-content: center;
+    padding: 12px;
+  }
+  
+  .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -224,3 +232,5 @@
     70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
     100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
 }
+
+

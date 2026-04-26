@@ -149,3 +149,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 window.actualizarNavbarAuth = actualizarNavbarAuth;
 window.setupBotonesNavbar = setupBotonesNavbar;
 
+
+
+

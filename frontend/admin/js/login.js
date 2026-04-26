@@ -25,7 +25,7 @@ const doLogin = async (e) => {
         const data = await res.json();
         if (res.ok) {
             localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('usuario', JSON.stringify(data.user));
             window.location.href = 'dashboard.html';
         } else {
             errorDiv.innerText = data.error || 'Credenciales incorrectas';
@@ -44,3 +44,6 @@ emailInput.addEventListener('keypress', (e) => {
 passwordInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') doLogin(e);
 });
+
+
+

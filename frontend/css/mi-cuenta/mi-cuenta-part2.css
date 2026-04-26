@@ -51,7 +51,7 @@
 
 .modal-header h3 {
   margin: 0;
-  color: #2c1a0e;
+  color: #1a1a1a;
   font-size: 20px;
 }
 
@@ -108,8 +108,8 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #8b5a2b;
-  box-shadow: 0 0 0 3px rgba(139, 90, 43, 0.1);
+  border-color: #0033A0;
+  box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
 }
 
 .modal-mensaje {
@@ -208,60 +208,14 @@
   background-color: #c0392b;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .mi-cuenta-container {
-    margin: 20px auto;
-  }
+/* Responsive se maneja en responsive.css */
 
-  .cuenta-header h1 {
-    font-size: 24px;
-  }
-
-  .perfil-card {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .perfil-info {
-    flex-direction: column;
-  }
-
-  .perfil-acciones {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .perfil-acciones button {
-    width: 100%;
-  }
-
-  .eventos-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .btn-crear-grande {
-    flex-direction: column;
-    padding: 20px;
-  }
-
-  .btn-crear-grande i {
-    font-size: 32px;
-  }
-
-  .btn-crear-grande span {
-    align-items: center;
-    text-align: center;
-  }
-
-  .modal-acciones,
-  .modal-footer {
-    flex-direction: column;
-  }
-}
 
 /* ── Botón Ver/Editar en tarjeta de evento (mi-cuenta) ── */
 .evento-card-acciones {
   padding: 0 14px 14px;
   margin-top: auto;
 }
+
+
+

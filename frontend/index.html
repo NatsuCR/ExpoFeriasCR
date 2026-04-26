@@ -82,6 +82,10 @@
                 <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="Logo ExpoFeriasCR" loading="lazy">
                 <span>ExpoFeriasCR</span>
             </div>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-menu-wrapper" id="nav-menu-wrapper">
             <ul class="nav-links">
                 <li><a href="#inicio" id="btnInicio">Inicio</a></li>
                 <li><a href="#eventos-proximos">Eventos</a></li>
@@ -98,25 +102,60 @@
                 </button>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <section class="hero">
         <div class="container">
             <h1>Explora las mejores ferias y exposiciones de Costa Rica</h1>
-            <p>Encuentra eventos ganaderos, culturales, comerciales y mucho más. Todo en un solo lugar.</p>
+            <p style="margin-bottom: 30px; font-weight: 500; opacity: 0.9;">🎯 Encuentra eventos por ubicación o categoría:</p>
             <div class="search-filters">
-                <select id="provincia-select" class="filter-select">
-                    <option value="">Todas las provincias</option>
-                    <option value="San José">San José</option>
-                    <option value="Alajuela">Alajuela</option>
-                    <option value="Cartago">Cartago</option>
-                    <option value="Heredia">Heredia</option>
-                    <option value="Guanacaste">Guanacaste</option>
-                    <option value="Puntarenas">Puntarenas</option>
-                    <option value="Limón">Limón</option>
-                </select>
-                <input type="text" id="buscador-principal" placeholder="Buscar por nombre o ubicación..." class="search-input">
-                <button id="btn-buscar-principal" class="btn-search"><i class="fas fa-search"></i> Buscar</button>
+                <div class="filter-wrapper">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <select id="provincia-select" class="filter-select">
+                        <option value="">📍 Provincia</option>
+                        <option value="San José">San José</option>
+                        <option value="Alajuela">Alajuela</option>
+                        <option value="Cartago">Cartago</option>
+                        <option value="Heredia">Heredia</option>
+                        <option value="Guanacaste">Guanacaste</option>
+                        <option value="Puntarenas">Puntarenas</option>
+                        <option value="Limón">Limón</option>
+                    </select>
+                </div>
+                <div class="filter-wrapper">
+                    <i class="fas fa-city"></i>
+                    <select id="canton-select" class="filter-select">
+                        <option value="">🏙️ Cantón</option>
+                    </select>
+                </div>
+                <div class="filter-wrapper">
+                    <i class="fas fa-home"></i>
+                    <select id="distrito-select" class="filter-select">
+                        <option value="">🏘️ Distrito</option>
+                    </select>
+                </div>
+                <div class="filter-wrapper">
+                    <i class="fas fa-tags"></i>
+                    <select id="categoria-select" class="filter-select">
+                        <option value="">🎭 Categoría</option>
+                        <option value="Feria">Feria</option>
+                        <option value="Exposición">Exposición</option>
+                        <option value="Concierto">Concierto</option>
+                        <option value="Fiesta Típica">Fiesta Típica</option>
+                        <option value="Fiesta Local">Fiesta Local</option>
+                        <option value="Fiesta Regional">Fiesta Regional</option>
+                        <option value="Expedición">Expedición</option>
+                        <option value="Congreso">Congreso</option>
+                        <option value="Deporte">Deporte</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="filter-wrapper" style="flex: 2; min-width: 250px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="buscador-principal" placeholder="¿Qué estás buscando?..." class="search-input">
+                </div>
+                <button id="btn-buscar-principal" class="btn-search">Buscar</button>
             </div>
         </div>
     </section>
@@ -153,21 +192,13 @@
         </div>
     </section>
 
-    <!-- Sección Próximos eventos (carrusel si >4) -->
-    <section class="section-carousel reveal" id="eventos-proximos">
-        <div class="container">
-            <div class="section-header">
-                <h2>📅 Próximos eventos</h2>
-                <div class="carousel-controls" id="controls-proximos" style="display: none;">
-                    <button class="carousel-prev"><i class="fas fa-chevron-left"></i></button>
-                    <button class="carousel-next"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-            <div class="carousel-container" id="carousel-proximos-container">
-                <div class="carousel-track" id="carousel-proximos-track"></div>
-            </div>
-        </div>
-    </section>
+    <!-- Sección Categorías Dinámicas (Próximos eventos agrupados) -->
+    <div id="categorias-proximos-container"></div>
+    
+    <div id="no-results-msg" class="container" style="display: none; padding: 40px 20px; text-align: center;">
+        <h2 style="color: #c8102e; font-size: 24px; margin-bottom: 10px;">⚠️ Evento no encontrado</h2>
+        <p style="color: #666; font-size: 16px;">No se encontraron eventos que coincidan con tu búsqueda, pero aquí tienes otros que te pueden interesar:</p>
+    </div>
 
     <!-- Sección Eventos finalizados (carrusel si >4) -->
     <section class="section-carousel reveal" id="eventos-finalizados">
@@ -225,9 +256,12 @@
     <div id="modal-auth-container"></div>
 
     <script src="js/helpers.js?v=8.2"></script>
+    <script src="js/publico/carousel.js?v=1"></script>
+    <script src="js/ubicaciones.js"></script>
+    <script src="js/publico/search.js?v=2.0"></script>
     <script src="js/publico/modal-auth.js?v=8.2"></script>
     <script src="js/publico/main-auth.js?v=8.2"></script>
-    <script src="js/publico/main.js?v=8.2"></script>
+    <script src="js/main.js?v=8.2"></script>
     <!-- Botón Flotante de Notificaciones (Parches) -->
     <div id="patch-notes-btn" class="patch-btn" title="Ver novedades y parches">
         <i class="fas fa-bell"></i>
@@ -287,3 +321,5 @@
     </div>
 </body>
 </html>
+
+

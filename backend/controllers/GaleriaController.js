@@ -18,3 +18,5 @@ class GaleriaController {
 }
 
 module.exports = GaleriaController;
+
+

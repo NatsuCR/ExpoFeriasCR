@@ -1,149 +1,206 @@
 /* admin-responsive.css - Estilos responsive para el panel de administración */
 
-/* Para pantallas menores a 768px (tablets y móviles) */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .admin-container {
-        padding: 1rem;
+        padding: 15px !important;
     }
 
     .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+
+    .header-main-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 15px 20px !important;
+        width: 100% !important;
+        background: #0033A0 !important;
+        color: white !important;
+    }
+
+    .header-main-row h1 {
+        color: white !important;
+        font-size: 1.1rem !important;
+        margin: 0 !important;
+    }
+
+    .admin-menu-toggle {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        width: 30px !important;
+        height: 20px !important;
+        background: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+    }
+
+    .admin-menu-toggle span {
+        width: 100% !important;
+        height: 3px !important;
+        background-color: white !important;
+        border-radius: 10px !important;
+        transition: all 0.3s linear !important;
+    }
+
+    .header-buttons {
+        display: none !important; /* Escondido por defecto */
+        width: 100% !important;
+        background: white !important;
+        padding: 15px !important;
+        border-top: 1px solid #eee !important;
+        grid-template-columns: 1fr !important; /* Una sola columna en el desplegable */
+    }
+
+    .header-buttons.active {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .header-buttons .btn, 
+    .header-buttons .btn-logout {
+        width: 100% !important;
+        text-align: left !important;
+        justify-content: flex-start !important;
+        padding: 12px 15px !important;
+        border-radius: 8px !important;
+    }
+
+    /* El botón de cerrar sesión que ocupe toda la fila abajo si es impar, o simplemente grid */
+    .btn-logout {
+        grid-column: span 2 !important;
     }
 
     .toolbar {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: column !important;
+        gap: 10px !important;
     }
 
     .toolbar .btn {
-        width: 100%;
-        text-align: center;
+        width: 100% !important;
+        height: 45px !important;
+        font-size: 14px !important;
     }
 
-    .filtro-fechas .date-range {
-        flex-direction: column;
-        align-items: stretch;
+    .dashboard-sections {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
     }
 
-    .filtro-fechas .date-range input,
-    .filtro-fechas .date-range button {
-        width: 100%;
+    .section-body {
+        max-height: none !important; /* Permitir ver más en móvil si se desea */
     }
 
-    /* Tarjetas de eventos (dashboard) */
+    .mini-evento {
+        padding: 12px 15px !important;
+    }
+
+    .mini-edit-btn {
+        opacity: 1 !important; /* Siempre visible en táctil */
+    }
+
+    /* Lista de todos los eventos */
     .evento-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 15px !important;
+        position: relative !important;
     }
 
     .evento-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-        width: 100%;
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        margin-bottom: 15px !important;
+    }
+
+    .evento-details {
+        width: calc(100% - 30px) !important;
     }
 
     .evento-actions {
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        width: 100% !important;
+        padding-top: 15px !important;
+        border-top: 1px solid #f0f0f0 !important;
     }
 
-    /* Formularios */
-    .form-row {
-        flex-direction: column;
-        gap: 0.5rem;
+    .evento-actions .btn {
+        width: 100% !important;
+        margin: 0 !important;
+        height: 38px !important;
+        font-size: 12px !important;
+        justify-content: center !important;
     }
 
-    .form-group {
-        width: 100%;
+    /* Rango de fechas y gestión masiva */
+    .filtro-fechas {
+        padding: 15px !important;
     }
-
-    /* Pestañas */
-    .tabs {
-        flex-wrap: wrap;
-        justify-content: center;
+ 
+    .date-range-container {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 15px !important;
     }
-
-    .tab-btn {
-        font-size: 0.8rem;
-        padding: 6px 12px;
+ 
+    .date-range-group, .selection-group {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 10px !important;
+        padding: 0 !important;
+        border: none !important;
     }
-
-    /* Tablas (precios, actividades, etc.) */
-    .data-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
+ 
+    .date-range-group span {
+        display: none !important;
     }
-
-    /* Modales */
-    .modal-content {
-        width: 95%;
-        margin: 1rem;
-        padding: 1rem;
+ 
+    .date-range-container .btn {
+        width: 100% !important;
+        height: 45px !important;
     }
-
-    .modal-content .form-group input,
-    .modal-content .form-group textarea,
-    .modal-content .form-group select {
-        font-size: 16px; /* Evita zoom en iOS */
-    }
-
-    /* Mensajes */
-    .message {
-        font-size: 0.9rem;
-    }
-
-    /* Botones */
-    .btn {
-        padding: 8px 12px;
-        font-size: 0.85rem;
+ 
+    .select-all-wrapper {
+        justify-content: center !important;
+        padding: 5px 0 !important;
     }
 }
 
-/* Para pantallas muy pequeñas (menos de 480px) */
 @media (max-width: 480px) {
-    .admin-container {
-        padding: 0.5rem;
-    }
-
     .dashboard-header h1 {
-        font-size: 1.5rem;
+        font-size: 18px !important;
     }
 
-    .tab-btn {
-        font-size: 0.7rem;
-        padding: 4px 8px;
+    .header-buttons {
+        grid-template-columns: 1fr !important;
     }
 
-    .evento-item {
-        padding: 0.75rem;
+    .btn-logout {
+        grid-column: auto !important;
     }
 
-    .evento-info strong {
-        font-size: 1rem;
+    .evento-actions {
+        grid-template-columns: 1fr !important;
     }
 
-    .evento-info .evento-details {
-        font-size: 0.85rem;
-    }
-
-    .data-table th, .data-table td {
-        padding: 6px 8px;
-        font-size: 0.75rem;
+    /* Tablas en páginas de administración */
+    .data-table, .tabla-eventos {
+        display: block !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
     }
 }
-/* ── Responsive: secciones de resumen del dashboard ── */
-@media (max-width: 768px) {
-    .dashboard-sections {
-        grid-template-columns: 1fr;
-    }
-    .section-body {
-        max-height: 260px;
-    }
-}
+
+

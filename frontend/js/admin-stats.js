@@ -113,3 +113,5 @@ document.getElementById('btnExportarZip').addEventListener('click', async () => 
 
 // Inicializar
 fetchStats();
+
+

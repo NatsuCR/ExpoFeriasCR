@@ -1,0 +1,29 @@
+/* Forzar el layout de pantalla dividida cuando la previa está activa */
+#formLayout.with-preview, 
+#formLayout.crear-evento-split {
+    display: grid !important;
+    grid-template-columns: 1fr 480px !important;
+    gap: 24px !important;
+    align-items: start !important;
+}
+/* Forzar visibilidad del panel de vista previa */
+#previewPanel.visible {
+    display: flex !important;
+}
+@media (max-width: 1200px) {
+    #formLayout.with-preview, 
+    #formLayout.crear-evento-split {
+        grid-template-columns: 1fr 400px !important;
+    }
+}
+@media (max-width: 992px) {
+    #formLayout.with-preview, 
+    #formLayout.crear-evento-split {
+        grid-template-columns: 1fr !important;
+    }
+    #previewPanel.visible {
+        display: none !important;
+    }
+}
+
+

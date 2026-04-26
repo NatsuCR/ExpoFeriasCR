@@ -103,4 +103,7 @@ export function cerrarLightbox() {
 
 export function initLightbox() {
     crearLightbox();
+    window.abrirLightbox = abrirLightbox;
 }
+
+

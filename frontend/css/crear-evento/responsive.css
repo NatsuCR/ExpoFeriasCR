@@ -1,0 +1,137 @@
+/* crear-evento-responsive.css */
+
+@media (max-width: 900px) {
+    .crear-evento-container {
+        margin: 10px auto !important;
+        padding: 0 10px !important;
+        width: 100% !important;
+    }
+
+    .crear-evento-header {
+        margin-bottom: 20px !important;
+        padding: 0 15px !important;
+    }
+
+    .crear-evento-header h1 {
+        font-size: 24px !important;
+    }
+
+    .admin-action-container {
+        flex-direction: column !important;
+        gap: 10px !important;
+        align-items: stretch !important;
+    }
+
+    .admin-action-container .btn-preview-unificado {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .tab-content {
+        padding: 20px 15px !important;
+    }
+
+    .tabs-nav {
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 5px !important;
+    }
+
+    .tab-btn {
+        flex: 0 0 auto !important;
+        padding: 10px 15px !important;
+        min-height: 45px !important;
+    }
+
+    .tab-btn span {
+        display: block !important; /* Volver a mostrar texto en móvil si hay scroll horizontal */
+        font-size: 11px !important;
+    }
+
+    .tab-btn i {
+        font-size: 14px !important;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    /* Tablas como tarjetas en móvil */
+    .tabla-eventos, .tabla-eventos thead, .tabla-eventos tbody, .tabla-eventos th, .tabla-eventos td, .tabla-eventos tr {
+        display: block !important;
+    }
+
+    .tabla-eventos thead {
+        display: none !important;
+    }
+
+    .tabla-eventos tr {
+        margin-bottom: 20px !important;
+        border: 1px solid #eee !important;
+        border-radius: 10px !important;
+        padding: 15px !important;
+        background: #fdfdfd !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+    }
+
+    .tabla-eventos td {
+        border: none !important;
+        padding: 10px 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        max-width: 100% !important;
+    }
+
+    .tabla-eventos td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        font-size: 11px;
+        color: #666;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .tabla-eventos td input, .tabla-eventos td select, .tabla-eventos td textarea {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    /* Botones de navegación */
+    .form-navigation {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .form-navigation button {
+        width: 100% !important;
+    }
+
+    /* Ayuda / Help Box */
+    .help-box {
+        flex-direction: column !important;
+        gap: 10px !important;
+        text-align: center !important;
+    }
+
+    /* Modales */
+    .modal-contenedor {
+        width: 95% !important;
+        max-height: 95vh !important;
+    }
+
+    .modal-body {
+        padding: 15px !important;
+    }
+
+    .modal-footer {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .modal-footer button {
+        width: 100% !important;
+    }
+}

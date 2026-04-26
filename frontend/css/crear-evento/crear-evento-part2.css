@@ -25,7 +25,7 @@
 }
 
 .form-section h3 {
-  color: #2c1a0e;
+  color: #1a1a1a;
   font-size: 18px;
   margin: 30px 0 10px 0;
 }
@@ -112,16 +112,18 @@
 .btn-primary,
 .btn-secondary,
 .btn-success {
-  padding: 12px 24px;
+  padding: 10px 24px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  min-height: 42px;
 }
 
 .btn-primary {
@@ -162,12 +164,24 @@
 .btn-danger {
   background-color: #e74c3c;
   color: white;
-  padding: 6px 12px;
-  font-size: 12px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  min-height: 42px;
 }
 
 .btn-danger:hover {
   background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 
 /* btn-navbar-back → definido globalmente en navbar-auth.css (color blanco) */
@@ -319,3 +333,6 @@
   color: #666;
   font-weight: 600;
 }
+
+
+

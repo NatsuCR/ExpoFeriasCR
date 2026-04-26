@@ -13,3 +13,5 @@ class GaleriaService {
 }
 
 module.exports = GaleriaService;
+
+

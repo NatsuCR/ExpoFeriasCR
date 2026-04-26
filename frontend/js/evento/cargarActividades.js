@@ -2,14 +2,9 @@
 import { initResponsiveCarousel } from './carrusel.js';
 import { initLightbox, abrirLightbox } from './lightbox.js';
 
-function parseImagenes(valor) {
-    if (!valor) return [];
-    try {
-        const parsed = JSON.parse(valor);
-        if (Array.isArray(parsed)) return parsed.filter(Boolean);
-    } catch (_) {}
-    return valor.trim() ? [valor.trim()] : [];
-}
+// Usamos window.parseImagenes definida en helpers.js
+const parseImagenes = (v) => window.parseImagenes(v);
+
 
 function buildMiniCarrusel(imagenes, altText) {
     if (imagenes.length === 0) return '';
@@ -97,6 +92,35 @@ export async function cargarActividades(slug) {
 
             const gratisHtml = esGratis ? '<p><strong>Evento gratuito</strong></p>' : '';
 
+            let videoHtml = '';
+            const videoSrc = (a.videoUrl || a.video_url || '').trim();
+            if (videoSrc) {
+                let mediaContent = '';
+                const isLocalVideo = videoSrc.match(/\.(mp4|webm|ogg|mov)(\?.*)?$/i) || videoSrc.startsWith('/assets/uploads/');
+                if (isLocalVideo) {
+                    mediaContent = `<video src="${videoSrc}" controls style="width:100%; border-radius:12px; aspect-ratio:16/9; background:#000;"></video>`;
+                } else {
+                    let embedUrl = videoSrc;
+                    if (videoSrc.includes('youtube.com/watch?v=')) {
+                        embedUrl = videoSrc.replace('watch?v=', 'embed/');
+                    } else if (videoSrc.includes('youtu.be/')) {
+                        embedUrl = videoSrc.replace('youtu.be/', 'youtube.com/embed/');
+                    }
+                    mediaContent = `<iframe src="${embedUrl}" frameborder="0" allowfullscreen style="width:100%; border-radius:12px; aspect-ratio:16/9;"></iframe>`;
+                }
+
+                videoHtml = `
+                    <div class="actividad-video-wrapper" style="margin-top:15px; text-align:center;">
+                        <button type="button" class="btn-toggle-video btn-ver-mas">
+                            <i class="fas fa-play-circle"></i> Ver video
+                        </button>
+                        <div class="video-container" style="display:none; margin-top:15px;">
+                            ${mediaContent}
+                        </div>
+                    </div>
+                `;
+            }
+
             html += `
     <div class="actividad-card">
         ${buildMiniCarrusel(imagenesLimpias, a.titulo)}
@@ -104,6 +128,7 @@ export async function cargarActividades(slug) {
         <p><i class="fas fa-calendar-day"></i> ${fecha} ${hora}</p>
         <p><i class="fas fa-map-pin"></i> ${lugar}</p>
         ${typeof window.formatDescription === 'function' ? window.formatDescription(descripcion) : `<p class="descripcion-texto">${descripcion}</p>`}
+        ${videoHtml}
         ${linkHtml}
         ${gratisHtml}
     </div>`;
@@ -112,6 +137,7 @@ export async function cargarActividades(slug) {
         container.innerHTML = html;
         initLightbox();
         initMiniCarruseles();
+        initVideoListeners(container);
 
         // Clic en imágenes → lightbox
         container.querySelectorAll('.card-img-principal').forEach(img => {
@@ -155,3 +181,27 @@ export async function cargarActividades(slug) {
         container.innerHTML = '<p>Error al cargar actividades.</p>';
     }
 }
+
+function initVideoListeners(container) {
+    container.querySelectorAll('.btn-toggle-video').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const wrapper = btn.closest('.actividad-video-wrapper');
+            const videoCont = wrapper.querySelector('.video-container');
+            const isHidden = videoCont.style.display === 'none';
+
+            if (isHidden) {
+                videoCont.style.display = 'block';
+                btn.innerHTML = 'Ocultar video';
+                btn.classList.add('btn-ver-menos');
+            } else {
+                videoCont.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-play-circle"></i> Ver video';
+                btn.classList.remove('btn-ver-menos');
+                const videoTag = videoCont.querySelector('video');
+                if (videoTag) videoTag.pause();
+            }
+        });
+    });
+}
+
+

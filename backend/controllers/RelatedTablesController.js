@@ -65,9 +65,9 @@ class RelatedTablesController {
         await pool.query(
           `INSERT INTO actividades (
             evento_id, titulo, tipo, fecha, hora, lugar,
-            descripcion, imagen, es_gratis,
-            requiere_entrada_online, enlace_venta
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            descripcion, imagen, video_url, es_gratis,
+            requiere_entrada_online, enlace_venta, solo_online
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             eventoId,
             a.titulo,
@@ -79,9 +79,11 @@ class RelatedTablesController {
             Array.isArray(a.imagen)
               ? JSON.stringify(a.imagen)
               : a.imagen || null,
+            a.video_url || a.video || null,
             a.es_gratis || 0,
             a.requiere_entrada_online || 0,
-            a.enlace_venta || null
+            a.enlace_venta || null,
+            a.solo_online || 0
           ]
         );
       }
@@ -129,3 +131,5 @@ class RelatedTablesController {
 }
 
 module.exports = new RelatedTablesController();
+
+

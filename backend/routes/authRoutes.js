@@ -19,3 +19,5 @@ router.post('/logout', authMiddleware, authController.logout.bind(authController
 router.delete('/eliminar-cuenta', authMiddleware, authController.eliminarCuenta.bind(authController));
 
 module.exports = router;
+
+

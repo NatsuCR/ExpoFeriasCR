@@ -242,3 +242,5 @@ export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId,
         reanudar: reanudarAutoplay
     };
 }
+
+

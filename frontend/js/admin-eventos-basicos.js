@@ -12,11 +12,11 @@ async function cargarDatosEvento() {
     document.getElementById('imagen_portada').value = evento.imagen_portada || '';
     document.getElementById('horario_imagen').value = evento.horario_imagen || '';
     document.getElementById('mapa_embed').value = evento.mapa_embed || '';
-    document.getElementById('color_primario').value = evento.color_primario || '#8b5a2b';
-    document.getElementById('color_secundario').value = evento.color_secundario || '#d4a373';
-    document.getElementById('color_titulo_seccion').value = evento.color_titulo_seccion || '#2c1a0e';
-    document.getElementById('color_fondo').value = evento.color_fondo || '#f4e4c1';
-    document.getElementById('color_texto').value = evento.color_texto || '#2c1a0e';
+    document.getElementById('color_primario').value = evento.color_primario || '#c8102e';
+    document.getElementById('color_secundario').value = evento.color_secundario || '#0033a0';
+    document.getElementById('color_titulo_seccion').value = evento.color_titulo_seccion || '#1a1a1a';
+    document.getElementById('color_fondo').value = evento.color_fondo || '#fdfdfd';
+    document.getElementById('color_texto').value = evento.color_texto || '#1a1a1a';
     document.getElementById('color_menu_fondo').value = evento.color_menu_fondo || '#ffffff';
     document.getElementById('color_menu_texto').value = evento.color_menu_texto || '#ffffff';
     document.getElementById('color_menu_fondo_hover').value = evento.color_menu_fondo_hover || '#000000';
@@ -26,14 +26,14 @@ async function cargarDatosEvento() {
     document.getElementById('url_venta_online').value = evento.url_venta_online || '';
     document.getElementById('color_titulo_hero').value = evento.color_titulo_hero || '#FFFFFF';
     document.getElementById('color_descripcion_hero').value = evento.color_descripcion_hero || '#FFFFFF';
-    document.getElementById('color_fondo_fechas').value = evento.color_fondo_fechas || '#d4a373';
-    document.getElementById('color_texto_fechas').value = evento.color_texto_fechas || '#8b5a2b';
-    document.getElementById('color_fondo_contacto').value = evento.color_fondo_contacto || '#f4e4c1';
-    document.getElementById('color_texto_contacto').value = evento.color_texto_contacto || '#2c1a0e';
-    document.getElementById('color_enlace_contacto').value = evento.color_enlace_contacto || '#8b5a2b';
-    document.getElementById('color_fondo_footer').value = evento.color_fondo_footer || '#8b5a2b';
+    document.getElementById('color_fondo_fechas').value = evento.color_fondo_fechas || '#0033a0';
+    document.getElementById('color_texto_fechas').value = evento.color_texto_fechas || '#c8102e';
+    document.getElementById('color_fondo_contacto').value = evento.color_fondo_contacto || '#fdfdfd';
+    document.getElementById('color_texto_contacto').value = evento.color_texto_contacto || '#1a1a1a';
+    document.getElementById('color_enlace_contacto').value = evento.color_enlace_contacto || '#c8102e';
+    document.getElementById('color_fondo_footer').value = evento.color_fondo_footer || '#c8102e';
     document.getElementById('color_texto_footer').value = evento.color_texto_footer || '#ffffff';
-    document.getElementById('color_titulo_h3').value = evento.color_titulo_h3 || '#2c1a0e';
+    document.getElementById('color_titulo_h3').value = evento.color_titulo_h3 || '#1a1a1a';
     document.getElementById('activo').checked = evento.activo;
     document.getElementById('formTitle').innerText = `Editando: ${evento.nombre}`;
 
@@ -144,3 +144,5 @@ async function confirmarPublicar() {
         mostrarMensaje('Error al publicar el evento', 'error');
     }
 }
+
+

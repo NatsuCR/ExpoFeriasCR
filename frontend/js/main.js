@@ -1,7 +1,9 @@
-// frontend/js/main.js
+/**
+ * main.js - Orquestador principal de la página de inicio
+ */
 
-let provinciaActual = '';
-let busquedaActual = '';
+window.provinciaActual = '';
+window.busquedaActual = '';
 
 async function fetchData(url) {
     try {
@@ -17,163 +19,77 @@ async function fetchData(url) {
 function createEventoCard(evento, isLive = false) {
     const card = document.createElement('div');
     card.className = 'evento-card carousel-slide';
+    
+    // Hacer que toda la tarjeta sea clickable
+    card.onclick = (e) => {
+        // Si se hace click en el botón de ver detalles, dejar que el <a> haga su trabajo
+        // Si se hace click en cualquier otra parte de la card, redirigir
+        if (e.target.tagName !== 'A' && !e.target.closest('a')) {
+            window.location.href = `evento.html?slug=${evento.slug}`;
+        }
+    };
+
     if (isLive) {
         const badge = document.createElement('div');
         badge.className = 'live-badge';
         badge.textContent = '🔴 EN VIVO';
         card.appendChild(badge);
     }
+    
+    const imgUrl = evento.imagen_portada || 'assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
+    
+    // Ubicación resumida (Provincia o Cantón si existe)
+    const ubicacionCorta = evento.canton ? `${evento.canton}, ${evento.provincia}` : (evento.provincia || evento.ubicacion);
+    
     card.innerHTML += `
-        <img src="${evento.imagen_portada || 'assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png'}" alt="${evento.nombre}">
-        <h3>${evento.nombre}</h3>
-        <p>${window.formatDateCR(evento.fecha_inicio)} - ${window.formatDateCR(evento.fecha_fin)}</p>
-        <p>${evento.ubicacion}</p>
-        <a href="evento.html?slug=${evento.slug}" class="btn-ver">Ver más</a>
+        <div class="card-img-wrap">
+            <img src="${imgUrl}" alt="${evento.nombre}" loading="lazy">
+            ${evento.tipo_evento ? `<span class="category-badge">${evento.tipo_evento}</span>` : ''}
+        </div>
+        <div class="card-info">
+            <h3>${evento.nombre}</h3>
+            <p class="card-date"><i class="fas fa-calendar-alt"></i> ${(() => {
+                const fInicio = window.formatDateCR ? window.formatDateCR(evento.fecha_inicio) : evento.fecha_inicio;
+                const fFin = window.formatDateCR ? window.formatDateCR(evento.fecha_fin) : evento.fecha_fin;
+                if (!evento.fecha_fin || fInicio === fFin) return fInicio;
+                return `${fInicio} - ${fFin}`;
+            })()}</p>
+            <p class="card-location"><i class="fas fa-map-marker-alt"></i> ${ubicacionCorta}</p>
+            <a href="evento.html?slug=${evento.slug}" class="btn-ver">Ver detalles</a>
+        </div>
     `;
     return card;
 }
 
-function initCarousel(trackId, items, controlsId, itemsPerView = 4) {
-    const track = document.getElementById(trackId);
-    const controls = document.getElementById(controlsId);
-    if (!track) return;
-
-    track.innerHTML = '';
-    items.forEach(item => track.appendChild(item));
-
-    const totalItems = items.length;
-    if (totalItems === 0) return;
-
-    let isMobile = window.innerWidth <= 768;
-    const showButtons = isMobile ? totalItems > 1 : totalItems > itemsPerView;
-
-    if (controls) {
-        controls.style.display = showButtons ? 'flex' : 'none';
-    }
-
-    if (!showButtons) {
-        track.style.transform = 'translateX(0)';
-        return;
-    }
-
-    let currentIndex = 0;
-    let maxOffset = 0;
-    let step = 0;
-    let containerWidth = 0;
-
-    function updateDimensions() {
-        isMobile = window.innerWidth <= 768;
-        const container = track.parentElement;
-        containerWidth = container.clientWidth;
-
-        if (isMobile) {
-            step = containerWidth;
-
-            Array.from(track.children).forEach(card => {
-                card.style.minWidth = `${containerWidth}px`;
-                card.style.maxWidth = `${containerWidth}px`;
-                card.style.marginRight = '0px';
-            });
-
-            maxOffset = -(totalItems - 1) * step;
-
-        } else {
-            // Limpiar estilos inline del modo móvil
-            Array.from(track.children).forEach(card => {
-                card.style.minWidth = '';
-                card.style.maxWidth = '';
-                card.style.marginRight = '';
-            });
-
-            const firstCard = track.children[0];
-            const secondCard = track.children[1];
-
-            if (firstCard && secondCard) {
-                // offsetLeft es fiable porque width:100% en el track
-                // hace que el % de las cards se calcule correctamente
-                step = secondCard.offsetLeft - firstCard.offsetLeft;
-            } else if (firstCard) {
-                step = firstCard.offsetWidth;
-            }
-
-            const trackWidth = track.scrollWidth;
-            maxOffset = Math.min(0, containerWidth - trackWidth);
-        }
-
-        const maxIndex = isMobile
-            ? totalItems - 1
-            : Math.max(0, totalItems - itemsPerView);
-
-        if (currentIndex > maxIndex) currentIndex = maxIndex;
-
-        updateTransform();
-    }
-
-    function updateTransform() {
-        if (isMobile) {
-            track.style.transform = `translateX(${-(currentIndex * step)}px)`;
-        } else {
-            let finalOffset = Math.max(-(currentIndex * step), maxOffset);
-            finalOffset = Math.min(finalOffset, 0);
-            track.style.transform = `translateX(${finalOffset}px)`;
-        }
-    }
-
-    function goNext() {
-        const maxIndex = isMobile
-            ? totalItems - 1
-            : Math.max(0, totalItems - itemsPerView);
-        if (currentIndex < maxIndex) {
-            currentIndex++;
-            updateTransform();
-        }
-    }
-
-    function goPrev() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateTransform();
-        }
-    }
-
-    const prevBtn = controls?.querySelector('.carousel-prev');
-    const nextBtn = controls?.querySelector('.carousel-next');
-
-    if (prevBtn) {
-        const newPrev = prevBtn.cloneNode(true);
-        prevBtn.parentNode.replaceChild(newPrev, prevBtn);
-        newPrev.addEventListener('click', goPrev);
-    }
-
-    if (nextBtn) {
-        const newNext = nextBtn.cloneNode(true);
-        nextBtn.parentNode.replaceChild(newNext, nextBtn);
-        newNext.addEventListener('click', goNext);
-    }
-
-    window.addEventListener('resize', () => {
-        updateDimensions();
-    });
-
-    updateDimensions();
-}
-
-async function cargarSeccion(endpoint, trackId, controlsId, isLive, provincia, termino = '') {
+window.cargarSeccion = async function(endpoint, trackId, controlsId, isLive, filtros = {}) {
     const sectionElement = document.getElementById(trackId)?.closest('.section-carousel');
     if (!sectionElement) return;
+
+    const { provincia, canton, distrito, categoria, termino } = filtros;
 
     let url = endpoint;
     if (provincia) url += `?provincia=${encodeURIComponent(provincia)}`;
     let eventos = await fetchData(url);
 
+    // Filtrado en el cliente (Frontend)
+    if (canton) {
+        eventos = eventos.filter(e => e.canton === canton);
+    }
+    if (distrito) {
+        eventos = eventos.filter(e => e.distrito === distrito);
+    }
+    if (categoria) {
+        eventos = eventos.filter(e => e.tipo_evento === categoria);
+    }
     if (termino) {
         const termLower = termino.toLowerCase();
         eventos = eventos.filter(e => {
             const enNombre = e.nombre.toLowerCase().includes(termLower);
-            const enUbicacion = e.ubicacion.toLowerCase().includes(termLower);
-            const anioInicio = new Date(e.fecha_inicio).getFullYear().toString();
-            const enAnio = anioInicio.includes(termLower);
-            return enNombre || enUbicacion || enAnio;
+            const enUbicacion = (e.ubicacion || '').toLowerCase().includes(termLower);
+            const enCanton = (e.canton || '').toLowerCase().includes(termLower);
+            const enDistrito = (e.distrito || '').toLowerCase().includes(termLower);
+            const enProvincia = (e.provincia || '').toLowerCase().includes(termLower);
+            return enNombre || enUbicacion || enCanton || enDistrito || enProvincia;
         });
     }
 
@@ -186,143 +102,171 @@ async function cargarSeccion(endpoint, trackId, controlsId, isLive, provincia, t
     }
     sectionElement.style.display = 'block';
     const cards = eventos.map(e => createEventoCard(e, isLive));
-    initCarousel(trackId, cards, controlsId, 4);
+    
+    if (window.initCarousel) {
+        window.initCarousel(trackId, cards, controlsId, 4);
+    } else {
+        track.innerHTML = '';
+        cards.forEach(c => track.appendChild(c));
+    }
 }
 
-async function cargarProximos(provincia = '', termino = '') {
+window.cargarProximos = async function(filtros = {}) {
+    const container = document.getElementById('categorias-proximos-container');
+    const noResultsMsg = document.getElementById('no-results-msg');
+    if (!container) return;
+
+    const { provincia, canton, distrito, categoria, termino } = filtros;
+
     let url = '/api/eventos';
     if (provincia) url += `?provincia=${encodeURIComponent(provincia)}`;
     let eventos = await fetchData(url);
 
+    let eventosFiltrados = eventos;
+    if (canton) eventosFiltrados = eventosFiltrados.filter(e => e.canton === canton);
+    if (distrito) eventosFiltrados = eventosFiltrados.filter(e => e.distrito === distrito);
+    if (categoria) eventosFiltrados = eventosFiltrados.filter(e => e.tipo_evento === categoria);
+    
     if (termino) {
         const termLower = termino.toLowerCase();
-        eventos = eventos.filter(e => {
+        eventosFiltrados = eventosFiltrados.filter(e => {
             const enNombre = e.nombre.toLowerCase().includes(termLower);
-            const enUbicacion = e.ubicacion.toLowerCase().includes(termLower);
-            const anioInicio = new Date(e.fecha_inicio).getFullYear().toString();
-            const enAnio = anioInicio.includes(termLower);
-            return enNombre || enUbicacion || enAnio;
+            const enUbicacion = (e.ubicacion || '').toLowerCase().includes(termLower);
+            const enCanton = (e.canton || '').toLowerCase().includes(termLower);
+            const enDistrito = (e.distrito || '').toLowerCase().includes(termLower);
+            const enProvincia = (e.provincia || '').toLowerCase().includes(termLower);
+            return enNombre || enUbicacion || enCanton || enDistrito || enProvincia;
         });
     }
 
-    const track = document.getElementById('carousel-proximos-track');
-    const sectionProximos = document.getElementById('eventos-proximos') || document.getElementById('eventos');
-    if (!track) return;
+    if (noResultsMsg) noResultsMsg.style.display = 'none';
 
-    if (eventos.length === 0) {
-        track.innerHTML = '';
-        const emptyMsg = document.createElement('div');
-        emptyMsg.className = 'carousel-slide';
-        emptyMsg.style.flex = '0 0 100%';
-        emptyMsg.style.textAlign = 'center';
-        emptyMsg.style.padding = '2rem';
-        emptyMsg.innerHTML = '<p>No se encontraron eventos disponibles.</p>';
-        track.appendChild(emptyMsg);
-        const controls = document.getElementById('controls-proximos');
-        if (controls) controls.style.display = 'none';
-        track.style.transform = 'translateX(0)';
-        if (sectionProximos) sectionProximos.style.display = 'block';
-        return;
+    // Si no hay resultados de búsqueda, mostramos todos los eventos próximos (para no dejar el sitio vacío)
+    const aMostrar = (eventosFiltrados.length === 0 && termino !== '') ? eventos : eventosFiltrados;
+    
+    // Agrupar por tipo_evento
+    const grupos = {};
+    aMostrar.forEach(e => {
+        const tipo = e.tipo_evento || 'Otros Eventos';
+        if (!grupos[tipo]) grupos[tipo] = [];
+        grupos[tipo].push(e);
+    });
+
+    container.innerHTML = '';
+    
+    // Ordenar categorías: Si hay búsqueda y resultados, poner la categoría del primer resultado arriba
+    let tiposOrdenados = Object.keys(grupos).sort();
+    if (termino && hayResultados) {
+        const tipoDestacado = eventosFiltrados[0].tipo_evento || 'Otros Eventos';
+        tiposOrdenados = [tipoDestacado, ...tiposOrdenados.filter(t => t !== tipoDestacado)];
     }
 
-    if (sectionProximos) sectionProximos.style.display = 'block';
-    const cards = eventos.map(e => createEventoCard(e, false));
-    initCarousel('carousel-proximos-track', cards, 'controls-proximos', 4);
+    tiposOrdenados.forEach((tipo, index) => {
+        const sectionId = `category-${index}`;
+        const trackId = `track-${sectionId}`;
+        const controlsId = `controls-${sectionId}`;
+        
+        const sectionHtml = `
+            <section class="section-carousel reveal active" id="${sectionId}">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>📅 ${tipo}</h2>
+                        <div class="carousel-controls" id="${controlsId}" style="display: none;">
+                            <button class="carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="carousel-next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="${trackId}"></div>
+                    </div>
+                </div>
+            </section>
+        `;
+        container.insertAdjacentHTML('beforeend', sectionHtml);
+        
+        const track = document.getElementById(trackId);
+        const cards = grupos[tipo].map(e => createEventoCard(e, false));
+        
+        if (window.initCarousel) {
+            window.initCarousel(trackId, cards, controlsId, 4);
+        } else {
+            cards.forEach(c => track.appendChild(c));
+        }
+    });
 }
 
-async function cargarFinalizados(provincia = '', termino = '') {
-    let url = '/api/eventos/finalizados';
-    if (provincia) url += `?provincia=${encodeURIComponent(provincia)}`;
-    let eventos = await fetchData(url);
-
-    if (termino) {
-        const termLower = termino.toLowerCase();
-        eventos = eventos.filter(e => {
-            const enNombre    = e.nombre.toLowerCase().includes(termLower);
-            const enUbicacion = e.ubicacion.toLowerCase().includes(termLower);
-            const anioInicio  = new Date(e.fecha_inicio).getFullYear().toString();
-            const enAnio      = anioInicio.includes(termLower);
-            return enNombre || enUbicacion || enAnio;
-        });
-    }
-
-    const track          = document.getElementById('carousel-finalizados-track');
-    const sectionElement = document.getElementById('eventos-finalizados');
-    if (!track) return;
-
-    if (eventos.length === 0) {
-        if (sectionElement) sectionElement.style.display = 'none';
-        return;
-    }
-    if (sectionElement) sectionElement.style.display = 'block';
-    const cards = eventos.map(e => createEventoCard(e, false));
-    initCarousel('carousel-finalizados-track', cards, 'controls-finalizados', 4);
+window.cargarFinalizados = async function(filtros = {}) {
+    await window.cargarSeccion('/api/eventos/finalizados', 'carousel-finalizados-track', 'controls-finalizados', false, filtros);
 }
 
-async function realizarBusqueda() {
-    const select = document.getElementById('provincia-select');
-    const input = document.getElementById('buscador-principal');
-    const provincia = select ? select.value : '';
-    const termino = input ? input.value.trim() : '';
+function initPatchNotes() {
+    const btn = document.getElementById('patch-notes-btn');
+    const overlay = document.getElementById('patch-notes-overlay');
+    const closeBtn = document.getElementById('patch-close-btn');
+    const understoodBtn = document.getElementById('btn-entendido-patch');
 
-    provinciaActual = provincia;
-    busquedaActual = termino;
-
-    await cargarSeccion('/api/eventos/hoy', 'carousel-hoy-track', 'controls-hoy', false, provincia, termino);
-    await cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, provincia, termino);
-    await cargarProximos(provincia, termino);
-    await cargarFinalizados(provincia, termino);
+    if (!btn || !overlay) return;
+    btn.onclick = () => overlay.classList.add('active');
+    if (closeBtn) closeBtn.onclick = () => overlay.classList.remove('active');
+    if (understoodBtn) understoodBtn.onclick = () => overlay.classList.remove('active');
+    overlay.onclick = (e) => { if (e.target === overlay) overlay.classList.remove('active'); };
 }
 
-function configurarBuscadores() {
-    const input = document.getElementById('buscador-principal');
-    const btn = document.getElementById('btn-buscar-principal');
-    const select = document.getElementById('provincia-select');
-    const btnInicio = document.getElementById('btnInicio');
+function initMobileMenu() {
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('nav-menu-wrapper');
+    const links = document.querySelectorAll('.nav-links a');
 
-    const ejecutarBusqueda = () => realizarBusqueda();
+    if (!toggle || !menu) return;
 
-    const resetear = () => {
-        if (select) select.value = '';
-        if (input) input.value = '';
-        provinciaActual = '';
-        busquedaActual = '';
-        cargarSeccion('/api/eventos/hoy', 'carousel-hoy-track', 'controls-hoy', false, '', '');
-        cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, '', '');
-        cargarProximos('', '');
-        cargarFinalizados('', '');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu.classList.toggle('active');
+        toggle.querySelector('i').classList.toggle('fa-bars');
+        toggle.querySelector('i').classList.toggle('fa-times');
+    });
 
-    if (btn && input) {
-        btn.addEventListener('click', ejecutarBusqueda);
-        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') ejecutarBusqueda(); });
-    }
-    if (select) {
-        select.addEventListener('change', () => {
-            if (busquedaActual !== '') {
-                realizarBusqueda();
-            } else {
-                const provincia = select.value;
-                cargarSeccion('/api/eventos/hoy', 'carousel-hoy-track', 'controls-hoy', false, provincia, '');
-                cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, provincia, '');
-                cargarProximos(provincia, '');
-                cargarFinalizados(provincia, '');
-            }
+    // Cerrar al hacer click fuera
+    document.addEventListener('click', (e) => {
+        if (menu.classList.contains('active') && !menu.contains(e.target) && e.target !== toggle) {
+            menu.classList.remove('active');
+            toggle.querySelector('i').classList.add('fa-bars');
+            toggle.querySelector('i').classList.remove('fa-times');
+        }
+    });
+
+    // Cerrar al clickear un link
+    links.forEach(l => {
+        l.addEventListener('click', () => {
+            menu.classList.remove('active');
+            toggle.querySelector('i').classList.add('fa-bars');
+            toggle.querySelector('i').classList.remove('fa-times');
         });
-    }
-    if (btnInicio) {
-        btnInicio.addEventListener('click', (e) => {
-            e.preventDefault();
-            resetear();
+    });
+}
+
+function initRevealAnimations() {
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('active');
         });
-    }
+    }, { threshold: 0.1 });
+    reveals.forEach(reveal => observer.observe(reveal));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    cargarSeccion('/api/eventos/hoy', 'carousel-hoy-track', 'controls-hoy', false, '', '');
-    cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, '', '');
-    cargarProximos('', '');
-    cargarFinalizados('', '');
-    configurarBuscadores();
+    const filtrosVacios = { provincia: '', canton: '', distrito: '', categoria: '', termino: '' };
+    window.cargarSeccion('/api/eventos/hoy', 'carousel-hoy-track', 'controls-hoy', false, filtrosVacios);
+    window.cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, filtrosVacios);
+    window.cargarProximos(filtrosVacios);
+    window.cargarFinalizados(filtrosVacios);
+    
+    if (window.configurarBuscadores) window.configurarBuscadores();
+    
+    initRevealAnimations();
+    initPatchNotes();
+    initMobileMenu();
 });
+
+

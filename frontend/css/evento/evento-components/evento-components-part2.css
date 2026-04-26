@@ -1,3 +1,18 @@
+.mini-carrusel {
+    position: relative;
+    width: 100%;
+    height: 250px; /* Altura fija para evitar colapso de información */
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    background: #f0f0f0;
+}
+
+.mini-carrusel-track {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
 
 .mini-slide {
     position: absolute;
@@ -198,3 +213,6 @@
 .mini-slide img {
     cursor: zoom-in;
 }
+
+
+

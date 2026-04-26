@@ -4,7 +4,7 @@
  * Importa todos los módulos y configura globales
  */
 
-import { CrearEvento } from './crearEventoMain.js?v=2.2';
+import { CrearEvento } from './crearEventoMain.js';
 import { subirImagen, bindUpload } from './uploadManager.js';
 import {
   abrirModalPrecio, cerrarModalPrecio, agregarPrecioDelModal,
@@ -74,3 +74,6 @@ function initColorListeners() {
 
 // Esperar a DOMContentLoaded antes de inicializar listeners de colores
 document.addEventListener('DOMContentLoaded', initColorListeners);
+
+
+

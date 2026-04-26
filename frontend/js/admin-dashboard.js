@@ -231,3 +231,5 @@ btnEliminarSeleccionados.addEventListener('click', eliminarSeleccionados);
 btnEliminarPorFecha.addEventListener('click', eliminarPorFecha);
 
 cargarEventos();
+
+

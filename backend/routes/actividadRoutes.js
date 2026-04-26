@@ -8,3 +8,5 @@ const actividadController = new ActividadController();
 router.get('/:slug', actividadController.obtenerPorEvento.bind(actividadController));
 
 module.exports = router;
+
+

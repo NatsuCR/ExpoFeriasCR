@@ -38,7 +38,7 @@
 
 .device-btn.active {
     background: #fff;
-    color: #2c1a0e;
+    color: #1a1a1a;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -81,4 +81,7 @@
     height: 100%;
     border: none;
 }
+
+
+
 

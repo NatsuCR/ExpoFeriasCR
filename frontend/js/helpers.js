@@ -1,216 +1,254 @@
 /**
- * helpers.js - Funciones globales utilitarias para ExpoFeriasCR
- * Este archivo NO es un módulo para asegurar disponibilidad global inmediata.
+ * helpers.js - Funciones de utilidad global para ExpoFeriasCR
  */
 
-window.toggleDesc = function (btn) {
+// Formatear fecha al estilo de Costa Rica
+window.formatDateCR = function (dateStr, format = 'full') {
+    if (!dateStr || dateStr === 'Invalid Date' || dateStr === 'null') return 'Fecha por confirmar';
+    try {
+        // Manejar formato DD-MMM o strings no-fecha que deben pasar tal cual
+        if (typeof dateStr === 'string' && dateStr.includes('-') && isNaN(new Date(dateStr).getTime())) {
+            return dateStr;
+        }
 
-    const container = btn.closest('.desc-container');
-    
-    if (!container) {
-        console.warn("No se encontró el contenedor .desc-container para el botón:", btn);
-        return;
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return 'Fecha por confirmar';
+
+        const options = format === 'short'
+            ? { day: '2-digit', month: 'short' }
+            : { day: '2-digit', month: 'long', year: 'numeric' };
+
+        // Forzar UTC si es necesario para evitar desfases de zona horaria en fechas puras
+        return date.toLocaleDateString('es-CR', options);
+    } catch (e) {
+        return 'Fecha por confirmar';
     }
-
-    const full = container.querySelector('.desc-full');
-    const short = container.querySelector('.desc-short');
-    
-    if (!full || !short) {
-        console.warn("No se encontraron los elementos .desc-full o .desc-short dentro de:", container);
-        return;
-    }
-
-    // Determinar estado actual basado en el estilo computado
-    const isFullHidden = window.getComputedStyle(full).display === 'none';
-
-    if (isFullHidden) {
-        // Expandir
-        short.style.setProperty('display', 'none');
-        full.style.setProperty('display', 'block');
-        btn.innerHTML = 'Ver menos';
-    } else {
-        // Colapsar
-        full.style.setProperty('display', 'none');
-        short.style.setProperty('display', '-webkit-box');
-        btn.innerHTML = 'Ver más';
-    }
-
-    // Emitir evento para que otros componentes (como el carrusel) reaccionen
-    document.dispatchEvent(new CustomEvent('descToggle', { 
-        detail: { expanded: isFullHidden } 
-    }));
 };
 
-window.formatDescription = function (text, forceFull = false) {
-    if (!text) return '';
+// Utilidad global para parsear imágenes (maneja arrays, strings JSON y strings corruptos)
+window.parseImagenes = function (valor) {
+    if (!valor) return [];
 
-    // Si el texto es corto o se fuerza completo, no truncamos
-    if (forceFull || text.length <= 140) {
-        return `
-            <div class="desc-container" style="text-align: center;">
-                <p class="descripcion-texto descripcion desc-full" style="display: block; white-space: pre-wrap;">${text}</p>
-            </div>
-        `;
+    // Si ya es un array, procesamos cada elemento de forma recursiva
+    if (Array.isArray(valor)) {
+        let result = [];
+        valor.forEach(item => {
+            const parsed = window.parseImagenes(item);
+            if (Array.isArray(parsed)) result = result.concat(parsed);
+            else if (parsed) result.push(parsed);
+        });
+        return result.filter(Boolean);
     }
 
-    // Truncar para versión corta
-    const shortText = text.substring(0, 140) + '...';
-    
+    if (typeof valor !== 'string') return [];
+
+    let trimmed = valor.trim();
+    if (!trimmed || trimmed === 'null' || trimmed === '[]' || trimmed === '""') return [];
+
+    // Intentar JSON.parse
+    if (trimmed.startsWith('[') || trimmed.startsWith('"[')) {
+        try {
+            // Manejar caso de string con comillas extra: "[...]"
+            if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+                trimmed = trimmed.substring(1, trimmed.length - 1);
+            }
+            const parsed = JSON.parse(trimmed);
+            return window.parseImagenes(parsed);
+        } catch (_) {
+            // Si falla, removemos corchetes manualmente y seguimos
+            trimmed = trimmed.replace(/^\[+/, '').replace(/\]+$/, '');
+        }
+    }
+
+    // Split por coma y limpieza agresiva
+    return trimmed.split(',')
+        .map(s => {
+            let item = s.trim();
+            // Limpiar comillas de todo tipo
+            item = item.replace(/^["']+/, '').replace(/["']+$/, '');
+            // Limpiar barras invertidas (escapes de DB)
+            item = item.replace(/\\/g, '/');
+            // Si el item resultante sigue pareciendo JSON, es basura o requiere más limpieza
+            if (item.startsWith('[') || item.includes('["')) return null;
+            return item;
+        })
+        .filter(s => s && s.length > 3); // Filtramos strings demasiado cortos (basura)
+};
+
+
+// Formatear descripción con "Ver más" decorado
+window.formatDescription = function (text, full = false) {
+    if (!text) return '';
+    const limit = 100; // Un poco más corto para tarjetas
+
+    if (full) {
+        return `<p class="descripcion-texto descripcion desc-full">${text}</p>`;
+    }
+
+    if (text.length <= limit) {
+        return `<p class="descripcion-texto descripcion desc-short">${text}</p>`;
+    }
+
+    const shortText = text.substring(0, limit) + '...';
     return `
-        <div class="desc-container" style="text-align: center;">
+        <div class="desc-container">
             <p class="descripcion-texto descripcion desc-short">${shortText}</p>
-            <p class="descripcion-texto descripcion desc-full" style="white-space: pre-wrap; display: none;">${text}</p>
-            <button type="button" onclick="window.toggleDesc(this)" class="btn-ver-mas">Ver más</button>
+            <p class="descripcion-texto descripcion desc-full" style="display: none; opacity: 0; transition: opacity 0.3s ease;">${text}</p>
+            <button class="btn-ver-mas-simple" onclick="window.toggleDesc(this)">Ver más</button>
         </div>
     `;
 };
 
-/**
- * Muestra un modal de confirmación premium asíncrono.
- * Retorna una Promesa que resuelve en true (confirmado) o false (cancelado).
- */
-window.confirmarAccion = function(titulo = '¿Estás seguro?', mensaje = 'Esta acción no se puede deshacer.', textoOk = 'Confirmar', claseOk = 'confirm-btn-danger') {
-    return new Promise((resolve) => {
-        // 1. Asegurar que el modal existe en el DOM
-        let overlay = document.getElementById('custom-confirm-modal');
-        if (!overlay) {
-            overlay = document.createElement('div');
-            overlay.id = 'custom-confirm-modal';
-            overlay.className = 'confirm-modal-overlay';
-            overlay.innerHTML = `
-                <div class="confirm-modal-content">
-                    <div class="confirm-modal-icon" id="confirm-modal-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="confirm-modal-title" id="confirm-modal-title"></div>
-                    <div class="confirm-modal-message" id="confirm-modal-message"></div>
-                    <div class="confirm-modal-actions">
-                        <button class="confirm-btn confirm-btn-cancel" id="confirm-btn-cancel">Cancelar</button>
-                        <button class="confirm-btn" id="confirm-btn-ok"></button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }
+// Toggle para el botón "Ver más" con efectos y comunicación
+window.toggleDesc = function (btn) {
+    const container = btn.parentElement;
+    if (!container) return;
+    const shortText = container.querySelector('.desc-short');
+    const fullText = container.querySelector('.desc-full');
+    if (!fullText || !shortText) return;
 
-        // 2. Configurar contenido y estilos
-        document.getElementById('confirm-modal-title').innerText = titulo;
-        document.getElementById('confirm-modal-message').innerText = mensaje;
-        
-        const btnOk = document.getElementById('confirm-btn-ok');
-        const btnCancel = document.getElementById('confirm-btn-cancel');
-        const modalIcon = document.getElementById('confirm-modal-icon');
+    const isExpanded = fullText.style.display === 'block';
 
-        btnOk.innerText = textoOk;
-        // Limpiar clases previas de color y añadir la nueva
-        btnOk.className = 'confirm-btn ' + claseOk;
-        
-        // Cambiar icono según el tipo (éxito vs advertencia)
-        if (claseOk.includes('success')) {
-            modalIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
-        } else {
-            modalIcon.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i>';
-        }
+    if (!isExpanded) {
+        // Expandir
+        fullText.style.display = 'block';
+        setTimeout(() => fullText.style.opacity = '1', 10);
+        shortText.style.display = 'none';
+        btn.innerText = 'Ver menos';
+        btn.classList.add('active');
+    } else {
+        // Contraer
+        fullText.style.opacity = '0';
+        setTimeout(() => {
+            fullText.style.display = 'none';
+            shortText.style.display = 'block';
+        }, 300);
+        btn.innerText = 'Ver más';
+        btn.classList.remove('active');
+    }
 
-        // 3. Mostrar modal
-        overlay.classList.add('active');
-
-        // 4. Manejadores de eventos (limpiando previos)
-        const cleanup = (result) => {
-            overlay.classList.remove('active');
-            btnOk.onclick = null;
-            btnCancel.onclick = null;
-            resolve(result);
-        };
-
-        btnOk.onclick = () => cleanup(true);
-        btnCancel.onclick = () => cleanup(false);
-        overlay.onclick = (e) => { if(e.target === overlay) cleanup(false); };
-    });
+    // Notificar al sistema (útil para detener carruseles)
+    document.dispatchEvent(new CustomEvent('descToggle', {
+        detail: { expanded: !isExpanded, element: container }
+    }));
 };
 
-/**
- * Muestra una alerta premium de solo información (un botón).
- */
-window.mostrarAlertaPremium = function(titulo = 'Atención', mensaje = '', textoBoton = 'Entendido', icono = 'fas fa-info-circle') {
-    return new Promise((resolve) => {
-        let overlay = document.getElementById('custom-confirm-modal');
-        if (!overlay) {
-            // Reutilizar el mismo contenedor si existe, o crearlo
-            overlay = document.createElement('div');
-            overlay.id = 'custom-confirm-modal';
-            overlay.className = 'confirm-modal-overlay';
-            overlay.innerHTML = `
-                <div class="confirm-modal-content">
-                    <div class="confirm-modal-icon" id="confirm-modal-icon"></div>
-                    <div class="confirm-modal-title" id="confirm-modal-title"></div>
-                    <div class="confirm-modal-message" id="confirm-modal-message"></div>
-                    <div class="confirm-modal-actions">
-                        <button class="confirm-btn confirm-btn-cancel" id="confirm-btn-cancel" style="display:none;"></button>
-                        <button class="confirm-btn confirm-btn-success" id="confirm-btn-ok"></button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }
+// Alerta Premium (Wrapper para SweetAlert2 o alert nativo)
+window.mostrarAlertaPremium = function (config, text = '', confirmText = 'Entendido', icon = 'fas fa-check-circle') {
+    // Normalizar argumentos
+    let title = '¡Listo!';
+    let message = '';
+    let btnText = 'Aceptar';
+    let iconClass = 'fas fa-check-circle';
 
-        document.getElementById('confirm-modal-title').innerText = titulo;
-        document.getElementById('confirm-modal-message').innerText = mensaje;
-        
-        const btnOk = document.getElementById('confirm-btn-ok');
-        const btnCancel = document.getElementById('confirm-btn-cancel');
-        const modalIcon = document.getElementById('confirm-modal-icon');
+    if (typeof config === 'object' && config !== null) {
+        title = config.title || '¡Hecho!';
+        message = config.text || '';
+        btnText = config.confirmButtonText || 'Entendido';
+        iconClass = config.icon || 'fas fa-check-circle';
+        // Mapeo si pasan iconos simples de Swal
+        if (iconClass === 'success') iconClass = 'fas fa-check-circle';
+        if (iconClass === 'error') iconClass = 'fas fa-times-circle';
+        if (iconClass === 'warning') iconClass = 'fas fa-exclamation-triangle';
+    } else {
+        title = config;
+        message = text;
+        btnText = confirmText;
+        iconClass = icon;
+    }
 
-        btnOk.innerText = textoBoton;
-        btnOk.className = 'confirm-btn confirm-btn-success'; // Siempre verde para info/alerta
-        btnCancel.style.display = 'none'; // Ocultar cancelar para alertas de info
-        
-        modalIcon.innerHTML = `<i class="${icono}" style="color: #f1c40f;"></i>`;
+    // Remover alerta previa si existe
+    const oldAlert = document.getElementById('premium-alert-overlay');
+    if (oldAlert) oldAlert.remove();
 
-        overlay.classList.add('active');
+    // Crear Estructura
+    const overlay = document.createElement('div');
+    overlay.id = 'premium-alert-overlay';
+    overlay.className = 'premium-alert-overlay';
 
-        const cleanup = () => {
-            overlay.classList.remove('active');
-            btnOk.onclick = null;
-            resolve();
-        };
+    overlay.innerHTML = `
+        <div class="premium-alert-card">
+            <div class="premium-alert-icon">
+                <i class="${iconClass}"></i>
+            </div>
+            <h3 class="premium-alert-title">${title}</h3>
+            <p class="premium-alert-text">${message}</p>
+            <button class="premium-alert-btn" id="premium-alert-close">${btnText}</button>
+        </div>
+    `;
 
-        btnOk.onclick = cleanup;
-        overlay.onclick = (e) => { if(e.target === overlay) cleanup(); };
-    });
+    document.body.appendChild(overlay);
+
+    // Animación de entrada
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    // Evento de cierre
+    const closeBtn = overlay.querySelector('#premium-alert-close');
+    const close = () => {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.remove(), 400);
+    };
+
+    closeBtn.onclick = close;
+    overlay.onclick = (e) => { if (e.target === overlay) close(); };
 };
 
-/**
- * window.formatDateCR - Formateador universal de fechas para ExpoFeriasCR
- * @param {string} dStr - Cadena de fecha (ISO, YYYY-MM-DD, etc.)
- * @param {string} option - 'long' (default) o 'short'
- */
-window.formatDateCR = function (dStr, option = 'long') {
-    if (!dStr || dStr === 'Invalid Date' || dStr === 'N/A' || dStr === 'null') return '—';
+// Obtener datos del usuario desde localStorage
+window.getUsuarioStorage = function () {
     try {
-        let clean = String(dStr);
-        if (clean.includes('T')) clean = clean.split('T')[0];
-        if (clean.includes(' ')) clean = clean.split(' ')[0];
-        
-        const parts = clean.split('-');
-        if (parts.length !== 3) return '—';
-        
-        // Crear fecha local por componentes para evitar desfases de zona horaria
-        const d = new Date(parts[0], parts[1] - 1, parts[2]);
-        if (isNaN(d.getTime())) return '—';
-        
-        if (option === 'short') {
-            return d.toLocaleDateString('es-CR', { day: '2-digit', month: 'short' });
-        }
-        
-        return d.toLocaleDateString('es-CR', { 
-            day: '2-digit', 
-            month: 'long', 
-            year: 'numeric' 
-        });
-    } catch (e) { 
-        console.error('[Helper] Error formateando fecha:', e);
-        return '—'; 
+        return JSON.parse(localStorage.getItem('usuario') || 'null');
+    } catch (e) {
+        return null;
     }
 };
+
+// Modal de confirmación universal (Promise)
+window.confirmarAccion = function (titulo, mensaje, tipo = 'danger') {
+    return new Promise((resolve) => {
+        // Remover si existe uno previo
+        const old = document.getElementById('confirm-modal-overlay');
+        if (old) old.remove();
+
+        const overlay = document.createElement('div');
+        overlay.id = 'confirm-modal-overlay';
+        overlay.className = 'confirm-modal-overlay';
+
+        const btnClass = tipo === 'danger' ? 'confirm-btn-danger' : 'confirm-btn-success';
+        const icon = tipo === 'danger' ? '⚠️' : '❓';
+
+        overlay.innerHTML = `
+            <div class="confirm-modal-content">
+                <div class="confirm-modal-icon">${icon}</div>
+                <h3 class="confirm-modal-title">${titulo}</h3>
+                <p class="confirm-modal-message">${mensaje}</p>
+                <div class="confirm-modal-actions">
+                    <button class="confirm-btn confirm-btn-cancel">Cancelar</button>
+                    <button class="confirm-btn ${btnClass}">Confirmar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        // Animación de entrada
+        setTimeout(() => overlay.classList.add('active'), 10);
+
+        const cerrar = (resultado) => {
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                overlay.remove();
+                resolve(resultado);
+            }, 400);
+        };
+
+        overlay.querySelector('.confirm-btn-cancel').onclick = () => cerrar(false);
+        overlay.querySelector(`.${btnClass}`).onclick = () => cerrar(true);
+
+        // Cerrar al hacer clic fuera del card
+        overlay.onclick = (e) => {
+            if (e.target === overlay) cerrar(false);
+        };
+    });
+};
+
+
 

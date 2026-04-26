@@ -45,3 +45,5 @@ document.addEventListener('DOMContentLoaded', () => {
     iniciarMonitoreoInactividad();
     wrapFetchAPI();
 });
+
+

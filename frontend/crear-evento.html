@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-adsense-account" content="ca-pub-9004819107277432">
     <title>Crear Evento | ExpoFeriasCR</title>
 
@@ -14,8 +15,11 @@
     <link rel="stylesheet" href="css/navbar-auth.css">
     <link rel="stylesheet" href="css/crear-evento/form.css">
     <link rel="stylesheet" href="css/crear-evento/preview.css">
+    <link rel="stylesheet" href="css/crear-evento/split-layout.css">
+    <link rel="stylesheet" href="css/crear-evento/responsive.css?v=1.0">
     <link rel="stylesheet" href="css/confirm-modal.css">
     <script src="js/helpers.js"></script>
+    <script src="js/ubicaciones.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -32,65 +36,6 @@
 
     <!-- Layout dividido: formulario | vista previa -->
     <div class="container crear-evento-container">
-        <style>
-            /* Forzar el layout de pantalla dividida cuando la previa está activa */
-            #formLayout.with-preview, 
-            #formLayout.crear-evento-split {
-                display: grid !important;
-                grid-template-columns: 1fr 480px !important;
-                gap: 24px !important;
-                align-items: start !important;
-            }
-            /* Forzar visibilidad del panel de vista previa */
-            #previewPanel.visible {
-                display: flex !important;
-            }
-            @media (max-width: 1200px) {
-                #formLayout.with-preview, 
-                #formLayout.crear-evento-split {
-                    grid-template-columns: 1fr 400px !important;
-                }
-            }
-            @media (max-width: 992px) {
-                #formLayout.with-preview, 
-                #formLayout.crear-evento-split {
-                    grid-template-columns: 1fr !important;
-                }
-                #previewPanel.visible {
-                    display: none !important;
-                }
-            }
-
-            /* Estilos de botones unificados */
-            .btn-preview-unificado {
-                height: 44px !important;
-                padding: 0 20px !important;
-                border: none !important;
-                border-radius: 8px !important;
-                cursor: pointer !important;
-                font-weight: 600 !important;
-                font-size: 14px !important;
-                display: inline-flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                gap: 10px !important;
-                transition: all 0.2s !important;
-                box-sizing: border-box !important;
-                color: white !important;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                margin: 0 !important;
-            }
-            .btn-preview-unificado:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-            }
-            #btnTogglePreview.btn-preview-unificado {
-                background: #0033A0 !important;
-            }
-            #btn-preview-portada.btn-preview-unificado {
-                background: #002677 !important;
-            }
-        </style>
         <div id="formLayout">
 
             <!-- ══════════════ COLUMNA FORMULARIO ══════════════ -->
@@ -158,6 +103,22 @@
 
                             <div class="form-section">
                                 <div class="form-group">
+                                    <label for="tipo_evento">🎭 Tipo de Evento *</label>
+                                    <select id="tipo_evento" name="tipo_evento" required>
+                                        <option value="">Selecciona el tipo de evento</option>
+                                        <option value="Feria">Feria</option>
+                                        <option value="Exposición">Exposición</option>
+                                        <option value="Concierto">Concierto</option>
+                                        <option value="Fiesta Típica">Fiesta Típica</option>
+                                        <option value="Fiesta Local">Fiesta Local</option>
+                                        <option value="Fiesta Regional">Fiesta Regional</option>
+                                        <option value="Expedición">Expedición</option>
+                                        <option value="Congreso">Congreso</option>
+                                        <option value="Deporte">Deporte</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="slug">🔗 Dirección web personalizada (URL) * <i class="fas fa-question-circle btn-help-icon" title="Esta será la dirección que compartirás. Ej: expoferiascr.com/evento/mi-evento"></i></label>
                                     <input type="text" id="slug" name="slug" placeholder="mi-evento-2026" required>
                                     <span class="field-guide"><strong>Ejemplo:</strong> san-carlos-2026 (sin espacios ni tildes)</span>
@@ -181,10 +142,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="ubicacion">📍 Ubicación *</label>
-                                    <input type="text" id="ubicacion" name="ubicacion" placeholder="Ej: Cámara de Ganaderos San Carlos, Alajuela" required>
-                                </div>
-                                <div class="form-group">
                                     <label for="provincia">🗺️ Provincia *</label>
                                     <select id="provincia" name="provincia" required>
                                         <option value="">Selecciona una provincia</option>
@@ -196,6 +153,25 @@
                                         <option value="Puntarenas">Puntarenas</option>
                                         <option value="Limón">Limón</option>
                                     </select>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="canton">🏙️ Cantón</label>
+                                        <select id="canton" name="canton">
+                                            <option value="">Selecciona la provincia primero</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="distrito">🏘️ Distrito</label>
+                                        <select id="distrito" name="distrito">
+                                            <option value="">Selecciona el cantón primero</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ubicacion">📍 Ubicación Exacta *</label>
+                                    <input type="text" id="ubicacion" name="ubicacion" placeholder="Ej: Cámara de Ganaderos San Carlos, Alajuela" required>
                                 </div>
 
                                 <!-- Imagen portada: type="text" para evitar validación URL del browser -->
@@ -299,8 +275,8 @@
                         <div id="tab-actividades" class="tab-content">
                             <div class="tab-header"><h2>🎭 Actividades del Evento</h2><p>¿Qué pasará en tu evento? Cuéntalo aquí.</p></div>
                             
-                            <div class="help-box" style="background:#fef9e7; border-left-color:#f1c40f;">
-                                <i class="fas fa-star" style="color:#f1c40f;"></i>
+                            <div class="help-box" style="background:#f8f9fa; border-left-color:#0033a0;">
+                                <i class="fas fa-star" style="color:#0033a0;"></i>
                                 <div class="help-box-content">
                                     <h4>💡 Consejo Pro</h4>
                                     <p>Las actividades con <strong>imágenes y descripciones detalladas</strong> tienen un 40% más de interés por parte de los visitantes.</p>
@@ -308,7 +284,7 @@
                             </div>
                             <div class="form-section">
                                 <table id="tabla-actividades" class="tabla-eventos">
-                                    <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Descripción</th><th>Gratuito</th><th>Acción</th></tr></thead>
+                                    <thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Imágenes</th><th>Video</th><th>Online</th><th>Gratis</th><th>Acción</th></tr></thead>
                                     <tbody id="actividades-rows"></tbody>
                                 </table>
                                 <button type="button" id="btn-agregar-actividad" class="btn-secondary">+ Agregar Actividad</button>
@@ -340,7 +316,7 @@
                                     </div>
                                 </div>
                                 <table id="tabla-expositores" class="tabla-eventos">
-                                    <thead><tr><th>Nombre</th><th>Categoría</th><th>Ubicación</th><th>Descripción</th><th>Imágenes/Logos</th><th>Video</th><th>Acción</th></tr></thead>
+                                    <thead><tr><th>Nombre</th><th>Categoría</th><th>Ubicación</th><th>Imágenes</th><th>Video</th><th>Acción</th></tr></thead>
                                     <tbody id="expositores-rows"></tbody>
                                 </table>
                                 <button type="button" id="btn-agregar-expositor" class="btn-secondary">+ Agregar Expositor</button>
@@ -363,7 +339,7 @@
                             </div>
                             <div class="form-section">
                                 <table id="tabla-galeria" class="tabla-eventos">
-                                    <thead><tr><th>Vista</th><th>URL de Imagen</th><th>Acción</th></tr></thead>
+                                    <thead><tr><th>Vista</th><th>URL de Imagen</th><th>Orden</th><th>Acción</th></tr></thead>
                                     <tbody id="galeria-rows"></tbody>
                                 </table>
                                 <button type="button" id="btn-agregar-imagen" class="btn-secondary">+ Agregar Imagen</button>
@@ -394,9 +370,10 @@
                                 <div class="form-row">
                                     <div class="form-group"><label>Color Primario <i class="fas fa-info-circle btn-help-icon" title="Botones y encabezados principales"></i></label><input type="color" id="color_primario" value="#C8102E"></div>
                                     <div class="form-group"><label>Color Secundario <i class="fas fa-info-circle btn-help-icon" title="Detalles y acentos"></i></label><input type="color" id="color_secundario" value="#0033A0"></div>
-                                    <div class="form-group"><label>Fondo de Página</label><input type="color" id="color_fondo" value="#f4e4c1"></div>
-                                    <div class="form-group"><label>Color info-card</label><input type="color" id="color_texto" value="#2c1a0e"></div>
-                                    <div class="form-group"><label>Color descripción-texto</label><input type="color" id="color_descripcion_texto" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Fondo de Página</label><input type="color" id="color_fondo" value="#fdfdfd"></div>
+                                    <div class="form-group"><label>Color info-card</label><input type="color" id="color_texto" value="#1a1a1a"></div>
+                        <div class="form-group"><label>Color Iconos</label><input type="color" id="color_iconos" value="#C8102E"></div>
+                                    <div class="form-group"><label>Color descripción-texto</label><input type="color" id="color_descripcion_texto" value="#1a1a1a"></div>
                                     <div class="form-group">
                                         <label>Oscuridad Imagen (Hero/Galería)</label>
                                         <div class="opacity-slider-wrapper">
@@ -410,28 +387,28 @@
                                 </div>
                                 <h3>Títulos y Secciones</h3>
                                 <div class="form-row">
-                                    <div class="form-group"><label>Color Título Sección (h2)</label><input type="color" id="color_titulo_seccion" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Color Título Sección (h2)</label><input type="color" id="color_titulo_seccion" value="#1a1a1a"></div>
                                     <div class="form-group"><label>Color Título Hero</label><input type="color" id="color_titulo_hero" value="#FFFFFF"></div>
                                     <div class="form-group"><label>Color Descripción Hero</label><input type="color" id="color_descripcion_hero" value="#FFFFFF"></div>
-                                    <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#d4a373"></div>
-                                    <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#8b5a2b"></div>
-                                    <div class="form-group"><label>Color Fondo Share</label><input type="color" id="color_fondo_share" value="#ffffff"></div>
-                                    <div class="form-group"><label>Color texto share</label><input type="color" id="color_texto_share" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Color Fondo Fechas</label><input type="color" id="color_fondo_fechas" value="#0033a0"></div>
+                                    <div class="form-group"><label>Color Texto Fechas</label><input type="color" id="color_texto_fechas" value="#c8102e"></div>
+                                    <div class="form-group"><label>Color fondo share</label><input type="color" id="color_fondo_share" value="#ffffff"></div>
+                                    <div class="form-group"><label>Color texto share</label><input type="color" id="color_texto_share" value="#1a1a1a"></div>
                                 </div>
                                 <h3>Menú de Navegación</h3>
                                 <div class="form-row">
                                     <div class="form-group"><label>Color fondo menú</label><input type="color" id="color_menu_fondo" value="#ffffff"></div>
                                     <div class="form-group"><label>Color texto menú</label><input type="color" id="color_menu_texto" value="#ffffff"></div>
-                                    <div class="form-group"><label>Color fondo hover</label><input type="color" id="color_menu_fondo_hover"></div>
-                                    <div class="form-group"><label>Color texto hover</label><input type="color" id="color_menu_texto_hover"></div>
-                                    <div class="form-group"><label>Color Título H3</label><input type="color" id="color_titulo_h3" value="#2c1a0e"></div>
+                                    <div class="form-group"><label>Color fondo hover</label><input type="color" id="color_menu_fondo_hover" value="#0033A0"></div>
+                                    <div class="form-group"><label>Color texto hover</label><input type="color" id="color_menu_texto_hover" value="#ffffff"></div>
+                                    <div class="form-group"><label>Color Título H3</label><input type="color" id="color_titulo_h3" value="#1a1a1a"></div>
                                 </div>
                                 <h3>Contacto y Pie de Página</h3>
                                 <div class="form-row">
-                                    <div class="form-group"><label>Color fondo contacto</label><input type="color" id="color_fondo_contacto" value="#f4e4c1"></div>
-                                    <div class="form-group"><label>Color texto contacto</label><input type="color" id="color_texto_contacto" value="#2c1a0e"></div>
-                                    <div class="form-group"><label>Color enlace contacto</label><input type="color" id="color_enlace_contacto" value="#8b5a2b"></div>
-                                    <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#8b5a2b"></div>
+                                    <div class="form-group"><label>Color fondo contacto</label><input type="color" id="color_fondo_contacto" value="#fdfdfd"></div>
+                                    <div class="form-group"><label>Color texto contacto</label><input type="color" id="color_texto_contacto" value="#1a1a1a"></div>
+                                    <div class="form-group"><label>Color enlace contacto</label><input type="color" id="color_enlace_contacto" value="#c8102e"></div>
+                                    <div class="form-group"><label>Color fondo footer</label><input type="color" id="color_fondo_footer" value="#c8102e"></div>
                                     <div class="form-group"><label>Color texto footer</label><input type="color" id="color_texto_footer" value="#ffffff"></div>
                                     <div class="form-group"><label>Color buscador exp</label><input type="color" id="color_buscador_expositores" value="#ffffff"></div>
                                     <div class="form-group"><label>Color borde busc. exp</label><input type="color" id="color_borde_buscador_expositores" value="#eeeeee"></div>
@@ -482,8 +459,19 @@
             <!-- ══════════════ COLUMNA VISTA PREVIA (iframe igual al admin) ══════════════ -->
             <div id="previewPanel">
                 <div class="preview-header">
-                    <span><div class="preview-dot"></div> Vista Previa en Vivo</span>
-                    <div class="preview-url-bar" id="previewUrlBar">Completa el slug y los datos básicos</div>
+                    <button class="preview-close-btn" onclick="togglePreview()" title="Cerrar Previa">✕</button>
+                    
+                    <div class="preview-device-toggles">
+                        <button class="preview-btn-device active" data-device="pc" title="Vista PC">
+                            <i class="fas fa-desktop"></i>
+                        </button>
+                        <button class="preview-btn-device" data-device="mobile" title="Vista Móvil">
+                            <i class="fas fa-mobile-alt"></i>
+                        </button>
+                    </div>
+
+                    <span><div class="preview-dot"></div> En Vivo</span>
+                    <div class="preview-url-bar" id="previewUrlBar">URL del evento</div>
                     <button class="preview-reload-btn" id="btnReloadPreview" title="Recargar">↺</button>
                 </div>
                 <iframe id="previewIframe" src="about:blank"></iframe>
@@ -499,13 +487,13 @@
         <div class="modal-contenedor" style="max-width:480px; text-align:center;">
             <div style="padding:40px 30px;">
                 <div style="font-size:64px; margin-bottom:16px;">🎉</div>
-                <h2 style="color:#2c1a0e; margin-bottom:12px;">¡Evento enviado!</h2>
+                <h2 style="color:#1a1a1a; margin-bottom:12px;">¡Evento enviado!</h2>
                 <p style="color:#555; font-size:15px; line-height:1.6; margin-bottom:24px;">
                     Tu evento ha sido enviado correctamente a revisión.<br>
                     Nuestro equipo lo revisará en un plazo de <strong>24 a 72 horas</strong>.<br>
                     Te notificaremos por correo electrónico con el resultado.
                 </p>
-                <div style="background:#f4e4c1; border-radius:8px; padding:14px; margin-bottom:24px; font-size:13px; color:#8b5a2b;">
+                <div style="background:#fdfdfd; border-radius:8px; padding:14px; margin-bottom:24px; font-size:13px; color:#c8102e;">
                     <i class="fas fa-clock"></i> Tiempo de revisión: 24-72 horas hábiles
                 </div>
                 <button type="button" id="btn-ir-cuenta" class="btn-primary" style="width:100%; justify-content:center;">
@@ -554,8 +542,10 @@
                     <textarea id="actividad-descripcion" placeholder="Describe la actividad..." rows="3"
                         style="padding:10px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;width:100%;font-family:inherit;resize:vertical;"></textarea>
                 </div>
-                <div class="form-group"><label>Fecha *</label><input type="date" id="actividad-fecha" required></div>
-                <div class="form-group"><label>Hora de Inicio</label><input type="time" id="actividad-hora"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Fecha *</label><input type="date" id="actividad-fecha" required></div>
+                    <div class="form-group"><label>Hora de Inicio</label><input type="time" id="actividad-hora"></div>
+                </div>
                 <div class="form-group"><label>Lugar / Escenario</label><input type="text" id="actividad-lugar" placeholder="ej: Ruedo principal, Escenario Norte"></div>
                 <div class="form-group">
                     <label>Imagen de la Actividad</label>
@@ -568,12 +558,22 @@
                     </div>
                     <div id="feedback-actividad-img" class="upload-feedback"></div>
                 </div>
+                <div class="form-group">
+                    <label>Video URL (YouTube/Vimeo) o subir archivo</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="actividad-video" placeholder="Opcional: link o sube archivo" style="flex:1;">
+                        <button type="button" class="btn-subir-archivo" id="btn-subir-actividad-video">📁 Subir Video</button>
+                    </div>
+                </div>
                 <div class="form-group" style="display:flex;gap:20px;flex-wrap:wrap;">
                     <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal;">
                         <input type="checkbox" id="actividad-es-gratis" checked> Actividad gratuita
                     </label>
                     <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal;">
                         <input type="checkbox" id="actividad-requiere-online"> Requiere entrada online
+                    </label>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal;">
+                        <input type="checkbox" id="actividad-solo-online"> Solo online
                     </label>
                 </div>
                 <div class="form-group" id="actividad-enlace-group" style="display:none;">
@@ -700,15 +700,15 @@
                 <p style="margin-bottom:20px; color:#666;">Así es como se verá tu evento resumido en las distintas secciones de la página principal (Index)</p>
                 <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
                     <div style="text-align:left;">
-                        <h4 style="margin-bottom:10px; color:#8b5a2b;">Normal / Hoy</h4>
+                        <h4 style="margin-bottom:10px; color:#c8102e;">Normal / Hoy</h4>
                         <div id="card-simulada-hoy"></div>
                     </div>
                     <div style="text-align:left;">
-                        <h4 style="margin-bottom:10px; color:#8b5a2b;">En Vivo</h4>
+                        <h4 style="margin-bottom:10px; color:#c8102e;">En Vivo</h4>
                         <div id="card-simulada-vivo"></div>
                     </div>
                     <div style="text-align:left;">
-                        <h4 style="margin-bottom:10px; color:#8b5a2b;">Próximos Eventos</h4>
+                        <h4 style="margin-bottom:10px; color:#c8102e;">Próximos Eventos</h4>
                         <div id="card-simulada-proximo"></div>
                     </div>
                 </div>
@@ -716,6 +716,8 @@
         </div>
     </div>
 
-    <script type="module" src="js/crear-evento/index.js?v=5.0"></script>
+    <script type="module" src="js/crear-evento/index.js?v=9.0"></script>
 </body>
 </html>
+
+

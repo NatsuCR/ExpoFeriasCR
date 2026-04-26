@@ -14,7 +14,7 @@
 }
 
 .crear-evento-header h1 {
-  color: #2c1a0e;
+  color: #1a1a1a;
   font-size: 32px;
   margin-bottom: 10px;
 }
@@ -29,7 +29,7 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow: visible; /* Cambiado de hidden para permitir position: sticky */
 }
 
 .tabs-nav {
@@ -60,12 +60,12 @@
 
 .tab-btn:hover {
   background-color: #f0f0f0;
-  color: #8b5a2b;
+  color: #0033A0;
 }
 
 .tab-btn.active {
-  color: #8b5a2b;
-  border-bottom-color: #8b5a2b;
+  color: #0033A0;
+  border-bottom-color: #0033A0;
   background-color: white;
 }
 
@@ -118,7 +118,7 @@
 }
 
 .tab-header h2 {
-  color: #2c1a0e;
+  color: #1a1a1a;
   font-size: 24px;
   margin: 0 0 8px 0;
 }
@@ -166,8 +166,8 @@
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #8b5a2b;
-  box-shadow: 0 0 0 3px rgba(139, 90, 43, 0.1);
+  border-color: #0033A0;
+  box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
 }
 
 .form-group small {
@@ -178,7 +178,7 @@
 }
 
 .form-group small a {
-  color: #8b5a2b;
+  color: #0033A0;
   text-decoration: none;
 }
 
@@ -236,7 +236,7 @@
 }
 
 .color-input:hover {
-  border-color: #8b5a2b !important;
+  border-color: #0033A0 !important;
   transform: scale(1.05);
 }
 
@@ -275,3 +275,6 @@
 }
 
 /* Miniaturas de preview */
+
+
+

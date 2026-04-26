@@ -3,7 +3,7 @@
 .expositor-search-bar {
     margin: 20px 0 30px;
     padding: 20px;
-    background: #ffffff;  /* Fijo */
+    background: var(--color-buscador-expositores, #ffffff);
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     display: flex;
@@ -20,23 +20,25 @@
     position: absolute;
     left: 15px;
     top: 50%;
+
     transform: translateY(-50%);
-    color: #666666;  /* Fijo */
+    color: var(--color-iconos, #c8102e);
 }
 
 .search-input-wrapper input {
     width: 100%;
     padding: 12px 15px 12px 45px;
-    border: 2px solid #eeeeee;  /* Fijo */
+    border: 2px solid var(--color-borde-buscador-expositores, #eeeeee);
     border-radius: 30px;
     font-size: 16px;
     transition: all 0.3s ease;
-    background-color: #ffffff;  /* Fijo */
+    background-color: #ffffff;
+    color: #333333;
 }
 
 .search-input-wrapper input:focus {
     outline: none;
-    border-color: var(--evento-primario); /* Se mantiene variable de primario */
+    border-color: var(--color-borde-buscador-expositores, #eeeeee);
     box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
 }
 
@@ -66,7 +68,9 @@
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    align-items: center;
+    text-align: center;
+    height: auto;
     border: 1px solid #f0f0f0;  /* Fijo */
 }
 
@@ -123,7 +127,6 @@
 .info-ubicacion {
     font-size: 0.9rem;
     color: #444;
-    margin-top: auto;
     padding-top: 15px;
     border-top: 1px solid #eeeeee;  /* Fijo */
 }
@@ -144,6 +147,26 @@
 }
 
 /* Estilos para carruseles por categoría */
+.expositores-carrusel-viewport {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.expositores-carrusel-track {
+    display: flex;
+    flex-direction: row;
+    transition: transform 0.5s ease;
+    gap: 0;
+    align-items: flex-start;
+}
+
+.expositores-carrusel-track .expositor-card {
+    flex: 0 0 280px; /* Ancho base para JS */
+    margin: 10px;
+    min-width: 280px;
+}
+
 .categoria-grupo .expositores-carrusel-wrapper {
     position: relative;
     padding: 0 40px;
@@ -153,15 +176,20 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background: #fff;
-    border: 1px solid #eeeeee;  /* Fijo */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    color: #333;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     cursor: pointer;
-    z-index: 10;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
+    font-size: 1.2rem;
 }
 
 .categoria-grupo .expositores-btn:hover {
@@ -171,3 +199,5 @@
 
 .categoria-grupo .expositores-btn.prev { left: 0; }
 .categoria-grupo .expositores-btn.next { right: 0; }
+
+

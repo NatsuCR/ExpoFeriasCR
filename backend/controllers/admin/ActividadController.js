@@ -56,3 +56,6 @@ class AdminActividadController {
 }
 
 module.exports = new AdminActividadController();
+
+
+

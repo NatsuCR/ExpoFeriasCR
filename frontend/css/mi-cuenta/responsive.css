@@ -1,0 +1,126 @@
+/* ============================================
+   MI CUENTA - RESPONSIVE (FORZADO)
+   ============================================ */
+@media (max-width: 900px) {
+  .navbar .container {
+    padding: 0 15px !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+  }
+  
+  .logo span {
+    display: none !important;
+  }
+
+  .btn-navbar-back {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+    width: auto !important;
+  }
+  
+  .mi-cuenta-container {
+    margin: 15px auto !important;
+    padding: 0 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .cuenta-header {
+    margin-bottom: 20px !important;
+  }
+
+  .cuenta-header h1 {
+    font-size: 22px !important;
+  }
+
+  .perfil-card {
+    padding: 20px !important;
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 20px !important;
+    width: 100% !important;
+  }
+
+  .perfil-info {
+    flex-direction: column !important;
+    gap: 15px !important;
+    width: 100% !important;
+  }
+  
+  .perfil-avatar {
+    font-size: 60px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  .perfil-acciones {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    display: flex !important;
+  }
+
+  .perfil-acciones button {
+    width: 100% !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 12px !important;
+  }
+
+  .seccion-crear-evento {
+    margin-bottom: 25px !important;
+  }
+
+  .btn-crear-grande {
+    flex-direction: column !important;
+    padding: 20px !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .btn-crear-grande i {
+    font-size: 32px !important;
+  }
+
+  .btn-crear-grande span {
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .btn-crear-grande strong {
+    font-size: 16px !important;
+  }
+
+  .seccion-eventos {
+    padding: 15px !important;
+    width: 100% !important;
+  }
+
+  .seccion-header h2 {
+    font-size: 20px !important;
+  }
+
+  .eventos-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+
+  .evento-card {
+    width: 100% !important;
+  }
+
+  .modal-acciones,
+  .modal-footer {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .modal-acciones button,
+  .modal-footer button {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  
+
+}

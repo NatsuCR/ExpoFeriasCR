@@ -18,3 +18,5 @@ class ActividadController {
 }
 
 module.exports = ActividadController;
+
+

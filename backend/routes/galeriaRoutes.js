@@ -7,3 +7,5 @@ const galeriaController = new GaleriaController();
 router.get('/:slug', galeriaController.obtenerPorEvento.bind(galeriaController));
 
 module.exports = router;
+
+

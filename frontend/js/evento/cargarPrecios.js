@@ -29,3 +29,5 @@ export async function cargarPrecios(slug) {
         container.innerHTML = '<p>Error al cargar precios.</p>';
     }
 }
+
+

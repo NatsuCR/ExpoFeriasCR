@@ -54,3 +54,5 @@ class AdminGaleriaController {
 }
 
 module.exports = new AdminGaleriaController();
+
+

@@ -7,3 +7,5 @@ const precioController = new PrecioController();
 router.get('/:slug', precioController.obtenerPorEvento.bind(precioController));
 
 module.exports = router;
+
+

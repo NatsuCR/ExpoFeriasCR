@@ -100,3 +100,5 @@ async function cargarGaleria() {
         if (tbody) tbody.innerHTML = '<tr><td colspan="3">Error al cargar imágenes.学ﬂ学ﬂ';
     }
 }
+
+

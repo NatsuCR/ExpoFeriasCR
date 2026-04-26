@@ -22,3 +22,6 @@ document.addEventListener('click', resetInactivityTimer);
 
 // Iniciar timer
 resetInactivityTimer();
+
+
+

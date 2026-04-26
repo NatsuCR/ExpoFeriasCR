@@ -13,7 +13,8 @@ class UsuarioEventsController {
       slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
       imagen_portada, horario_imagen, mapa_embed, mapa_waze_embed, tipo_venta, url_venta_online,
       tiene_expositores,
-      precios, actividades, expositores, galeria
+      precios, actividades, expositores, galeria,
+      canton, distrito, tipo_evento
     } = body;
 
     try {
@@ -24,59 +25,65 @@ class UsuarioEventsController {
       const [existingSlug] = await pool.query('SELECT id FROM eventos WHERE slug = ?', [slug]);
       if (existingSlug.length > 0) return res.status(409).json({ error: 'Slug duplicado' });
 
-      const [result] = await pool.query(
-        `INSERT INTO eventos 
-        (usuario_id, estado, razon_rechazo, fecha_envio_revision, slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, 
-         imagen_portada, activo, horario_imagen, mapa_embed, mapa_waze_embed, tipo_venta, url_venta_online, 
-         color_primario, color_secundario, color_fondo, color_texto, color_hero_overlay, color_titulo_hero, color_descripcion_hero, color_fondo_fechas, color_texto_fechas,
-         color_titulo_seccion, provincia,
-         color_menu_fondo, color_menu_texto, color_menu_fondo_hover, color_menu_texto_hover,
-         color_fondo_contacto, color_texto_contacto, color_enlace_contacto,
-         color_fondo_footer, color_texto_footer,
-         color_titulo_h3, borrador_cambios,
-         color_buscador_expositores, color_borde_buscador_expositores,
-         color_fondo_share, color_texto_share,
-         color_descripcion_texto, tiene_expositores)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          usuarioId, 'pendiente', null, null, slug, nombre, descripcion ?? body.descripcion, fecha_inicio, fecha_fin, ubicacion,
-          imagen_portada ?? body.imagen_portada ?? null, 
-          0, // activo inicial en 0
-          horario_imagen ?? body.horario_imagen ?? null, 
-          mapa_embed ?? body.mapa_embed ?? null, 
-          mapa_waze_embed ?? body.mapa_waze_embed ?? null, 
-          tipo_venta ?? body.tipo_venta ?? 'taquilla', 
-          url_venta_online ?? body.url_venta_online ?? null,
-          body.color_primario ?? '#c8102e', 
-          body.color_secundario ?? '#0033a0', 
-          body.color_fondo ?? '#f4e4c1', 
-          body.color_texto ?? '#2c1a0e',
-          body.color_hero_overlay ?? 'rgba(0,0,0,0.4)', 
-          body.color_titulo_hero ?? '#ffffff', 
-          body.color_descripcion_hero ?? '#ffffff', 
-          body.color_fondo_fechas ?? '#0033a0', 
-          body.color_texto_fechas ?? '#ffffff',
-          body.color_titulo_seccion ?? '#c8102e', 
-          provincia ?? body.provincia ?? null,
-          body.color_menu_fondo ?? '#ffffff', 
-          body.color_menu_texto ?? '#333333', 
-          body.color_menu_fondo_hover ?? '#c8102e', 
-          body.color_menu_texto_hover ?? '#ffffff',
-          body.color_fondo_contacto ?? '#f8f8f8', 
-          body.color_texto_contacto ?? '#333333', 
-          body.color_enlace_contacto ?? '#c8102e',
-          body.color_fondo_footer ?? '#c8102e', 
-          body.color_texto_footer ?? '#ffffff',
-          body.color_titulo_h3 ?? '#2c1a0e', 
-          null, // borrador_cambios inicial es null
-          body.color_buscador_expositores ?? '#ffffff', 
-          body.color_borde_buscador_expositores ?? '#eeeeee',
-          body.color_fondo_share ?? '#ffffff', 
-          body.color_texto_share ?? '#2c1a0e',
-          body.color_descripcion_texto ?? '#2c1a0e',
-          parseInt(tiene_expositores) || 0
-        ]
-      );
+      const columns = [
+        'usuario_id', 'estado', 'razon_rechazo', 'fecha_envio_revision', 'slug', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin', 'ubicacion',
+        'imagen_portada', 'activo', 'horario_imagen', 'mapa_embed', 'mapa_waze_embed', 'tipo_venta', 'url_venta_online',
+        'color_primario', 'color_secundario', 'color_fondo', 'color_texto', 'color_hero_overlay', 'color_titulo_hero', 'color_descripcion_hero', 'color_fondo_fechas', 'color_texto_fechas',
+        'color_titulo_seccion', 'provincia', 'canton', 'distrito',
+        'color_menu_fondo', 'color_menu_texto', 'color_menu_fondo_hover', 'color_menu_texto_hover',
+        'color_fondo_contacto', 'color_texto_contacto', 'color_enlace_contacto',
+        'color_fondo_footer', 'color_texto_footer',
+        'color_titulo_h3', 'borrador_cambios',
+        'color_buscador_expositores', 'color_borde_buscador_expositores',
+        'color_fondo_share', 'color_texto_share',
+        'color_descripcion_texto', 'color_iconos', 'tiene_expositores', 'tipo_evento'
+      ];
+
+      const values = [
+        usuarioId, 'pendiente', null, null, slug, nombre, descripcion ?? body.descripcion, fecha_inicio, fecha_fin, ubicacion,
+        imagen_portada ?? body.imagen_portada ?? null,
+        0,
+        horario_imagen ?? body.horario_imagen ?? null,
+        mapa_embed ?? body.mapa_embed ?? null,
+        mapa_waze_embed ?? body.mapa_waze_embed ?? null,
+        tipo_venta ?? body.tipo_venta ?? 'taquilla',
+        url_venta_online ?? body.url_venta_online ?? null,
+        body.color_primario ?? '#c8102e',
+        body.color_secundario ?? '#0033a0',
+        body.color_fondo ?? '#fdfdfd',
+        body.color_texto ?? '#1a1a1a',
+        body.color_hero_overlay ?? 'rgba(0,0,0,0.4)',
+        body.color_titulo_hero ?? '#ffffff',
+        body.color_descripcion_hero ?? '#ffffff',
+        body.color_fondo_fechas ?? '#0033a0',
+        body.color_texto_fechas ?? '#ffffff',
+        body.color_titulo_seccion ?? '#c8102e',
+        provincia ?? body.provincia ?? null,
+        canton ?? body.canton ?? null,
+        distrito ?? body.distrito ?? null,
+        body.color_menu_fondo ?? '#ffffff',
+        body.color_menu_texto ?? '#333333',
+        body.color_menu_fondo_hover ?? '#c8102e',
+        body.color_menu_texto_hover ?? '#ffffff',
+        body.color_fondo_contacto ?? '#fdfdfd',
+        body.color_texto_contacto ?? '#1a1a1a',
+        body.color_enlace_contacto ?? '#c8102e',
+        body.color_fondo_footer ?? '#c8102e',
+        body.color_texto_footer ?? '#ffffff',
+        body.color_titulo_h3 ?? '#1a1a1a',
+        null,
+        body.color_buscador_expositores ?? '#ffffff',
+        body.color_borde_buscador_expositores ?? '#eeeeee',
+        body.color_fondo_share ?? '#ffffff',
+        body.color_texto_share ?? '#1a1a1a',
+        body.color_descripcion_texto ?? '#1a1a1a',
+        body.color_iconos ?? '#c8102e',
+        parseInt(tiene_expositores) || 0,
+        body.tipo_evento || null
+      ];
+
+      const query = `INSERT INTO eventos (${columns.join(', ')}) VALUES (${values.map(() => '?').join(', ')})`;
+      const [result] = await pool.query(query, values);
 
       const eventoId = result.insertId;
       await RelatedTablesController.guardarTodo(eventoId, { precios, actividades, expositores, galeria });
@@ -111,7 +118,7 @@ class UsuarioEventsController {
 
       const estadoActual = eventos[0].estado;
       let nuevoEstado = 'pendiente';
-      
+
       // Si ya estaba aprobado o en edición, marcamos como edicion_pendiente
       if (['aprobado', 'edicion_pendiente', 'finalizado'].includes(estadoActual)) {
         nuevoEstado = 'edicion_pendiente';
@@ -139,7 +146,7 @@ class UsuarioEventsController {
       let evento = eventos[0];
       let borradorData = null;
       if (evento.borrador_cambios) {
-        try { borradorData = JSON.parse(evento.borrador_cambios); } catch(e){}
+        try { borradorData = JSON.parse(evento.borrador_cambios); } catch (e) { }
       }
 
       const [act] = await pool.query('SELECT * FROM actividades WHERE evento_id = ?', [id]);
@@ -228,3 +235,6 @@ class UsuarioEventsController {
 }
 
 module.exports = UsuarioEventsController;
+
+
+

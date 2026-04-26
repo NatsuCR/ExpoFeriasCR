@@ -14,7 +14,7 @@
 }
 
 .cuenta-header h1 {
-  color: #2c1a0e;
+  color: #1a1a1a;
   font-size: 32px;
   margin-bottom: 8px;
 }
@@ -49,13 +49,13 @@
 
 .perfil-avatar {
   font-size: 80px;
-  color: #8b5a2b;
+  color: #0033A0;
   width: 100px;
   text-align: center;
 }
 
 .perfil-datos h2 {
-  color: #2c1a0e;
+  color: #1a1a1a;
   margin: 0 0 5px 0;
   font-size: 24px;
 }
@@ -67,7 +67,7 @@
 }
 
 .perfil-miembro {
-  color: #8b5a2b;
+  color: #0033A0;
   font-weight: 600;
   font-size: 12px;
   text-transform: uppercase;
@@ -143,7 +143,7 @@
 }
 
 .seccion-header h2 {
-  color: #2c1a0e;
+  color: #1a1a1a;
   font-size: 24px;
   margin: 0 0 8px 0;
 }
@@ -182,7 +182,7 @@
 }
 
 .evento-card-titulo {
-  color: #2c1a0e;
+  color: #1a1a1a;
   font-size: 16px;
   font-weight: 600;
   margin: 0 0 10px 0;
@@ -253,7 +253,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid #f0f0f0;
-  border-top-color: #8b5a2b;
+  border-top-color: #0033A0;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 15px;
@@ -305,3 +305,6 @@
 .btn-danger-outline i {
   font-size: 16px;
 }
+
+
+

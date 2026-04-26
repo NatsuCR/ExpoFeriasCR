@@ -143,3 +143,5 @@ document.getElementById('actividadRequiereOnline').addEventListener('change', fu
 document.getElementById('btnAgregarImagenActividad').addEventListener('click', () => {
     agregarFilaImagen('actividadImagenesLista');
 });
+
+

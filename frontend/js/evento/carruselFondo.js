@@ -57,3 +57,5 @@ export function cargarCarruselFondo(slug) {
         next.addEventListener('click', siguienteSlideFondo);
     }
 }
+
+

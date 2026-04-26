@@ -42,12 +42,19 @@ function estadoEvento(e) {
     if (e.estado !== 'aprobado')            return { label: 'Sin aprobar', cls: 'estado-no-aprobado' };
     
     // Si está aprobado, mostrar estado por fechas
-    const hoy   = new Date();
-    const ini   = new Date(e.fecha_inicio);
-    const fin   = new Date(e.fecha_fin);
-    if (hoy >= ini && hoy <= fin) return { label: 'En curso ✓', cls: 'estado-activo' };
-    if (hoy < ini)                return { label: 'Próximo ✓',  cls: 'estado-proximo' };
-    return                               { label: 'Finalizado ✓', cls: 'estado-pasado' };
+    const hoy = new Date();
+    // Normalizar hoy a las 00:00:00 para comparaciones de solo fecha si fuera necesario, 
+    // pero aquí compararemos contra el final del día de 'fin'
+    const ini = new Date(e.fecha_inicio);
+    const fin = new Date(e.fecha_fin);
+    
+    // Seteamos 'fin' al último milisegundo del día para que "Hoy" siga siendo "En curso"
+    const finDelDia = new Date(fin);
+    finDelDia.setHours(23, 59, 59, 999);
+
+    if (hoy >= ini && hoy <= finDelDia) return { label: 'En curso ✓', cls: 'estado-activo' };
+    if (hoy < ini)                      return { label: 'Próximo ✓',  cls: 'estado-proximo' };
+    return                                     { label: 'Finalizado ✓', cls: 'estado-pasado' };
 }
 
 // ── Secciones de resumen ──────────────────────────────────────────────────────
@@ -172,8 +179,14 @@ async function cargarEventos() {
 // ── Acciones ─────────────────────────────────────────────────────────────────
 
 function actualizarBotonEliminarSeleccionados() {
+    const total = document.querySelectorAll('.evento-check');
     const checks = document.querySelectorAll('.evento-check:checked');
     btnEliminarSeleccionados.disabled = checks.length === 0;
+
+    const selectAll = document.getElementById('selectAll');
+    if (selectAll) {
+        selectAll.checked = total.length > 0 && total.length === checks.length;
+    }
 }
 
 async function eliminarEvento(id) {
@@ -228,11 +241,44 @@ function editarEvento(id) {
 
 btnLogout.addEventListener('click', () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('usuario');
     window.location.href = 'login.html';
 });
 btnCrearEvento.addEventListener('click', () => { window.location.href = 'evento-form.html'; });
 btnEliminarSeleccionados.addEventListener('click', eliminarSeleccionados);
 btnEliminarPorFecha.addEventListener('click', eliminarPorFecha);
 
+// Lógica de Seleccionar Todos
+document.getElementById('selectAll')?.addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+    document.querySelectorAll('.evento-check').forEach(cb => {
+        cb.checked = isChecked;
+    });
+    actualizarBotonEliminarSeleccionados();
+});
+
+window.editarEvento = editarEvento;
+
 cargarEventos();
+
+// ── Mobile Menu Toggle ────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.getElementById('adminMenuToggle');
+    const headerButtons = document.getElementById('adminHeaderButtons');
+
+    if (menuToggle && headerButtons) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            headerButtons.classList.toggle('active');
+        });
+
+        // Cerrar al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (headerButtons.classList.contains('active') && !headerButtons.contains(e.target) && e.target !== menuToggle) {
+                headerButtons.classList.remove('active');
+            }
+        });
+    }
+});
+
+

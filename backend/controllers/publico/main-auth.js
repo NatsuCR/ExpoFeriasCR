@@ -88,3 +88,5 @@ window.cerrarSesion = function () {
     limpiarSesionAuth();
     window.location.href = '/index.html';
 };
+
+

@@ -132,3 +132,5 @@ async function cargarExpositores() {
 document.getElementById('btnAgregarImagenExpositor').addEventListener('click', () => {
     agregarFilaImagen('expositorImagenesLista');
 });
+
+

@@ -27,7 +27,7 @@
     padding: 12px;
     border: none;
     background: transparent;
-    color: var(--evento-primario, #8b5a2b);
+    color: var(--evento-primario, #0033A0);
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
@@ -126,7 +126,7 @@
 .fallback-icon-wrap {
     width: 60px;
     height: 60px;
-    background: var(--evento-primario, #8b5a2b);
+    background: var(--evento-primario, #0033A0);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -216,7 +216,7 @@
 
 .fallback-content h4 {
     margin: 0 0 5px 0;
-    color: #2c1a0e;
+    color: #1a1a1a;
     font-size: 1.1em;
 }
 
@@ -234,3 +234,6 @@
         padding: 10px;
     }
 }
+
+
+

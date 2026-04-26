@@ -37,25 +37,25 @@ export function guardarDatosPreview() {
         url_venta_online: get('url_venta_online'),
 
         // ── Los 20 colores exactos de la BD ──────────────────────────────────
-        color_primario: get('color_primario') || '#8b5a2b',
-        color_secundario: get('color_secundario') || '#d4a373',
-        color_fondo: get('color_fondo') || '#f4e4c1',
-        color_texto: get('color_texto') || '#2c1a0e',
+        color_primario: get('color_primario') || '#c8102e',
+        color_secundario: get('color_secundario') || '#0033a0',
+        color_fondo: get('color_fondo') || '#fdfdfd',
+        color_texto: get('color_texto') || '#1a1a1a',
         color_hero_overlay: get('color_hero_overlay') || 'rgba(62,42,31,0.7)',
-        color_titulo_seccion: get('color_titulo_seccion') || '#2c1a0e',
+        color_titulo_seccion: get('color_titulo_seccion') || '#1a1a1a',
         color_titulo_hero: get('color_titulo_hero') || '#ffffff',
         color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
-        color_fondo_fechas: get('color_fondo_fechas') || '#d4a373',
-        color_texto_fechas: get('color_texto_fechas') || '#8b5a2b',
+        color_fondo_fechas: get('color_fondo_fechas') || '#0033a0',
+        color_texto_fechas: get('color_texto_fechas') || '#c8102e',
         color_menu_fondo: get('color_menu_fondo') || '#ffffff',
         color_menu_texto: get('color_menu_texto') || '#ffffff',
         color_menu_fondo_hover: get('color_menu_fondo_hover') || '',
         color_menu_texto_hover: get('color_menu_texto_hover') || '',
-        color_titulo_h3: get('color_titulo_h3') || '#2c1a0e',
-        color_fondo_contacto: get('color_fondo_contacto') || '#f4e4c1',
-        color_texto_contacto: get('color_texto_contacto') || '#2c1a0e',
-        color_enlace_contacto: get('color_enlace_contacto') || '#8b5a2b',
-        color_fondo_footer: get('color_fondo_footer') || '#8b5a2b',
+        color_titulo_h3: get('color_titulo_h3') || '#1a1a1a',
+        color_fondo_contacto: get('color_fondo_contacto') || '#fdfdfd',
+        color_texto_contacto: get('color_texto_contacto') || '#1a1a1a',
+        color_enlace_contacto: get('color_enlace_contacto') || '#c8102e',
+        color_fondo_footer: get('color_fondo_footer') || '#c8102e',
         color_texto_footer: get('color_texto_footer') || '#ffffff'
     };
 
@@ -179,3 +179,6 @@ export function aplicarCambiosEnVivo() {
 
     actualizarUrlBar();
 }
+
+
+

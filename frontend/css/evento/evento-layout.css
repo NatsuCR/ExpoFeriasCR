@@ -15,7 +15,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 .logo {
     display: flex;
@@ -37,6 +37,24 @@
     list-style: none;
     gap: 1.5rem;
     flex-wrap: wrap;
+}
+.nav-links a {
+    color: var(--color-menu-texto, #ffffff);
+    background-color: var(--color-menu-fondo, rgba(255,255,255,0.1));
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.nav-links a:hover {
+    background-color: var(--color-menu-fondo-hover, rgba(255,255,255,0.2));
+    color: var(--color-menu-texto-hover, #ffffff);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* Hero con carrusel de fondo */
@@ -115,11 +133,11 @@
 }
 .hero-dates {
     font-size: 1.5rem;
-    background-color: var(--evento-secundario);
+    background-color: var(--color-fondo-fechas, var(--evento-secundario));
     display: inline-block;
     padding: 0.5rem 1.5rem;
     border-radius: 30px;
-    color: var(--evento-primario);
+    color: var(--color-texto-fechas, var(--evento-primario));
     font-weight: bold;
 }
 .hero-carrusel-btn {
@@ -150,13 +168,52 @@ h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 2rem;
-    color: var(--evento-primario);
+    color: var(--color-titulo-seccion, var(--evento-primario));
     border-bottom: 3px solid var(--evento-secundario);
     display: inline-block;
     padding-bottom: 0.5rem;
     width: auto;
     margin-left: auto;
     margin-right: auto;
+}
+
+h3 {
+    color: var(--color-titulo-h3);
+}
+
+.contacto {
+    background-color: var(--color-fondo-contacto, var(--evento-fondo));
+    color: var(--color-texto-contacto, var(--evento-texto));
+}
+
+.contacto a {
+    color: var(--color-enlace-contacto, var(--evento-primario));
+    font-weight: bold;
+}
+
+.btn-toggle-video {
+    background: var(--evento-primario);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    margin: 20px auto;
+}
+
+.btn-toggle-video:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.btn-toggle-video i {
+    font-size: 1.4rem;
 }
 
 /* Mapa */
@@ -174,9 +231,16 @@ h2 {
 
 /* Footer */
 footer {
-    background-color: var(--footer-fondo, var(--evento-primario)) !important;
-    color: var(--footer-texto, white) !important;
+    background-color: var(--color-fondo-footer, var(--evento-primario)) !important;
+    color: var(--color-texto-footer, white) !important;
     text-align: center;
-    padding: 1.5rem 0;
+    padding: 2rem 0;
     margin-top: 2rem;
 }
+
+footer p {
+    color: var(--color-texto-footer, white);
+    margin: 0;
+}
+
+

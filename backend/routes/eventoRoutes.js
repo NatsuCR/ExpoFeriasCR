@@ -35,3 +35,6 @@ router.get('/', eventoController.obtenerTodos.bind(eventoController));
 router.get('/:slug', eventoController.obtenerPorSlug.bind(eventoController));
 
 module.exports = router;
+
+
+

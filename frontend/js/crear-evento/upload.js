@@ -51,3 +51,6 @@ export function bindUpload(btnId, fileId, targetInputId, feedbackId, onSuccess) 
     file.value = '';
   });
 }
+
+
+

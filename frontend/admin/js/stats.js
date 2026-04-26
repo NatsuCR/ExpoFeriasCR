@@ -78,7 +78,7 @@ function updateUI(data, filteredDate) {
     const pageLabels = data.byPage.map(item => item.label);
     const pageData = data.byPage.map(item => item.total);
 
-    const colors = ['#3498db', '#e67e22', '#2ecc71', '#9b59b6', '#f1c40f', '#e74c3c', '#1abc9c', '#34495e', '#d35400', '#7f8c8d'];
+    const colors = ['#3498db', '#e67e22', '#2ecc71', '#9b59b6', '#0033a0', '#e74c3c', '#1abc9c', '#34495e', '#d35400', '#7f8c8d'];
     const backgroundColors = pageLabels.map((_, i) => colors[i % colors.length]);
 
     if (pagesChart) pagesChart.destroy();
@@ -192,3 +192,5 @@ if (btnExportarZip) {
 
 // Inicializar
 fetchStats();
+
+

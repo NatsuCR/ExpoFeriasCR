@@ -166,7 +166,7 @@
 .preview-hero {
   position: relative;
   height: 160px;
-  background: linear-gradient(135deg, #8b5a2b, #d4a373);
+  background: linear-gradient(135deg, #0033A0, #C8102E);
   display: flex;
   align-items: flex-end;
   padding: 14px;
@@ -225,7 +225,7 @@
 
 .preview-field i {
   width: 16px;
-  color: #8b5a2b;
+  color: #0033A0;
   margin-top: 2px;
   flex-shrink: 0;
 }
@@ -274,3 +274,46 @@
   padding: 0;
   margin: 0;
 }
+
+/* Spinner de Carga */
+.uploading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Feedback de Subida */
+.upload-feedback {
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: none;
+}
+
+.upload-feedback.ok {
+  display: inline-block;
+  background: #e8f8f5;
+  color: #27ae60;
+  border: 1px solid #27ae60;
+}
+
+.upload-feedback.err {
+  display: inline-block;
+  background: #fdf2f2;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+
+

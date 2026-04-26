@@ -9,7 +9,7 @@
 }
 
 .preview-list li i {
-  color: #8b5a2b;
+  color: #0033A0;
   width: 14px;
 }
 
@@ -146,17 +146,19 @@
 .btn-toggle-preview {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     margin-top: 12px;
-    padding: 9px 18px;
+    padding: 10px 20px;
     background: linear-gradient(135deg, #0033A0 0%, #003db5 100%);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
+    min-height: 42px;
 }
 
 .btn-toggle-preview:hover {
@@ -275,3 +277,6 @@
     border-radius: 4px;
     display: none;
 }
+
+
+

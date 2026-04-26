@@ -51,3 +51,24 @@ export function bindUpload(btnId, fileId, targetInputId, feedbackId, onSuccess) 
     file.value = '';
   });
 }
+
+export function bindMultiUpload(btnId, fileId, feedbackId, onEachSuccess) {
+  const btn = document.getElementById(btnId);
+  const file = document.getElementById(fileId);
+  if (!btn || !file) return;
+
+  btn.onclick = () => file.click();
+  file.onchange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    for (const f of files) {
+      const url = await subirImagen(f, feedbackId, btn);
+      if (url && onEachSuccess) onEachSuccess(url);
+    }
+    file.value = '';
+  };
+}
+
+
+

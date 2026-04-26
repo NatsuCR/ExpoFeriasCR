@@ -4,13 +4,13 @@
     justify-content: center;
     gap: 1rem;
     flex-wrap: wrap;
-    max-width: 700px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
 .filter-select, .search-input {
     flex: 1;
-    padding: 15px 25px;
+    padding: 15px 25px 15px 45px; /* MÃ¡s espacio a la izquierda para el icono */
     border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: var(--radius-premium);
     font-size: 1rem;
@@ -19,6 +19,24 @@
     backdrop-filter: blur(10px);
     box-shadow: var(--shadow-premium);
     transition: var(--transition);
+    width: 100%;
+}
+
+.filter-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+}
+
+.filter-wrapper i {
+    position: absolute;
+    left: 18px;
+    color: var(--color-accent);
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 2;
 }
 
 .filter-select:focus, .search-input:focus {
@@ -48,48 +66,106 @@
 
 /* ========== EVENTO CARD ========== */
 .evento-card {
-    background: var(--color-bg-card);
+    background: white;
     border-radius: var(--radius-premium);
     overflow: hidden;
     box-shadow: var(--shadow-premium);
     transition: var(--transition);
-    border: 1px solid rgba(0,0,0,0.03);
-    position: relative;
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.evento-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+.card-img-wrap {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    background: #eee;
+}
+
+.card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.evento-card:hover .card-img-wrap img {
+    transform: scale(1.1);
+}
+
+.category-badge {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 51, 160, 0.9);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.2);
+    z-index: 2;
+}
+
+.card-info {
+    padding: 1.5rem;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.evento-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,26,82,0.12);
+.card-info h3 {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: var(--color-midnight);
+    margin-bottom: 0.8rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+    height: 3.3rem;
 }
 
-.evento-card img {
+.card-date, .card-location {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0.3rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-location {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-date i, .card-location i {
+    color: var(--color-accent);
+    width: 14px;
+}
+
+.card-info .btn-ver {
+    margin: 1.2rem 0 0 0;
     width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
-
-.evento-card h3 {
-    padding: 1rem 1rem 0;
-    color: var(--color-secondary);
-    font-size: 1.3rem;
-}
-
-.evento-card p {
-    padding: 0 1rem;
-    color: var(--color-text-muted);
-    flex-grow: 1;
-}
-
-.evento-card .btn-ver {
     display: block;
-    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-midnight) 100%);
+    background: var(--color-midnight);
     color: white;
     text-align: center;
     padding: 12px;
-    margin: 1.2rem;
     border-radius: var(--radius-premium);
     text-decoration: none;
     font-weight: 700;
@@ -97,12 +173,12 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: var(--transition);
-    box-shadow: 0 4px 10px rgba(0, 51, 160, 0.2);
 }
 
-.evento-card .btn-ver:hover {
-    box-shadow: 0 6px 15px rgba(0, 51, 160, 0.4);
-    filter: brightness(1.1);
+.card-info .btn-ver:hover {
+    background: var(--color-accent);
+    color: white;
+    box-shadow: 0 6px 15px rgba(255, 193, 7, 0.3);
 }
 
 /* ========== BADGE EN VIVO ========== */
@@ -176,7 +252,7 @@
     gap: 1.5rem;
     transition: transform 0.3s ease;
     will-change: transform;
-    width: 100%; /* AGREGAR ESTO */
+    width: 100%;
 }
 
 .carousel-slide {
@@ -261,7 +337,7 @@
 }
 
 
-/* ========== BOTÓN DE NOTIFICACIONES (PARCHES) - VERSION RED ACCENTS ========== */
+/* ========== BOTÃ“N DE NOTIFICACIONES (PARCHES) ========== */
 .patch-btn {
     position: fixed;
     bottom: 30px;
@@ -269,7 +345,7 @@
     width: 60px;
     height: 60px;
     background: var(--color-midnight);
-    border: 2px solid #ff3e3e; /* Borde Rojo */
+    border: 2px solid #ff3e3e;
     color: #ffffff;
     border-radius: 50%;
     display: flex;
@@ -284,7 +360,7 @@
 
 .patch-btn:hover {
     transform: scale(1.15) rotate(15deg);
-    background: #ff3e3e; /* Fondo Rojo al hover */
+    background: #ff3e3e;
     color: #ffffff;
     box-shadow: 0 0 20px rgba(255, 62, 62, 0.4);
 }
@@ -293,7 +369,7 @@
     position: absolute;
     top: -2px;
     right: -2px;
-    background: #ffffff; /* Badge Blanco para contraste */
+    background: #ffffff;
     color: #ff3e3e;
     font-size: 11px;
     font-weight: bold;
@@ -306,7 +382,7 @@
     border: 2px solid var(--color-midnight);
 }
 
-/* ========== PANEL DE NOVEDADES (MODAL) - VERSION RED ACCENTS ========== */
+/* ========== PANEL DE NOVEDADES (MODAL) ========== */
 .patch-overlay {
     position: fixed;
     top: 0;
@@ -392,7 +468,7 @@
 }
 
 .patch-body h3 {
-    color: #ff3e3e; /* Títulos de sección en Rojo */
+    color: #ff3e3e;
     font-size: 1.3rem;
     margin-bottom: 1rem;
     display: flex;
@@ -400,14 +476,6 @@
     gap: 12px;
     border-left: 4px solid #ff3e3e;
     padding-left: 15px;
-}
-
-.patch-body li::before {
-    content: "?";
-    color: #ff3e3e; /* Flechas en Rojo */
-    position: absolute;
-    left: 0;
-    font-weight: bold;
 }
 
 .patch-body li {
@@ -419,15 +487,22 @@
     color: rgba(255,255,255,0.85);
 }
 
-.patch-footer {
-    margin-top: 2.5rem;
-    text-align: center; /* Centrado del botón */
+.patch-body li::before {
+    content: "âžœ";
+    color: #ff3e3e;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
 }
 
-/* DECORACIÓN DEL BOTÓN ENTENDIDO EN ROJO */
+.patch-footer {
+    margin-top: 2.5rem;
+    text-align: center;
+}
+
 #btn-entendido-patch {
-    background: #ff3e3e; /* Fondo Rojo */
-    color: #ffffff; /* Letras Blancas */
+    background: #ff3e3e;
+    color: #ffffff;
     padding: 16px 50px;
     border-radius: 18px;
     border: none;
@@ -447,6 +522,5 @@
     background: #ff5555;
 }
 
-#btn-entendido-patch:active {
-    transform: translateY(1px);
-}
+
+

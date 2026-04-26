@@ -30,15 +30,15 @@ export async function cargarEvento(slug) {
         const horario_imagen_url = evento.horario_imagen;
         const mapa_embed = (evento.mapa_embed || '').trim();
         const mapa_waze_embed = (evento.mapa_waze_embed || '').trim();
-        
-        // Manejo de tiene_expositores
-        const tiene_expositores = (evento.tiene_expositores !== undefined && evento.tiene_expositores !== null) 
-                                 ? parseInt(evento.tiene_expositores) 
-                                 : 1;
 
-        console.log('[cargarEvento] Config Normalizada (snake_case):', { 
-            tiene_expositores, 
-            has_google: mapa_embed.length > 5, 
+        // Manejo de tiene_expositores
+        const tiene_expositores = (evento.tiene_expositores !== undefined && evento.tiene_expositores !== null)
+            ? parseInt(evento.tiene_expositores)
+            : 1;
+
+        console.log('[cargarEvento] Config Normalizada (snake_case):', {
+            tiene_expositores,
+            has_google: mapa_embed.length > 5,
             has_waze: mapa_waze_embed.length > 5,
             tipo_venta: evento.tipo_venta
         });
@@ -53,8 +53,26 @@ export async function cargarEvento(slug) {
         document.getElementById('eventoFechas').innerHTML = fechaRango;
         document.getElementById('eventoInfoCompleta').innerHTML = typeof window.formatDescription === 'function' ? window.formatDescription(descripcion, true) : descripcion;
         document.getElementById('infoFechas').innerHTML = `${fmt(fecha_inicio)} - ${fmt(fecha_fin)}`;
-        document.getElementById('infoUbicacion').innerHTML = ubicacion;
-        document.getElementById('ubicacionTexto').innerHTML = ubicacion;
+
+        // Jerarquía Administrativa (Distrito, Cantón, Provincia)
+        const jerarquiaAdmin = [
+            evento.distrito,
+            evento.canton,
+            evento.provincia,
+            'Costa Rica'
+        ].filter(Boolean).join(', ');
+
+        // Ubicación Completa (para otros usos si se requiere)
+        const ubicacionFull = [ubicacion, jerarquiaAdmin].filter(Boolean).join(', ');
+
+        document.getElementById('infoUbicacion').innerHTML = ubicacionFull;
+        document.getElementById('ubicacionTexto').innerHTML = jerarquiaAdmin;
+
+        const exactElem = document.getElementById('ubicacionExactaTexto');
+        if (exactElem) {
+            exactElem.innerHTML = `📍 ${ubicacion}`;
+            exactElem.style.display = ubicacion ? 'block' : 'none';
+        }
 
         // Horario
         const sectionHorario = document.getElementById('seccion-horario');
@@ -71,7 +89,7 @@ export async function cargarEvento(slug) {
             if (src && src !== 'null' && src !== 'undefined' && src.trim() !== '') {
                 const altText = `Horario oficial y cronograma de ${nombre}`;
                 horarioDiv.innerHTML = `<img src="${src}" alt="${altText}" class="horario-img" style="max-width:100%; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1); cursor:pointer;" loading="lazy">`;
-                
+
                 const img = horarioDiv.querySelector('img');
                 if (img) {
                     img.addEventListener('click', () => abrirLightbox(src, altText));
@@ -88,13 +106,13 @@ export async function cargarEvento(slug) {
         function renderMapContent(input, type) {
             if (!input) return '';
             if (input.toLowerCase().startsWith('<iframe')) return input;
-            
+
             const isWaze = type === 'waze';
             const icon = isWaze ? 'fab fa-waze' : 'fab fa-google';
             const appName = isWaze ? 'Waze' : 'Google Maps';
             const btnClass = isWaze ? 'btn-waze' : 'btn-google';
             const navClass = isWaze ? 'nav-waze' : 'nav-google';
-            
+
             return `
                 <div class="nav-action-card ${navClass}">
                     <div class="nav-card-icon"><i class="${icon}"></i></div>
@@ -211,7 +229,7 @@ export async function cargarEvento(slug) {
             // Asegurar que la tarjeta sea visible siempre
             const entradasCard = entradasParrafo.closest('.info-card');
             if (entradasCard) {
-                entradasCard.style.display = 'flex'; 
+                entradasCard.style.display = 'flex';
                 // Si es gratis, quitamos el puntero de scroll ya que no hay sección de precios
                 if (tipo_venta === 'gratis') entradasCard.style.pointerEvents = 'none';
                 else entradasCard.style.pointerEvents = 'auto';
@@ -256,18 +274,19 @@ export async function cargarEvento(slug) {
         const ctf = evento.color_texto_fechas;
 
         const r = document.documentElement;
-        
+
         if (cp) r.style.setProperty('--evento-primario', cp);
         if (cs) r.style.setProperty('--evento-secundario', cs);
         if (cf) r.style.setProperty('--evento-fondo', cf);
         if (ct) document.body.style.color = ct;
-        
-        r.style.setProperty('--color-descripcion-texto', cdt || '#2c1a0e');
+        if (evento.color_iconos) r.style.setProperty('--color-iconos', evento.color_iconos);
+
+        r.style.setProperty('--color-descripcion-texto', cdt || '#1a1a1a');
         r.style.setProperty('--color-descripcion-hero', cdh || '#ffffff');
 
         // Share
         const cfs = evento.color_fondo_share || 'rgba(255, 255, 255, 0.5)';
-        const ctshare = evento.color_texto_share || '#2c1a0e';
+        const ctshare = evento.color_texto_share || '#1a1a1a';
         r.style.setProperty('--color-fondo-share', cfs);
         r.style.setProperty('--color-texto-share', ctshare);
 
@@ -307,8 +326,8 @@ export async function cargarEvento(slug) {
 
         // H3, Buscador, Contacto, Footer, etc
         if (evento.color_titulo_h3) document.querySelectorAll('.info-card h3, .actividad-card h3, .expositor-card h3').forEach(h3 => h3.style.color = evento.color_titulo_h3);
-        if (evento.color_buscador_expositores) document.getElementById('expositorSearchContainer').style.backgroundColor = evento.color_buscador_expositores;
-        if (evento.color_borde_buscador_expositores) document.getElementById('expositorSearch').style.borderColor = evento.color_borde_buscador_expositores;
+        if (evento.color_buscador_expositores) r.style.setProperty('--color-buscador-expositores', evento.color_buscador_expositores);
+        if (evento.color_borde_buscador_expositores) r.style.setProperty('--color-borde-buscador-expositores', evento.color_borde_buscador_expositores);
 
         if (evento.color_fondo_contacto) r.style.setProperty('--contacto-fondo', evento.color_fondo_contacto);
         if (evento.color_texto_contacto) r.style.setProperty('--contacto-texto', evento.color_texto_contacto);
@@ -324,3 +343,5 @@ export async function cargarEvento(slug) {
         document.body.innerHTML = `<div style="padding:40px; text-align:center;"><h1>⚠️ ${err.message}</h1><a href="/">Volver</a></div>`;
     }
 }
+
+

@@ -9,6 +9,18 @@ const trackerMiddleware = require('./middlewares/trackerMiddleware');
 const app = express();
 
 // =======================
+// 🌐 ARCHIVOS CRÍTICOS (SEO/ADS)
+// =======================
+// Servir antes de Helmet y otros middlewares para asegurar máxima compatibilidad con bots
+app.get('/ads.txt', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'frontend', 'ads.txt'));
+});
+
+app.get('/robots.txt', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'frontend', 'robots.txt'));
+});
+
+// =======================
 // 🛡️ SEGURIDAD GLOBAL
 // =======================
 app.use(helmet({
@@ -150,3 +162,5 @@ server.on('error', (error) => {
     console.error('❌ Error inesperado en el servidor:', error);
   }
 });
+
+

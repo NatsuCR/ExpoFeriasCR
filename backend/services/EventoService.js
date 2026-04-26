@@ -28,9 +28,9 @@ class EventoService {
     return rows.map(row => Evento.fromDatabase(row));
   }
 
-  // Obtiene eventos en progreso (vivo)
+  // Obtiene eventos en progreso (que empezaron antes de hoy y terminan hoy o después)
   async obtenerEventosEnProgreso(provincia = null) {
-    let query = `SELECT * FROM eventos WHERE activo = true AND estado IN ('aprobado', 'edicion_pendiente') AND fecha_inicio <= CURDATE() AND fecha_fin >= CURDATE()`;
+    let query = `SELECT * FROM eventos WHERE activo = true AND estado IN ('aprobado', 'edicion_pendiente') AND fecha_inicio < CURDATE() AND fecha_fin >= CURDATE()`;
     const params = [];
     if (provincia) {
       query += ` AND provincia = ?`;
@@ -137,3 +137,5 @@ class EventoService {
 }
 
 module.exports = EventoService;
+
+

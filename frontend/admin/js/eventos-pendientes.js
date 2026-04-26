@@ -1,6 +1,9 @@
 /**
- * admin-eventos-pendientes.js - Gestión de eventos pendientes de aprobación
+ * admin-eventos-pendientes.js - Gestión de eventos pendientes
  */
+
+import { verEvento as previewVerEvento } from './eventos-pendientes-preview.js';
+import { aprobarEvento as actionAprobarEvento, confirmarRechazo as actionConfirmarRechazo } from './eventos-pendientes-actions.js';
 
 class AdminEventosPendientes {
   constructor() {
@@ -13,493 +16,144 @@ class AdminEventosPendientes {
     this.init();
   }
 
-
   init() {
     this.verificarAutenticacion();
     this.cargarEventos();
     this.setupEventListeners();
-    this.actualizarContador();
+    
+    // Exponer funciones globales que el HTML llama directamente
+    window.cerrarModalPreview = () => this.cerrarModalPreview();
+    window.cerrarModalRechazo = () => this.cerrarModalRechazo();
   }
 
   verificarAutenticacion() {
-    const usuario = JSON.parse(localStorage.getItem('user') || 'null');
+    const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     if (!usuario || usuario.rol !== 'admin') {
-      window.mostrarMensaje('Acceso denegado. Se requieren permisos de administrador', 'error');
-      setTimeout(() => {
-        window.location.href = '/admin/login.html';
-      }, 2000);
+      window.location.href = '/admin/login.html';
     }
   }
 
   setupEventListeners() {
-    // Filtros
-    document.getElementById('filtro-estado').addEventListener('change', () => this.aplicarFiltros());
-    document.getElementById('filtro-buscar').addEventListener('input', () => this.aplicarFiltros());
-    document.getElementById('btn-limpiar-filtros').addEventListener('click', () => this.limpiarFiltros());
-
-    // Paginación
-    document.getElementById('btn-pagina-anterior').addEventListener('click', () => this.irPaginaAnterior());
-    document.getElementById('btn-pagina-siguiente').addEventListener('click', () => this.irPaginaSiguiente());
+    document.getElementById('filtro-estado')?.addEventListener('change', () => this.aplicarFiltros());
+    document.getElementById('filtro-buscar')?.addEventListener('input', () => this.aplicarFiltros());
+    document.getElementById('btn-pagina-anterior')?.addEventListener('click', () => this.irPaginaAnterior());
+    document.getElementById('btn-pagina-siguiente')?.addEventListener('click', () => this.irPaginaSiguiente());
   }
 
   async cargarEventos() {
+    const msgCargando = document.getElementById('mensaje-cargando');
+    const tabla = document.getElementById('tabla-eventos');
+    const msgVacio = document.getElementById('mensaje-vacio');
+    
+    if (msgCargando) msgCargando.style.display = 'block';
+    if (tabla) tabla.style.display = 'none';
+    if (msgVacio) msgVacio.style.display = 'none';
+
     try {
-      document.getElementById('mensaje-cargando').style.display = 'flex';
-      document.getElementById('tabla-eventos').style.display = 'none';
-      document.getElementById('mensaje-vacio').style.display = 'none';
-
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/eventos-pendientes', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al cargar eventos pendientes');
-      }
-
+      const response = await fetch('/api/admin/eventos-pendientes', { headers: { 'Authorization': `Bearer ${token}` } });
       const data = await response.json();
       this.eventos = data.eventos || [];
       this.eventosFiltrados = [...this.eventos];
-      this.paginaActual = 1;
-
       this.renderizarTabla();
-      this.actualizarContador();
     } catch (error) {
       console.error('Error:', error);
-      document.getElementById('mensaje-cargando').style.display = 'none';
-      window.mostrarMensaje('Error al cargar eventos: ' + error.message, 'error');
+      if (msgCargando) msgCargando.style.display = 'none';
     }
   }
 
   aplicarFiltros() {
     const estado = document.getElementById('filtro-estado').value;
     const buscar = document.getElementById('filtro-buscar').value.toLowerCase();
-
-    this.eventosFiltrados = this.eventos.filter(evento => {
-      const coincideEstado = !estado || evento.estado === estado;
-      const coincideBusqueda = !buscar ||
-        evento.nombre.toLowerCase().includes(buscar) ||
-        (evento.usuario_nombre || '').toLowerCase().includes(buscar);
-
-      return coincideEstado && coincideBusqueda;
-    });
-
-    this.paginaActual = 1;
-    this.renderizarTabla();
-  }
-
-  limpiarFiltros() {
-    document.getElementById('filtro-estado').value = '';
-    document.getElementById('filtro-buscar').value = '';
-    this.eventosFiltrados = [...this.eventos];
+    this.eventosFiltrados = this.eventos.filter(e => (!estado || e.estado === estado) && (!buscar || e.nombre.toLowerCase().includes(buscar)));
     this.paginaActual = 1;
     this.renderizarTabla();
   }
 
   renderizarTabla() {
-    document.getElementById('mensaje-cargando').style.display = 'none';
+    const tbody = document.getElementById('eventos-tbody');
+    const msgCargando = document.getElementById('mensaje-cargando');
+    const tabla = document.getElementById('tabla-eventos');
+    const msgVacio = document.getElementById('mensaje-vacio');
+    const paginacion = document.getElementById('paginacion-container');
+
+    if (msgCargando) msgCargando.style.display = 'none';
+
+    if (!tbody) return;
+    tbody.innerHTML = '';
 
     if (this.eventosFiltrados.length === 0) {
-      document.getElementById('tabla-eventos').style.display = 'none';
-      document.getElementById('mensaje-vacio').style.display = 'block';
-      document.getElementById('paginacion-container').style.display = 'none';
+      if (tabla) tabla.style.display = 'none';
+      if (msgVacio) msgVacio.style.display = 'block';
+      if (paginacion) paginacion.style.display = 'none';
       return;
     }
 
-    // Calcular índices de paginación
+    if (tabla) tabla.style.display = 'table';
+    if (msgVacio) msgVacio.style.display = 'none';
+
     const inicio = (this.paginaActual - 1) * this.eventosPerPagina;
-    const fin = inicio + this.eventosPerPagina;
-    const eventosPagina = this.eventosFiltrados.slice(inicio, fin);
+    const eventosPagina = this.eventosFiltrados.slice(inicio, inicio + this.eventosPerPagina);
 
-    // Renderizar filas
-    const tbody = document.getElementById('eventos-tbody');
-    tbody.innerHTML = '';
-
-    eventosPagina.forEach(evento => {
+    eventosPagina.forEach(e => {
       const row = document.createElement('tr');
-      const usuarioNombre = evento.usuario_nombre || 'Sin usuario';
-      const estadoBadge = this.getEstadoBadge(evento.estado);
-      const fechaCreacion = new Date(evento.created_at).toLocaleDateString('es-CR');
-
       row.innerHTML = `
-        <td><strong>${this.escapeHtml(usuarioNombre)}</strong><br><small style="color: #999;">${this.escapeHtml(evento.usuario_email || '')}</small></td>
-        <td>${this.escapeHtml(evento.nombre)}</td>
-        <td>${fechaCreacion}</td>
-        <td>${estadoBadge}</td>
+        <td><strong>${this.escapeHtml(e.usuario_nombre || 'Usuario')}</strong></td>
+        <td>${this.escapeHtml(e.nombre)}</td>
+        <td>${new Date(e.created_at).toLocaleDateString()}</td>
+        <td>${this.getEstadoBadge(e.estado)}</td>
         <td>
           <div class="acciones-cell">
-            <button class="btn-accion btn-ver" onclick="admin.verEvento(${evento.id})">
-              <i class="fas fa-eye"></i> Ver
-            </button>
-            <button class="btn-accion btn-aprobar" onclick="admin.aprobarEvento(${evento.id})">
-              <i class="fas fa-check"></i> Aprobar
-            </button>
-            <button class="btn-accion btn-rechazar" onclick="admin.abrirRechazar(${evento.id})">
-              <i class="fas fa-times"></i> Rechazar
-            </button>
+            <button class="btn-accion btn-ver" onclick="admin.verEvento(${e.id})" title="Ver detalles"><i class="fas fa-eye"></i> Ver</button>
+            <button class="btn-accion btn-aprobar" onclick="admin.aprobarEvento(${e.id})" title="Aprobar"><i class="fas fa-check"></i> Aprobar</button>
+            <button class="btn-accion btn-rechazar" onclick="admin.abrirRechazar(${e.id})" title="Rechazar"><i class="fas fa-times"></i> Rechazar</button>
           </div>
         </td>
       `;
       tbody.appendChild(row);
     });
 
-    // Mostrar paginación si es necesario
+    // Actualizar Paginación
     const totalPaginas = Math.ceil(this.eventosFiltrados.length / this.eventosPerPagina);
-    if (totalPaginas > 1) {
-      document.getElementById('paginacion-container').style.display = 'flex';
-      document.getElementById('info-pagina').textContent = `Página ${this.paginaActual} de ${totalPaginas}`;
-      document.getElementById('btn-pagina-anterior').disabled = this.paginaActual === 1;
-      document.getElementById('btn-pagina-siguiente').disabled = this.paginaActual === totalPaginas;
-    } else {
-      document.getElementById('paginacion-container').style.display = 'none';
+    if (paginacion) {
+        paginacion.style.display = totalPaginas > 1 ? 'flex' : 'none';
+        const infoPagina = document.getElementById('info-pagina');
+        if (infoPagina) infoPagina.textContent = `Página ${this.paginaActual} de ${totalPaginas}`;
     }
-
-    document.getElementById('tabla-eventos').style.display = 'table';
-    document.getElementById('mensaje-vacio').style.display = 'none';
   }
 
   getEstadoBadge(estado) {
-    const iconos = {
-      pendiente: '⏳',
-      aprobado: '✓',
-      rechazado: '✕',
-      edicion_pendiente: '🔄',
-      finalizado: '✓'
+    const configs = {
+      pendiente: { texto: 'Pendiente', emoji: '⌛' },
+      aprobado: { texto: 'Aprobado', emoji: '✅' },
+      rechazado: { texto: 'Rechazado', emoji: '❌' },
+      edicion_pendiente: { texto: 'Actualización', emoji: '🔄' }
     };
-
-    const textos = {
-      pendiente: 'Pendiente',
-      aprobado: 'Aprobado',
-      rechazado: 'Rechazado',
-      edicion_pendiente: 'Actualización',
-      finalizado: 'Finalizado'
-    };
-
-    const icono = iconos[estado] || '❓';
-    const texto = textos[estado] || estado;
-    return `<span class="estado-badge ${estado}">${icono} ${texto}</span>`;
+    const config = configs[estado] || { texto: estado, emoji: '❓' };
+    return `<span class="estado-badge ${estado}"><span>${config.emoji}</span> <span>${config.texto}</span></span>`;
   }
 
-  async verEvento(eventoId) {
-    try {
-      const token = localStorage.getItem('token');
-      // Obtener detalle completo (incluyendo borrador mezclado)
-      const res = await fetch(`/api/admin/eventos-pendientes/${eventoId}`, {
-         headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      if(!res.ok) throw new Error('Error al cargar detalle del evento');
-      
-      const fullData = await res.json();
-      const evento = fullData.evento;
-      this.eventoActualModal = evento;
-
-      // Normalizar datos para la vista previa (conviértelo todo a los campos que espera cargarEvento.js)
-      const datosPreview = {
-        id: evento.id,
-        nombre: evento.nombre,
-        descripcion: evento.descripcion,
-        fecha_inicio: evento.fecha_inicio,
-        fecha_fin: evento.fecha_fin,
-        ubicacion: evento.ubicacion,
-        provincia: evento.provincia,
-        horario_imagen: evento.horario_imagen || evento.horarioImagen || '',
-        slug: evento.slug || '',
-        activo: (evento.activo !== undefined) ? parseInt(evento.activo) : 1,
-        imagen_portada: evento.imagen_portada || '',
-        mapa_embed: evento.mapa_embed || '',
-        mapa_waze_embed: evento.mapa_waze_embed || '',
-        color_primario: evento.color_primario || '#8b5a2b',
-        color_secundario: evento.color_secundario || '#d4a373',
-        color_fondo: evento.color_fondo || '#f4e4c1',
-        color_texto: evento.color_texto || '#2c1a0e',
-        color_descripcion_texto: evento.color_descripcion_texto || '#2c1a0e',
-        color_hero_overlay: evento.color_hero_overlay || 'rgba(62,42,31,0.7)',
-        color_titulo_seccion: evento.color_titulo_seccion || '#2c1a0e',
-        color_titulo_hero: evento.color_titulo_hero || '#ffffff',
-        color_descripcion_hero: evento.color_descripcion_hero || '#ffffff',
-        color_fondo_fechas: evento.color_fondo_fechas || '#d4a373',
-        color_texto_fechas: evento.color_texto_fechas || '#8b5a2b',
-        color_menu_fondo: evento.color_menu_fondo || '#ffffff',
-        color_menu_texto: evento.color_menu_texto || '#ffffff',
-        color_menu_fondo_hover: evento.color_menu_fondo_hover || '',
-        color_menu_texto_hover: evento.color_menu_texto_hover || '',
-        color_titulo_h3: evento.color_titulo_h3 || '#2c1a0e',
-        color_fondo_contacto: evento.color_fondo_contacto || '#f4e4c1',
-        color_texto_contacto: evento.color_texto_contacto || '#2c1a0e',
-        color_enlace_contacto: evento.color_enlace_contacto || '#8b5a2b',
-        color_fondo_footer: evento.color_fondo_footer || '#8b5a2b',
-        color_texto_footer: evento.color_texto_footer || '#ffffff',
-        color_fondo_share: evento.color_fondo_share || 'rgba(255, 255, 255, 0.5)',
-        color_texto_share: evento.color_texto_share || '#2c1a0e',
-        color_buscador_expositores: evento.color_buscador_expositores || '#ffffff',
-        color_borde_buscador_expositores: evento.color_borde_buscador_expositores || '#eeeeee',
-        color_borde_buscador_expositores: evento.color_borde_buscador_expositores || '#eeeeee',
-        tiene_expositores: (evento.tiene_expositores !== undefined && evento.tiene_expositores !== null) ? parseInt(evento.tiene_expositores) : 0,
-        tipo_venta: evento.tipo_venta || 'taquilla',
-        url_venta_online: evento.url_venta_online || '',
-        precios: fullData.precios || [],
-        actividades: (fullData.actividades || []).map(act => ({
-          ...act,
-          imagen: (typeof act.imagen === 'string' && act.imagen.startsWith('[')) ? JSON.parse(act.imagen) : act.imagen
-        })),
-        expositores: (fullData.expositores || []).map(exp => ({
-          ...exp,
-          logo: exp.imagen_logo || exp.logo,
-          video: exp.video_url || exp.video
-        })),
-        galeria: fullData.galeria || []
-      };
-      
-      const dataKey = 'preview_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem(dataKey, JSON.stringify(datosPreview));
-
-      const formatDate = (d) => window.formatDateCR ? window.formatDateCR(d) : d;
-
-      const buildCard = (isLive) => {
-        const liveBadge = isLive ? `<div style="position:absolute; top:10px; right:10px; background:#e74c3c; color:white; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; z-index:10;">🔴 EN VIVO</div>` : '';
-        const gratisBadge = datosPreview.tipo_venta === 'gratis' ? `<div style="position:absolute; top:10px; left:10px; background:#27ae60; color:white; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:12px; z-index:10;">GRATIS</div>` : '';
-        
-        const cp = evento.color_primario || '#C8102E'; 
-        const cs = evento.color_secundario || '#0033A0'; 
-        const imgUrl = (evento.imagen_portada && !evento.imagen_portada.startsWith('http') && !evento.imagen_portada.startsWith('/')) 
-          ? '/' + evento.imagen_portada 
-          : (evento.imagen_portada || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png');
-
-        return `
-          <div class="evento-card" style="--color-primary: ${cp}; --color-secondary: ${cs}; width:250px; margin:0 auto; box-shadow:0 4px 10px rgba(0,0,0,0.1); border-top:5px solid ${cp}; border-radius:8px; overflow:hidden; background:white;">
-            <div style="position:relative;">
-              ${liveBadge}
-              ${gratisBadge}
-              <img src="${imgUrl}" alt="${this.escapeHtml(evento.nombre)}" style="width:100%; height:160px; object-fit:cover;">
-            </div>
-            <div style="padding:12px; text-align:left;">
-              <h3 style="margin:0 0 8px; font-size:16px; color:${cs}; font-family:'Playfair Display', serif;">${this.escapeHtml(evento.nombre)}</h3>
-              <p style="margin:4px 0; color:#666; font-size:13px;">${formatDate(evento.fecha_inicio)} - ${formatDate(evento.fecha_fin)}</p>
-              <p style="margin:4px 0 12px; color:#666; font-size:13px;">${this.escapeHtml(evento.ubicacion)}</p>
-              <button type="button" style="width:100%; padding:8px; border:none; background:${cs}; color:white; border-radius:4px; font-size:13px; font-weight:bold; cursor:pointer;">Ver más</button>
-            </div>
-          </div>
-        `;
-      };
-
-      // Inyectar el HTML del modal con el iframe apuntando a preview=1
-      const html = `
-        <div style="display:flex; gap: 20px; flex-wrap: wrap;">
-          <div class="evento-preview-info" style="flex:1; min-width:300px;">
-            <div class="preview-usuario-info">
-              <h4>Información del Usuario</h4>
-              <p><strong>Nombre:</strong> ${this.escapeHtml(evento.usuario_nombre || 'N/A')}</p>
-              <p><strong>Email:</strong> ${this.escapeHtml(evento.usuario_email || 'N/A')}</p>
-              <p><strong>Fecha Creación:</strong> ${new Date(evento.created_at).toLocaleDateString('es-CR')}</p>
-              <p><strong>Estado:</strong> ${this.getEstadoBadge(evento.estado)}</p>
-              ${evento.razon_rechazo ? `<div style="background: #fadbd8; padding: 12px; border-radius: 6px; margin-top: 12px;"><strong style="color: #721c24;">Razón del Rechazo:</strong><p style="color: #721c24;">${this.escapeHtml(evento.razon_rechazo)}</p></div>` : ''}
-            </div>
-
-            <div style="margin-top:20px;">
-              <h4 style="border-bottom: 2px solid #ddd; padding-bottom: 8px; margin-bottom: 15px;">Simulación Portada (Index)</h4>
-              <div style="display:flex; flex-direction:column; gap:25px; margin-top:10px;">
-                <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border-left: 5px solid #C8102E;">
-                   <h5 style="margin: 0 0 10px 0; color: #333; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Normal / Hoy</h5>
-                   ${buildCard(false)}
-                </div>
-                <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border-left: 5px solid #e74c3c;">
-                   <h5 style="margin: 0 0 10px 0; color: #333; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">En Vivo</h5>
-                   ${buildCard(true)}
-                </div>
-              </div>
-            </div>
-          </div>
-          <iframe src="/evento.html?preview=1&dataKey=${dataKey}" class="evento-preview-iframe" allowfullscreen style="flex:2; min-width:360px; height: 80vh; border: 1px solid #ddd; border-radius: 8px;"></iframe>
-        </div>
-      `;
-
-      document.getElementById('evento-preview-contenido').innerHTML = html;
-
-      const puedeAccion = ['pendiente', 'edicion_pendiente'].includes(evento.estado);
-      document.getElementById('btn-modal-aprobar').style.display = puedeAccion ? 'block' : 'none';
-      document.getElementById('btn-modal-rechazar').style.display = puedeAccion ? 'block' : 'none';
-
-      document.getElementById('modal-evento-preview').style.display = 'flex';
-    } catch (error) {
-      console.error('Error:', error);
-      window.mostrarMensaje('Error al cargar evento: ' + error.message, 'error');
-    }
+  // Delegaciones
+  verEvento(id) { previewVerEvento(id, this); }
+  aprobarEvento(id) { actionAprobarEvento(id, this); }
+  aprobarEventoModal() { 
+    if (this.eventoActualModal) this.aprobarEvento(this.eventoActualModal.id);
   }
-
-  async aprobarEvento(eventoId) {
-    const confirmado = await window.confirmarAccion(
-      '¿Aprobar este evento?',
-      'Se enviará un correo de notificación al organizador indicando que su evento ya está disponible en el sitio.',
-      'Aprobar',
-      'confirm-btn-success'
-    );
-
-    if (!confirmado) return;
-
-    try {
-      this.eventosAprobar = eventoId;
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/admin/eventos-pendientes/${eventoId}/aprobar`, {
-        method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Error al aprobar evento');
-      }
-
-      window.mostrarMensaje('✓ Evento aprobado exitosamente. Email enviado al usuario.', 'success');
-      
-      this.cerrarModalPreview();
-      this.cargarEventos();
-      
-      setTimeout(() => {
-        location.reload();
-      }, 1500);
-    } catch (error) {
-      console.error('Error:', error);
-      window.mostrarMensaje('Error: ' + error.message, 'error');
-    }
+  abrirRechazar(id) { 
+    this.eventosAprobar = id || this.eventoActualModal?.id;
+    document.getElementById('modal-rechazar').style.display = 'flex'; 
   }
+  confirmarRechazo() { actionConfirmarRechazo(this); }
 
-  async aprobarEventoModal() {
-    if (this.eventoActualModal) {
-      await this.aprobarEvento(this.eventoActualModal.id);
-    }
-  }
+  irPaginaAnterior() { if (this.paginaActual > 1) { this.paginaActual--; this.renderizarTabla(); } }
+  irPaginaSiguiente() { if (this.paginaActual < Math.ceil(this.eventosFiltrados.length / this.eventosPerPagina)) { this.paginaActual++; this.renderizarTabla(); } }
 
-  abrirRechazar(eventoId) {
-    this.eventosAprobar = eventoId || (this.eventoActualModal ? this.eventoActualModal.id : null);
-    document.getElementById('razon-rechazo').value = '';
-    document.getElementById('modal-evento-preview').style.display = 'none';
-    document.getElementById('modal-rechazar').style.display = 'flex';
-  }
-
-  async confirmarRechazo() {
-    const razon = document.getElementById('razon-rechazo').value.trim();
-
-    if (!razon) {
-      window.mostrarMensaje('Por favor ingresa una razón para rechazar el evento', 'error');
-      return;
-    }
-
-    const confirmado = await window.confirmarAccion(
-      '¿Confirmar rechazo?',
-      'Se enviará el motivo del rechazo al usuario y el evento dejará de estar pendiente.',
-      'Rechazar',
-      'confirm-btn-danger'
-    );
-
-    if (!confirmado) return;
-
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/admin/eventos-pendientes/${this.eventosAprobar}/rechazar`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ razonRechazo: razon })
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Error al rechazar evento');
-      }
-
-      window.mostrarMensaje('✓ Evento rechazado. Email enviado al usuario con la razón.', 'success');
-      
-      this.cerrarModalRechazo();
-      this.cerrarModalPreview();
-      this.cargarEventos();
-
-      setTimeout(() => {
-        location.reload();
-      }, 1500);
-    } catch (error) {
-      console.error('Error:', error);
-      window.mostrarMensaje('Error: ' + error.message, 'error');
-    }
-  }
-
-  irPaginaAnterior() {
-    if (this.paginaActual > 1) {
-      this.paginaActual--;
-      this.renderizarTabla();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  irPaginaSiguiente() {
-    const totalPaginas = Math.ceil(this.eventosFiltrados.length / this.eventosPerPagina);
-    if (this.paginaActual < totalPaginas) {
-      this.paginaActual++;
-      this.renderizarTabla();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  async actualizarContador() {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/eventos-pendientes-stats', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const badge = document.getElementById('badge-pendientes');
-        if (data.pendiente > 0) {
-          badge.textContent = data.pendiente;
-          badge.style.display = 'inline-block';
-        } else {
-          badge.style.display = 'none';
-        }
-      }
-    } catch (error) {
-      console.error('Error al cargar contador:', error);
-    }
-  }
-
-  cerrarModalPreview() {
-    const modal = document.getElementById('modal-evento-preview');
-    if (modal) modal.style.display = 'none';
-    const modalRec = document.getElementById('modal-rechazar');
-    if (modalRec) modalRec.style.display = 'none';
-  }
-
-  cerrarModalRechazo() {
-    const modal = document.getElementById('modal-rechazar');
-    if (modal) modal.style.display = 'none';
-  }
-
-  escapeHtml(texto) {
-    if (!texto) return '';
-    const div = document.createElement('div');
-    div.textContent = texto;
-    return div.innerHTML;
-  }
+  cerrarModalPreview() { document.getElementById('modal-evento-preview').style.display = 'none'; }
+  cerrarModalRechazo() { document.getElementById('modal-rechazar').style.display = 'none'; }
+  escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 }
 
-// Funciones globales para callbacks
-function cerrarModalPreview() {
-  if (admin) admin.cerrarModalPreview();
-}
+window.admin = new AdminEventosPendientes();
 
-function cerrarModalRechazo() {
-  if (admin) admin.cerrarModalRechazo();
-}
 
-function abrirModalRechazo() {
-  if (admin) admin.abrirRechazar();
-}
 
-// Global instance
-let admin;
-
-document.addEventListener('DOMContentLoaded', () => {
-  admin = new AdminEventosPendientes();
-});

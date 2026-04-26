@@ -343,3 +343,6 @@ observer.observe(document.body, { childList: true, subtree: true });
 
 // Prevenció del envío de contraseña sin encriptación (solo HTTPS en producción)
 // El ejemplo actual funciona localmente pero en producción siempre usar HTTPS
+
+
+

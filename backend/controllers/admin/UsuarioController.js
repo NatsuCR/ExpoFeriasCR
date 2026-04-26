@@ -75,3 +75,5 @@ class AdminUsuarioController {
 }
 
 module.exports = new AdminUsuarioController();
+
+

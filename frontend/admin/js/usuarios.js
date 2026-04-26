@@ -175,3 +175,5 @@ btnCrearUsuario.addEventListener('click', async () => {
 btnEliminarSeleccionados.addEventListener('click', eliminarUsuariosSeleccionados);
 
 cargarUsuarios();
+
+

@@ -22,31 +22,21 @@ let carruselControls = [];
 
 function parseImagenes(valor) {
     if (!valor) return [];
-    
-    // Caso 1: Ya es un array
-    if (Array.isArray(valor)) return valor.filter(u => u && u !== 'null');
-
-    // Caso 2: Es un string
-    if (typeof valor === 'string' && valor.trim()) {
-        const trimmed = valor.trim();
-        // Caso JSON
-        if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-            try {
-                const parsed = JSON.parse(trimmed);
-                return (Array.isArray(parsed) ? parsed : [parsed]).filter(u => u && u !== 'null');
-            } catch (_) {
-                return [trimmed];
-            }
+    if (Array.isArray(valor)) return valor.filter(Boolean);
+    if (typeof valor !== 'string') return [];
+    let trimmed = valor.trim();
+    if (!trimmed) return [];
+    if (trimmed.startsWith('[')) {
+        try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed)) return parsed.filter(Boolean);
+        } catch (_) {
+            trimmed = trimmed.replace(/^\[/, '').replace(/\]$/, '');
         }
-        // Caso CSV
-        if (trimmed.includes(',')) {
-            return trimmed.split(',').map(s => s.trim()).filter(u => u && u !== 'null');
-        }
-        // Caso string único
-        return [trimmed];
     }
-
-    return [];
+    return trimmed.split(',')
+        .map(s => s.trim().replace(/^["']/, '').replace(/["']$/, '').trim())
+        .filter(s => s && s !== '[' && s !== ']');
 }
 
 function buildMiniCarrusel(imagenes, altText) {
@@ -152,9 +142,16 @@ export function renderExpositores(lista) {
     const container = document.getElementById('expositoresDinamicContainer');
     if (!container) return;
 
+    const searchContainer = document.getElementById('expositorSearchContainer');
     if (lista.length === 0) {
+        if (searchContainer) searchContainer.style.display = 'none';
         container.innerHTML = '<div class="no-results" style="text-align:center; padding:40px; color:#666;">No se encontraron expositores que coincidan con tu búsqueda.</div>';
         return;
+    }
+
+    // Mostrar buscador si hay datos
+    if (searchContainer) {
+        searchContainer.style.display = 'flex';
     }
 
     // Agrupar por categoría
@@ -298,22 +295,7 @@ export async function cargarExpositores(slug) {
         const res = await fetch(`/api/expositores/${slug}`);
         allExpositores = await res.json();
 
-        // Mostrar buscador si hay datos
-        const searchContainer = document.getElementById('expositorSearchContainer');
-        if (allExpositores.length > 0 && searchContainer) {
-            searchContainer.style.display = 'flex';
-
-            // Aplicar color personalizado si existe
-            const [eventoRows] = await fetch(`/api/eventos/${slug}`).then(r => r.json()).then(data => [data]);
-            // Nota: El endpoint /api/eventos/:slug devuelve el objeto directamente usualmente
-            const colorBuscador = allExpositores.length > 0 ? (window.colorBuscadorExpositores || '#ffffff') : '#ffffff';
-            // Para obtener el color necesitamos el evento, pero cargarEvento ya lo hace.
-            // Usaremos una variable global o la buscaremos en el DOM
-            const searchBar = document.querySelector('.expositor-search-bar');
-            if (searchBar && window.colorBuscadorExpositores) {
-                searchBar.style.backgroundColor = window.colorBuscadorExpositores;
-            }
-        }
+        // El buscador ahora se gestiona dentro de renderExpositores(lista)
 
         renderExpositores(allExpositores);
 
@@ -334,3 +316,5 @@ export async function cargarExpositores(slug) {
         console.error('Error al cargar expositores:', err);
     }
 }
+
+

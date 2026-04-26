@@ -35,12 +35,12 @@ const emailService = {
         subject: 'Código para recuperar tu contraseña - ExpoFeriasCR',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #2c1a0e;">Recupera tu contraseña</h2>
+            <h2 style="color: #1a1a1a;">Recupera tu contraseña</h2>
             <p>Hola <strong>${nombre}</strong>,</p>
             <p>Recibimos una solicitud para recuperar tu contraseña en ExpoFeriasCR. Usa el siguiente código:</p>
 
-            <div style="background-color: #f4e4c1; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
-              <p style="font-size: 32px; font-weight: bold; color: #8b5a2b; letter-spacing: 5px; margin: 0;">${codigo}</p>
+            <div style="background-color: #fdfdfd; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+              <p style="font-size: 32px; font-weight: bold; color: #c8102e; letter-spacing: 5px; margin: 0;">${codigo}</p>
             </div>
 
             <p><strong>Este código expira en 30 minutos.</strong></p>
@@ -71,12 +71,12 @@ const emailService = {
         subject: 'Confirma tu correo - ExpoFeriasCR',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #2c1a0e;">¡Bienvenido a ExpoFeriasCR!</h2>
+            <h2 style="color: #1a1a1a;">¡Bienvenido a ExpoFeriasCR!</h2>
             <p>Hola <strong>${nombre}</strong>,</p>
             <p>Gracias por registrarte. Para activar tu cuenta, confirma tu correo haciendo clic en el botón:</p>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${linkConfirmacion}" style="background-color: #8b5a2b; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+              <a href="${linkConfirmacion}" style="background-color: #c8102e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
                 Confirmar Email
               </a>
             </div>
@@ -108,7 +108,7 @@ const emailService = {
         subject: `Tu evento "${nombreEvento}" está siendo revisado`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #2c1a0e;">¡Evento recibido!</h2>
+            <h2 style="color: #1a1a1a;">¡Evento recibido!</h2>
             <p>Hola <strong>${nombre}</strong>,</p>
             <p>Tu evento <strong>"${nombreEvento}"</strong> ha sido recibido exitosamente.</p>
 
@@ -225,3 +225,6 @@ const emailService = {
 };
 
 module.exports = emailService;
+
+
+

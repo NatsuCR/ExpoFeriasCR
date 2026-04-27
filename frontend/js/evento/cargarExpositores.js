@@ -9,12 +9,21 @@ const ORDEN_CATEGORIAS = [
     'Chinamos',
     'Moda',
     'Artesanía',
-    'Administración',
+    'Salud',
+    'Educación',
+    'Hogar y Decoración',
+    'Automotriz',
+    'Finanzas y Seguros',
+    'Turismo',
+    'Belleza y Cuidado Personal',
     'Tecnología',
     'Construcción',
     'Transporte',
     'Ganadería y Agricultura',
-    'Juegos'
+    'Juegos y Entretenimiento',
+    'Administración',
+    'Servicios Profesionales',
+    'Otro'
 ];
 
 let allExpositores = [];
@@ -143,14 +152,24 @@ export function renderExpositores(lista) {
     if (!container) return;
 
     const searchContainer = document.getElementById('expositorSearchContainer');
+    
+    // Si la lista de resultados está vacía
     if (lista.length === 0) {
-        if (searchContainer) searchContainer.style.display = 'none';
-        container.innerHTML = '<div class="no-results" style="text-align:center; padding:40px; color:#666;">No se encontraron expositores que coincidan con tu búsqueda.</div>';
-        return;
+        // Si el evento TIENE expositores pero la búsqueda actual no dio resultados
+        if (allExpositores.length > 0) {
+            container.innerHTML = '<div class="no-results" style="text-align:center; padding:40px; color:#666; width:100%;">No se encontraron expositores que coincidan con tu búsqueda.</div>';
+            if (searchContainer) searchContainer.style.display = 'flex';
+            return;
+        } else {
+            // Si el evento NO tiene expositores en absoluto
+            if (searchContainer) searchContainer.style.display = 'none';
+            container.innerHTML = '';
+            return;
+        }
     }
 
-    // Mostrar buscador si hay datos
-    if (searchContainer) {
+    // Mostrar buscador si el evento tiene datos
+    if (searchContainer && allExpositores.length > 0) {
         searchContainer.style.display = 'flex';
     }
 

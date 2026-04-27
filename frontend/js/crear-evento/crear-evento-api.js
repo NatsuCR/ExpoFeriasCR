@@ -286,7 +286,11 @@ function recolectarTabla(selector, campos) {
     Object.entries(campos).forEach(([key, sel]) => {
       const el = row.querySelector(sel);
       if (!el) return;
-      if (key === 'precio_normal' || key === 'orden') obj[key] = parseInt(el.value) || 0;
+      if (key === 'precio_normal' || key === 'orden') {
+        const rawVal = (el.value || '').trim();
+        const cleanVal = rawVal.replace(/[^\d]/g, '');
+        obj[key] = parseInt(cleanVal, 10) || 0;
+      }
       else if (key === 'imagen' || key === 'logo') {
         let val = (el.value || '').trim();
         if (!val) {

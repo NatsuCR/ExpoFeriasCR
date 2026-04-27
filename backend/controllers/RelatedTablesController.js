@@ -42,6 +42,7 @@ class RelatedTablesController {
     if (!Array.isArray(precios)) return;
 
     for (const p of precios) {
+      // 🛡️ Solo insertamos si hay fecha y precio
       if (p.fecha && p.precio_normal !== undefined) {
         await pool.query(
           'INSERT INTO precios_entrada (evento_id, fecha, precio_normal, promocion, descripcion_promocion) VALUES (?, ?, ?, ?, ?)',
@@ -61,7 +62,8 @@ class RelatedTablesController {
     if (!Array.isArray(actividades)) return;
 
     for (const a of actividades) {
-      if (a.titulo) {
+      // 🛡️ CRÍTICO: Solo insertamos si hay título Y FECHA (la fecha es NOT NULL en DB)
+      if (a.titulo && a.fecha) {
         await pool.query(
           `INSERT INTO actividades (
             evento_id, titulo, tipo, fecha, hora, lugar,
@@ -72,7 +74,7 @@ class RelatedTablesController {
             eventoId,
             a.titulo,
             a.tipo || null,
-            a.fecha || null,
+            a.fecha,
             a.hora || null,
             a.lugar || null,
             a.descripcion || null,

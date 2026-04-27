@@ -77,8 +77,12 @@ class AdminEventoController {
       const [newEvent] = await pool.query('SELECT * FROM eventos WHERE id = ?', [result.insertId]);
       res.status(201).json(newEvent[0]);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al crear evento' });
+      console.error('❌ ERROR AL CREAR EVENTO:', error);
+      res.status(500).json({ 
+        error: 'Error interno del servidor',
+        sqlMessage: error.sqlMessage || error.message,
+        stack: error.stack
+      });
     }
   }
 

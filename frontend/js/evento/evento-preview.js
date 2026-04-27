@@ -340,15 +340,15 @@ function aplicarColoresPreview(datos) {
         // Aplicamos directamente a los elementos con !important para vencer cualquier CSS
         document.body.style.setProperty('background-color', fondo, 'important');
         document.documentElement.style.setProperty('background-color', fondo, 'important');
-        
+
         // También quitamos gradientes que puedan estar estorbando en base.css
         document.body.style.setProperty('background-image', 'none', 'important');
-        
+
         // Aplicamos a todas las secciones EXCEPTO a contacto (que tiene su propio selector)
         document.querySelectorAll('section:not(#contacto)').forEach(s => {
             s.style.setProperty('background-color', fondo, 'important');
         });
-        
+
         // Aseguramos que el contenedor principal también sea transparente o use el fondo
         document.querySelectorAll('.container').forEach(c => {
             c.style.setProperty('background-color', 'transparent', 'important');
@@ -370,7 +370,7 @@ function aplicarColoresPreview(datos) {
         estiloMenu.id = 'estilo-menu-dinamico';
         document.head.appendChild(estiloMenu);
     }
-    
+
     // Limpiar estilos inline previos para que el bloque de estilo dinámico mande
     document.querySelectorAll('.nav-links a').forEach(a => {
         a.style.backgroundColor = '';
@@ -430,7 +430,10 @@ function renderPreciosPreview(precios) {
         let html = `<table class="tabla-precios-estilo"><thead><tr><th>Fecha</th><th>Precio normal</th><th>Promoción</th><th>Detalle</th></tr></thead><tbody>`;
         precios.forEach(p => {
             const fecha = window.formatDateCR(p.fecha);
-            const precioFormateado = new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(p.precio_normal || 0);
+            const valorRaw = String(p.precio_normal || '0');
+            const valorLimpio = valorRaw.replace(/[^\d]/g, '');
+            const num = parseInt(valorLimpio, 10) || 0;
+            const precioFormateado = new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(num);
             html += `<tr><td>${fecha}</td><td>${precioFormateado}</td><td>${p.promocion || '—'}</td><td>${p.descripcion_promocion || '—'}</td></tr>`;
         });
         html += `</tbody></table>`;

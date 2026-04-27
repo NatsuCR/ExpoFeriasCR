@@ -10,11 +10,32 @@ export function abrirModalImagen() {
   filaEnEdicion = null;
   imagenesPendientes = [];
   document.getElementById('form-imagen')?.reset();
+  
   const wrap = document.getElementById('preview-galeria-img-wrap');
-  if (wrap) {
-    wrap.style.display = 'none';
-    wrap.innerHTML = '<div id="pending-gallery-container" style="display:flex; flex-wrap:wrap; gap:10px;"></div>';
+  const container = document.getElementById('pending-gallery-container');
+  const previewImg = document.getElementById('preview-galeria-img');
+
+  if (wrap) wrap.style.display = 'none';
+  if (previewImg) previewImg.src = '';
+  if (container) {
+    container.innerHTML = '';
+    container.style.display = 'none';
   }
+
+  // Preview para URL pegada
+  const urlInput = document.getElementById('imagen-url');
+  if (urlInput && wrap && previewImg) {
+    urlInput.oninput = () => {
+        const url = urlInput.value.trim();
+        if (url) {
+            previewImg.src = url;
+            wrap.style.display = 'block';
+        } else if (imagenesPendientes.length === 0) {
+            wrap.style.display = 'none';
+        }
+    };
+  }
+  
   document.getElementById('modal-imagen').style.display = 'flex';
 }
 
@@ -25,18 +46,42 @@ export function cerrarModalImagen() {
 export function addPendingImage(url) {
   if (!url) return;
   imagenesPendientes.push(url);
-  const wrap = document.getElementById('preview-galeria-img-wrap');
+  
   const container = document.getElementById('pending-gallery-container');
-  if (wrap && container) {
-    wrap.style.display = 'block';
+  if (container) {
+    container.style.display = 'grid'; // Asegurar visibilidad
+    const imgWrapper = document.createElement('div');
+    imgWrapper.style.position = 'relative';
+    
     const img = document.createElement('img');
     img.src = url;
-    img.style.width = '80px';
-    img.style.height = '60px';
+    img.style.width = '100%';
+    img.style.height = '80px';
     img.style.objectFit = 'cover';
-    img.style.borderRadius = '4px';
-    img.style.border = '1px solid #ddd';
-    container.appendChild(img);
+    img.style.borderRadius = '8px';
+    img.style.border = '2px solid #0033A0';
+    
+    // Botón para eliminar miniatura
+    const removeBtn = document.createElement('button');
+    removeBtn.innerHTML = '×';
+    removeBtn.style.cssText = `
+        position: absolute; top: -5px; right: -5px; 
+        background: #C8102E; color: white; border: none; 
+        border-radius: 50%; width: 20px; height: 20px; 
+        cursor: pointer; font-weight: bold; font-size: 14px;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    `;
+    removeBtn.onclick = (e) => {
+        e.stopPropagation();
+        imagenesPendientes = imagenesPendientes.filter(u => u !== url);
+        imgWrapper.remove();
+        if (imagenesPendientes.length === 0) container.style.display = 'none';
+    };
+
+    imgWrapper.appendChild(img);
+    imgWrapper.appendChild(removeBtn);
+    container.appendChild(imgWrapper);
   }
 }
 

@@ -46,14 +46,14 @@ export function initHeroCarousel() {
 
     let interval = setInterval(() => {
         showSlide((index + 1) % slides.length);
-    }, 8000);
+    }, 35000);
     
     slidesWrap.dataset.intervalId = interval;
 
     // Resetear intervalo al hacer click manual
     const resetInterval = () => {
         clearInterval(interval);
-        interval = setInterval(() => showSlide((index + 1) % slides.length), 8000);
+        interval = setInterval(() => showSlide((index + 1) % slides.length), 35000);
         slidesWrap.dataset.intervalId = interval;
     };
     if (prevBtn) prevBtn.addEventListener('click', resetInterval);

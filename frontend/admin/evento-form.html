@@ -568,6 +568,16 @@
                         <button type="button" class="btn-subir-archivo" id="btn-subir-expositor-multi">📁 Subir</button>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label>Video URL (YouTube/Vimeo)</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="expositor-video" placeholder="https://youtube.com/..." style="flex: 1;">
+                        <button type="button" class="btn-secondary" id="btn-subir-expositor-video" title="Subir video desde mi equipo">
+                            <i class="fas fa-upload"></i> Subir
+                        </button>
+                        <input type="file" id="archivo-expositor-video" accept="video/*" style="display: none;">
+                    </div>
+                </div>
             </form>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="cerrarModalExpositor()">Cancelar</button>
@@ -594,6 +604,8 @@
                     </div>
                     <input type="file" id="archivo-imagen-galeria" accept="image/*" multiple style="display:none;">
                     <div id="feedback-galeria" class="upload-feedback"></div>
+                    <!-- Contenedor para múltiples imágenes (usado por modals-galeria.js) -->
+                    <div id="pending-gallery-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 15px;"></div>
                 </div>
             </form>
             <div class="modal-footer">

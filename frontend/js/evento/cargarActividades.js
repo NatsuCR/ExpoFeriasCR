@@ -166,7 +166,7 @@ export async function cargarActividades(slug) {
             });
         });
 
-        const carruselControl = initResponsiveCarousel('actividadesWrapper', 'actividadesGrid', 'actividadesPrev', 'actividadesNext', 280, 10000);
+        const carruselControl = initResponsiveCarousel('actividadesWrapper', 'actividadesGrid', 'actividadesPrev', 'actividadesNext', 320, 35000);
 
         // Escuchar expansión de descripciones para pausar el carrusel
         document.addEventListener('descToggle', (e) => {

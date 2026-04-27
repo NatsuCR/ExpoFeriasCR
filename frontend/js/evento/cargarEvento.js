@@ -219,17 +219,21 @@ export async function cargarEvento(slug) {
                     if (ventaUrl) htmlContent += `<br><a href="${ventaUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar en línea</a>`;
                     break;
                 case 'gratis':
-                    htmlContent = '🎟️ <strong>Entrada Gratuita</strong>';
+                    htmlContent = '<strong>Entrada Gratuita</strong>';
                     break;
                 default:
                     htmlContent = 'Entradas solo en taquilla del campo ferial';
             }
             entradasParrafo.innerHTML = videoHtml + htmlContent;
 
-            // Asegurar que la tarjeta sea visible siempre
+            // Asegurar que la tarjeta sea visible siempre y con layout correcto
             const entradasCard = entradasParrafo.closest('.info-card');
             if (entradasCard) {
                 entradasCard.style.display = 'flex';
+                entradasCard.style.flexDirection = 'column';
+                entradasCard.style.alignItems = 'center';
+                entradasCard.style.justifyContent = 'center';
+
                 // Si es gratis, quitamos el puntero de scroll ya que no hay sección de precios
                 if (tipo_venta === 'gratis') entradasCard.style.pointerEvents = 'none';
                 else entradasCard.style.pointerEvents = 'auto';

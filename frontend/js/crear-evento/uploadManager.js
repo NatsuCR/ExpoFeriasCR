@@ -24,12 +24,20 @@ export async function subirImagen(file, feedbackId, btnEl) {
     });
     const data = await res.json();
     if (data.success && data.url) {
-      if (feedback) { feedback.className = 'upload-feedback ok'; feedback.textContent = '✓ Imagen subida correctamente'; }
+      if (feedback) { 
+        feedback.className = 'upload-feedback ok'; 
+        feedback.textContent = '✓ Imagen subida correctamente'; 
+        feedback.style.display = 'block';
+      }
       return data.url;
     }
     throw new Error(data.error || 'Error al subir imagen');
   } catch (err) {
-    if (feedback) { feedback.className = 'upload-feedback err'; feedback.textContent = '✗ ' + err.message; }
+    if (feedback) { 
+      feedback.className = 'upload-feedback err'; 
+      feedback.textContent = '✗ ' + err.message; 
+      feedback.style.display = 'block';
+    }
     return null;
   } finally {
     if (btnEl) { btnEl.innerHTML = originalHtml; btnEl.disabled = false; }

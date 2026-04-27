@@ -109,5 +109,34 @@ export function duplicarUltimoPrecio(notificar) {
   if (notificar) notificar();
 }
 
+export function duplicarMismaFecha(notificar) {
+  const tipoVenta = document.getElementById('tipo_venta')?.value;
+  if (tipoVenta === 'gratis') {
+    if (typeof window.mostrarAlertaPremium === 'function') {
+        window.mostrarAlertaPremium('Operación no permitida', 'El evento es gratuito, no puedes agregar precios.', 'Cerrar', 'fas fa-exclamation-circle');
+    } else {
+        alert('El evento es gratuito, no puedes agregar precios.');
+    }
+    return;
+  }
+  const rows = document.querySelectorAll('#precios-rows tr');
+  if (rows.length === 0) {
+    alert('No hay precios que duplicar. Agrega uno primero.');
+    return;
+  }
+
+  const lastRow = rows[rows.length - 1];
+  const fechaStr = lastRow.querySelector('.precio-fecha').value;
+  const monto = lastRow.querySelector('.precio-monto').value;
+  const promo = lastRow.querySelector('.precio-promocion').value;
+  const desc = lastRow.querySelector('.precio-descripcion').value;
+
+  if (!fechaStr) { alert('El último precio no tiene fecha.'); return; }
+
+  crearFilaPrecio(fechaStr, monto, promo, desc);
+  programarActualizacion();
+  if (notificar) notificar();
+}
+
 
 

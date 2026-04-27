@@ -22,6 +22,7 @@ export const cerrarModalPrecio = precios.cerrarModalPrecio;
 export const agregarPrecioDelModal = () => precios.agregarPrecioDelModal(notificarConfirmacion);
 export const crearFilaPrecio = precios.crearFilaPrecio;
 export const duplicarUltimoPrecio = () => precios.duplicarUltimoPrecio(notificarConfirmacion);
+export const duplicarMismaFecha = () => precios.duplicarMismaFecha(notificarConfirmacion);
 
 // Actividades
 export const abrirModalActividad = actividades.abrirModalActividad;

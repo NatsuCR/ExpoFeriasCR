@@ -9,7 +9,7 @@ import {
 } from './previewManager.js';
 import {
   abrirModalPrecio, abrirModalActividad, abrirModalExpositor, abrirModalImagen, duplicarUltimoPrecio,
-  setupAllModals, addGalleryRow, addPendingImage
+  duplicarMismaFecha, setupAllModals, addGalleryRow, addPendingImage
 } from './modalsManager.js';
 
 import * as api from './crear-evento-api.js';
@@ -68,6 +68,7 @@ export class CrearEvento {
     document.getElementById('btn-preview-portada')?.addEventListener('click', () => this.simularPortada());
     document.getElementById('btn-agregar-precio')?.addEventListener('click', () => abrirModalPrecio());
     document.getElementById('btn-duplicar-precio')?.addEventListener('click', () => duplicarUltimoPrecio());
+    document.getElementById('btn-duplicar-fecha')?.addEventListener('click', () => duplicarMismaFecha());
     document.getElementById('btn-agregar-actividad')?.addEventListener('click', abrirModalActividad);
     document.getElementById('btn-agregar-expositor')?.addEventListener('click', abrirModalExpositor);
     document.getElementById('btn-agregar-imagen')?.addEventListener('click', abrirModalImagen);

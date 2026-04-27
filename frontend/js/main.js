@@ -19,7 +19,7 @@ async function fetchData(url) {
 function createEventoCard(evento, isLive = false) {
     const card = document.createElement('div');
     card.className = 'evento-card carousel-slide';
-    
+
     // Hacer que toda la tarjeta sea clickable
     card.onclick = (e) => {
         // Si se hace click en el botón de ver detalles, dejar que el <a> haga su trabajo
@@ -35,12 +35,12 @@ function createEventoCard(evento, isLive = false) {
         badge.textContent = '🔴 EN VIVO';
         card.appendChild(badge);
     }
-    
+
     const imgUrl = evento.imagen_portada || 'assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
-    
+
     // Ubicación resumida (Provincia o Cantón si existe)
     const ubicacionCorta = evento.canton ? `${evento.canton}, ${evento.provincia}` : (evento.provincia || evento.ubicacion);
-    
+
     card.innerHTML += `
         <div class="card-img-wrap">
             <img src="${imgUrl}" alt="${evento.nombre}" loading="lazy">
@@ -49,11 +49,11 @@ function createEventoCard(evento, isLive = false) {
         <div class="card-info">
             <h3>${evento.nombre}</h3>
             <p class="card-date"><i class="fas fa-calendar-alt"></i> ${(() => {
-                const fInicio = window.formatDateCR ? window.formatDateCR(evento.fecha_inicio) : evento.fecha_inicio;
-                const fFin = window.formatDateCR ? window.formatDateCR(evento.fecha_fin) : evento.fecha_fin;
-                if (!evento.fecha_fin || fInicio === fFin) return fInicio;
-                return `${fInicio} - ${fFin}`;
-            })()}</p>
+            const fInicio = window.formatDateCR ? window.formatDateCR(evento.fecha_inicio) : evento.fecha_inicio;
+            const fFin = window.formatDateCR ? window.formatDateCR(evento.fecha_fin) : evento.fecha_fin;
+            if (!evento.fecha_fin || fInicio === fFin) return fInicio;
+            return `${fInicio} - ${fFin}`;
+        })()}</p>
             <p class="card-location"><i class="fas fa-map-marker-alt"></i> ${ubicacionCorta}</p>
             <a href="evento.html?slug=${evento.slug}" class="btn-ver">Ver detalles</a>
         </div>
@@ -61,7 +61,7 @@ function createEventoCard(evento, isLive = false) {
     return card;
 }
 
-window.cargarSeccion = async function(endpoint, trackId, controlsId, isLive, filtros = {}) {
+window.cargarSeccion = async function (endpoint, trackId, controlsId, isLive, filtros = {}) {
     const sectionElement = document.getElementById(trackId)?.closest('.section-carousel');
     if (!sectionElement) return;
 
@@ -102,7 +102,7 @@ window.cargarSeccion = async function(endpoint, trackId, controlsId, isLive, fil
     }
     sectionElement.style.display = 'block';
     const cards = eventos.map(e => createEventoCard(e, isLive));
-    
+
     if (window.initCarousel) {
         window.initCarousel(trackId, cards, controlsId, 4);
     } else {
@@ -111,7 +111,7 @@ window.cargarSeccion = async function(endpoint, trackId, controlsId, isLive, fil
     }
 }
 
-window.cargarProximos = async function(filtros = {}) {
+window.cargarProximos = async function (filtros = {}) {
     const container = document.getElementById('categorias-proximos-container');
     const noResultsMsg = document.getElementById('no-results-msg');
     if (!container) return;
@@ -126,7 +126,7 @@ window.cargarProximos = async function(filtros = {}) {
     if (canton) eventosFiltrados = eventosFiltrados.filter(e => e.canton === canton);
     if (distrito) eventosFiltrados = eventosFiltrados.filter(e => e.distrito === distrito);
     if (categoria) eventosFiltrados = eventosFiltrados.filter(e => e.tipo_evento === categoria);
-    
+
     if (termino) {
         const termLower = termino.toLowerCase();
         eventosFiltrados = eventosFiltrados.filter(e => {
@@ -143,7 +143,7 @@ window.cargarProximos = async function(filtros = {}) {
 
     // Si no hay resultados de búsqueda, mostramos todos los eventos próximos (para no dejar el sitio vacío)
     const aMostrar = (eventosFiltrados.length === 0 && termino !== '') ? eventos : eventosFiltrados;
-    
+
     // Agrupar por tipo_evento
     const grupos = {};
     aMostrar.forEach(e => {
@@ -153,7 +153,7 @@ window.cargarProximos = async function(filtros = {}) {
     });
 
     container.innerHTML = '';
-    
+
     // Ordenar categorías: Si hay búsqueda y resultados, poner la categoría del primer resultado arriba
     let tiposOrdenados = Object.keys(grupos).sort();
     if (termino && hayResultados) {
@@ -165,7 +165,7 @@ window.cargarProximos = async function(filtros = {}) {
         const sectionId = `category-${index}`;
         const trackId = `track-${sectionId}`;
         const controlsId = `controls-${sectionId}`;
-        
+
         const sectionHtml = `
             <section class="section-carousel reveal active" id="${sectionId}">
                 <div class="container">
@@ -183,10 +183,10 @@ window.cargarProximos = async function(filtros = {}) {
             </section>
         `;
         container.insertAdjacentHTML('beforeend', sectionHtml);
-        
+
         const track = document.getElementById(trackId);
         const cards = grupos[tipo].map(e => createEventoCard(e, false));
-        
+
         if (window.initCarousel) {
             window.initCarousel(trackId, cards, controlsId, 4);
         } else {
@@ -195,7 +195,7 @@ window.cargarProximos = async function(filtros = {}) {
     });
 }
 
-window.cargarFinalizados = async function(filtros = {}) {
+window.cargarFinalizados = async function (filtros = {}) {
     await window.cargarSeccion('/api/eventos/finalizados', 'carousel-finalizados-track', 'controls-finalizados', false, filtros);
 }
 
@@ -261,9 +261,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, filtrosVacios);
     window.cargarProximos(filtrosVacios);
     window.cargarFinalizados(filtrosVacios);
-    
+
     if (window.configurarBuscadores) window.configurarBuscadores();
-    
+
     initRevealAnimations();
     initPatchNotes();
     initMobileMenu();

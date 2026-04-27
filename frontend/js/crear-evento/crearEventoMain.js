@@ -144,39 +144,38 @@ export class CrearEvento {
     const iframe = document.getElementById('finalPreviewIframe');
     if (!preview || !iframe) return;
 
+    // Reseteo inmediato de estilos
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.transform = 'none';
+    if ('zoom' in iframe.style) iframe.style.zoom = 'normal';
+
     if (mode === 'mobile') {
       preview.classList.add('mobile');
       preview.classList.remove('pc');
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.transform = 'none';
-      if ('zoom' in iframe.style) iframe.style.zoom = 'normal';
     } else {
       preview.classList.remove('mobile');
       preview.classList.add('pc');
       
-      const containerWidth = preview.offsetWidth;
-      // Si el contenedor es pequeño (móvil), aplicamos truco de escalado para ver versión PC
-      if (containerWidth > 0 && containerWidth < 1000) {
+      // Usamos el ancho del padre para el cálculo, ya que el preview está en transición
+      // El contenedor padre (device-simulator-container) tiene un padding de 30px (60px total)
+      const parentWidth = preview.parentElement.offsetWidth;
+      const availableWidth = parentWidth - 64; // margen de seguridad
+
+      if (availableWidth > 0 && availableWidth < 1000) {
           const targetWidth = 1200;
-          const scale = (containerWidth - 4) / targetWidth; // -4 por el borde de 2px a cada lado
+          const scale = availableWidth / targetWidth;
           if ('zoom' in iframe.style) {
               iframe.style.transform = 'none';
               iframe.style.zoom = scale;
               iframe.style.width = `${targetWidth}px`;
-              iframe.style.height = '100%'; // Permitir que el iframe maneje su propio scroll interno
+              iframe.style.height = '100%';
           } else {
               iframe.style.width = `${targetWidth}px`;
               iframe.style.transform = `scale(${scale})`;
               iframe.style.transformOrigin = 'top left';
               iframe.style.height = `${100 / scale}%`;
           }
-      } else {
-          // En PC real no escalamos
-          iframe.style.width = '100%';
-          iframe.style.height = '100%';
-          iframe.style.transform = 'none';
-          if ('zoom' in iframe.style) iframe.style.zoom = 'normal';
       }
     }
   }

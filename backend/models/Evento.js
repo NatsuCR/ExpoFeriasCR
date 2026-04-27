@@ -51,6 +51,8 @@ class Evento {
 
     this.tiene_expositores = (data.tiene_expositores !== undefined && data.tiene_expositores !== null) ? parseInt(data.tiene_expositores) : 0;
     this.activo = (data.activo !== undefined && data.activo !== null) ? parseInt(data.activo) : 0;
+    this.es_en_vivo = (data.es_en_vivo !== undefined && data.es_en_vivo !== null) ? parseInt(data.es_en_vivo) : 0;
+    this.color_iconos = data.color_iconos || '#C8102E';
 
     this.estado = data.estado;
     this.razon_rechazo = data.razon_rechazo;

@@ -319,7 +319,12 @@ function inicializarModalAuth() {
       modalAuthInstance = new ModalAuth();
 
       // Función global para abrir modal
-      window.abrirModalAuth = () => modalAuthInstance.abrir();
+      window.abrirModalAuth = (tab = 'login') => {
+        if (modalAuthInstance) {
+          modalAuthInstance.cambiarTab(tab);
+          modalAuthInstance.abrir();
+        }
+      };
       window.cerrarModalAuth = () => modalAuthInstance.cerrar();
     } catch (error) {
       console.error('Error inicializando ModalAuth:', error);

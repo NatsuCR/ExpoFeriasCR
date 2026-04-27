@@ -44,6 +44,8 @@
 <link rel="stylesheet" href="css/evento/evento-components.css?v=8.2">
 <link rel="stylesheet" href="css/evento/map-tabs.css?v=8.2">
 <link rel="stylesheet" href="css/evento/evento-responsive.css?v=8.2">
+<link rel="stylesheet" href="css/navbar-auth.css?v=8.2">
+<link rel="stylesheet" href="css/modal-auth.css?v=8.2">
     <script src="js/helpers.js?v=8.2"></script>
 </head>
 <body>
@@ -194,10 +196,20 @@
 <section id="contacto" class="contacto">
     <div class="container">
         <h2>Contacto</h2>
-        <p>¿Tienes una feria o una exposición y quieres aparecer? Escríbenos al correo <a href="mailto:jaravillaloboscarlos531@gmail.com">jaravillaloboscarlos531@gmail.com</a></p>
-        <p>Síguenos en redes sociales (próximamente)</p>
+        <p style="margin-bottom: 5px;">¿Tienes un evento y quieres que aparezca en nuestra plataforma?</p>
+        <p style="margin-bottom: 15px;">Escríbenos a <a href="mailto:jaravillaloboscarlos531@gmail.com">jaravillaloboscarlos531@gmail.com</a></p>
+        
+        <p style="margin-bottom: 10px;">o crea tu cuenta y publica tu evento gratis ahora mismo aquí 👉 
+            <button onclick="abrirModalAuth('registro')" class="btn-navbar-auth" style="display: inline-block; vertical-align: middle; margin-left: 5px; cursor: pointer;">
+                <i class="fas fa-user-plus"></i> Crear Cuenta
+            </button>
+        </p>
+        <p style="font-size: 0.9em; opacity: 0.8;">Síguenos en redes sociales (próximamente)</p>
     </div>
 </section>
+    
+    <!-- Modal de Autenticación -->
+    <div id="modal-auth-container"></div>
 
     <footer>
         <div class="container">
@@ -205,6 +217,8 @@
         </div>
     </footer>
 
+    <script src="js/publico/modal-auth.js?v=8.2"></script>
+    <script src="js/publico/main-auth.js?v=8.2"></script>
     <script type="module" src="js/evento/evento-main.js?v=8.2"></script>
 </body>
 </html>

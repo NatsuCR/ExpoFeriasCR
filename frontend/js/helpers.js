@@ -118,8 +118,7 @@ window.toggleDesc = function (btn) {
         shortText.style.display = 'none';
         btn.innerText = 'Ver menos';
         btn.classList.add('active');
-        btn.classList.add('btn-ver-menos'); // Sincronizar clases
-        btn.classList.remove('btn-ver-mas-simple');
+        btn.classList.add('btn-ver-menos');
     } else {
         // Contraer
         fullText.style.opacity = '0';
@@ -131,7 +130,6 @@ window.toggleDesc = function (btn) {
         btn.innerText = 'Ver más';
         btn.classList.remove('active');
         btn.classList.remove('btn-ver-menos');
-        btn.classList.add('btn-ver-mas-simple');
     }
 
     // Notificar al sistema (útil para detener carruseles)

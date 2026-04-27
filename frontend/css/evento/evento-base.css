@@ -117,7 +117,8 @@
     width: 100%;
 }
 
-.btn-ver-mas-simple {
+.btn-ver-mas-simple, 
+.btn-ver-menos {
     background: none;
     border: none;
     color: var(--evento-primario, #C8102E);

@@ -257,3 +257,6 @@ window.confirmarAccion = function (titulo, mensaje, tipo = 'danger') {
 
 
 
+
+
+

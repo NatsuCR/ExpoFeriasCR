@@ -11,8 +11,8 @@
 .btn-navbar-auth {
   background: linear-gradient(135deg, #0033A0 0%, #003db5 100%);
   color: white;
-  border: none;
-  padding: 8px 16px;
+  border: 2px solid transparent;
+  padding: 6px 14px; /* Ajustado por los 2px de borde */
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
@@ -21,6 +21,20 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap; /* Evita que el texto salte de línea */
+}
+
+.btn-navbar-auth.btn-outline {
+  background: transparent;
+  border-color: #0033A0;
+  color: #0033A0;
+  box-shadow: none;
+}
+
+.btn-navbar-auth.btn-outline:hover {
+  background: #0033A0;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 51, 160, 0.2);
 }
 
 .btn-navbar-auth:hover {

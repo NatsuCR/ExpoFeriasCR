@@ -1,8 +1,23 @@
-# Robots.txt for ExpoFeriasCR
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /api/auth/
-Disallow: /mi-cuenta.html
+
+# Bloquear rastreadores de IA conocidos (AI Labyrinth / Scrapers)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
 
 Sitemap: https://expoferiascr.site/sitemap.xml

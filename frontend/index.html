@@ -7,9 +7,9 @@
      crossorigin="anonymous"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExpoFeriasCR | Ferias y exposiciones de Costa Rica, Fiestas Cívicas y Regionales de Costa Rica</title>
-    <meta name="description" content="Descubre los mejores y próximos eventos en Costa Rica. Encuentra información actualizada sobre ferias, exposiciones, fiestas cívicas, topes, eventos ganaderos y mucho más. ¡Tu guía de entretenimiento!">
-    <meta name="keywords" content="próximos eventos, próximas ferias, próximas expos, próximo evento, próxima feria, próxima expo, próximos topes, próximo tope, eventos, ferias, expo, fiestas, costa rica, fiestas cívicas, fiestas patronales, exposiciones, eventos ganaderos, ferias ganaderas, topes, cultura, comercio, conciertos, actividades, entretenimiento">
+    <title>ExpoFeriasCR | Tu conexión con las mejores tradiciones y eventos de Costa Rica</title>
+    <meta name="description" content="La guía definitiva para descubrir los mejores eventos, ferias del agricultor, topes, fiestas patronales y exposiciones en todas las provincias de Costa Rica.">
+    <meta name="keywords" content="eventos costa rica, ferias, exposiciones, fiestas cívicas, fiestas patronales, topes, eventos ganaderos, ferias del agricultor, cultura costarricense, conciertos, entretenimiento">
     <link rel="canonical" href="https://expoferiascr.site">
 
     <!-- Open Graph / Facebook -->
@@ -17,16 +17,16 @@
     <meta property="og:url" content="https://expoferiascr.site">
     <meta property="og:site_name" content="ExpoFeriasCR">
     <meta property="og:locale" content="es_CR">
-    <meta property="og:title" content="ExpoFeriasCR | Ferias y exposiciones de Costa Rica, Fiestas Cívicas y Regionales de Costa Rica">
-    <meta property="og:description" content="Descubre los mejores y próximos eventos en Costa Rica. Encuentra información actualizada sobre ferias, exposiciones, fiestas cívicas, topes, eventos ganaderos y mucho más. ¡Tu guía de entretenimiento!">
+    <meta property="og:title" content="ExpoFeriasCR | Tu conexión con las mejores tradiciones y eventos de Costa Rica">
+    <meta property="og:description" content="La guía definitiva para descubrir los mejores eventos, ferias del agricultor, topes, fiestas patronales y exposiciones en todas las provincias de Costa Rica.">
     <meta property="og:image" content="https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png">
     <meta property="og:image:alt" content="Logo oficial de ExpoFeriasCR">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://expoferiascr.site">
-    <meta property="twitter:title" content="ExpoFeriasCR | Ferias y exposiciones de Costa Rica, Fiestas Cívicas y Regionales de Costa Rica">
-    <meta property="twitter:description" content="Descubre los mejores y próximos eventos en Costa Rica. Encuentra información actualizada sobre ferias, exposiciones, fiestas cívicas, topes, eventos ganaderos y mucho más. ¡Tu guía de entretenimiento!">
+    <meta property="twitter:title" content="ExpoFeriasCR | Tu conexión con las mejores tradiciones y eventos de Costa Rica">
+    <meta property="twitter:description" content="La guía definitiva para descubrir los mejores eventos, ferias del agricultor, topes, fiestas patronales y exposiciones en todas las provincias de Costa Rica.">
     <meta property="twitter:image" content="https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png">
     <meta property="twitter:image:alt" content="Logo oficial de ExpoFeriasCR">
 
@@ -68,95 +68,142 @@
     }
     </script>
     <!-- CSS en capas -->
-    <link rel="stylesheet" href="css/base.css?v=8.2">
-    <link rel="stylesheet" href="css/layout.css?v=8.2">
-    <link rel="stylesheet" href="css/components.css?v=8.2">
-    <link rel="stylesheet" href="css/navbar-auth.css?v=8.2">
-    <link rel="stylesheet" href="css/modal-auth.css?v=8.2">
+    <link rel="stylesheet" href="css/base.css?v=8.3">
+    <link rel="stylesheet" href="css/layout.css?v=8.3">
+    <link rel="stylesheet" href="css/components.css?v=8.3">
+    <link rel="stylesheet" href="css/navbar-auth.css?v=8.3">
+    <link rel="stylesheet" href="css/modal-auth.css?v=8.3">
     
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <div class="logo">
+            <!-- Izquierda: Logo -->
+            <a href="/" class="logo">
                 <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="Logo ExpoFeriasCR" loading="lazy">
                 <span>ExpoFeriasCR</span>
-            </div>
+            </a>
+
+            <!-- Botón Hamburguesa -->
             <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
                 <i class="fas fa-bars"></i>
             </button>
+
+            <!-- Centro y Derecha: Menú y Acciones -->
             <div class="nav-menu-wrapper" id="nav-menu-wrapper">
-            <ul class="nav-links">
-                <li><a href="#inicio" id="btnInicio">Inicio</a></li>
-                <li><a href="#eventos-finalizados">Finalizados</a></li>
-                <li><a href="#contacto">Contacto</a></li>
-                <li><a href="https://www.youtube.com/watch?v=4RkI6S82tDQ" target="_blank"  rel="noopener noreferrer"  id="btnTutorial" class="tutorial-link"><i class="fas fa-play-circle"></i> Tutorial</a></li>
-            </ul>
-            <div class="nav-auth" id="nav-auth">
-                <button id="btn-crear-evento-navbar" class="btn-navbar-auth" title="Crea un evento y comparte con la comunidad">
-                    <i class="fas fa-plus-circle"></i> Crear Evento
-                </button>
-                <button id="btn-login-navbar" class="btn-navbar-auth">
-                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-                </button>
+                <!-- Enlaces Centrales -->
+                <ul class="nav-links">
+
+
+                    <li><a href="#inicio" id="btnInicio">Inicio</a></li>
+                    <li><a href="#eventos-finalizados">Finalizados</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+
+                <!-- Acciones (Derecha) -->
+                <div class="nav-actions">
+                    <a href="https://www.youtube.com/watch?v=4RkI6S82tDQ" target="_blank" rel="noopener noreferrer" id="btnTutorial" class="tutorial-btn">
+                        <i class="fas fa-play"></i> Tutorial
+                    </a>
+                    <div class="custom-language-selector">
+                        <i class="fas fa-globe"></i>
+                        <select id="custom-lang-select" class="lang-select-modern">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                            <option value="ja">日本語 (Japonés)</option>
+                            <option value="zh-CN">中文 (Chino)</option>
+                        </select>
+                    </div>
+                    <div id="google_translate_element" style="display: none;"></div>
+                    <div class="nav-auth" id="nav-auth">
+                        <button id="btn-crear-evento-navbar" class="btn-navbar-auth btn-outline" title="Crea un evento y comparte con la comunidad">
+                            <i class="fas fa-plus"></i> Crear Evento
+                        </button>
+                        <button id="btn-login-navbar" class="btn-navbar-auth btn-primary">
+                            <i class="fas fa-user"></i> Ingresar
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Explora las mejores ferias y exposiciones de Costa Rica</h1>
-            <p style="font-size: 1.15em; max-width: 800px; margin: 15px auto 25px auto; opacity: 0.95; line-height: 1.5; font-weight: 400; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">Descubre la esencia, cultura y tradición costarricense. Encuentra la información más completa sobre topes, fiestas patronales, ferias del agricultor, eventos ganaderos, cívicos y exposiciones de emprendedores en todas las provincias del país. ¡Apoya lo local y no te pierdas la diversión!</p>
-            <p style="margin-bottom: 30px; font-weight: 500; opacity: 0.9;">🎯 Encuentra eventos por ubicación o categoría:</p>
-            <div class="search-filters">
-                <div class="filter-wrapper">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <select id="provincia-select" class="filter-select">
-                        <option value="">📍 Provincia</option>
-                        <option value="San José">San José</option>
-                        <option value="Alajuela">Alajuela</option>
-                        <option value="Cartago">Cartago</option>
-                        <option value="Heredia">Heredia</option>
-                        <option value="Guanacaste">Guanacaste</option>
-                        <option value="Puntarenas">Puntarenas</option>
-                        <option value="Limón">Limón</option>
-                    </select>
+    <section class="hero-modern">
+        <div class="hero-overlay-modern"></div>
+        <div class="container hero-content-modern">
+            <h1 class="hero-title-modern">
+                La guía definitiva para <br>
+                <span class="text-highlight">descubrir Costa Rica</span>
+            </h1>
+            <p class="hero-subtitle-modern">Descubre la esencia, cultura y tradición costarricense. Encuentra la información más completa sobre topes, fiestas patronales, ferias del agricultor, eventos ganaderos, cívicos y exposiciones de emprendedores en todas las provincias del país. ¡Apoya lo local y no te pierdas la diversión!</p>
+            
+            <div class="search-panel-modern">
+                <div class="search-filters-modern">
+                    <div class="filter-group">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <select id="provincia-select" class="modern-select">
+                            <option value="">📍 Provincia</option>
+                            <option value="San José">San José</option>
+                            <option value="Alajuela">Alajuela</option>
+                            <option value="Cartago">Cartago</option>
+                            <option value="Heredia">Heredia</option>
+                            <option value="Guanacaste">Guanacaste</option>
+                            <option value="Puntarenas">Puntarenas</option>
+                            <option value="Limón">Limón</option>
+                        </select>
+                    </div>
+                    <div class="filter-separator"></div>
+                    <div class="filter-group">
+                        <i class="fas fa-city"></i>
+                        <select id="canton-select" class="modern-select">
+                            <option value="">🏙️ Cantón</option>
+                        </select>
+                    </div>
+                    <div class="filter-separator"></div>
+                    <div class="filter-group">
+                        <i class="fas fa-home"></i>
+                        <select id="distrito-select" class="modern-select">
+                            <option value="">🏘️ Distrito</option>
+                        </select>
+                    </div>
+                    <div class="filter-separator"></div>
+                    <div class="filter-group">
+                        <i class="fas fa-tags"></i>
+                        <select id="categoria-select" class="modern-select">
+                            <option value="">🎭 Categoría</option>
+                            <option value="Feria">Feria</option>
+                            <option value="Exposición">Exposición</option>
+                            <option value="Concierto">Concierto</option>
+                            <option value="Fiesta Típica">Fiesta Típica</option>
+                            <option value="Fiesta Local">Fiesta Local</option>
+                            <option value="Fiesta Regional">Fiesta Regional</option>
+                            <option value="Expedición">Expedición</option>
+                            <option value="Congreso">Congreso</option>
+                            <option value="Deporte">Deporte</option>
+                            <option value="Recreativa">Recreativa</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="filter-separator"></div>
+                    <div class="filter-group search-bar-group">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="buscador-principal" placeholder="¿Qué evento buscas?" class="modern-input">
+                        <button id="btn-buscar-principal" class="btn-search-modern">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="filter-wrapper">
-                    <i class="fas fa-city"></i>
-                    <select id="canton-select" class="filter-select">
-                        <option value="">🏙️ Cantón</option>
-                    </select>
+            </div>
+
+            <div class="quick-categories">
+                <p>Categorías populares:</p>
+                <div class="quick-tags">
+                    <span class="quick-tag" data-category="Feria"><i class="fas fa-store"></i> Ferias</span>
+                    <span class="quick-tag" data-category="Exposición"><i class="fas fa-bullhorn"></i> Exposiciones</span>
+                    <span class="quick-tag" data-category="Concierto"><i class="fas fa-guitar"></i> Concierto</span>
+                    <span class="quick-tag" data-category="Fiesta Típica"><i class="fas fa-hat-cowboy"></i> Fiestas Tipica</span>
+                    <span class="quick-tag" data-category="Fiesta Regional"><i class="fas fa-map-marked-alt"></i> Fiestas Regional</span>
                 </div>
-                <div class="filter-wrapper">
-                    <i class="fas fa-home"></i>
-                    <select id="distrito-select" class="filter-select">
-                        <option value="">🏘️ Distrito</option>
-                    </select>
-                </div>
-                <div class="filter-wrapper">
-                    <i class="fas fa-tags"></i>
-                    <select id="categoria-select" class="filter-select">
-                        <option value="">🎭 Categoría</option>
-                        <option value="Feria">Feria</option>
-                        <option value="Exposición">Exposición</option>
-                        <option value="Concierto">Concierto</option>
-                        <option value="Fiesta Típica">Fiesta Típica</option>
-                        <option value="Fiesta Local">Fiesta Local</option>
-                        <option value="Fiesta Regional">Fiesta Regional</option>
-                        <option value="Expedición">Expedición</option>
-                        <option value="Congreso">Congreso</option>
-                        <option value="Deporte">Deporte</option>
-                        <option value="Recreativa">Recreativa</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-                <div class="filter-wrapper" style="flex: 2; min-width: 250px;">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="buscador-principal" placeholder="¿Qué estás buscando?..." class="search-input">
-                </div>
-                <button id="btn-buscar-principal" class="btn-search">Buscar</button>
             </div>
         </div>
     </section>
@@ -217,23 +264,35 @@
         </div>
     </section>
 
-    <section class="info-adicional reveal">
+    <section class="features-section reveal">
         <div class="container">
-            <div class="info-cards">
-                <div class="info-card">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3>Actualizado</h3>
-                    <p>Fechas y horarios verificados</p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Eventos Confirmados</h3>
+                        <p>Fechas y horarios siempre actualizados y verificados.</p>
+                    </div>
                 </div>
-                <div class="info-card">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <h3>Ubicaciones</h3>
-                    <p>Mapas y direcciones exactas</p>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Ubicación Exacta</h3>
+                        <p>Mapas detallados para que nunca te pierdas de la diversión.</p>
+                    </div>
                 </div>
-                <div class="info-card">
-                    <i class="fas fa-ticket-alt"></i>
-                    <h3>Precios</h3>
-                    <p>Entradas y promociones</p>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Detalles Completos</h3>
+                        <p>Información de precios, parqueos y actividades.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -341,6 +400,87 @@
             </div>
         </div>
     </div>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'es',
+                includedLanguages: 'en,es,ja,zh-CN',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- Script para Custom Language Selector -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const customSelect = document.getElementById('custom-lang-select');
+            
+            // 1. Cargar idioma desde la cookie (si existe) para mostrarlo correcto en el select
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                if (match) return match[2];
+                return null;
+            }
+            
+            const googtrans = getCookie('googtrans');
+            if (googtrans) {
+                const lang = googtrans.split('/')[2];
+                if (lang && customSelect.querySelector(`option[value="${lang}"]`)) {
+                    customSelect.value = lang;
+                }
+            }
+
+            // 2. Escuchar cambios en nuestro select
+            customSelect.addEventListener('change', function() {
+                const selectedLang = this.value;
+                const googleSelect = document.querySelector('.goog-te-combo');
+                
+                if (googleSelect) {
+                    googleSelect.value = selectedLang;
+                    // Disparar el evento de cambio para que Google lo detecte
+                    googleSelect.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+    </script>
+
+    <!-- Script para Etiquetas Rápidas (Quick Tags) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quickTags = document.querySelectorAll('.quick-tag');
+            
+            quickTags.forEach(tag => {
+                tag.addEventListener('click', () => {
+                    const categoriaSelect = document.getElementById('categoria-select');
+                    const categoryValue = tag.getAttribute('data-category');
+                    
+                    // Asignar el valor al select oculto basado en el atributo de datos (no en el texto traducido)
+                    if (categoryValue) {
+                        categoriaSelect.value = categoryValue;
+                    }
+                    
+                    // Hacer scroll suave hacia la sección de resultados y buscar
+                    const resultadosSeccion = document.getElementById('eventos-recientes');
+                    if (resultadosSeccion) {
+                        resultadosSeccion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    
+                    const buscadorInput = document.getElementById('buscador-principal');
+                    if (buscadorInput) {
+                        buscadorInput.value = ''; // Limpiar texto para forzar búsqueda por categoría
+                    }
+                    
+                    const btnBuscar = document.getElementById('btn-buscar-principal');
+                    if (btnBuscar) {
+                        btnBuscar.click(); // Simular clic en el botón buscar
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 

@@ -55,6 +55,7 @@ function createEventoCard(evento, isLive = false) {
             return `${fInicio} - ${fFin}`;
         })()}</p>
             <p class="card-location"><i class="fas fa-map-marker-alt"></i> ${ubicacionCorta}</p>
+            ${evento.ubicacion && evento.ubicacion !== ubicacionCorta ? `<p class="card-address"><i class="fas fa-compass"></i> ${evento.ubicacion}</p>` : ''}
             <a href="evento.html?slug=${evento.slug}" class="btn-ver">Ver detalles</a>
         </div>
     `;

@@ -14,12 +14,12 @@ const trackerMiddleware = async (req, res, next) => {
   if (url.startsWith('/api/admin') || url.includes('/admin/')) return next();
 
   // 3. LISTA BLANCA: Solo rastrear páginas de interés para el negocio
-  const isAllowedPage = 
-    url === '/' || 
-    url === '/index.html' || 
+  const isAllowedPage =
+    url === '/' ||
+    url === '/index.html' ||
     url.startsWith('/index.html?') ||
-    (url.startsWith('/evento.html') && url.includes('slug=')) || 
-    url.startsWith('/crear-evento.html') || 
+    (url.startsWith('/evento.html') && url.includes('slug=')) ||
+    url.startsWith('/crear-evento.html') ||
     url.startsWith('/mi-cuenta.html');
 
 

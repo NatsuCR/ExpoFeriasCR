@@ -12,8 +12,8 @@ export async function cargarPrecios(slug) {
         precios.forEach(p => {
             const fecha = window.formatDateCR(p.fecha);
             const valorRaw = String(p.precio_normal || '0');
-            const valorLimpio = valorRaw.replace(/[^\d]/g, '');
-            const precioNum = parseInt(valorLimpio, 10) || 0;
+            const valorLimpio = valorRaw.replace(/[^\d.]/g, '');
+            const precioNum = parseFloat(valorLimpio) || 0;
             const precioFormateado = new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(precioNum);
             const promocion = p.promocion || '—';
             const detalle = p.descripcion_promocion || '—';

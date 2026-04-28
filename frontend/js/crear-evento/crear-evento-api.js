@@ -288,8 +288,8 @@ function recolectarTabla(selector, campos) {
       if (!el) return;
       if (key === 'precio_normal' || key === 'orden') {
         const rawVal = (el.value || '').trim();
-        const cleanVal = rawVal.replace(/[^\d]/g, '');
-        obj[key] = parseInt(cleanVal, 10) || 0;
+        const cleanVal = rawVal.replace(/[^\d.]/g, '');
+        obj[key] = parseFloat(cleanVal) || 0;
       }
       else if (key === 'imagen' || key === 'logo') {
         let val = (el.value || '').trim();

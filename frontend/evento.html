@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{EVENT_NAME}} | ExpoFeriasCR</title>
     <meta name="description" content="{{EVENT_DESC}}">
-    <meta name="keywords" content="prÃ³ximos eventos, prÃ³ximas ferias, prÃ³ximas expos, prÃ³ximo evento, prÃ³xima feria, prÃ³xima expo, prÃ³ximos topes, prÃ³ximo tope, eventos, ferias, expo, fiestas, costa rica, fiestas cÃ­vicas, fiestas patronales, exposiciones, eventos ganaderos, ferias ganaderas, topes, cultura, comercio, conciertos, {{EVENT_NAME}}">
+    <meta name="keywords" content="próximos eventos, próximas ferias, próximas expos, próximo evento, próxima feria, próxima expo, próximos topes, próximo tope, eventos, ferias, expo, fiestas, costa rica, fiestas cívicas, fiestas patronales, exposiciones, eventos ganaderos, ferias ganaderas, topes, cultura, comercio, conciertos, {{EVENT_NAME}}">
     <link rel="canonical" href="https://expoferiascr.site/evento.html?slug={{EVENT_SLUG}}">
 
     <!-- SEO: Open Graph / Facebook -->
@@ -32,7 +32,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- SEO: JSON-LD DinÃ¡mico -->
+    <!-- SEO: JSON-LD Dinámico -->
     {{{EVENT_JSON_LD}}}
 
     <link rel="stylesheet" href="css/base.css?v=8.2">
@@ -51,7 +51,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menÃº">
+            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
                 <i class="fas fa-bars"></i>
             </button>
             <div class="logo">
@@ -62,11 +62,11 @@
                 <ul class="nav-links">
 
                     <li><a href="/">Inicio</a></li>
-                    <li><a href="#informacion">InformaciÃ³n</a></li>
+                    <li><a href="#informacion">Información</a></li>
                     <li><a href="#actividades">Actividades</a></li>
                     <li><a href="#precios">Precios</a></li>
                     <li><a href="#expositores">Expositores</a></li>
-                    <li><a href="#ubicacion">UbicaciÃ³n</a></li>
+                    <li><a href="#ubicacion">Ubicación</a></li>
                 </ul>
                 <!-- El widget estÃ¡ oculto, pero el script sigue activo para leer la cookie y traducir automÃ¡ticamente -->
                 <div id="google_translate_element" style="display: none;"></div>
@@ -91,7 +91,7 @@
     <section id="informacion" class="info">
         <div class="container">
             <div class="social-share" id="socialShare">
-                <h3>Â¡Comparte este evento!</h3>
+                <h3>¡Comparte este evento!</h3>
                 <div class="share-buttons">
                     <a href="#" class="share-btn whatsapp" id="shareWhatsapp" title="Compartir en WhatsApp">
                         <i class="fab fa-whatsapp"></i>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="info-card clickable-card" onclick="document.getElementById('ubicacion').scrollIntoView({ behavior: 'smooth' })">
                     <i class="fas fa-map-marker-alt"></i>
-                    <h3>UbicaciÃ³n</h3>
+                    <h3>Ubicación</h3>
                     <p id="infoUbicacion"></p>
                 </div>
                 <div class="info-card clickable-card" onclick="document.getElementById('precios').scrollIntoView({ behavior: 'smooth' })">
@@ -169,13 +169,13 @@
         <div id="expositorSearchContainer" class="expositor-search-bar" style="display: none;">
             <div class="search-input-wrapper">
                 <i class="fas fa-search"></i>
-                <input type="text" id="expositorSearch" placeholder="Buscar por nombre o ubicaciÃ³n...">
+                <input type="text" id="expositorSearch" placeholder="Buscar por nombre o ubicación...">
             </div>
         </div>
 
-        <!-- Contenedor dinÃ¡mico para categorÃ­as y carruseles -->
+        <!-- Contenedor dinÃ¡mico para categorías y carruseles -->
         <div id="expositoresDinamicContainer">
-            <!-- Se inyectarÃ¡n grupos de: <h3>CategorÃ­a</h3> + carrusel -->
+            <!-- Se inyectarÃ¡n grupos de: <h3>Categoría</h3> + carrusel -->
             <div class="expositores-carrusel-wrapper" id="expositoresWrapper">
                 <div class="expositores-carrusel-viewport">
                     <div class="expositores-carrusel-track" id="expositoresGrid">
@@ -189,7 +189,7 @@
 
     <section id="ubicacion" class="ubicacion">
         <div class="container">
-            <h2>Â¿CÃ³mo llegar?</h2>
+            <h2>¿Cómo llegar?</h2>
             <p id="ubicacionTexto" style="color: var(--color-descripcion-texto);"></p>
             <p id="ubicacionExactaTexto" style="margin-top: 5px; font-weight: bold; color: var(--color-descripcion-texto);"></p>
             <div class="mapa" id="mapaIframe"></div>
@@ -199,27 +199,27 @@
 <section id="contacto" class="contacto">
     <div class="container">
         <h2>Contacto</h2>
-        <p style="margin-bottom: 5px;">Â¿Tienes un evento y quieres que aparezca en nuestra plataforma?</p>
-        <p style="margin-bottom: 15px;">EscrÃ­benos a <a href="mailto:jaravillaloboscarlos531@gmail.com">jaravillaloboscarlos531@gmail.com</a></p>
+        <p style="margin-bottom: 5px;">¿Tienes un evento y quieres que aparezca en nuestra plataforma?</p>
+        <p style="margin-bottom: 15px;">Escríbenos a <a href="mailto:jaravillaloboscarlos531@gmail.com">jaravillaloboscarlos531@gmail.com</a></p>
         
-        <p style="margin-bottom: 10px;">o crea tu cuenta y publica tu evento gratis ahora mismo aquÃ­ ðŸ‘‰ 
+        <p style="margin-bottom: 10px;">o crea tu cuenta y publica tu evento gratis ahora mismo aquí 👉 
             <button onclick="abrirModalAuth('registro')" class="btn-navbar-auth" style="display: inline-block; vertical-align: middle; margin-left: 5px; cursor: pointer;">
                 <i class="fas fa-user-plus"></i> Crear Cuenta
             </button>
         </p>
-        <p style="font-size: 0.9em; opacity: 0.8;">SÃ­guenos en redes sociales (prÃ³ximamente)</p>
+        <p style="font-size: 0.9em; opacity: 0.8;">Síguenos en redes sociales (prÃ³ximamente)</p>
     </div>
 </section>
     
-    <!-- Modal de AutenticaciÃ³n -->
+    <!-- Modal de Autenticación -->
     <div id="modal-auth-container"></div>
 
     <footer>
         <div class="container">
             <div class="footer-links" style="margin-bottom: 15px; font-size: 0.9em; text-align: center;">
-                <a href="/nosotros.html" style="color: white; margin: 0 10px; text-decoration: underline;">QuiÃ©nes Somos</a> |
-                <a href="/privacidad.html" style="color: white; margin: 0 10px; text-decoration: underline;">PolÃ­tica de Privacidad</a> |
-                <a href="/terminos.html" style="color: white; margin: 0 10px; text-decoration: underline;">TÃ©rminos y Condiciones</a>
+                <a href="/nosotros.html" style="color: white; margin: 0 10px; text-decoration: underline;">Quiénes Somos</a> |
+                <a href="/privacidad.html" style="color: white; margin: 0 10px; text-decoration: underline;">Política de Privacidad</a> |
+                <a href="/terminos.html" style="color: white; margin: 0 10px; text-decoration: underline;">Términos y Condiciones</a>
             </div>
             <p>&copy; 2026 ExpoFeriasCR - Todos los derechos reservados</p>
         </div>

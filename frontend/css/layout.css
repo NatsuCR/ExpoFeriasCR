@@ -368,6 +368,10 @@ body { top: 0 !important; }
     margin-left: 10px;
 }
 
+.btn-search-modern i {
+    color: white !important;
+}
+
 .btn-search-modern:hover {
     transform: scale(1.05);
     background: #a00d25;
@@ -510,63 +514,81 @@ footer {
 
     .menu-toggle {
         display: block;
+        z-index: 1100; /* Por encima del wrapper que tiene 1001 */
+        position: relative;
     }
 
     .nav-menu-wrapper {
         position: fixed;
-        top: 60px;
+        top: 0; /* Inicia desde arriba para cubrir mejor */
         left: 0;
         width: 100%;
+        height: 100vh; /* Ocupa toda la pantalla */
         background-color: #FFFFFF;
         flex-direction: column;
-        padding: 2rem;
-        gap: 1.5rem;
-        transform: translateY(-150%);
-        transition: transform 0.4s ease;
-        z-index: 999;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        border-bottom: 1px solid #E0E0E0;
+        justify-content: flex-start;
+        padding: 80px 2rem 2rem; /* Espacio para el logo y botón cerrar */
+        gap: 2rem;
+        transform: translateX(100%); /* Deslizar desde la derecha */
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1001;
+        overflow-y: auto;
     }
 
     .nav-menu-wrapper.active {
-        transform: translateY(0);
+        transform: translateX(0);
     }
 
     .nav-links {
         flex-direction: column;
         width: 100%;
-        gap: 1rem;
+        gap: 0.8rem;
         margin-right: 0;
+        align-items: center;
     }
 
     .nav-links li {
-        width: 100%;
+        width: auto; /* No forzar 100% para que el diseño píldora luzca mejor */
     }
 
     .nav-links a {
-        width: 100%;
+        display: inline-block;
+        width: 200px; /* Ancho fijo para consistencia como en la foto */
         text-align: center;
-        padding: 0.8rem;
+        padding: 10px 20px;
         font-size: 1.1rem;
         color: var(--color-midnight);
+        border-radius: 50px;
+        background-color: rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(0, 0, 0, 0.08);
     }
 
     .nav-actions {
         flex-direction: column;
         width: 100%;
         gap: 1rem;
+        align-items: center;
     }
 
     .tutorial-btn, .btn-navbar-auth {
-        width: 100%;
+        width: 250px; /* Un poco más anchos que los links */
         justify-content: center;
         padding: 12px;
+        border-radius: 50px;
     }
     
     .nav-auth {
         flex-direction: column;
         width: 100%;
         gap: 10px;
+        align-items: center;
+    }
+
+    /* Selector de idioma en móvil */
+    .custom-language-selector {
+        width: 200px;
+        justify-content: center;
+        background-color: white;
     }
 }
 

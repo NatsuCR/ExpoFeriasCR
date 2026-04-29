@@ -167,7 +167,8 @@ window.cargarProximos = async function (filtros = {}) {
         'Deporte',
         'Recreativa',
         'Gobierno / Cívico',
-        'Religioso'
+        'Religioso',
+        'Otro'
     ];
 
     // Obtener los tipos presentes y ordenarlos según la prioridad, luego alfabéticamente
@@ -176,8 +177,17 @@ window.cargarProximos = async function (filtros = {}) {
         let indexA = ORDEN_PRIORIDAD.indexOf(a);
         let indexB = ORDEN_PRIORIDAD.indexOf(b);
         
-        if (indexA === -1) indexA = 999;
-        if (indexB === -1) indexB = 999;
+        // Forzar que Gobierno, Religioso y Otro sean los últimos (prioridad 1000+)
+        if (a === 'Gobierno / Cívico') indexA = 1000;
+        if (a === 'Religioso') indexA = 1001;
+        if (a === 'Otro') indexA = 1002;
+        if (b === 'Gobierno / Cívico') indexB = 1000;
+        if (b === 'Religioso') indexB = 1001;
+        if (b === 'Otro') indexB = 1002;
+
+        // Cualquier otra categoría no listada (como Fiesta Regional) queda en medio (500)
+        if (indexA === -1) indexA = 500;
+        if (indexB === -1) indexB = 500;
         
         if (indexA !== indexB) return indexA - indexB;
         return a.localeCompare(b);

@@ -160,6 +160,7 @@ window.cargarProximos = async function (filtros = {}) {
         'Feria',
         'Concierto',
         'Arte y Cultura',
+        'Tour',
         'Fiesta Típica',
         'Gastronomía',
         'Exposición',

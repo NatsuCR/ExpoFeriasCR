@@ -3,7 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const helmet = require('helmet'); // 🛡️ Protección de cabeceras
-const rateLimit = require('express-rate-limit'); // 🛡️ Límite de peticiones
+const rateLimit = require('express-rate-limit'); // 🛡️ Límite de peticiones (Legacy/Fixed Window)
+const tokenBucketLimiter = require('./middlewares/tokenBucketLimiter'); // 🛡️ Token Bucket
 const trackerMiddleware = require('./middlewares/trackerMiddleware');
 
 const app = express();
@@ -37,6 +38,9 @@ const authLimiter = rateLimit({
 
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/registro', authLimiter);
+
+// 🛡️ Aplicar Token Bucket a TODAS las rutas de la API para protección global
+app.use('/api', tokenBucketLimiter({ capacity: 30, refillRate: 5 })); 
 
 // =======================
 // 🔧 MIDDLEWARES

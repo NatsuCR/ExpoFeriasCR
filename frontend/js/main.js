@@ -155,9 +155,36 @@ window.cargarProximos = async function (filtros = {}) {
 
     container.innerHTML = '';
 
-    // Ordenar categorías: Si hay búsqueda y resultados, poner la categoría del primer resultado arriba
-    let tiposOrdenados = Object.keys(grupos).sort();
-    if (termino && hayResultados) {
+    // Definir orden de importancia
+    const ORDEN_PRIORIDAD = [
+        'Feria',
+        'Concierto',
+        'Arte y Cultura',
+        'Fiesta Típica',
+        'Gastronomía',
+        'Exposición',
+        'Talleres y Charlas',
+        'Deporte',
+        'Recreativa',
+        'Gobierno / Cívico',
+        'Religioso'
+    ];
+
+    // Obtener los tipos presentes y ordenarlos según la prioridad, luego alfabéticamente
+    let tiposPresentes = Object.keys(grupos);
+    let tiposOrdenados = tiposPresentes.sort((a, b) => {
+        let indexA = ORDEN_PRIORIDAD.indexOf(a);
+        let indexB = ORDEN_PRIORIDAD.indexOf(b);
+        
+        if (indexA === -1) indexA = 999;
+        if (indexB === -1) indexB = 999;
+        
+        if (indexA !== indexB) return indexA - indexB;
+        return a.localeCompare(b);
+    });
+
+    // Si hay una búsqueda activa, ponemos la categoría del primer resultado de primero
+    if (termino && eventosFiltrados.length > 0) {
         const tipoDestacado = eventosFiltrados[0].tipo_evento || 'Otros Eventos';
         tiposOrdenados = [tipoDestacado, ...tiposOrdenados.filter(t => t !== tipoDestacado)];
     }

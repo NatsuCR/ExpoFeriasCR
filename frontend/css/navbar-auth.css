@@ -51,7 +51,7 @@
 .btn-navbar-back {
   background: none;
   border: none;
-  color: #ffffff;
+  color: #0033A0; /* Cambiado de blanco a azul oficial para visibilidad */
   font-size: 15px;
   cursor: pointer;
   padding: 8px 14px;
@@ -64,8 +64,8 @@
 }
 
 .btn-navbar-back:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.15);
+  color: #C8102E; /* Cambio a rojo en hover para feedback */
+  background: rgba(0, 51, 160, 0.05);
 }
 
 /* ── Menú de usuario autenticado ── */

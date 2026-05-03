@@ -55,7 +55,7 @@ async function cargarPrecios() {
     let html = '';
     precios.forEach(p => {
         html += `<tr>
-            <td>${new Date(p.fecha).toLocaleDateString()}</td>
+            <td>${new Date(p.fecha + 'T12:00:00').toLocaleDateString()}</td>
             <td>${p.precio_normal}</td>
             <td>${p.promocion || '—'}</td>
             <td>${p.descripcion_promocion || '—'}</td>

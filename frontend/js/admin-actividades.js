@@ -110,7 +110,7 @@ async function cargarActividades() {
         html += `<tr>
             <td>${a.titulo}</td>
             <td>${a.tipo || '—'}</td>
-            <td>${new Date(a.fecha).toLocaleDateString()}</td>
+            <td>${new Date(a.fecha + 'T12:00:00').toLocaleDateString()}</td>
             <td>${a.hora ? a.hora.slice(0,5) : '—'}</td>
             <td>${a.lugar || '—'}</td>
             <td>${imgBadge}</td>

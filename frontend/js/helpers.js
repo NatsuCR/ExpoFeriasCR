@@ -11,14 +11,18 @@ window.formatDateCR = function (dateStr, format = 'full') {
             return dateStr;
         }
 
-        const date = new Date(dateStr);
+        const date = new Date(
+            // Si es fecha pura YYYY-MM-DD, añadir mediodía para evitar desfase de zona horaria
+            typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
+                ? dateStr + 'T12:00:00'
+                : dateStr
+        );
         if (isNaN(date.getTime())) return 'Fecha por confirmar';
 
         const options = format === 'short'
             ? { day: '2-digit', month: 'short' }
             : { day: '2-digit', month: 'long', year: 'numeric' };
 
-        // Forzar UTC si es necesario para evitar desfases de zona horaria en fechas puras
         return date.toLocaleDateString('es-CR', options);
     } catch (e) {
         return 'Fecha por confirmar';

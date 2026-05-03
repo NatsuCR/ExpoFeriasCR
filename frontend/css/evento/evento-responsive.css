@@ -105,6 +105,18 @@
     .actividad-card a, .expositor-card a {
         margin-bottom: 0.5rem;
     }
+    .actividad-card .btn-ver-mas-simple, .expositor-card .btn-ver-mas-simple,
+    .actividad-card .btn-ver-menos, .expositor-card .btn-ver-menos,
+    .actividad-card .info-ubicacion, .expositor-card .info-ubicacion,
+    .actividad-card .enlace-localidades, .expositor-card .enlace-localidades,
+    .actividad-card p strong, .expositor-card p strong,
+    .actividad-card p:last-child, .expositor-card p:last-child {
+        display: block !important;
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        width: fit-content !important;
+    }
     .categoria-titulo {
         font-size: 1.4rem !important;
         padding-left: 10px !important;

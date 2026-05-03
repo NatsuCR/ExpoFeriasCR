@@ -93,22 +93,22 @@ window.formatDescription = function (text, full = false) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
     
-    const formattedText = cleanText.replace(/\n/g, '<br>');
+    const formattedText = cleanText.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>');
 
     if (full) {
-        return `<p class="descripcion-texto descripcion desc-full">${formattedText}</p>`;
+        return `<p class="descripcion-texto descripcion desc-full" style="text-align: left !important; white-space: pre-wrap !important;">${formattedText}</p>`;
     }
 
     if (cleanText.length <= limit) {
-        return `<p class="descripcion-texto descripcion desc-short">${formattedText}</p>`;
+        return `<p class="descripcion-texto descripcion desc-short" style="text-align: left !important; white-space: pre-wrap !important;">${formattedText}</p>`;
     }
 
     const shortText = cleanText.substring(0, limit) + '...';
-    const formattedShortText = shortText.replace(/\n/g, '<br>');
+    const formattedShortText = shortText.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>');
     return `
-        <div class="desc-container">
-            <p class="descripcion-texto descripcion desc-short">${formattedShortText}</p>
-            <p class="descripcion-texto descripcion desc-full" style="display: none; opacity: 0; transition: opacity 0.3s ease;">${formattedText}</p>
+        <div class="desc-container" style="text-align: left !important;">
+            <p class="descripcion-texto descripcion desc-short" style="text-align: left !important; white-space: pre-wrap !important;">${formattedShortText}</p>
+            <p class="descripcion-texto descripcion desc-full" style="display: none; opacity: 0; transition: opacity 0.3s ease; text-align: left !important; white-space: pre-wrap !important;">${formattedText}</p>
             <button class="btn-ver-mas-simple" onclick="window.toggleDesc(this)">Ver más</button>
         </div>
     `;

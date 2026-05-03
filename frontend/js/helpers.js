@@ -109,14 +109,14 @@ window.formatDescription = function (text, full = false) {
         <div class="desc-container" style="text-align: left !important;">
             <p class="descripcion-texto descripcion desc-short" style="text-align: left !important; white-space: pre-wrap !important;">${formattedShortText}</p>
             <p class="descripcion-texto descripcion desc-full" style="display: none; opacity: 0; transition: opacity 0.3s ease; text-align: left !important; white-space: pre-wrap !important;">${formattedText}</p>
-            <div style="text-align: center !important; width: 100% !important; display: flex !important; justify-content: center !important; margin-top: 5px !important;"><button class="btn-ver-mas-simple" onclick="window.toggleDesc(this)" style="margin: 0 auto !important; display: inline-block !important; text-align: center !important;">Ver más</button></div>
+            <button class="btn-ver-mas-simple" onclick="window.toggleDesc(this)" style="display: block !important; margin: 10px auto 0 !important; text-align: center !important;">Ver más</button>
         </div>
     `;
 };
 
 // Toggle para el botón "Ver más" con efectos y comunicación
 window.toggleDesc = function (btn) {
-    const container = btn.parentElement;
+    const container = btn.closest('.desc-container');
     if (!container) return;
     const shortText = container.querySelector('.desc-short');
     const fullText = container.querySelector('.desc-full');

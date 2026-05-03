@@ -36,7 +36,7 @@
     <div class="container mi-cuenta-container">
         <!-- Header -->
         <div class="cuenta-header">
-            <h1>ðŸ‘¤ Mi Cuenta</h1>
+            <h1>👤 Mi Cuenta</h1>
             <p>Gestiona tu perfil y tus eventos</p>
         </div>
 
@@ -55,10 +55,10 @@
                 </div>
                 <div class="perfil-acciones">
                     <button id="btn-cambiar-password" class="btn-secondary">
-                        <i class="fas fa-key"></i> Cambiar ContraseÃ±a
+                        <i class="fas fa-key"></i> Cambiar Contraseña
                     </button>
                     <button id="btn-logout" class="btn-danger">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar SesiÃ³n
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                     </button>
                     <button id="btn-eliminar-cuenta" class="btn-danger-outline">
                         <i class="fas fa-user-slash"></i> Eliminar Cuenta
@@ -81,8 +81,8 @@
         <!-- Mis Eventos -->
         <section class="seccion-eventos">
             <div class="seccion-header">
-                <h2>ðŸ“… Mis Eventos</h2>
-                <p>AquÃ­ puedes ver todos los eventos que has creado</p>
+                <h2>📋 Mis Eventos</h2>
+                <p>Aquí puedes ver todos los eventos que has creado</p>
                 <div class="bulk-actions-container" style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
                     <label for="seleccionar-todos-eventos" style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:14px; color:#555; width:fit-content;">
                         <input type="checkbox" id="seleccionar-todos-eventos" title="Seleccionar todos"> 
@@ -102,28 +102,28 @@
             </div>
         </section>
 
-        <!-- Modal de cambio de contraseÃ±a -->
+        <!-- Modal de cambio de contraseña -->
         <div id="modal-cambiar-password" class="modal-overlay" style="display: none;">
             <div class="modal-contenedor">
                 <div class="modal-header">
-                    <h3>Cambiar ContraseÃ±a</h3>
+                    <h3>Cambiar Contraseña</h3>
                     <button id="btn-cerrar-modal-password" class="btn-cerrar-modal">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
 
                 <form id="form-cambiar-password" class="modal-form">
-                    <!-- Campo oculto para accesibilidad de gestores de contraseÃ±as -->
+                    <!-- Campo oculto para accesibilidad de gestores de contraseñas -->
                     <input type="text" name="email" id="email-hidden" style="display:none;" autocomplete="username">
                     
                     <div class="form-group">
-                        <label>Nueva ContraseÃ±a</label>
-                        <input type="password" id="nueva-password" placeholder="MÃ­nimo 6 caracteres" autocomplete="new-password" required>
+                        <label>Nueva Contraseña</label>
+                        <input type="password" id="nueva-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Confirmar ContraseÃ±a</label>
-                        <input type="password" id="confirmar-password" placeholder="Confirma tu contraseÃ±a" autocomplete="new-password" required>
+                        <label>Confirmar Contraseña</label>
+                        <input type="password" id="confirmar-password" placeholder="Confirma tu contraseña" autocomplete="new-password" required>
                     </div>
 
                     <div id="mensaje-password" class="modal-mensaje" style="display: none;"></div>
@@ -189,6 +189,3 @@
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
-
-
-

@@ -25,46 +25,91 @@
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    .actividad-card, .expositor-card {
-        padding: 20px !important; /* Añadir padding a la tarjeta */
+    .actividades-carrusel-wrapper,
+    .expositores-carrusel-wrapper {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        position: relative !important;
+    }
+    .actividades-carrusel-viewport,
+    .expositores-carrusel-viewport {
         overflow: hidden !important;
+        width: 100% !important;
+        padding: 10px 0 !important;
+    }
+    .actividades-carrusel-track,
+    .expositores-carrusel-track {
+        display: flex !important;
+        width: 100% !important;
+        gap: 0 !important;
+        transition: transform 0.4s ease-in-out !important;
+    }
+    .actividades-carrusel-track .actividad-card,
+    .expositores-carrusel-track .expositor-card {
+        flex: 0 0 calc(100% - 30px) !important;
+        min-width: calc(100% - 30px) !important;
+        max-width: calc(100% - 30px) !important;
+        margin-left: 15px !important;
+        margin-right: 15px !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+        padding: 20px !important;
         box-sizing: border-box !important;
         background: #fff !important;
         border-radius: 15px !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
     }
-    .actividad-card img.card-img-principal, 
-    .actividad-card .mini-carrusel,
-    .expositor-card img.card-img-principal {
+    .actividad-card > img, .actividad-card > .mini-carrusel,
+    .expositor-card > img, .expositor-card > .mini-carrusel {
         margin: -20px -20px 15px -20px !important;
         width: calc(100% + 40px) !important;
+        max-width: none !important;
         height: 250px !important;
         object-fit: cover !important;
         border-top-left-radius: 15px !important;
         border-top-right-radius: 15px !important;
+        flex-shrink: 0 !important;
+    }
+    .mini-carrusel-track img {
+        margin: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 0 !important;
     }
     /* El texto hereda el padding de la tarjeta */
     .actividad-card h3, .expositor-card h3 {
         margin-top: 5px !important;
         font-size: 1.25rem !important;
         text-align: center !important;
+        width: 100% !important;
     }
-    .actividad-card p, .expositor-card p {
+    .actividad-card p, .expositor-card p,
+    .actividad-card .desc-container, .expositor-card .desc-container,
+    .actividad-card .descripcion-contenedor, .expositor-card .descripcion-contenedor,
+    .actividad-card div, .expositor-card div {
         font-size: 0.9rem !important;
         margin-bottom: 8px !important;
         text-align: left !important;
-    }
-    .actividad-card .desc-container, .expositor-card .desc-container {
-        padding: 0 !important;
-        margin: 10px 0 !important;
-        text-align: left !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        white-space: normal !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
     }
     .actividad-card a, .expositor-card a {
         margin-bottom: 0.5rem;
     }
-    .actividades-carrusel-wrapper,
-    .expositores-carrusel-wrapper {
-        padding: 0 35px !important;
+    .categoria-titulo {
+        font-size: 1.4rem !important;
+        padding-left: 10px !important;
+        margin-bottom: 15px !important;
+        gap: 10px !important;
     }
     .tabla-precios th, .tabla-precios td {
         padding: 6px;
@@ -83,13 +128,6 @@
         width: fit-content !important;
         margin-left: auto !important;
         margin-right: auto !important;
-    }
-    .actividades-carrusel-track .actividad-card,
-    .expositores-carrusel-track .expositor-card {
-        min-width: calc(100% - 20px) !important;
-        margin: 10px !important;
-        padding: 0 !important;
-        box-sizing: border-box !important;
     }
     .mini-carrusel {
         height: 280px;
@@ -206,19 +244,26 @@
 @media (max-width: 768px) {
     .actividades-btn,
     .expositores-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 1.2rem;
-        padding: 0;
-        background-color: rgba(0,0,0,0.6);
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 1rem !important;
+        z-index: 100 !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        color: #333 !important;
+        border: 1px solid #ddd !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     .actividades-btn.prev,
     .expositores-btn.prev {
-        left: 5px;
+        left: 3px !important;
     }
     .actividades-btn.next,
     .expositores-btn.next {
-        right: 5px;
+        right: 3px !important;
     }
 }
 

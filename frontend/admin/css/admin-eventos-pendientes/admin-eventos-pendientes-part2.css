@@ -213,6 +213,22 @@
   background-color: #e0e0e0;
 }
 
+/* Botón Limpiar Filtros — rojo (sobreescribe .btn-secondary genérico) */
+#btn-limpiar-filtros {
+  background-color: #D32F2F !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#btn-limpiar-filtros:hover {
+  background-color: #b71c1c !important;
+}
+
 /* Vista Previa Evento */
 .evento-preview {
   display: flex;

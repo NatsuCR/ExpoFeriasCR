@@ -1,3 +1,14 @@
+/* ── Footer siempre al fondo ── */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.admin-eventos-container {
+  flex: 1;
+}
+
 .preview-item-label {
   font-weight: 600;
   color: #666;
@@ -132,9 +143,9 @@
   width: 100%;
 }
 
-/* Decoración botón Limpiar Filtros */
+/* Botón Limpiar Filtros — rojo */
 #btn-limpiar-filtros {
-  background: linear-gradient(135deg, #8b5a2b 0%, #a67c52 100%);
+  background: #D32F2F;
   color: white;
   border: none;
   padding: 10px 16px;
@@ -146,18 +157,18 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 2px 8px rgba(139, 90, 43, 0.2);
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
 }
 
 #btn-limpiar-filtros:hover {
-  background: linear-gradient(135deg, #a67c52 0%, #c89d6b 100%);
+  background: #b71c1c;
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(139, 90, 43, 0.3);
+  box-shadow: 0 4px 16px rgba(211, 47, 47, 0.4);
 }
 
 #btn-limpiar-filtros:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(139, 90, 43, 0.2);
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
 }
 
 #btn-limpiar-filtros::before {

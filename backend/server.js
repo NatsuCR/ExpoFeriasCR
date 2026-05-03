@@ -123,8 +123,36 @@ app.get('/sitemap.xml', async (req, res) => {
 // 🔥 Esto arregla tu problema de uploads
 app.use('/assets', express.static(path.join(process.cwd(), 'frontend', 'assets')));
 
+// 🔤 Forzar charset=utf-8 en todos los archivos de texto estáticos
+// Esto evita que el navegador interprete las tildes y ñ como Latin-1
+app.use((req, res, next) => {
+  res.on('headers', () => {
+    const ct = res.getHeader('Content-Type');
+    if (ct && typeof ct === 'string' && ct.startsWith('text/') && !ct.includes('charset')) {
+      res.setHeader('Content-Type', ct + '; charset=utf-8');
+    }
+  });
+  next();
+});
+
 // 🔥 Servir frontend completo
-app.use(express.static(path.join(process.cwd(), 'frontend')));
+app.use(express.static(path.join(process.cwd(), 'frontend'), {
+  setHeaders(res, filePath) {
+    const ext = path.extname(filePath).toLowerCase();
+    const textTypes = {
+      '.html': 'text/html; charset=utf-8',
+      '.js':   'text/javascript; charset=utf-8',
+      '.mjs':  'text/javascript; charset=utf-8',
+      '.css':  'text/css; charset=utf-8',
+      '.json': 'application/json; charset=utf-8',
+      '.txt':  'text/plain; charset=utf-8',
+      '.xml':  'application/xml; charset=utf-8',
+    };
+    if (textTypes[ext]) {
+      res.setHeader('Content-Type', textTypes[ext]);
+    }
+  }
+}));
 
 // =======================
 // 🧪 HEALTH CHECK

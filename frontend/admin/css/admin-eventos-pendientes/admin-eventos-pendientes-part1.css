@@ -14,9 +14,9 @@
 }
 
 .navbar-links a {
-  color: #ffffff;
+  color: #001A52; /* Azul medianoche — visible sobre navbar blanco */
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
   padding: 8px 16px;
   border-radius: 6px;
@@ -24,16 +24,19 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  border: 1px solid rgba(0,0,0,0.08);
 }
 
 .navbar-links a:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background-color: rgba(211, 47, 47, 0.08);
+  color: #D32F2F;
+  border-color: rgba(211, 47, 47, 0.3);
 }
 
 .navbar-links a.active {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: #D32F2F;
   color: #ffffff;
+  border-color: #D32F2F;
 }
 
 .navbar-links a i {
@@ -101,12 +104,26 @@
 .filtros-group input:focus,
 .filtros-group select:focus {
   outline: none;
-  border-color: #8b5a2b;
-  box-shadow: 0 0 0 3px rgba(139, 90, 43, 0.1);
+  border-color: #D32F2F;
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
 }
 
+/* Botón Limpiar Filtros — rojo */
 .filtros-group .btn-secondary {
   margin: 0;
+  background-color: #D32F2F;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.filtros-group .btn-secondary:hover {
+  background-color: #b71c1c;
 }
 
 /* Tabla */

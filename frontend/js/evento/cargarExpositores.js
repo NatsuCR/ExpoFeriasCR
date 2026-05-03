@@ -158,10 +158,10 @@ export function renderExpositores(lista) {
     if (!container) return;
 
     const searchContainer = document.getElementById('expositorSearchContainer');
-    
+
     // Si la lista de resultados está vacía
     if (lista.length === 0) {
-        // Si el evento TIENE expositores pero la búsqueda actual no dio resultados
+        // Si el evento TIENE expositores (en allExpositores o en lista misma previa)
         if (allExpositores.length > 0) {
             container.innerHTML = '<div class="no-results" style="text-align:center; padding:40px; color:#666; width:100%;">No se encontraron expositores que coincidan con tu búsqueda.</div>';
             if (searchContainer) searchContainer.style.display = 'flex';
@@ -174,9 +174,10 @@ export function renderExpositores(lista) {
         }
     }
 
-    // Mostrar buscador si el evento tiene datos
-    if (searchContainer && allExpositores.length > 0) {
-        searchContainer.style.display = 'flex';
+    // Mostrar buscador si hay expositores en la lista actual
+    // (funciona tanto en carga normal como en preview donde allExpositores puede ser 0)
+    if (searchContainer) {
+        searchContainer.style.display = lista.length > 0 ? 'flex' : 'none';
     }
 
     // Agrupar por categoría

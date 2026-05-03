@@ -139,6 +139,8 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(process.cwd(), 'frontend'), {
   setHeaders(res, filePath) {
     const ext = path.extname(filePath).toLowerCase();
+
+    // Tipos de texto con charset
     const textTypes = {
       '.html': 'text/html; charset=utf-8',
       '.js':   'text/javascript; charset=utf-8',
@@ -150,6 +152,16 @@ app.use(express.static(path.join(process.cwd(), 'frontend'), {
     };
     if (textTypes[ext]) {
       res.setHeader('Content-Type', textTypes[ext]);
+    }
+
+    // 🚫 JS, CSS y HTML: siempre verificar con el servidor (no-cache)
+    // Esto soluciona que el navegador use versiones viejas después de un deploy
+    if (['.js', '.mjs', '.css', '.html'].includes(ext)) {
+      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    }
+    // 🖼️ Imágenes y fuentes: cachear 7 días (cambian poco)
+    else if (['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico', '.woff', '.woff2', '.ttf'].includes(ext)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800');
     }
   }
 }));

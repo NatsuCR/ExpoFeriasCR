@@ -25,8 +25,11 @@ app.get('/robots.txt', (req, res) => {
 // 🛡️ SEGURIDAD GLOBAL
 // =======================
 app.use(helmet({
-  contentSecurityPolicy: false, // Desactivado para permitir scripts externos (CDNs) sin conflicto inmediato
-  crossOriginEmbedderPolicy: false
+  contentSecurityPolicy: false,    // Desactivado para permitir scripts externos (CDNs)
+  crossOriginEmbedderPolicy: false, // Necesario para que el iframe del preview cargue recursos
+  crossOriginOpenerPolicy: false,   // Permite comunicación entre iframe y ventana padre
+  crossOriginResourcePolicy: false, // Permite cargar recursos cross-origin en el iframe
+  frameguard: false,                // Permite embeber evento.html en el iframe del preview
 }));
 
 // Límite de velocidad para login y registro (Evitar fuerza bruta)

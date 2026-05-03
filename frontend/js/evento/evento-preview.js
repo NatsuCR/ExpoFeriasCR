@@ -5,6 +5,7 @@
 export function cargarEventoDesdePreview(datos) {
     if (datos.nombre) document.getElementById('eventoNombre').innerText = datos.nombre;
     if (datos.descripcion) {
+
         const descHtml = typeof window.formatDescription === 'function' ? window.formatDescription(datos.descripcion) : datos.descripcion;
         const colorDesc = datos.color_descripcion_hero || '#ffffff';
 

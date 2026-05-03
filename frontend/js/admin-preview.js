@@ -3,10 +3,10 @@
 // Espeja EXACTAMENTE lo que hace cargarEvento.js en la página real.
 
 let previewAbierto = true;
-let previewSlug    = null;
-let previewTimer   = null;
+let previewSlug = null;
+let previewTimer = null;
 
-function getSlug()   { return document.getElementById('slug')?.value.trim() || null; }
+function getSlug() { return document.getElementById('slug')?.value.trim() || null; }
 function getIframe() { return document.getElementById('previewIframe'); }
 
 // ─── Recolectar datos del formulario admin ────────────────────────────────────
@@ -15,39 +15,39 @@ function construirDatosPreview() {
 
     const datos = {
         // Básicos
-        nombre:           get('nombre'),
-        descripcion:      get('descripcion'),
-        fecha_inicio:     get('fecha_inicio'),
-        fecha_fin:        get('fecha_fin'),
-        ubicacion:        get('ubicacion'),
-        provincia:        get('provincia'),
-        imagen_portada:   get('imagen_portada'),
-        horario_imagen:   get('horario_imagen'),
-        mapa_embed:       get('mapa_embed'),
-        tipo_venta:       get('tipo_venta'),
+        nombre: get('nombre'),
+        descripcion: get('descripcion'),
+        fecha_inicio: get('fecha_inicio'),
+        fecha_fin: get('fecha_fin'),
+        ubicacion: get('ubicacion'),
+        provincia: get('provincia'),
+        imagen_portada: get('imagen_portada'),
+        horario_imagen: get('horario_imagen'),
+        mapa_embed: get('mapa_embed'),
+        tipo_venta: get('tipo_venta'),
         url_venta_online: get('url_venta_online'),
 
         // ── Los 20 colores exactos de la BD ──────────────────────────────────
-        color_primario:         get('color_primario')         || '#C8102E',
-        color_secundario:       get('color_secundario')       || '#0033A0',
-        color_fondo:            get('color_fondo')            || '#fdfdfd',
-        color_texto:            get('color_texto')            || '#1a1a1a',
-        color_hero_overlay:     get('color_hero_overlay')     || 'rgba(62,42,31,0.7)',
-        color_titulo_seccion:   get('color_titulo_seccion')   || '#1a1a1a',
-        color_titulo_hero:      get('color_titulo_hero')      || '#ffffff',
+        color_primario: get('color_primario') || '#C8102E',
+        color_secundario: get('color_secundario') || '#0033A0',
+        color_fondo: get('color_fondo') || '#fdfdfd',
+        color_texto: get('color_texto') || '#1a1a1a',
+        color_hero_overlay: get('color_hero_overlay') || 'rgba(62,42,31,0.7)',
+        color_titulo_seccion: get('color_titulo_seccion') || '#1a1a1a',
+        color_titulo_hero: get('color_titulo_hero') || '#ffffff',
         color_descripcion_hero: get('color_descripcion_hero') || '#ffffff',
-        color_fondo_fechas:     get('color_fondo_fechas')     || '#0033a0',
-        color_texto_fechas:     get('color_texto_fechas')     || '#c8102e',
-        color_menu_fondo:       get('color_menu_fondo')       || '#ffffff',
-        color_menu_texto:       get('color_menu_texto')       || '#ffffff',
+        color_fondo_fechas: get('color_fondo_fechas') || '#0033a0',
+        color_texto_fechas: get('color_texto_fechas') || '#c8102e',
+        color_menu_fondo: get('color_menu_fondo') || '#ffffff',
+        color_menu_texto: get('color_menu_texto') || '#ffffff',
         color_menu_fondo_hover: get('color_menu_fondo_hover') || '',
         color_menu_texto_hover: get('color_menu_texto_hover') || '',
-        color_titulo_h3:        get('color_titulo_h3')        || '#1a1a1a',
-        color_fondo_contacto:   get('color_fondo_contacto')   || '#fdfdfd',
-        color_texto_contacto:   get('color_texto_contacto')   || '#1a1a1a',
-        color_enlace_contacto:  get('color_enlace_contacto')  || '#c8102e',
-        color_fondo_footer:     get('color_fondo_footer')     || '#c8102e',
-        color_texto_footer:     get('color_texto_footer')     || '#ffffff'
+        color_titulo_h3: get('color_titulo_h3') || '#1a1a1a',
+        color_fondo_contacto: get('color_fondo_contacto') || '#fdfdfd',
+        color_texto_contacto: get('color_texto_contacto') || '#1a1a1a',
+        color_enlace_contacto: get('color_enlace_contacto') || '#c8102e',
+        color_fondo_footer: get('color_fondo_footer') || '#c8102e',
+        color_texto_footer: get('color_texto_footer') || '#ffffff'
     };
 
     // Precios: leer del data-precio de los botones editar
@@ -55,7 +55,7 @@ function construirDatosPreview() {
         .map(row => {
             const btn = row.querySelector('.btn-editar-precio');
             if (btn && btn.dataset.precio) {
-                try { return JSON.parse(btn.dataset.precio); } catch (_) {}
+                try { return JSON.parse(btn.dataset.precio); } catch (_) { }
             }
             return null;
         }).filter(Boolean);
@@ -75,7 +75,7 @@ function construirDatosPreview() {
                         } catch (_) { imagen = a.imagen.trim() ? [a.imagen.trim()] : []; }
                     }
                     return { ...a, imagen };
-                } catch (_) {}
+                } catch (_) { }
             }
             return null;
         }).filter(Boolean);
@@ -95,14 +95,14 @@ function construirDatosPreview() {
                         } catch (_) { imagenes = [e.imagen_logo]; }
                     }
                     return {
-                        nombre:      e.nombre,
-                        rubro:       e.rubro || '',
-                        ubicacion:   e.ubicacion || '',
+                        nombre: e.nombre,
+                        rubro: e.rubro || '',
+                        ubicacion: e.ubicacion || '',
                         descripcion: e.descripcion || '',
-                        imagenes:    imagenes,
-                        video:       e.video_url || ''
+                        imagenes: imagenes,
+                        video: e.video_url || ''
                     };
-                } catch (_) {}
+                } catch (_) { }
             }
             return null;
         }).filter(Boolean);
@@ -122,7 +122,7 @@ function construirDatosPreview() {
 function recargarPreview() {
     if (!eventoId && !getSlug()) return;
     const datos = construirDatosPreview();
-    const key   = 'preview_admin_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    const key = 'preview_admin_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem(key, JSON.stringify(datos));
     getIframe().src = `/evento.html?preview=1&dataKey=${encodeURIComponent(key)}`;
     previewSlug = getSlug();
@@ -136,11 +136,11 @@ function aplicarCambiosEnVivo() {
     const doc = iframe.contentDocument;
 
     const datos = construirDatosPreview();
-    
+
     // Si el iframe tiene la función cargarEventoDesdePreview, usarla
     if (doc.defaultView && doc.defaultView.cargarEventoDesdePreview) {
         doc.defaultView.cargarEventoDesdePreview(datos);
-        
+
         // Re-inicializar controles después de un breve delay
         setTimeout(() => {
             if (doc.defaultView.initCarouselControls) doc.defaultView.initCarouselControls();
@@ -169,7 +169,7 @@ function aplicarCambiosEnVivo() {
 
 // ─── Cuando el iframe termina de cargar ──────────────────────────────────────
 function onIframeLoad() {
-    const slug   = getSlug();
+    const slug = getSlug();
     const urlBar = document.getElementById('previewUrlBar');
     if (urlBar && slug) urlBar.textContent = `/evento.html?slug=${slug}`;
 
@@ -193,8 +193,8 @@ function programarRecarga() {
 
 // ─── Botón toggle panel ───────────────────────────────────────────────────────
 function togglePreview() {
-    const panel  = document.getElementById('previewPanel');
-    const btn    = document.getElementById('btnTogglePreview');
+    const panel = document.getElementById('previewPanel');
+    const btn = document.getElementById('btnTogglePreview');
     const layout = document.getElementById('formLayout');
     previewAbierto = !previewAbierto;
     if (previewAbierto) {
@@ -215,7 +215,7 @@ export function initPreview() {
 
     document.querySelectorAll('#formBasicos input, #formBasicos textarea, #formBasicos select')
         .forEach(el => {
-            el.addEventListener('input',  programarRecarga);
+            el.addEventListener('input', programarRecarga);
             el.addEventListener('change', programarRecarga);
         });
 

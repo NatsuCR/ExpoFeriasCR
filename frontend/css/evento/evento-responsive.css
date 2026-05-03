@@ -36,12 +36,21 @@
     }
     /* Añadir padding solo al texto */
     .actividad-card h3, .actividad-card p, .actividad-card a,
-    .expositor-card h3, .expositor-card p, .expositor-card a {
-        padding-left: 1rem;
-        padding-right: 1rem;
+    .actividad-card .desc-container, .actividad-card .descripcion-texto,
+    .expositor-card h3, .expositor-card p, .expositor-card a,
+    .expositor-card .desc-container, .expositor-card .descripcion-texto {
+        padding-left: 1.2rem !important;
+        padding-right: 1.2rem !important;
     }
     .actividad-card a, .expositor-card a {
         margin-bottom: 1rem;
+    }
+    .actividad-card .btn-ver-mas-simple {
+        margin-left: 1.2rem !important;
+    }
+    .actividades-carrusel-wrapper,
+    .expositores-carrusel-wrapper {
+        padding: 0 35px !important;
     }
     .tabla-precios th, .tabla-precios td {
         padding: 6px;
@@ -50,9 +59,23 @@
     .mapa iframe {
         height: 250px;
     }
+    h2 {
+        font-size: 1.6rem !important;
+        margin-bottom: 1.5rem !important;
+        display: block !important;
+        text-align: center !important;
+        border-bottom: 2px solid var(--evento-secundario) !important;
+        padding-bottom: 0.3rem !important;
+        width: fit-content !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
     .actividades-carrusel-track .actividad-card,
     .expositores-carrusel-track .expositor-card {
-        min-width: 100%;
+        min-width: calc(100% - 20px) !important;
+        margin: 10px !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
     }
     .mini-carrusel {
         height: 280px;

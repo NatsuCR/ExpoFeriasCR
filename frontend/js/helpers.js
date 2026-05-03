@@ -85,19 +85,30 @@ window.formatDescription = function (text, full = false) {
     if (!text) return '';
     const limit = 100; // Un poco más corto para tarjetas
 
+    // Escapamos caracteres HTML para evitar inyección XSS y formateamos saltos de línea
+    const cleanText = String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    
+    const formattedText = cleanText.replace(/\n/g, '<br>');
+
     if (full) {
-        return `<p class="descripcion-texto descripcion desc-full">${text}</p>`;
+        return `<p class="descripcion-texto descripcion desc-full">${formattedText}</p>`;
     }
 
-    if (text.length <= limit) {
-        return `<p class="descripcion-texto descripcion desc-short">${text}</p>`;
+    if (cleanText.length <= limit) {
+        return `<p class="descripcion-texto descripcion desc-short">${formattedText}</p>`;
     }
 
-    const shortText = text.substring(0, limit) + '...';
+    const shortText = cleanText.substring(0, limit) + '...';
+    const formattedShortText = shortText.replace(/\n/g, '<br>');
     return `
         <div class="desc-container">
-            <p class="descripcion-texto descripcion desc-short">${shortText}</p>
-            <p class="descripcion-texto descripcion desc-full" style="display: none; opacity: 0; transition: opacity 0.3s ease;">${text}</p>
+            <p class="descripcion-texto descripcion desc-short">${formattedShortText}</p>
+            <p class="descripcion-texto descripcion desc-full" style="display: none; opacity: 0; transition: opacity 0.3s ease;">${formattedText}</p>
             <button class="btn-ver-mas-simple" onclick="window.toggleDesc(this)">Ver más</button>
         </div>
     `;

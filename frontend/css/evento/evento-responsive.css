@@ -26,27 +26,41 @@
         gap: 1rem;
     }
     .actividad-card, .expositor-card {
-        padding: 0; /* Quitar padding para que la imagen llene el ancho */
-        overflow: hidden;
+        padding: 20px !important; /* Añadir padding a la tarjeta */
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        background: #fff !important;
+        border-radius: 15px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
     }
-    .actividad-card img, .expositor-card img {
-        width: 100%;
-        height: 280px; /* Igualar altura al mini-carrusel */
-        object-fit: cover;
+    .actividad-card img.card-img-principal, 
+    .actividad-card .mini-carrusel,
+    .expositor-card img.card-img-principal {
+        margin: -20px -20px 15px -20px !important;
+        width: calc(100% + 40px) !important;
+        height: 250px !important;
+        object-fit: cover !important;
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
     }
-    /* Añadir padding solo al texto */
-    .actividad-card h3, .actividad-card p, .actividad-card a,
-    .actividad-card .desc-container, .actividad-card .descripcion-texto,
-    .expositor-card h3, .expositor-card p, .expositor-card a,
-    .expositor-card .desc-container, .expositor-card .descripcion-texto {
-        padding-left: 1.2rem !important;
-        padding-right: 1.2rem !important;
+    /* El texto hereda el padding de la tarjeta */
+    .actividad-card h3, .expositor-card h3 {
+        margin-top: 5px !important;
+        font-size: 1.25rem !important;
+        text-align: center !important;
+    }
+    .actividad-card p, .expositor-card p {
+        font-size: 0.9rem !important;
+        margin-bottom: 8px !important;
+        text-align: left !important;
+    }
+    .actividad-card .desc-container, .expositor-card .desc-container {
+        padding: 0 !important;
+        margin: 10px 0 !important;
+        text-align: left !important;
     }
     .actividad-card a, .expositor-card a {
-        margin-bottom: 1rem;
-    }
-    .actividad-card .btn-ver-mas-simple {
-        margin-left: 1.2rem !important;
+        margin-bottom: 0.5rem;
     }
     .actividades-carrusel-wrapper,
     .expositores-carrusel-wrapper {

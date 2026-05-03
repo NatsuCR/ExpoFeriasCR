@@ -97,10 +97,10 @@
     color: var(--color-descripcion-texto, #1a1a1a);
 }
 
-/* Centrado para tarjetas */
+/* Alineación izquierda para tarjetas */
 .actividad-card .descripcion-texto,
 .expositor-card .descripcion-texto {
-    text-align: center;
+    text-align: left;
 }
 
 /* Override para el Hero */

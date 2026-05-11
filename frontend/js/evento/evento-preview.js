@@ -14,11 +14,11 @@ export function cargarEventoDesdePreview(datos) {
         if (heroDesc) {
             heroDesc.innerHTML = descHtml;
             // Forzamos estilos con el color dinámico del selector
-            heroDesc.setAttribute('style', `display: block !important; visibility: visible !important; opacity: 1 !important; margin: 15px 0 !important; color: ${colorDesc} !important; font-size: 1.2rem !important; min-height: 20px !important;`);
+            heroDesc.setAttribute('style', `display: block !important; visibility: visible !important; opacity: 1 !important; margin: 15px 0 !important; color: ${colorDesc} !important; font-size: 1.2rem !important; min-height: 20px !important; text-align: center !important;`);
 
             // Aseguramos que los párrafos internos también usen ese color
             const p = heroDesc.querySelector('p');
-            if (p) p.setAttribute('style', `color: ${colorDesc} !important; display: block !important;`);
+            if (p) p.setAttribute('style', `color: ${colorDesc} !important; display: block !important; text-align: center !important;`);
         }
 
         // 2. En la SECCIÓN DE INFORMACIÓN (desc-full)

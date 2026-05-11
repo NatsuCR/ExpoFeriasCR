@@ -96,19 +96,19 @@ window.formatDescription = function (text, full = false) {
     const formattedText = cleanText.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>');
 
     if (full) {
-        return `<p class="descripcion-texto descripcion desc-full" style="text-align: left !important; white-space: pre-wrap !important;">${formattedText}</p>`;
+        return `<p class="descripcion-texto descripcion desc-full" style="text-align: center !important; white-space: pre-wrap !important;">${formattedText}</p>`;
     }
 
     if (cleanText.length <= limit) {
-        return `<p class="descripcion-texto descripcion desc-short" style="text-align: left !important; white-space: pre-wrap !important;">${formattedText}</p>`;
+        return `<p class="descripcion-texto descripcion desc-short" style="text-align: center !important; white-space: pre-wrap !important;">${formattedText}</p>`;
     }
 
     const shortText = cleanText.substring(0, limit) + '...';
     const formattedShortText = shortText.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>');
     return `
-        <div class="desc-container" style="text-align: left !important;">
-            <p class="descripcion-texto descripcion desc-short" style="text-align: left !important; white-space: pre-wrap !important;">${formattedShortText}</p>
-            <p class="descripcion-texto descripcion desc-full" style="display: none; opacity: 0; transition: opacity 0.3s ease; text-align: left !important; white-space: pre-wrap !important;">${formattedText}</p>
+        <div class="desc-container" style="text-align: center !important;">
+            <p class="descripcion-texto descripcion desc-short" style="text-align: center !important; white-space: pre-wrap !important;">${formattedShortText}</p>
+            <p class="descripcion-texto descripcion desc-full" style="display: none; opacity: 0; transition: opacity 0.3s ease; text-align: center !important; white-space: pre-wrap !important;">${formattedText}</p>
             <button class="btn-ver-mas-simple" onclick="window.toggleDesc(this)" style="display: block !important; margin: 10px auto 0 !important; text-align: center !important;">Ver más</button>
         </div>
     `;

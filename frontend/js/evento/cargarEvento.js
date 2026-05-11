@@ -337,8 +337,8 @@ export async function cargarEvento(slug) {
         if (evento.color_texto_contacto) r.style.setProperty('--contacto-texto', evento.color_texto_contacto);
         if (evento.color_enlace_contacto) r.style.setProperty('--contacto-enlace', evento.color_enlace_contacto);
 
-        if (evento.color_fondo_footer) r.style.setProperty('--footer-fondo', evento.color_fondo_footer);
-        if (evento.color_texto_footer) r.style.setProperty('--footer-texto', evento.color_texto_footer);
+        if (evento.color_fondo_footer) r.style.setProperty('--color-fondo-footer', evento.color_fondo_footer);
+        if (evento.color_texto_footer) r.style.setProperty('--color-texto-footer', evento.color_texto_footer);
 
         return evento;
 

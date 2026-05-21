@@ -13,54 +13,103 @@ function mostrarPopupAnuncio(targetUrl) {
 
     const overlay = document.createElement('div');
     overlay.id = 'ad-popup-overlay';
+
     overlay.innerHTML = `
         <div id="ad-popup-card">
             <div id="ad-popup-header">
-                <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" id="ad-popup-logo">
-                <p id="ad-popup-msg">Apoya a <strong>ExpoFeriasCR</strong> viendo este anuncio</p>
-                <div id="ad-popup-timer"><span id="ad-popup-count">3</span></div>
+                <img 
+                    src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" 
+                    alt="ExpoFeriasCR" 
+                    id="ad-popup-logo"
+                >
+
+                <p id="ad-popup-msg">
+                    Apoya a <strong>ExpoFeriasCR</strong> viendo este anuncio
+                </p>
+
+                <div id="ad-popup-timer">
+                    <span id="ad-popup-count">3</span>
+                </div>
             </div>
+
             <div id="ad-popup-ad">
-                <script>
-                    atOptions = {
-                        'key' : 'd24a04b077cc5a19d8ab72ae7e33176e',
-                        'format' : 'iframe',
-                        'height' : 90,
-                        'width' : 728,
-                        'params' : {}
-                    };
-                <\/script>
-                <script src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"><\/script>
+                <div id="adsterra-container"></div>
             </div>
-            <a href="${targetUrl}" id="ad-popup-skip" class="ad-popup-btn" style="display:none;">Ir al evento ahora &rarr;</a>
+
+            <a 
+                href="${targetUrl}" 
+                id="ad-popup-skip" 
+                class="ad-popup-btn" 
+                style="display:none;"
+            >
+                Ir al evento ahora &rarr;
+            </a>
         </div>
     `;
+
     document.body.appendChild(overlay);
 
+    // =========================
+    // CARGAR SCRIPT DE ADSTERRA
+    // =========================
+
+    window.atOptions = {
+        key: 'd24a04b077cc5a19d8ab72ae7e33176e',
+        format: 'iframe',
+        height: 90,
+        width: 728,
+        params: {}
+    };
+
+    const adScript = document.createElement('script');
+    adScript.src = 'https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js';
+    adScript.async = true;
+
+    const adContainer = document.getElementById('adsterra-container');
+
+    if (adContainer) {
+        adContainer.appendChild(adScript);
+    }
+
     // Animación de entrada
-    setTimeout(() => overlay.classList.add('active'), 10);
+    setTimeout(() => {
+        overlay.classList.add('active');
+    }, 10);
 
     let timeLeft = 3;
+
     const countEl = document.getElementById('ad-popup-count');
     const skipBtn = document.getElementById('ad-popup-skip');
 
     const timer = setInterval(() => {
         timeLeft--;
-        if (countEl) countEl.textContent = timeLeft;
+
+        if (countEl) {
+            countEl.textContent = timeLeft;
+        }
+
         if (timeLeft <= 0) {
             clearInterval(timer);
-            // Solo mostramos el botón - el usuario DEBE hacer clic para continuar
-            if (countEl) countEl.closest('#ad-popup-timer').style.display = 'none';
-            if (skipBtn) skipBtn.style.display = 'inline-block';
+
+            if (countEl) {
+                countEl.closest('#ad-popup-timer').style.display = 'none';
+            }
+
+            if (skipBtn) {
+                skipBtn.style.display = 'inline-block';
+            }
         }
     }, 1000);
 
-    // Ir al evento solo cuando el usuario hace clic en el botón
+    // Ir al evento solo cuando el usuario hace clic
     if (skipBtn) {
         skipBtn.addEventListener('click', (e) => {
             e.preventDefault();
+
             clearInterval(timer);
+
             overlay.classList.remove('active');
+
             setTimeout(() => {
                 overlay.remove();
                 window.location.href = targetUrl;
@@ -240,7 +289,7 @@ window.cargarProximos = async function (filtros = {}) {
     let tiposOrdenados = tiposPresentes.sort((a, b) => {
         let indexA = ORDEN_PRIORIDAD.indexOf(a);
         let indexB = ORDEN_PRIORIDAD.indexOf(b);
-        
+
         // Forzar que Gobierno, Religioso y Otro sean los últimos (prioridad 1000+)
         if (a === 'Gobierno / Cívico') indexA = 1000;
         if (a === 'Religioso') indexA = 1001;
@@ -252,7 +301,7 @@ window.cargarProximos = async function (filtros = {}) {
         // Cualquier otra categoría no listada (como Fiesta Regional) queda en medio (500)
         if (indexA === -1) indexA = 500;
         if (indexB === -1) indexB = 500;
-        
+
         if (indexA !== indexB) return indexA - indexB;
         return a.localeCompare(b);
     });

@@ -475,8 +475,9 @@ function renderActividadesPreview(actividades) {
         }
         const url = act.enlace_venta || act.enlace;
         if (isOnline && url) {
+            const interstitialUrl = `/interstitial.html?url=${encodeURIComponent(url)}`;
             ticketHtml += `
-                <a href="${url}" target="_blank" class="btn-ver" style="display: inline-block; margin-top: 10px; background: #C8102E; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                <a href="${interstitialUrl}" target="_blank" class="btn-ver" style="display: inline-block; margin-top: 10px; background: #C8102E; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
                     <i class="fas fa-shopping-cart"></i> Comprar entrada
                 </a>`;
         }

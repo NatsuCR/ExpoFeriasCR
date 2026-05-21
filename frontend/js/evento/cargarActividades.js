@@ -85,7 +85,8 @@ export async function cargarActividades(slug) {
 
             let linkHtml = '';
             if (requiereOnline && enlaceVenta) {
-                linkHtml = `<a href="${enlaceVenta}" target="_blank" class="btn-ver" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; background: var(--evento-primario, #C8102E) !important; color: white !important; padding: 10px 20px !important; border-radius: 30px !important; text-decoration: none !important; font-weight: bold !important; width: fit-content !important; margin: 15px auto !important; box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important; transition: all 0.3s ease !important;"><i class="fas fa-shopping-cart"></i> Comprar entrada</a>`;
+                const interstitialUrl = `/interstitial.html?url=${encodeURIComponent(enlaceVenta)}`;
+                linkHtml = `<a href="${interstitialUrl}" target="_blank" class="btn-ver" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; background: var(--evento-primario, #C8102E) !important; color: white !important; padding: 10px 20px !important; border-radius: 30px !important; text-decoration: none !important; font-weight: bold !important; width: fit-content !important; margin: 15px auto !important; box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important; transition: all 0.3s ease !important;"><i class="fas fa-shopping-cart"></i> Comprar entrada</a>`;
             } else if (requiereOnline && !enlaceVenta) {
                 linkHtml = `<p style="text-align: center !important; width: 100% !important; margin-top: 15px !important; margin-left: auto !important; margin-right: auto !important;"><i class="fas fa-ticket-alt"></i> Entrada online (enlace no disponible)</p>`;
             }

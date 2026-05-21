@@ -5,6 +5,70 @@
 window.provinciaActual = '';
 window.busquedaActual = '';
 
+// ──── POPUP DE ANUNCIO (3 seg) ANTES DE VER EVENTO ────
+function mostrarPopupAnuncio(targetUrl) {
+    // Evitar duplicados
+    const existing = document.getElementById('ad-popup-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'ad-popup-overlay';
+    overlay.innerHTML = `
+        <div id="ad-popup-card">
+            <div id="ad-popup-header">
+                <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" id="ad-popup-logo">
+                <p id="ad-popup-msg">Apoya a <strong>ExpoFeriasCR</strong> viendo este anuncio</p>
+                <div id="ad-popup-timer"><span id="ad-popup-count">3</span></div>
+            </div>
+            <div id="ad-popup-ad">
+                <script>
+                    atOptions = {
+                        'key' : 'd24a04b077cc5a19d8ab72ae7e33176e',
+                        'format' : 'iframe',
+                        'height' : 90,
+                        'width' : 728,
+                        'params' : {}
+                    };
+                <\/script>
+                <script src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"><\/script>
+            </div>
+            <a href="${targetUrl}" id="ad-popup-skip" class="ad-popup-btn" style="display:none;">Ir al evento ahora &rarr;</a>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    // Animación de entrada
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    let timeLeft = 3;
+    const countEl = document.getElementById('ad-popup-count');
+    const skipBtn = document.getElementById('ad-popup-skip');
+
+    const timer = setInterval(() => {
+        timeLeft--;
+        if (countEl) countEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            // Solo mostramos el botón - el usuario DEBE hacer clic para continuar
+            if (countEl) countEl.closest('#ad-popup-timer').style.display = 'none';
+            if (skipBtn) skipBtn.style.display = 'inline-block';
+        }
+    }, 1000);
+
+    // Ir al evento solo cuando el usuario hace clic en el botón
+    if (skipBtn) {
+        skipBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            clearInterval(timer);
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                overlay.remove();
+                window.location.href = targetUrl;
+            }, 300);
+        });
+    }
+}
+
 async function fetchData(url) {
     try {
         const res = await fetch(url);
@@ -20,12 +84,11 @@ function createEventoCard(evento, isLive = false) {
     const card = document.createElement('div');
     card.className = 'evento-card carousel-slide';
 
-    // Hacer que toda la tarjeta sea clickable
+    // Hacer que toda la tarjeta sea clickable (con popup de anuncio)
     card.onclick = (e) => {
-        // Si se hace click en el botón de ver detalles, dejar que el <a> haga su trabajo
-        // Si se hace click en cualquier otra parte de la card, redirigir
         if (e.target.tagName !== 'A' && !e.target.closest('a')) {
-            window.location.href = `evento.html?slug=${evento.slug}`;
+            e.preventDefault();
+            mostrarPopupAnuncio(`evento.html?slug=${evento.slug}`);
         }
     };
 
@@ -56,7 +119,7 @@ function createEventoCard(evento, isLive = false) {
         })()}</p>
             <p class="card-location"><i class="fas fa-map-marker-alt"></i> ${ubicacionCorta}</p>
             ${evento.ubicacion && evento.ubicacion !== ubicacionCorta ? `<p class="card-address"><i class="fas fa-compass"></i> ${evento.ubicacion}</p>` : ''}
-            <a href="evento.html?slug=${evento.slug}" class="btn-ver">Ver detalles</a>
+            <a href="evento.html?slug=${evento.slug}" class="btn-ver" onclick="event.preventDefault(); mostrarPopupAnuncio('evento.html?slug=${evento.slug}');">Ver detalles</a>
         </div>
     `;
     return card;

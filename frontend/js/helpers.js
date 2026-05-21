@@ -96,7 +96,7 @@ window.formatDescription = function (text, full = false) {
     const formattedText = cleanText.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>');
 
     if (full) {
-        return `<p class="descripcion-texto descripcion desc-full" style="text-align: center !important; white-space: pre-wrap !important;">${formattedText}</p>`;
+        return `<p class="descripcion-texto descripcion desc-full" style="text-align: left !important; white-space: pre-wrap !important;">${formattedText}</p>`;
     }
 
     if (cleanText.length <= limit) {

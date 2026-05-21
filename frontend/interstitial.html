@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirigiendo... | ExpoFeriasCR</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 90%;
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #001A52;
+            margin-bottom: 10px;
+        }
+        .timer {
+            font-size: 2rem;
+            color: #C8102E;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .ad-container {
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            min-height: 90px;
+        }
+        .btn-skip {
+            display: none;
+            background: #0033A0;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+        .btn-skip:hover {
+            background: #002277;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo">
+        <h2>Apoya a ExpoFeriasCR</h2>
+        <p>Serás redirigido a tu destino en unos segundos...</p>
+        
+        <div class="timer" id="countdown">3</div>
+
+        <!-- Anuncio Horizontal -->
+        <div class="ad-container">
+            <script>
+                atOptions = {
+                    'key' : 'd24a04b077cc5a19d8ab72ae7e33176e',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></script>
+        </div>
+
+        <a href="#" id="skip-btn" class="btn-skip">Ir al enlace ahora</a>
+    </div>
+
+    <!-- Scripts de Ads (Popunders y Social Bar) -->
+    <script src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></script>
+    <script src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetUrl = urlParams.get('url');
+            const countdownEl = document.getElementById('countdown');
+            const skipBtn = document.getElementById('skip-btn');
+            
+            let timeLeft = 3;
+
+            if (!targetUrl) {
+                window.location.href = '/';
+                return;
+            }
+
+            skipBtn.href = targetUrl;
+
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdownEl.innerText = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    countdownEl.closest('#countdown').style.display = 'none';
+                    // Solo mostrar el botón - el usuario DEBE hacer clic para continuar
+                    skipBtn.style.display = 'inline-block';
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

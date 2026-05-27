@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,29 +20,34 @@
             min-height: 100vh;
             text-align: center;
         }
+
         .container {
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             max-width: 800px;
             width: 90%;
             position: relative;
         }
+
         .logo {
             width: 150px;
             margin-bottom: 20px;
         }
+
         h2 {
             color: #001A52;
             margin-bottom: 10px;
         }
+
         .timer {
             font-size: 2rem;
             color: #C8102E;
             font-weight: bold;
             margin: 20px 0;
         }
+
         .ad-container {
             margin: 30px 0;
             display: flex;
@@ -50,6 +56,7 @@
             overflow: hidden;
             min-height: 90px;
         }
+
         .btn-skip {
             display: none;
             background: #0033A0;
@@ -63,29 +70,32 @@
             margin-top: 15px;
             transition: background 0.3s ease;
         }
+
         .btn-skip:hover {
             background: #002277;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <button id="ad-popup-close" style="display:none; position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; font-weight:bold; color:#555;">&times;</button>
+        <button id="ad-popup-close"
+            style="display:none; position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; font-weight:bold; color:#555;">&times;</button>
         <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo">
         <h2>Apoya a ExpoFeriasCR</h2>
         <p>Serás redirigido a tu destino en unos segundos...</p>
-        
+
         <div class="timer" id="countdown">3</div>
 
         <!-- Anuncio Horizontal -->
         <div class="ad-container">
             <script>
                 atOptions = {
-                    'key' : 'd24a04b077cc5a19d8ab72ae7e33176e',
-                    'format' : 'iframe',
-                    'height' : 90,
-                    'width' : 728,
-                    'params' : {}
+                    'key': 'd24a04b077cc5a19d8ab72ae7e33176e',
+                    'format': 'iframe',
+                    'height': 90,
+                    'width': 728,
+                    'params': {}
                 };
             </script>
             <script src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></script>
@@ -104,7 +114,7 @@
             const targetUrl = urlParams.get('url');
             const countdownEl = document.getElementById('countdown');
             const skipBtn = document.getElementById('skip-btn');
-            
+
             let timeLeft = 3;
 
             if (!targetUrl) {
@@ -114,13 +124,13 @@
 
             skipBtn.href = targetUrl;
             skipBtn.target = '_blank';
-            
+
             const closeBtn = document.getElementById('ad-popup-close');
 
             const timer = setInterval(() => {
                 timeLeft--;
                 countdownEl.innerText = timeLeft;
-                
+
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     countdownEl.closest('#countdown').style.display = 'none';
@@ -141,4 +151,5 @@
         });
     </script>
 </body>
+
 </html>

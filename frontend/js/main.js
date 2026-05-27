@@ -15,7 +15,8 @@ function mostrarPopupAnuncio(targetUrl) {
     overlay.id = 'ad-popup-overlay';
 
     overlay.innerHTML = `
-        <div id="ad-popup-card">
+        <div id="ad-popup-card" style="position: relative;">
+            <button id="ad-popup-close" style="display:none; position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; font-weight:bold; color:#555;">&times;</button>
             <div id="ad-popup-header">
                 <img 
                     src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" 
@@ -38,6 +39,7 @@ function mostrarPopupAnuncio(targetUrl) {
 
             <a 
                 href="${targetUrl}" 
+                target="_blank"
                 id="ad-popup-skip" 
                 class="ad-popup-btn" 
                 style="display:none;"
@@ -50,7 +52,7 @@ function mostrarPopupAnuncio(targetUrl) {
     document.body.appendChild(overlay);
 
     // =========================
-    // CARGAR SCRIPT DE ADSTERRA
+    // CARGAR SCRIPT DE ADSTERRA Y SOCIAL BAR
     // =========================
 
     window.atOptions = {
@@ -71,6 +73,14 @@ function mostrarPopupAnuncio(targetUrl) {
         adContainer.appendChild(adScript);
     }
 
+    const socialScript1 = document.createElement('script');
+    socialScript1.src = 'https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js';
+    document.body.appendChild(socialScript1);
+
+    const socialScript2 = document.createElement('script');
+    socialScript2.src = 'https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js';
+    document.body.appendChild(socialScript2);
+
     // Animación de entrada
     setTimeout(() => {
         overlay.classList.add('active');
@@ -80,6 +90,7 @@ function mostrarPopupAnuncio(targetUrl) {
 
     const countEl = document.getElementById('ad-popup-count');
     const skipBtn = document.getElementById('ad-popup-skip');
+    const closeBtn = document.getElementById('ad-popup-close');
 
     const timer = setInterval(() => {
         timeLeft--;
@@ -101,18 +112,22 @@ function mostrarPopupAnuncio(targetUrl) {
         }
     }, 1000);
 
-    // Ir al evento solo cuando el usuario hace clic
+    // Ir al evento abre en nueva pestaña y muestra la X
     if (skipBtn) {
         skipBtn.addEventListener('click', (e) => {
-            e.preventDefault();
+            // No prevenimos el default porque queremos que el target="_blank" abra la nueva ventana.
+            if (closeBtn) {
+                closeBtn.style.display = 'block';
+            }
+        });
+    }
 
-            clearInterval(timer);
-
+    // Cerrar el popup
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
             overlay.classList.remove('active');
-
             setTimeout(() => {
                 overlay.remove();
-                window.location.href = targetUrl;
             }, 300);
         });
     }
@@ -318,6 +333,9 @@ window.cargarProximos = async function (filtros = {}) {
         const controlsId = `controls-${sectionId}`;
 
         const sectionHtml = `
+            <div style="text-align: center; margin: 20px 0;">
+                <img border="0" alt="" src="https://cdn.storageimagedisplay.com/cti/6f/8f/ef/6f8fefa6447554571085566ee4c3443e/1779116078.jpg" width="728" height="90" style="max-width: 100%; height: auto;">
+            </div>
             <section class="section-carousel reveal active" id="${sectionId}">
                 <div class="container">
                     <div class="section-header">

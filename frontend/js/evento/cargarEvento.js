@@ -1,7 +1,98 @@
 // frontend/js/evento/cargarEvento.js
 import { abrirLightbox } from './lightbox.js';
 
-// Las funciones window.toggleDesc y window.formatDescription se definen ahora centralmente en evento-main.js
+// ──── POPUP DE ANUNCIO (3 seg) ANTES DE IR A COMPRAR ENTRADAS ────
+window.mostrarPopupCompra = function(targetUrl) {
+    const existing = document.getElementById('ad-popup-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'ad-popup-overlay';
+
+    overlay.innerHTML = `
+        <div id="ad-popup-card" style="position: relative;">
+            <button id="ad-popup-close" style="display:none; position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; font-weight:bold; color:#555;">&times;</button>
+            <div id="ad-popup-header">
+                <img 
+                    src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" 
+                    alt="ExpoFeriasCR" 
+                    id="ad-popup-logo"
+                >
+                <p id="ad-popup-msg">
+                    Apoya a <strong>ExpoFeriasCR</strong> viendo este anuncio
+                </p>
+                <div id="ad-popup-timer">
+                    <span id="ad-popup-count">3</span>
+                </div>
+            </div>
+            <div id="ad-popup-ad">
+                <div id="adsterra-container"></div>
+            </div>
+            <a 
+                href="${targetUrl}" 
+                target="_blank"
+                id="ad-popup-skip" 
+                class="ad-popup-btn" 
+                style="display:none;"
+            >
+                Ir a comprar entradas &rarr;
+            </a>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    window.atOptions = {
+        key: 'd24a04b077cc5a19d8ab72ae7e33176e',
+        format: 'iframe',
+        height: 90,
+        width: 728,
+        params: {}
+    };
+    const adScript = document.createElement('script');
+    adScript.src = 'https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js';
+    adScript.async = true;
+    const adContainer = document.getElementById('adsterra-container');
+    if (adContainer) adContainer.appendChild(adScript);
+
+    const socialScript1 = document.createElement('script');
+    socialScript1.src = 'https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js';
+    document.body.appendChild(socialScript1);
+
+    const socialScript2 = document.createElement('script');
+    socialScript2.src = 'https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js';
+    document.body.appendChild(socialScript2);
+
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    let timeLeft = 3;
+    const countEl = document.getElementById('ad-popup-count');
+    const skipBtn = document.getElementById('ad-popup-skip');
+    const closeBtn = document.getElementById('ad-popup-close');
+
+    const timer = setInterval(() => {
+        timeLeft--;
+        if (countEl) countEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            if (countEl) countEl.closest('#ad-popup-timer').style.display = 'none';
+            if (skipBtn) skipBtn.style.display = 'inline-block';
+        }
+    }, 1000);
+
+    if (skipBtn) {
+        skipBtn.addEventListener('click', (e) => {
+            if (closeBtn) closeBtn.style.display = 'block';
+        });
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            overlay.classList.remove('active');
+            setTimeout(() => overlay.remove(), 300);
+        });
+    }
+};
 
 export async function cargarEvento(slug) {
     try {
@@ -212,11 +303,11 @@ export async function cargarEvento(slug) {
             switch (tipo_venta) {
                 case 'online':
                     htmlContent = `Entradas solo en línea`;
-                    if (ventaUrl) htmlContent += `<br><a href="${ventaUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar aquí</a>`;
+                    if (ventaUrl) htmlContent += `<br><a href="#" onclick="event.preventDefault(); window.mostrarPopupCompra('${ventaUrl}');" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar aquí</a>`;
                     break;
                 case 'ambos':
                     htmlContent = `Entradas en taquilla y en línea`;
-                    if (ventaUrl) htmlContent += `<br><a href="${ventaUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar en línea</a>`;
+                    if (ventaUrl) htmlContent += `<br><a href="#" onclick="event.preventDefault(); window.mostrarPopupCompra('${ventaUrl}');" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar en línea</a>`;
                     break;
                 case 'gratis':
                     htmlContent = '<strong>Entrada Gratuita</strong>';

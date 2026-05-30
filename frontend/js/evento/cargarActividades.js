@@ -79,10 +79,10 @@ export async function cargarActividades(slug) {
             const lugar       = a.lugar || 'Campo ferial';
             const descripcion = a.descripcion || '';
 
-            const requiereOnline = a.requiereEntradaOnline === 1 || a.requiereEntradaOnline === true || a.requiere_entrada_online === 1 || a.requiere_entrada_online === true;
+            const requiereOnline = a.requiereEntradaOnline == 1 || a.requiereEntradaOnline === true || a.requiereEntradaOnline === 'true' || a.requiere_entrada_online == 1 || a.requiere_entrada_online === true || a.requiere_entrada_online === 'true';
             const enlaceVenta    = a.enlaceVenta || a.enlace_venta;
-            const esGratis       = a.esGratis === 1 || a.esGratis === true || a.es_gratis === 1 || a.es_gratis === true;
-            const enVivo         = a.enVivo === 1 || a.enVivo === true || a.en_vivo === 1 || a.en_vivo === true;
+            const esGratis       = a.esGratis == 1 || a.esGratis === true || a.esGratis === 'true' || a.es_gratis == 1 || a.es_gratis === true || a.es_gratis === 'true';
+            const enVivo         = a.enVivo == 1 || a.enVivo === true || a.enVivo === 'true' || a.en_vivo == 1 || a.en_vivo === true || a.en_vivo === 'true';
 
             let linkHtml = '';
             let gratisHtml = '';

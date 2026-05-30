@@ -470,10 +470,10 @@ function renderActividadesPreview(actividades) {
         }
 
         let ticketHtml = '';
-        const isGratis = (act.es_gratis === 1 || act.esGratis === true || act.esGratis === 1);
-        const isOnline = (act.requiere_entrada_online || act.reqOnline);
+        const isGratis = act.es_gratis == 1 || act.es_gratis === true || act.es_gratis === 'true' || act.esGratis == 1 || act.esGratis === true || act.esGratis === 'true';
+        const isOnline = act.requiere_entrada_online == 1 || act.requiere_entrada_online === true || act.requiere_entrada_online === 'true' || act.reqOnline == 1 || act.reqOnline === true || act.reqOnline === 'true';
         const url = act.enlace_venta || act.enlace;
-        const isEnVivo = act.en_vivo || act.enVivo;
+        const isEnVivo = act.en_vivo == 1 || act.en_vivo === true || act.en_vivo === 'true' || act.enVivo == 1 || act.enVivo === true || act.enVivo === 'true';
 
         if (isEnVivo) {
             if (url) {

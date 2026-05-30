@@ -13,7 +13,7 @@ class SEOService {
     if (!evento) return '';
 
     const baseUrl = 'https://expoferiascr.site';
-    let imagenUrl = evento.imagenPortada || evento.imagen_portada || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
+    let imagenUrl = evento.imagenPortada || evento.imagen_portada || evento.imagenFallback || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
     if (imagenUrl.startsWith('/')) {
       imagenUrl = `${baseUrl}${imagenUrl}`;
     }
@@ -109,7 +109,7 @@ class SEOService {
       ? evento.descripcion.substring(0, 152).trim() + '...'
       : evento.descripcion;
 
-    let imagenUrl = evento.imagenPortada || evento.imagen_portada || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
+    let imagenUrl = evento.imagenPortada || evento.imagen_portada || evento.imagenFallback || '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
     // Asegurar URL absoluta para redes sociales
     if (imagenUrl.startsWith('/')) {
       imagenUrl = `https://expoferiascr.site${imagenUrl}`;

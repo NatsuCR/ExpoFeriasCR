@@ -73,7 +73,41 @@ class EventoService {
     `;
     const [rows] = await pool.query(query, [slug]);
     if (rows.length === 0) return null;
-    return Evento.fromDatabase(rows[0]);
+    
+    const eventoData = rows[0];
+
+    // Si no tiene imagen_portada, busquemos una de reserva para Facebook/SEO
+    if (!eventoData.imagen_portada) {
+      const [galeria] = await pool.query('SELECT imagen_url FROM evento_galeria WHERE evento_id = ? AND imagen_url IS NOT NULL AND imagen_url != "" LIMIT 1', [eventoData.id]);
+      if (galeria.length > 0) {
+        eventoData.imagen_fallback = galeria[0].imagen_url;
+      } else {
+        const [actividades] = await pool.query('SELECT imagen FROM actividades WHERE evento_id = ? AND imagen IS NOT NULL AND imagen != ""', [eventoData.id]);
+        for (let act of actividades) {
+          try {
+            const imgs = JSON.parse(act.imagen);
+            if (Array.isArray(imgs) && imgs.length > 0) {
+              eventoData.imagen_fallback = imgs[0];
+              break;
+            } else if (typeof imgs === 'string' && imgs) {
+              eventoData.imagen_fallback = imgs;
+              break;
+            }
+          } catch(e) {
+            if (act.imagen) {
+              eventoData.imagen_fallback = act.imagen;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    const evento = Evento.fromDatabase(eventoData);
+    if (eventoData.imagen_fallback) {
+      evento.imagenFallback = eventoData.imagen_fallback;
+    }
+    return evento;
   }
 
   /**

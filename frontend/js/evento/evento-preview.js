@@ -135,6 +135,18 @@ export function cargarEventoDesdePreview(datos) {
         const entradasCard = entradasTexto.closest('.info-card');
         const tipoVenta = datos.tipo_venta || 'taquilla';
         const urlVentaOnline = datos.url_venta_online || '';
+        let imgUrlParam = '';
+        try {
+            if (datos.imagen_portada && datos.imagen_portada.startsWith('[')) {
+                const parsed = JSON.parse(datos.imagen_portada);
+                if (parsed.length > 0) imgUrlParam = parsed[0];
+            } else {
+                imgUrlParam = datos.imagen_portada || datos.horario_imagen || '';
+            }
+        } catch (e) {
+            imgUrlParam = datos.imagen_portada || '';
+        }
+        const interstitialUrl = urlVentaOnline ? `/interstitial.html?url=${encodeURIComponent(urlVentaOnline)}&img=${encodeURIComponent(imgUrlParam)}` : '#';
 
         if (tipoVenta === 'gratis') {
             entradasTexto.innerHTML = '🎟️ <strong>Entrada Gratuita</strong>';
@@ -146,7 +158,7 @@ export function cargarEventoDesdePreview(datos) {
             }
         } else if (tipoVenta === 'en vivo online') {
             let html = '🔴 <strong>Evento en vivo online</strong>';
-            if (urlVentaOnline) html += `<br><a href="${urlVentaOnline}" target="_blank">Ver en vivo aquí</a>`;
+            if (urlVentaOnline) html += `<br><a href="${interstitialUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Ver en vivo aquí</a>`;
             entradasTexto.innerHTML = html;
             if (entradasCard) {
                 entradasCard.style.display = 'block';
@@ -157,8 +169,8 @@ export function cargarEventoDesdePreview(datos) {
         } else {
             let html = '';
             switch (tipoVenta) {
-                case 'online': html = `Entradas en línea: <a href="${urlVentaOnline}" target="_blank">Comprar aquí</a>`; break;
-                case 'ambos': html = `Entradas en taquilla y en línea: <a href="${urlVentaOnline}" target="_blank">Comprar en línea</a>`; break;
+                case 'online': html = `Entradas en línea: <br><a href="${interstitialUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar aquí</a>`; break;
+                case 'ambos': html = `Entradas en taquilla y en línea: <br><a href="${interstitialUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar en línea</a>`; break;
                 default: html = 'Entradas solo en taquilla';
             }
             entradasTexto.innerHTML = html;

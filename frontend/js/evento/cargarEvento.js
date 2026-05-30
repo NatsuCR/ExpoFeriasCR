@@ -296,22 +296,34 @@ export async function cargarEvento(slug) {
 
             let htmlContent = '';
             const ventaUrl = (url_venta_online || '').trim();
+            let imgUrlParam = '';
+            try {
+                if (evento.imagen_portada && evento.imagen_portada.startsWith('[')) {
+                    const parsed = JSON.parse(evento.imagen_portada);
+                    if (parsed.length > 0) imgUrlParam = parsed[0];
+                } else {
+                    imgUrlParam = evento.imagen_portada || evento.horario_imagen || '';
+                }
+            } catch (e) {
+                imgUrlParam = evento.imagen_portada || '';
+            }
+            const interstitialUrl = ventaUrl ? `/interstitial.html?url=${encodeURIComponent(ventaUrl)}&img=${encodeURIComponent(imgUrlParam)}` : '#';
 
             switch (tipo_venta) {
                 case 'online':
                     htmlContent = `Entradas solo en línea`;
-                    if (ventaUrl) htmlContent += `<br><a href="#" onclick="event.preventDefault(); window.mostrarPopupCompra('${ventaUrl}');" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar aquí</a>`;
+                    if (ventaUrl) htmlContent += `<br><a href="${interstitialUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar aquí</a>`;
                     break;
                 case 'ambos':
                     htmlContent = `Entradas en taquilla y en línea`;
-                    if (ventaUrl) htmlContent += `<br><a href="#" onclick="event.preventDefault(); window.mostrarPopupCompra('${ventaUrl}');" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar en línea</a>`;
+                    if (ventaUrl) htmlContent += `<br><a href="${interstitialUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Comprar en línea</a>`;
                     break;
                 case 'gratis':
                     htmlContent = '<strong>Entrada Gratuita</strong>';
                     break;
                 case 'en vivo online':
                     htmlContent = '<strong>🔴 Evento en vivo online</strong>';
-                    if (ventaUrl) htmlContent += `<br><a href="#" onclick="event.preventDefault(); window.mostrarPopupCompra('${ventaUrl}');" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Ver en vivo aquí</a>`;
+                    if (ventaUrl) htmlContent += `<br><a href="${interstitialUrl}" target="_blank" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Ver en vivo aquí</a>`;
                     break;
                 default:
                     htmlContent = 'Entradas solo en taquilla del campo ferial';

@@ -128,8 +128,8 @@ function poblarTablas(data, context) {
 
         crearFilaActividad(
           a.titulo || '', a.tipo || '', a.fecha ? a.fecha.slice(0, 10) : '',
-          a.hora || '', a.lugar || '', a.es_gratis == 1, a.descripcion || '',
-          imagenes, a.requiere_entrada_online == 1, a.enlace_venta || '', a.solo_online == 1, a.video_url || ''
+          a.hora || '', a.lugar || '', a.es_gratis == 1 || a.es_gratis === true || a.es_gratis === 'true', a.descripcion || '',
+          imagenes, a.requiere_entrada_online == 1 || a.requiere_entrada_online === true || a.requiere_entrada_online === 'true', a.enlace_venta || '', a.solo_online == 1 || a.solo_online === true || a.solo_online === 'true', a.video_url || '', a.en_vivo == 1 || a.en_vivo === true || a.en_vivo === 'true' || a.enVivo == 1 || a.enVivo === true || a.enVivo === 'true'
         );
       });
     }

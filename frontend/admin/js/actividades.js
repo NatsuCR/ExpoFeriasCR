@@ -52,8 +52,8 @@ function abrirModalActividad(actividad = null) {
     document.getElementById('actividadHora').value = actividad ? (actividad.hora ? actividad.hora.slice(0,5) : '') : '';
     document.getElementById('actividadLugar').value = actividad ? actividad.lugar || '' : '';
     document.getElementById('actividadDescripcion').value = actividad ? actividad.descripcion || '' : '';
-    document.getElementById('actividadRequiereOnline').checked = actividad ? actividad.requiere_entrada_online : false;
-    document.getElementById('actividadEsGratis').checked = actividad ? actividad.es_gratis : false;
+    document.getElementById('actividadRequiereOnline').checked = actividad ? (actividad.requiere_entrada_online == 1 || actividad.requiere_entrada_online === true || actividad.requiere_entrada_online === 'true') : false;
+    document.getElementById('actividadEsGratis').checked = actividad ? (actividad.es_gratis == 1 || actividad.es_gratis === true || actividad.es_gratis === 'true') : false;
     document.getElementById('actividadEnlaceVenta').value = actividad ? actividad.enlace_venta || '' : '';
     document.getElementById('actividadEnlaceGroup').style.display =
         document.getElementById('actividadRequiereOnline').checked ? 'block' : 'none';

@@ -32,6 +32,7 @@ export function agregarActividadDelModal(notificar) {
   const esGratis    = document.getElementById('actividad-es-gratis').checked;
   const reqOnline   = document.getElementById('actividad-requiere-online').checked;
   const soloOnline  = document.getElementById('actividad-solo-online').checked;
+  const enVivo      = document.getElementById('actividad-en-vivo')?.checked || false;
   const enlace      = document.getElementById('actividad-enlace').value.trim();
   const video       = document.getElementById('actividad-video')?.value.trim() || '';
 
@@ -50,6 +51,8 @@ export function agregarActividadDelModal(notificar) {
     filaEnEdicion.querySelector('.act-imagenes').value = JSON.stringify(imagenes);
     filaEnEdicion.querySelector('.act-requiere-online').setAttribute('data-value', reqOnline);
     filaEnEdicion.querySelector('.act-solo-online').setAttribute('data-value', soloOnline);
+    const spanEnVivo = filaEnEdicion.querySelector('.act-en-vivo');
+    if (spanEnVivo) spanEnVivo.setAttribute('data-value', enVivo);
     filaEnEdicion.querySelector('.act-enlace').value = enlace;
     const vidInpt = filaEnEdicion.querySelector('.act-video');
     if (vidInpt) vidInpt.value = video;
@@ -57,7 +60,7 @@ export function agregarActividadDelModal(notificar) {
     // Actualizar badges visuales en la tabla
     const numImg = imagenes.length;
     const imgBadge = numImg > 0 ? `<span class="badge" style="background:#27ae60; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">${numImg} img</span>` : '<span style="color:#ccc;">-</span>';
-    const isOnline = reqOnline || soloOnline;
+    const isOnline = reqOnline || soloOnline || enVivo;
     const onlineBadge = isOnline ? `<span class="badge" style="background:#3498db; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
     const videoBadge = video ? `<span class="badge" style="background:#f39c12; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
     
@@ -68,7 +71,7 @@ export function agregarActividadDelModal(notificar) {
         cells[7].innerHTML = onlineBadge;
     }
   } else {
-    crearFilaActividad(titulo, tipo, fecha, hora, lugar, esGratis, descripcion, imagenes, reqOnline, enlace, soloOnline, video);
+    crearFilaActividad(titulo, tipo, fecha, hora, lugar, esGratis, descripcion, imagenes, reqOnline, enlace, soloOnline, video, enVivo);
   }
   
   programarActualizacion();
@@ -76,10 +79,10 @@ export function agregarActividadDelModal(notificar) {
   cerrarModalActividad();
 }
 
-export function crearFilaActividad(titulo, tipo, fecha, hora, lugar, esGratis, descripcion, imagenes, reqOnline, enlace, soloOnline, video = '') {
+export function crearFilaActividad(titulo, tipo, fecha, hora, lugar, esGratis, descripcion, imagenes, reqOnline, enlace, soloOnline, video = '', enVivo = false) {
     const numImg = (imagenes || []).length;
     const imgBadge = numImg > 0 ? `<span class="badge" style="background:#27ae60; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">${numImg} img</span>` : '<span style="color:#ccc;">-</span>';
-    const isOnline = reqOnline || soloOnline;
+    const isOnline = reqOnline || soloOnline || enVivo;
     const onlineBadge = isOnline ? `<span class="badge" style="background:#3498db; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
     const videoBadge = video ? `<span class="badge" style="background:#f39c12; color:white; padding:2px 6px; border-radius:4px; font-size:11px;">SÍ</span>` : '<span style="color:#ccc;">-</span>';
 
@@ -106,6 +109,7 @@ export function crearFilaActividad(titulo, tipo, fecha, hora, lugar, esGratis, d
       <td style="display:none;"><input type="text" value='${JSON.stringify(imagenes)}' class="act-imagenes"></td>
       <td style="display:none;"><span class="act-requiere-online" data-value="${reqOnline}"></span></td>
       <td style="display:none;"><span class="act-solo-online" data-value="${soloOnline}"></span></td>
+      <td style="display:none;"><span class="act-en-vivo" data-value="${enVivo}"></span></td>
       <td style="display:none;"><input type="text" value="${enlace}" class="act-enlace"></td>
       <td style="display:none;"><input type="text" value="${video}" class="act-video"></td>
     `;
@@ -121,11 +125,13 @@ export function crearFilaActividad(titulo, tipo, fecha, hora, lugar, esGratis, d
         
         const reqOnlineVal = row.querySelector('.act-requiere-online').getAttribute('data-value') === 'true';
         const soloOnlineVal = row.querySelector('.act-solo-online')?.getAttribute('data-value') === 'true';
+        const enVivoVal = row.querySelector('.act-en-vivo')?.getAttribute('data-value') === 'true';
         document.getElementById('actividad-requiere-online').checked = reqOnlineVal;
         document.getElementById('actividad-solo-online').checked = soloOnlineVal;
+        if(document.getElementById('actividad-en-vivo')) document.getElementById('actividad-en-vivo').checked = enVivoVal;
         document.getElementById('actividad-es-gratis').checked = row.querySelector('.act-gratis').getAttribute('data-value') === 'true';
         const enlaceGrp = document.getElementById('actividad-enlace-group');
-        if (enlaceGrp) enlaceGrp.style.display = (reqOnlineVal || soloOnlineVal) ? 'block' : 'none';
+        if (enlaceGrp) enlaceGrp.style.display = (reqOnlineVal || soloOnlineVal || enVivoVal) ? 'block' : 'none';
         document.getElementById('actividad-enlace').value = row.querySelector('.act-enlace').value;
         const vidInpt = document.getElementById('actividad-video');
         if (vidInpt) vidInpt.value = row.querySelector('.act-video')?.value || '';
@@ -188,25 +194,30 @@ export function setupActividadUploads() {
 
   const checkOnline = document.getElementById('actividad-requiere-online');
   const checkSoloOnline = document.getElementById('actividad-solo-online');
+  const checkEnVivo = document.getElementById('actividad-en-vivo');
   const enlaceGrp = document.getElementById('actividad-enlace-group');
 
-  if (checkOnline) {
-    checkOnline.onchange = (e) => {
-      if (enlaceGrp) {
-          enlaceGrp.style.display = (e.target.checked || (checkSoloOnline && checkSoloOnline.checked)) ? 'block' : 'none';
-      }
-    };
-  }
+  const updateEnlaceVisibility = () => {
+      const isReq = checkOnline?.checked;
+      const isSolo = checkSoloOnline?.checked;
+      const isVivo = checkEnVivo?.checked;
+      if (enlaceGrp) enlaceGrp.style.display = (isReq || isSolo || isVivo) ? 'block' : 'none';
+  };
+
+  if (checkOnline) checkOnline.addEventListener('change', updateEnlaceVisibility);
   if (checkSoloOnline) {
-    checkSoloOnline.onchange = (e) => {
-      if (e.target.checked) {
-          if (checkOnline) checkOnline.checked = true;
-          if (enlaceGrp) enlaceGrp.style.display = 'block';
-      } else {
-          // Si quitamos solo online, verificamos si aún requiere online
-          if (enlaceGrp) enlaceGrp.style.display = (checkOnline && checkOnline.checked) ? 'block' : 'none';
-      }
-    };
+    checkSoloOnline.addEventListener('change', (e) => {
+        if (e.target.checked && checkOnline) checkOnline.checked = true;
+        updateEnlaceVisibility();
+    });
+  }
+  if (checkEnVivo) {
+    checkEnVivo.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            if (checkSoloOnline) checkSoloOnline.checked = false;
+        }
+        updateEnlaceVisibility();
+    });
   }
 
   const btnVideo = document.getElementById('btn-subir-actividad-video');

@@ -205,7 +205,7 @@ export async function handleSubmit(context) {
     activo: document.getElementById('activo')?.checked ? 1 : 0,
     tiene_expositores: parseInt(document.getElementById('tiene_expositores')?.value) || 0,
     precios: recolectarTabla('#precios-rows tr', { fecha: '.precio-fecha', precio_normal: '.precio-monto', promocion: '.precio-promocion', descripcion_promocion: '.precio-descripcion' }).filter(p => p.fecha),
-    actividades: recolectarTabla('#actividades-rows tr', { titulo: '.act-titulo', tipo: '.act-tipo', fecha: '.act-fecha', hora: '.act-hora', lugar: '.act-lugar', descripcion: '.act-descripcion', imagen: '.act-imagenes', video_url: '.act-video', es_gratis: '.act-gratis', requiere_entrada_online: '.act-requiere-online', enlace_venta: '.act-enlace' }).filter(a => a.titulo),
+    actividades: recolectarTabla('#actividades-rows tr', { titulo: '.act-titulo', tipo: '.act-tipo', fecha: '.act-fecha', hora: '.act-hora', lugar: '.act-lugar', descripcion: '.act-descripcion', imagen: '.act-imagenes', video_url: '.act-video', es_gratis: '.act-gratis', requiere_entrada_online: '.act-requiere-online', solo_online: '.act-solo-online', en_vivo: '.act-en-vivo', enlace_venta: '.act-enlace' }).filter(a => a.titulo),
     expositores: recolectarTabla('#expositores-rows tr', { nombre: '.exp-nombre', rubro: '.exp-rubro', ubicacion: '.exp-ubicacion', descripcion: '.exp-descripcion', logo: '.exp-imagenes', video: '.exp-video' }).filter(e => e.nombre),
     galeria: recolectarTabla('#galeria-rows tr', { imagen_url: '.gal-url' }).filter(g => g.imagen_url)
   };
@@ -309,7 +309,7 @@ function recolectarTabla(selector, campos) {
         } else {
           obj[key] = val.split(',').map(s => s.trim().replace(/^["']/, '').replace(/["']$/, '').trim()).filter(Boolean);
         }
-      } else if (key === 'es_gratis' || key === 'requiere_entrada_online') {
+      } else if (key === 'es_gratis' || key === 'requiere_entrada_online' || key === 'solo_online' || key === 'en_vivo') {
         obj[key] = el.dataset?.value === 'true' ? 1 : 0;
       } else obj[key] = el.value || '';
     });

@@ -76,11 +76,37 @@ export function initSocialShare() {
     const url = window.location.href;
     const title = document.title;
     const fb = document.getElementById('shareFacebook');
-    if (fb) fb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    if (fb) {
+        fb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        fb.target = '_blank';
+        fb.rel = 'noopener noreferrer';
+    }
     
+    const tw = document.getElementById('shareTwitter');
+    if (tw) {
+        tw.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+        tw.target = '_blank';
+        tw.rel = 'noopener noreferrer';
+    }
+    
+    const wa = document.getElementById('shareWhatsapp');
+    if (wa) {
+        wa.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + url)}`;
+        wa.target = '_blank';
+        wa.rel = 'noopener noreferrer';
+    }
+
+    const tg = document.getElementById('shareTelegram');
+    if (tg) {
+        tg.href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+        tg.target = '_blank';
+        tg.rel = 'noopener noreferrer';
+    }
+
     const copy = document.getElementById('shareCopy');
     if (copy) {
-        copy.onclick = () => {
+        copy.onclick = (e) => {
+            e.preventDefault();
             navigator.clipboard.writeText(url).then(() => {
                 copy.classList.add('success');
                 setTimeout(() => copy.classList.remove('success'), 2000);

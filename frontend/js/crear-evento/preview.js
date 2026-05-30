@@ -78,6 +78,8 @@ export function guardarDatosPreview() {
         imagenes: (() => { try { return JSON.parse(row.querySelector('.act-imagenes')?.value || '[]'); } catch (e) { return []; } })(),
         es_gratis: row.querySelector('.act-gratis')?.dataset.value === 'true' ? 1 : 0,
         requiere_entrada_online: row.querySelector('.act-requiere-online')?.dataset.value === 'true',
+        solo_online: row.querySelector('.act-solo-online')?.dataset.value === 'true',
+        en_vivo: row.querySelector('.act-en-vivo')?.dataset.value === 'true',
         enlace_venta: row.querySelector('.act-enlace')?.value || ''
     })).filter(a => a.titulo);
 

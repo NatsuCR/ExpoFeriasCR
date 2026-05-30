@@ -34,7 +34,11 @@
             </div>
         </div>
 
-        <div class="toolbar">
+        <div class="toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+            <div class="search-container" style="flex:1; max-width:400px; display:flex; align-items:center; background:#fff; border-radius:8px; border:1px solid #ddd; padding:5px 15px;">
+                <i class="fas fa-search" style="color:#888;"></i>
+                <input type="text" id="buscadorEventos" placeholder="Buscar evento por nombre o ubicación..." style="border:none; outline:none; padding:8px; width:100%; font-size:14px;">
+            </div>
             <button id="btnCrearEvento" class="btn btn-primary">+ Nuevo Evento</button>
         </div>
 

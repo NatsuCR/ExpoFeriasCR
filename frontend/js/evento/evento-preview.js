@@ -48,11 +48,12 @@ export function cargarEventoDesdePreview(datos) {
         const ubicTexto = document.getElementById('ubicacionTexto');
         const exactElem = document.getElementById('ubicacionExactaTexto');
 
+        const esInternacional = datos.provincia === 'Internacional';
         const jerarquiaAdmin = [
             datos.distrito,
             datos.canton,
             datos.provincia,
-            'Costa Rica'
+            esInternacional ? '' : 'Costa Rica'
         ].filter(Boolean).join(', ');
 
         const ubicacionFull = [datos.ubicacion, jerarquiaAdmin].filter(Boolean).join(', ');
@@ -143,6 +144,16 @@ export function cargarEventoDesdePreview(datos) {
                 entradasCard.removeAttribute('onclick');
                 entradasCard.style.cursor = 'default';
             }
+        } else if (tipoVenta === 'en vivo online') {
+            let html = '🔴 <strong>Evento en vivo online</strong>';
+            if (urlVentaOnline) html += `<br><a href="${urlVentaOnline}" target="_blank">Ver en vivo aquí</a>`;
+            entradasTexto.innerHTML = html;
+            if (entradasCard) {
+                entradasCard.style.display = 'block';
+                entradasCard.classList.remove('clickable-card');
+                entradasCard.removeAttribute('onclick');
+                entradasCard.style.cursor = 'default';
+            }
         } else {
             let html = '';
             switch (tipoVenta) {
@@ -186,9 +197,10 @@ function toggleSeccionesOpcionales(datos) {
     const seccionPrecios = document.getElementById('precios');
     const linkPrecios = document.querySelector('.nav-links a[href="#precios"]');
     const esGratis = datos.tipo_venta === 'gratis';
-    if (seccionPrecios) seccionPrecios.style.display = esGratis ? 'none' : 'block';
+    const esEnVivoOnline = datos.tipo_venta === 'en vivo online';
+    if (seccionPrecios) seccionPrecios.style.display = (esGratis || esEnVivoOnline) ? 'none' : 'block';
     if (linkPrecios && linkPrecios.closest('li')) {
-        linkPrecios.closest('li').style.display = esGratis ? 'none' : 'block';
+        linkPrecios.closest('li').style.display = (esGratis || esEnVivoOnline) ? 'none' : 'block';
     }
 
     // Expositores
@@ -460,26 +472,42 @@ function renderActividadesPreview(actividades) {
         let ticketHtml = '';
         const isGratis = (act.es_gratis === 1 || act.esGratis === true || act.esGratis === 1);
         const isOnline = (act.requiere_entrada_online || act.reqOnline);
-
-        if (isGratis) {
-            ticketHtml = '<p style="color: #1a1a1a; font-weight: bold; margin-top: 10px;"><i class="fas fa-ticket-alt"></i> Actividad Gratuita</p>';
-        } else {
-            const isSoloOnline = (act.solo_online || act.soloOnline);
-            let texto = 'Requiere entrada física';
-            if (isSoloOnline) {
-                texto = 'Requiere entrada (SOLO ONLINE)';
-            } else if (isOnline) {
-                texto = 'Requiere entrada online o física';
-            }
-            ticketHtml = `<p style="color: #2c3e50; font-weight: bold; margin-top: 10px;"><i class="fas fa-ticket-alt"></i> ${texto}</p>`;
-        }
         const url = act.enlace_venta || act.enlace;
-        if (isOnline && url) {
-            const interstitialUrl = `/interstitial.html?url=${encodeURIComponent(url)}`;
-            ticketHtml += `
-                <a href="${interstitialUrl}" target="_blank" class="btn-ver" style="display: inline-block; margin-top: 10px; background: #C8102E; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
-                    <i class="fas fa-shopping-cart"></i> Comprar entrada
-                </a>`;
+        const isEnVivo = act.en_vivo || act.enVivo;
+
+        if (isEnVivo) {
+            if (url) {
+                const imgQuery = urls.length > 0 ? urls[0] : '';
+                const interstitialUrl = `/interstitial.html?url=${encodeURIComponent(url)}&img=${encodeURIComponent(imgQuery)}`;
+                ticketHtml = `
+                    <a href="${interstitialUrl}" target="_blank" class="btn-ver" style="display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; background: #ff0000; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-weight: bold;">
+                        <i class="fas fa-play"></i> Ver en vivo
+                    </a>`;
+            } else {
+                ticketHtml = `<p style="color: #ff0000; font-weight: bold; margin-top: 10px; text-align: center;"><i class="fas fa-video"></i> Transmisión en vivo (enlace no disponible)</p>`;
+            }
+        } else {
+            if (isGratis) {
+                ticketHtml = '<p style="color: #1a1a1a; font-weight: bold; margin-top: 10px;"><i class="fas fa-ticket-alt"></i> Actividad Gratuita</p>';
+            } else {
+                const isSoloOnline = (act.solo_online || act.soloOnline);
+                let texto = 'Requiere entrada física';
+                if (isSoloOnline) {
+                    texto = 'Requiere entrada (SOLO ONLINE)';
+                } else if (isOnline) {
+                    texto = 'Requiere entrada online o física';
+                }
+                ticketHtml = `<p style="color: #2c3e50; font-weight: bold; margin-top: 10px;"><i class="fas fa-ticket-alt"></i> ${texto}</p>`;
+            }
+            
+            if (isOnline && url) {
+                const imgQuery = urls.length > 0 ? urls[0] : '';
+                const interstitialUrl = `/interstitial.html?url=${encodeURIComponent(url)}&img=${encodeURIComponent(imgQuery)}`;
+                ticketHtml += `
+                    <a href="${interstitialUrl}" target="_blank" class="btn-ver" style="display: inline-block; margin-top: 10px; background: #C8102E; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                        <i class="fas fa-shopping-cart"></i> Comprar entrada
+                    </a>`;
+            }
         }
 
         let videoHtml = '';
@@ -511,7 +539,15 @@ function renderActividadesPreview(actividades) {
             `;
         }
 
+        // isEnVivo was declared above
+        const enVivoBadge = isEnVivo ? `
+            <div class="actividad-live-badge" style="position: absolute; top: 10px; right: 10px; background: #ff0000; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 10; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px rgba(255,0,0,0.3); animation: pulseAnim 2s infinite;">
+                <span style="width: 6px; height: 6px; background: white; border-radius: 50%; display: inline-block;"></span> EN VIVO
+            </div>` : '';
+
+        card.style.position = 'relative';
         card.innerHTML = `
+            ${enVivoBadge}
             ${imgHtml}
             <div class="card-content">
                 <h3>${act.titulo}</h3>

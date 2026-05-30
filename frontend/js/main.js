@@ -6,7 +6,7 @@ window.provinciaActual = '';
 window.busquedaActual = '';
 
 // ──── POPUP DE ANUNCIO (3 seg) ANTES DE VER EVENTO ────
-function mostrarPopupAnuncio(targetUrl) {
+window.mostrarPopupAnuncio = function (targetUrl) {
     // Evitar duplicados
     const existing = document.getElementById('ad-popup-overlay');
     if (existing) existing.remove();
@@ -17,6 +17,10 @@ function mostrarPopupAnuncio(targetUrl) {
     overlay.innerHTML = `
         <div id="ad-popup-card" style="position: relative;">
             <button id="ad-popup-close" style="display:none; position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; font-weight:bold; color:#555;">&times;</button>
+            <div id="ad-popup-ad-top" style="display:flex; justify-content:center; overflow:hidden; min-height:90px; margin-bottom: 10px;">
+                <div id="adsterra-container-top"></div>
+            </div>
+
             <div id="ad-popup-header">
                 <img 
                     src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" 
@@ -29,12 +33,30 @@ function mostrarPopupAnuncio(targetUrl) {
                 </p>
 
                 <div id="ad-popup-timer">
-                    <span id="ad-popup-count">3</span>
+                    <span id="ad-popup-count">6</span>
                 </div>
             </div>
 
-            <div id="ad-popup-ad">
-                <div id="adsterra-container"></div>
+            <!-- BANNER NATIVE / 320x50 -->
+            <div id="ad-popup-native-placeholder" style="margin: 15px 0; min-height: 50px; display: flex; justify-content: center; align-items: center; background: transparent;">
+                <iframe srcdoc="
+                    <!DOCTYPE html><html><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;'>
+                    <script>
+                    atOptions = {
+                        'key' : 'db5fab4e621232d201d1e41f58321ace',
+                        'format' : 'iframe',
+                        'height' : 50,
+                        'width' : 320,
+                        'params' : {}
+                    };
+                    </script>
+                    <script src='https://www.highperformanceformat.com/db5fab4e621232d201d1e41f58321ace/invoke.js'></script>
+                    </body></html>
+                " width="320" height="50" frameborder="0" scrolling="no"></iframe>
+            </div>
+
+            <div id="ad-popup-ad-bottom" style="display:flex; justify-content:center; overflow:hidden; min-height:90px; margin-top: 10px; margin-bottom: 15px;">
+                <div id="adsterra-container-bottom"></div>
             </div>
 
             <a 
@@ -63,19 +85,23 @@ function mostrarPopupAnuncio(targetUrl) {
         params: {}
     };
 
-    const adScript = document.createElement('script');
-    adScript.src = 'https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js';
-    adScript.async = true;
+    const adScriptTop = document.createElement('script');
+    adScriptTop.src = 'https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js';
+    adScriptTop.async = true;
 
-    const adContainer = document.getElementById('adsterra-container');
-
-    if (adContainer) {
-        adContainer.appendChild(adScript);
+    const adContainerTop = document.getElementById('adsterra-container-top');
+    if (adContainerTop) {
+        adContainerTop.appendChild(adScriptTop);
     }
 
-    const socialScript1 = document.createElement('script');
-    socialScript1.src = 'https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js';
-    document.body.appendChild(socialScript1);
+    const adScriptBottom = document.createElement('script');
+    adScriptBottom.src = 'https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js';
+    adScriptBottom.async = true;
+
+    const adContainerBottom = document.getElementById('adsterra-container-bottom');
+    if (adContainerBottom) {
+        adContainerBottom.appendChild(adScriptBottom);
+    }
 
     const socialScript2 = document.createElement('script');
     socialScript2.src = 'https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js';
@@ -86,7 +112,7 @@ function mostrarPopupAnuncio(targetUrl) {
         overlay.classList.add('active');
     }, 10);
 
-    let timeLeft = 3;
+    let timeLeft = 6;
 
     const countEl = document.getElementById('ad-popup-count');
     const skipBtn = document.getElementById('ad-popup-skip');
@@ -152,7 +178,7 @@ function createEventoCard(evento, isLive = false) {
     card.onclick = (e) => {
         if (e.target.tagName !== 'A' && !e.target.closest('a')) {
             e.preventDefault();
-            mostrarPopupAnuncio(`evento.html?slug=${evento.slug}`);
+            window.mostrarPopupAnuncio(`evento.html?slug=${evento.slug}`);
         }
     };
 
@@ -183,7 +209,7 @@ function createEventoCard(evento, isLive = false) {
         })()}</p>
             <p class="card-location"><i class="fas fa-map-marker-alt"></i> ${ubicacionCorta}</p>
             ${evento.ubicacion && evento.ubicacion !== ubicacionCorta ? `<p class="card-address"><i class="fas fa-compass"></i> ${evento.ubicacion}</p>` : ''}
-            <a href="evento.html?slug=${evento.slug}" class="btn-ver" onclick="event.preventDefault(); mostrarPopupAnuncio('evento.html?slug=${evento.slug}');">Ver detalles</a>
+            <a href="evento.html?slug=${evento.slug}" class="btn-ver" onclick="event.preventDefault(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}');">Ver detalles</a>
         </div>
     `;
     return card;

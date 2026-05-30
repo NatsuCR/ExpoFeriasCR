@@ -644,7 +644,26 @@ footer {
     justify-content: center;
     align-items: center;
     margin: 20px auto;
-    overflow: hidden;
+}
+
+/* Para evitar que los anuncios de 728px rompan el diseño en pantallas pequeñas */
+@media (max-width: 1024px) {
+    .ad-horizontal-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        justify-content: flex-start; /* Para que inicie pegado a la izquierda al hacer scroll */
+        padding-bottom: 5px; /* Espacio para el scrollbar */
+    }
+    
+    /* Personalizar el scrollbar para que sea sutil */
+    .ad-horizontal-container::-webkit-scrollbar {
+        height: 4px;
+    }
+    .ad-horizontal-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
 }
 
 /* Mostrar anuncios laterales solo si hay espacio suficiente para no tapar el contenedor principal */

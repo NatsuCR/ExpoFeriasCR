@@ -72,11 +72,12 @@ export async function verEvento(eventoId, context) {
           <div style="flex: 1; display: flex; flex-direction: column; background: #f0f0f0;">
             <div style="padding: 12px 25px; background: white; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10;">
                <div style="display: flex; align-items: center; gap: 15px;">
-                   <i class="fas fa-laptop" style="color: #666; font-size: 18px;"></i>
-                   <span style="font-weight: 700; color: #333; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Vista Previa del Evento (Web Completa)</span>
+                   <i class="fas fa-laptop" style="color: #666; font-size: 18px;" id="icon-device-preview"></i>
+                   <span style="font-weight: 700; color: #333; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;" id="title-device-preview">Vista Previa del Evento (Web Completa)</span>
                    ${evento.tipo_evento ? `<span style="background: #c8102e; color: white; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 10px;">${evento.tipo_evento}</span>` : ''}
                 </div>
                <div style="display: flex; gap: 15px; align-items: center;">
+                  <button id="btn-toggle-mobile-preview" class="btn-secondary" style="padding: 4px 10px; font-size: 12px;"><i class="fas fa-mobile-alt"></i> Ver en Celular</button>
                   <div style="display: flex; gap: 8px;">
                     <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f56; border: 1px solid #e14e47;"></span>
                     <span style="width: 10px; height: 10px; border-radius: 50%; background: #ffbd2e; border: 1px solid #e1a116;"></span>
@@ -84,14 +85,46 @@ export async function verEvento(eventoId, context) {
                   </div>
                </div>
             </div>
-            <div style="flex: 1; position: relative; padding: 0;">
-                <iframe src="/evento.html?preview=1&dataKey=${dataKey}" style="width: 100%; height: 100%; border: none; background: white;"></iframe>
+            <div id="iframe-container-preview" style="flex: 1; position: relative; padding: 0; display: flex; justify-content: center; align-items: center; background: #f0f0f0; overflow: hidden;">
+                <iframe id="iframe-preview-admin" src="/evento.html?preview=1&dataKey=${dataKey}" style="width: 100%; height: 100%; border: none; background: white; transition: all 0.3s ease;"></iframe>
             </div>
           </div>
         </div>
       `;
 
         document.getElementById('evento-preview-contenido').innerHTML = html;
+        
+        setTimeout(() => {
+            const btnToggleMobile = document.getElementById('btn-toggle-mobile-preview');
+            const iframe = document.getElementById('iframe-preview-admin');
+            const iconDevice = document.getElementById('icon-device-preview');
+            const titleDevice = document.getElementById('title-device-preview');
+            let isMobile = false;
+            if (btnToggleMobile) {
+                btnToggleMobile.addEventListener('click', () => {
+                    isMobile = !isMobile;
+                    if (isMobile) {
+                        iframe.style.width = '375px';
+                        iframe.style.height = '812px';
+                        iframe.style.borderRadius = '30px';
+                        iframe.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
+                        iframe.style.border = '12px solid #333';
+                        iconDevice.className = 'fas fa-mobile-alt';
+                        titleDevice.textContent = 'Vista Previa del Evento (Celular)';
+                        btnToggleMobile.innerHTML = '<i class="fas fa-laptop"></i> Ver en Web';
+                    } else {
+                        iframe.style.width = '100%';
+                        iframe.style.height = '100%';
+                        iframe.style.borderRadius = '0';
+                        iframe.style.boxShadow = 'none';
+                        iframe.style.border = 'none';
+                        iconDevice.className = 'fas fa-laptop';
+                        titleDevice.textContent = 'Vista Previa del Evento (Web Completa)';
+                        btnToggleMobile.innerHTML = '<i class="fas fa-mobile-alt"></i> Ver en Celular';
+                    }
+                });
+            }
+        }, 100);
 
         // Forzar dimensiones del modal para el split view
         const modalContenedor = document.querySelector('#modal-evento-preview .modal-contenedor');

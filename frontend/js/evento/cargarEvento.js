@@ -55,10 +55,6 @@ window.mostrarPopupCompra = function(targetUrl) {
     const adContainer = document.getElementById('adsterra-container');
     if (adContainer) adContainer.appendChild(adScript);
 
-    const socialScript1 = document.createElement('script');
-    socialScript1.src = 'https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js';
-    document.body.appendChild(socialScript1);
-
     const socialScript2 = document.createElement('script');
     socialScript2.src = 'https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js';
     document.body.appendChild(socialScript2);
@@ -146,11 +142,12 @@ export async function cargarEvento(slug) {
         document.getElementById('infoFechas').innerHTML = `${fmt(fecha_inicio)} - ${fmt(fecha_fin)}`;
 
         // Jerarquía Administrativa (Distrito, Cantón, Provincia)
+        const esInternacional = evento.provincia === 'Internacional';
         const jerarquiaAdmin = [
             evento.distrito,
             evento.canton,
             evento.provincia,
-            'Costa Rica'
+            esInternacional ? '' : 'Costa Rica'
         ].filter(Boolean).join(', ');
 
         // Ubicación Completa (para otros usos si se requiere)
@@ -312,6 +309,10 @@ export async function cargarEvento(slug) {
                 case 'gratis':
                     htmlContent = '<strong>Entrada Gratuita</strong>';
                     break;
+                case 'en vivo online':
+                    htmlContent = '<strong>🔴 Evento en vivo online</strong>';
+                    if (ventaUrl) htmlContent += `<br><a href="#" onclick="event.preventDefault(); window.mostrarPopupCompra('${ventaUrl}');" style="color:var(--evento-primario); font-weight:bold; text-decoration:underline;">Ver en vivo aquí</a>`;
+                    break;
                 default:
                     htmlContent = 'Entradas solo en taquilla del campo ferial';
             }
@@ -336,7 +337,7 @@ export async function cargarEvento(slug) {
         const linkPrecios = document.querySelector('.nav-links a[href="#precios"]');
         const linkUbicacion = document.querySelector('.nav-links a[href="#ubicacion"]');
 
-        if (tipo_venta === 'gratis') {
+        if (tipo_venta === 'gratis' || tipo_venta === 'en vivo online') {
             if (sectionPrecios) sectionPrecios.style.display = 'none';
             if (linkPrecios) linkPrecios.closest('li').style.display = 'none';
         } else {

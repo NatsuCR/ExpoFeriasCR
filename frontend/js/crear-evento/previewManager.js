@@ -118,6 +118,7 @@ export function guardarDatosPreview() {
         es_gratis: row.querySelector('.act-gratis')?.dataset.value === 'true' ? 1 : 0,
         requiere_entrada_online: row.querySelector('.act-requiere-online')?.dataset.value === 'true',
         solo_online: row.querySelector('.act-solo-online')?.dataset.value === 'true',
+        en_vivo: row.querySelector('.act-en-vivo')?.dataset.value === 'true',
         enlace_venta: row.querySelector('.act-enlace')?.value || '',
         video_url: row.querySelector('.act-video')?.value || '',
         video: row.querySelector('.act-video')?.value || ''

@@ -79,19 +79,36 @@ export async function cargarActividades(slug) {
             const lugar       = a.lugar || 'Campo ferial';
             const descripcion = a.descripcion || '';
 
-            const requiereOnline = a.requiereEntradaOnline === 1 || a.requiereEntradaOnline === true;
-            const enlaceVenta    = a.enlaceVenta;
-            const esGratis       = a.esGratis === 1 || a.esGratis === true;
+            const requiereOnline = a.requiereEntradaOnline === 1 || a.requiereEntradaOnline === true || a.requiere_entrada_online === 1 || a.requiere_entrada_online === true;
+            const enlaceVenta    = a.enlaceVenta || a.enlace_venta;
+            const esGratis       = a.esGratis === 1 || a.esGratis === true || a.es_gratis === 1 || a.es_gratis === true;
+            const enVivo         = a.enVivo === 1 || a.enVivo === true || a.en_vivo === 1 || a.en_vivo === true;
 
             let linkHtml = '';
-            if (requiereOnline && enlaceVenta) {
-                const interstitialUrl = `/interstitial.html?url=${encodeURIComponent(enlaceVenta)}`;
-                linkHtml = `<a href="${interstitialUrl}" target="_blank" class="btn-ver" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; background: var(--evento-primario, #C8102E) !important; color: white !important; padding: 10px 20px !important; border-radius: 30px !important; text-decoration: none !important; font-weight: bold !important; width: fit-content !important; margin: 15px auto !important; box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important; transition: all 0.3s ease !important;"><i class="fas fa-shopping-cart"></i> Comprar entrada</a>`;
-            } else if (requiereOnline && !enlaceVenta) {
-                linkHtml = `<p style="text-align: center !important; width: 100% !important; margin-top: 15px !important; margin-left: auto !important; margin-right: auto !important;"><i class="fas fa-ticket-alt"></i> Entrada online (enlace no disponible)</p>`;
-            }
+            let gratisHtml = '';
 
-            const gratisHtml = esGratis ? '<p><strong>Evento gratuito</strong></p>' : '';
+            if (enVivo) {
+                if (enlaceVenta) {
+                    const imgUrlParam = imagenesLimpias.length > 0 ? imagenesLimpias[0] : '';
+                    const interstitialUrl = `/interstitial.html?url=${encodeURIComponent(enlaceVenta)}&img=${encodeURIComponent(imgUrlParam)}`;
+                    linkHtml = `<a href="${interstitialUrl}" target="_blank" class="btn-ver" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; background: #ff0000 !important; color: white !important; padding: 10px 20px !important; border-radius: 30px !important; text-decoration: none !important; font-weight: bold !important; width: fit-content !important; margin: 15px auto !important; box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important; transition: all 0.3s ease !important;"><i class="fas fa-play"></i> Ver en vivo</a>`;
+                } else {
+                    linkHtml = `<p style="text-align: center !important; width: 100% !important; margin-top: 15px !important; margin-left: auto !important; margin-right: auto !important; color: #ff0000; font-weight: bold;"><i class="fas fa-video"></i> Transmisión en vivo (enlace no disponible)</p>`;
+                }
+            } else {
+                if (requiereOnline && enlaceVenta) {
+                    const imgUrlParam = imagenesLimpias.length > 0 ? imagenesLimpias[0] : '';
+                    const interstitialUrl = `/interstitial.html?url=${encodeURIComponent(enlaceVenta)}&img=${encodeURIComponent(imgUrlParam)}`;
+                    linkHtml = `<a href="${interstitialUrl}" target="_blank" class="btn-ver" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; background: var(--evento-primario, #C8102E) !important; color: white !important; padding: 10px 20px !important; border-radius: 30px !important; text-decoration: none !important; font-weight: bold !important; width: fit-content !important; margin: 15px auto !important; box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important; transition: all 0.3s ease !important;"><i class="fas fa-shopping-cart"></i> Comprar entrada</a>`;
+                } else if (requiereOnline && !enlaceVenta) {
+                    linkHtml = `<p style="text-align: center !important; width: 100% !important; margin-top: 15px !important; margin-left: auto !important; margin-right: auto !important;"><i class="fas fa-ticket-alt"></i> Entrada online (enlace no disponible)</p>`;
+                }
+                gratisHtml = esGratis ? '<p><strong>Evento gratuito</strong></p>' : '';
+            }
+            const enVivoBadge = enVivo ? `
+                <div class="actividad-live-badge" style="position: absolute; top: 10px; right: 10px; background: #ff0000; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 10; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px rgba(255,0,0,0.3); animation: pulseAnim 2s infinite;">
+                    <span style="width: 6px; height: 6px; background: white; border-radius: 50%; display: inline-block;"></span> EN VIVO
+                </div>` : '';
 
             let videoHtml = '';
             const videoSrc = (a.videoUrl || a.video_url || '').trim();
@@ -123,7 +140,8 @@ export async function cargarActividades(slug) {
             }
 
             html += `
-    <div class="actividad-card">
+    <div class="actividad-card" style="position: relative;">
+        ${enVivoBadge}
         ${buildMiniCarrusel(imagenesLimpias, a.titulo)}
         <h3>${a.titulo}</h3>
         <p><i class="fas fa-calendar-day"></i> ${fecha} ${hora}</p>

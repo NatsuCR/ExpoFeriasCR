@@ -62,9 +62,9 @@
             background: #0033A0;
             color: white;
             border: none;
-            padding: 10px 25px;
-            border-radius: 30px;
-            font-size: 1.1rem;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             cursor: pointer;
             text-decoration: none;
             margin-top: 15px;
@@ -74,14 +74,67 @@
         .btn-skip:hover {
             background: #002277;
         }
+
+        .ad-vertical-left, .ad-vertical-right {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            display: none;
+            z-index: 10;
+        }
+
+        .ad-vertical-left {
+            left: 20px;
+        }
+
+        .ad-vertical-right {
+            right: 20px;
+        }
+
+        /* Mostrar solo en pantallas grandes donde haya espacio a los lados */
+        @media (min-width: 1200px) {
+            .ad-vertical-left, .ad-vertical-right {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Anuncio Vertical Izquierdo -->
+    <div class="ad-vertical-left">
+        <script>
+            atOptions = {
+                'key': '6e65addb785e209f532431dd48906da2',
+                'format': 'iframe',
+                'height': 600,
+                'width': 160,
+                'params': {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></script>
+    </div>
+
+    <!-- Anuncio Vertical Derecho -->
+    <div class="ad-vertical-right">
+        <script>
+            atOptions = {
+                'key': '6e65addb785e209f532431dd48906da2',
+                'format': 'iframe',
+                'height': 600,
+                'width': 160,
+                'params': {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></script>
+    </div>
+
     <div class="container">
         <button id="ad-popup-close"
             style="display:none; position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; font-weight:bold; color:#555;">&times;</button>
-        <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo">
+        <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" style="display:inline-block; position:relative; z-index:100000; margin-bottom: 20px;">
+            <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
+        </a>
         <h2>Apoya a ExpoFeriasCR</h2>
         <p>Serás redirigido a tu destino en unos segundos...</p>
 
@@ -104,9 +157,15 @@
         <a href="#" id="skip-btn" class="btn-skip">Ir al enlace ahora</a>
     </div>
 
-    <!-- Scripts de Ads (Popunders y Social Bar) -->
-    <script src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></script>
+    <!-- Capa invisible para simular Popunder a toda la pantalla -->
+    <a href="#" id="popunder-overlay" target="_blank" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; cursor:pointer;"></a>
+
+    <!-- Social Bar -->
     <script src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></script>
+
+    <!-- Popunder -->
+    <script src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -114,8 +173,21 @@
             const targetUrl = urlParams.get('url');
             const countdownEl = document.getElementById('countdown');
             const skipBtn = document.getElementById('skip-btn');
+            const popunderOverlay = document.getElementById('popunder-overlay');
+            const dynamicImg = document.getElementById('dynamic-img');
+            const imgUrl = urlParams.get('img');
 
-            let timeLeft = 3;
+            if (imgUrl && imgUrl !== 'null' && imgUrl !== '') {
+                dynamicImg.src = imgUrl;
+                dynamicImg.style.maxHeight = '55vh';
+                dynamicImg.style.height = '100%';
+                dynamicImg.style.width = 'auto';
+                dynamicImg.style.maxWidth = '100%';
+                dynamicImg.style.objectFit = 'contain';
+                dynamicImg.style.borderRadius = '10px';
+            }
+
+            let timeLeft = 6;
 
             if (!targetUrl) {
                 window.location.href = '/';
@@ -124,6 +196,7 @@
 
             skipBtn.href = targetUrl;
             skipBtn.target = '_blank';
+            popunderOverlay.href = targetUrl;
 
             const closeBtn = document.getElementById('ad-popup-close');
 
@@ -136,11 +209,19 @@
                     countdownEl.closest('#countdown').style.display = 'none';
                     // Solo mostrar el botón - el usuario DEBE hacer clic para continuar
                     skipBtn.style.display = 'inline-block';
+                    // Hacer toda la pantalla clickeable
+                    popunderOverlay.style.display = 'block';
                 }
             }, 1000);
 
             skipBtn.addEventListener('click', () => {
                 if (closeBtn) closeBtn.style.display = 'block';
+                popunderOverlay.style.display = 'none'; // Desactivar overlay si da clic al botón
+            });
+
+            popunderOverlay.addEventListener('click', () => {
+                if (closeBtn) closeBtn.style.display = 'block';
+                popunderOverlay.style.display = 'none'; // Desactivar para que el usuario pueda usar la página
             });
 
             if (closeBtn) {

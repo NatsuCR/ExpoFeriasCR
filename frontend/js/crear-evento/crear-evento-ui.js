@@ -5,9 +5,29 @@
 export function syncVisibility() {
     const tipoVentaEl = document.getElementById('tipo_venta');
     const urlGroup = document.getElementById('urlVentaGroup');
+    const msgOnlinePrecios = document.getElementById('msg-online-precios');
+    const tablaPrecios = document.getElementById('tabla-precios');
+    const btnAgregarPrecio = document.getElementById('btn-agregar-precio');
+    const btnDuplicarPrecio = document.getElementById('btn-duplicar-precio');
+    const btnDuplicarFecha = document.getElementById('btn-duplicar-fecha');
+
     if (tipoVentaEl && urlGroup) {
       const valor = tipoVentaEl.value;
-      urlGroup.style.display = (valor === 'online' || valor === 'ambos') ? 'block' : 'none';
+      urlGroup.style.display = (valor === 'online' || valor === 'ambos' || valor === 'en vivo online') ? 'block' : 'none';
+      
+      if (valor === 'en vivo online') {
+          if(msgOnlinePrecios) msgOnlinePrecios.style.display = 'flex';
+          if(tablaPrecios) tablaPrecios.style.display = 'none';
+          if(btnAgregarPrecio) btnAgregarPrecio.style.display = 'none';
+          if(btnDuplicarPrecio) btnDuplicarPrecio.style.display = 'none';
+          if(btnDuplicarFecha) btnDuplicarFecha.style.display = 'none';
+      } else {
+          if(msgOnlinePrecios) msgOnlinePrecios.style.display = 'none';
+          if(tablaPrecios) tablaPrecios.style.display = 'table';
+          if(btnAgregarPrecio) btnAgregarPrecio.style.display = 'inline-block';
+          if(btnDuplicarPrecio) btnDuplicarPrecio.style.display = 'inline-block';
+          if(btnDuplicarFecha) btnDuplicarFecha.style.display = 'inline-block';
+      }
     }
 
     const tieneExpositoresEl = document.getElementById('tiene_expositores');

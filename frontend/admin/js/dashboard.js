@@ -257,6 +257,20 @@ document.getElementById('selectAll')?.addEventListener('change', (e) => {
     actualizarBotonEliminarSeleccionados();
 });
 
+// Lógica de Búsqueda
+document.getElementById('buscadorEventos')?.addEventListener('input', (e) => {
+    const texto = e.target.value.toLowerCase();
+    const items = document.querySelectorAll('.evento-item');
+    items.forEach(item => {
+        const details = item.querySelector('.evento-details');
+        if (details && details.textContent.toLowerCase().includes(texto)) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+
 window.editarEvento = editarEvento;
 
 cargarEventos();

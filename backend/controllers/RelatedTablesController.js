@@ -68,8 +68,8 @@ class RelatedTablesController {
           `INSERT INTO actividades (
             evento_id, titulo, tipo, fecha, hora, lugar,
             descripcion, imagen, video_url, es_gratis,
-            requiere_entrada_online, enlace_venta, solo_online
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            requiere_entrada_online, enlace_venta, solo_online, en_vivo
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             eventoId,
             a.titulo,
@@ -85,7 +85,8 @@ class RelatedTablesController {
             a.es_gratis || 0,
             a.requiere_entrada_online || 0,
             a.enlace_venta || null,
-            a.solo_online || 0
+            a.solo_online || 0,
+            a.en_vivo || 0
           ]
         );
       }

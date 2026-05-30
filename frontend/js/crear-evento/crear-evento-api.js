@@ -310,7 +310,8 @@ function recolectarTabla(selector, campos) {
           obj[key] = val.split(',').map(s => s.trim().replace(/^["']/, '').replace(/["']$/, '').trim()).filter(Boolean);
         }
       } else if (key === 'es_gratis' || key === 'requiere_entrada_online' || key === 'solo_online' || key === 'en_vivo') {
-        obj[key] = el.dataset?.value === 'true' ? 1 : 0;
+        const val = el.getAttribute('data-value');
+        obj[key] = (val === 'true' || val === '1' || val === true || val === 1) ? 1 : 0;
       } else obj[key] = el.value || '';
     });
     return obj;

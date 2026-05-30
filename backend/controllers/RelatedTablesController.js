@@ -64,6 +64,7 @@ class RelatedTablesController {
     for (const a of actividades) {
       // 🛡️ CRÍTICO: Solo insertamos si hay título Y FECHA (la fecha es NOT NULL en DB)
       if (a.titulo && a.fecha) {
+        console.log('[guardarActividades] RECIBIDO:', a);
         await pool.query(
           `INSERT INTO actividades (
             evento_id, titulo, tipo, fecha, hora, lugar,

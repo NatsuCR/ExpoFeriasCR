@@ -113,6 +113,7 @@ class UsuarioEventsController {
     const body = req.body;
 
     try {
+      console.log('[actualizarEvento] Body Actividades:', JSON.stringify(body.actividades, null, 2));
       const [eventos] = await pool.query('SELECT estado FROM eventos WHERE id = ? AND usuario_id = ?', [id, usuarioId]);
       if (eventos.length === 0) return res.status(404).json({ error: 'No encontrado' });
 

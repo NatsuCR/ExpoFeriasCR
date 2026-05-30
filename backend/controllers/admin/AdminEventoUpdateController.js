@@ -20,6 +20,7 @@ class AdminEventoUpdateController {
     } = data;
 
     try {
+      console.log('[AdminEventoUpdateController] Body Actividades:', JSON.stringify(data.actividades, null, 2));
       const values = [
         slug, nombre, descripcion, fecha_inicio, fecha_fin, ubicacion, provincia,
         imagen_portada || null, activo === undefined ? 1 : (activo ? 1 : 0), horario_imagen || null,

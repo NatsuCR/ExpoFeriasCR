@@ -1,0 +1,98 @@
+.streaming-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 100px 20px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 80vh;
+}
+
+.streaming-content {
+    flex: 1;
+    max-width: 1000px;
+    background: #fff;
+    color: #333;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.ad-banner {
+    width: 160px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 100px;
+    flex-shrink: 0;
+}
+
+
+@media (max-width: 1100px) {
+    .ad-banner {
+        display: none;
+    }
+}
+
+.streaming-content h1 {
+    color: #C8102E;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 2.5rem;
+}
+
+.streaming-content p.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.ad-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: #000;
+    cursor: pointer;
+}
+
+.ad-overlay a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes pulseAnimRed {
+    0% { opacity: 1; color: #ff0000; }
+    50% { opacity: 0.5; color: #ff6b6b; }
+    100% { opacity: 1; color: #ff0000; }
+}
+
+.live-icon {
+    animation: pulseAnimRed 2s infinite;
+    margin-right: 5px;
+}

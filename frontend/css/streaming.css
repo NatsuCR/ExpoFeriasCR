@@ -96,3 +96,57 @@
     animation: pulseAnimRed 2s infinite;
     margin-right: 5px;
 }
+
+/* Adaptabilidad para móviles */
+@media (max-width: 768px) {
+    .streaming-layout {
+        padding: 80px 10px 20px;
+    }
+    
+    .streaming-content {
+        padding: 15px;
+    }
+
+    .streaming-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .streaming-content p.subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+    }
+
+    /* Ajuste para que el anuncio de 728x90 quepa en la pantalla sin desbordar */
+    .ad-banner-horizontal {
+        transform: scale(0.48);
+        transform-origin: center center;
+        margin-top: -20px !important;
+        margin-bottom: -20px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .streaming-layout {
+        padding: 70px 5px 15px;
+    }
+
+    .streaming-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .ad-banner-horizontal {
+        transform: scale(0.40);
+        margin-top: -25px !important;
+        margin-bottom: -25px !important;
+    }
+}
+
+/* Ajustes para el nuevo bloque de anuncios añadido manualmente */
+#container-c083045c1441aa427e4f38dd4dc7fc88 {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+}

@@ -97,14 +97,34 @@
     margin-right: 5px;
 }
 
+.ad-banner-horizontal {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.top-banner {
+    margin-bottom: 20px;
+}
+
+.bottom-banner {
+    margin-top: 20px;
+}
+
 /* Adaptabilidad para móviles */
 @media (max-width: 768px) {
     .streaming-layout {
-        padding: 80px 10px 20px;
+        padding: 40px 10px 20px;
+        flex-direction: column;
+        align-items: center;
     }
     
     .streaming-content {
         padding: 15px;
+        width: 100%;
     }
 
     .streaming-content h1 {
@@ -115,29 +135,25 @@
         font-size: 0.95rem;
         margin-bottom: 20px;
     }
+    
+    /* Ocultar las banners laterales en móvil por completo, aunque ya lo hace en <1100px */
+    .ad-banner {
+        display: none;
+    }
 
-    /* Ajuste para que el anuncio de 728x90 quepa en la pantalla sin desbordar */
-    .ad-banner-horizontal {
-        transform: scale(0.48);
-        transform-origin: center center;
-        margin-top: -20px !important;
-        margin-bottom: -20px !important;
+    /* Reducimos un poco el reproductor en móviles si es necesario, o lo mantenemos full width */
+    .video-wrapper {
+        border-radius: 8px;
     }
 }
 
 @media (max-width: 480px) {
     .streaming-layout {
-        padding: 70px 5px 15px;
+        padding: 20px 5px 15px;
     }
 
     .streaming-content h1 {
         font-size: 1.5rem;
-    }
-
-    .ad-banner-horizontal {
-        transform: scale(0.40);
-        margin-top: -25px !important;
-        margin-bottom: -25px !important;
     }
 }
 

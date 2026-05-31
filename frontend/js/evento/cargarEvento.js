@@ -2,7 +2,7 @@
 import { abrirLightbox } from './lightbox.js';
 
 // ──── POPUP DE ANUNCIO (3 seg) ANTES DE IR A COMPRAR ENTRADAS ────
-window.mostrarPopupCompra = function(targetUrl) {
+window.mostrarPopupCompra = function (targetUrl) {
     const existing = document.getElementById('ad-popup-overlay');
     if (existing) existing.remove();
 

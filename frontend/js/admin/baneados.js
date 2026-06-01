@@ -1,10 +1,7 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = '../index.html';
-        return;
-    }
-
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = '../index.html';
+} else {
     const listaBaneados = document.getElementById('listaBaneados');
 
     async function cargarBaneados() {
@@ -21,11 +18,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const baneados = await res.json();
             
             if (baneados.length === 0) {
-                listaBaneados.innerHTML = `<tr><td colspan="5" class="empty-state">No hay usuarios baneados.</td></tr>`;
+                if (listaBaneados) listaBaneados.innerHTML = `<tr><td colspan="5" class="empty-state">No hay usuarios baneados.</td></tr>`;
                 return;
             }
 
-            listaBaneados.innerHTML = '';
+            if (listaBaneados) listaBaneados.innerHTML = '';
             baneados.forEach(ban => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -39,11 +36,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </button>
                     </td>
                 `;
-                listaBaneados.appendChild(tr);
+                if (listaBaneados) listaBaneados.appendChild(tr);
             });
         } catch (error) {
             console.error('Error cargando baneados:', error);
-            listaBaneados.innerHTML = `<tr><td colspan="5" class="empty-state">Error cargando la lista.</td></tr>`;
+            if (listaBaneados) listaBaneados.innerHTML = `<tr><td colspan="5" class="empty-state">Error cargando la lista.</td></tr>`;
         }
     }
 
@@ -69,4 +66,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     cargarBaneados();
-});
+}

@@ -5,11 +5,11 @@ if (!token) window.location.href = 'login.html';
 let eventosGlobal = [];
 
 // Elementos del DOM
-const btnLogout                 = document.getElementById('btnLogout');
-const btnCrearEvento            = document.getElementById('btnCrearEvento');
-const btnEliminarSeleccionados  = document.getElementById('btnEliminarSeleccionados');
-const btnEliminarPorFecha       = document.getElementById('btnEliminarPorFecha');
-const listaEventosDiv           = document.getElementById('listaEventos');
+let btnLogout                 = document.getElementById('btnLogout');
+let btnCrearEvento            = document.getElementById('btnCrearEvento');
+let btnEliminarSeleccionados  = document.getElementById('btnEliminarSeleccionados');
+let btnEliminarPorFecha       = document.getElementById('btnEliminarPorFecha');
+let listaEventosDiv           = document.getElementById('listaEventos');
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -271,6 +271,36 @@ document.getElementById('buscadorEventos')?.addEventListener('input', (e) => {
     });
 });
 
+// Helper para mostrar toast
+function mostrarToast(mensaje, tipo = 'success') {
+    let toast = document.getElementById('toast-mensaje');
+    if(!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast-mensaje';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = mensaje;
+    toast.className = `toast-mensaje ${tipo}`;
+    toast.style.display = 'block';
+    
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 3000);
+}
+
+// Fallback for common.js mostrarMensaje
+window.mostrarMensaje = function(texto, tipo, contenedorId = 'globalMessage') {
+    const div = document.getElementById(contenedorId);
+    if (div) {
+        div.className = `message message-${tipo}`;
+        div.innerText = texto;
+        div.style.display = 'block';
+        setTimeout(() => { div.style.display = 'none'; }, 4000);
+    } else {
+        mostrarToast(texto, tipo);
+    }
+};
+
 window.editarEvento = editarEvento;
 
 cargarEventos();
@@ -278,21 +308,172 @@ cargarEventos();
 // ── Mobile Menu Toggle ────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('adminMenuToggle');
-    const headerButtons = document.getElementById('adminHeaderButtons');
+    const sidebar = document.querySelector('.sidebar');
 
-    if (menuToggle && headerButtons) {
+    if (menuToggle && sidebar) {
         menuToggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            headerButtons.classList.toggle('active');
+            sidebar.classList.toggle('open');
         });
 
-        // Cerrar al hacer clic fuera
         document.addEventListener('click', (e) => {
-            if (headerButtons.classList.contains('active') && !headerButtons.contains(e.target) && e.target !== menuToggle) {
-                headerButtons.classList.remove('active');
+            if (window.innerWidth <= 992 && sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== menuToggle && !menuToggle.contains(e.target)) {
+                sidebar.classList.remove('open');
             }
         });
     }
+});
+
+// ── SPA Router ────────────────────────────────────────────────────────────────
+function loadPageSPA(url) {
+    const wrapper = document.querySelector('.content-wrapper');
+    wrapper.innerHTML = '<div style="padding:40px; text-align:center; color:#888;">Cargando...</div>';
+    
+    fetch(url)
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            let content = '';
+
+            if (url.includes('dashboard.html')) {
+                const cw = doc.querySelector('.content-wrapper');
+                if (cw) content = cw.innerHTML;
+            } else if (url.includes('eventos-pendientes.html')) {
+                const cw = doc.querySelector('.admin-eventos-container');
+                if (cw) {
+                    content = cw.outerHTML;
+                    doc.querySelectorAll('.modal-overlay').forEach(m => content += m.outerHTML);
+                }
+            } else if (url.includes('usuarios.html') || url.includes('baneados.html') || url.includes('stats.html')) {
+                const cw = doc.querySelector('.admin-container');
+                if (cw) {
+                    const btnVolver = cw.querySelector('.btn-volver');
+                    if (btnVolver) btnVolver.remove();
+                    const hb = cw.querySelector('.dashboard-header .header-buttons');
+                    if (hb) hb.remove();
+                    content = cw.innerHTML;
+                }
+            }
+
+            if (content) {
+                // Inyectar CSS específicos de la vista
+                doc.querySelectorAll('link[rel="stylesheet"], style').forEach(style => {
+                    if (style.tagName.toLowerCase() === 'link') {
+                        const href = style.getAttribute('href');
+                        if (href && !document.querySelector(`link[href="${href}"]`)) {
+                            const newLink = document.createElement('link');
+                            newLink.rel = 'stylesheet';
+                            newLink.href = href;
+                            document.head.appendChild(newLink);
+                        }
+                    } else if (style.tagName.toLowerCase() === 'style') {
+                        const newStyle = document.createElement('style');
+                        newStyle.innerHTML = style.innerHTML;
+                        document.head.appendChild(newStyle);
+                    }
+                });
+
+                // Inyectar scripts del head (ej. Chart.js)
+                doc.querySelectorAll('head script').forEach(script => {
+                    const src = script.getAttribute('src');
+                    if (src && !document.querySelector(`script[src="${src}"]`)) {
+                        const newScript = document.createElement('script');
+                        newScript.src = src;
+                        document.head.appendChild(newScript);
+                    }
+                });
+
+                wrapper.innerHTML = content;
+                window.history.pushState({}, '', url);
+
+                document.querySelectorAll('.sidebar-nav a.nav-link').forEach(l => {
+                    l.classList.remove('active');
+                    if (l.getAttribute('href') === url.split('/').pop() || (url === '' && l.getAttribute('href') === 'dashboard.html')) {
+                        l.classList.add('active');
+                    }
+                });
+
+                if (url.includes('dashboard.html') || url.endsWith('/admin/')) {
+                    // Re-bind dashboard events and load data
+                    btnCrearEvento = document.getElementById('btnCrearEvento');
+                    if(btnCrearEvento) btnCrearEvento.addEventListener('click', () => { window.location.href = 'evento-form.html'; });
+                    
+                    btnEliminarPorFecha = document.getElementById('btnEliminarPorFecha');
+                    if(btnEliminarPorFecha) btnEliminarPorFecha.addEventListener('click', eliminarPorFecha);
+                    
+                    btnEliminarSeleccionados = document.getElementById('btnEliminarSeleccionados');
+                    if(btnEliminarSeleccionados) btnEliminarSeleccionados.addEventListener('click', eliminarSeleccionados);
+
+                    listaEventosDiv = document.getElementById('listaEventos');
+
+                    const selectAll = document.getElementById('selectAll');
+                    if(selectAll) selectAll.addEventListener('change', (e) => {
+                        const isChecked = e.target.checked;
+                        document.querySelectorAll('.evento-check').forEach(cb => { cb.checked = isChecked; });
+                        actualizarBotonEliminarSeleccionados();
+                    });
+
+                    const buscador = document.getElementById('buscadorEventos');
+                    if(buscador) buscador.addEventListener('input', (e) => {
+                        const texto = e.target.value.toLowerCase();
+                        document.querySelectorAll('.evento-item').forEach(item => {
+                            const details = item.querySelector('.evento-details');
+                            item.style.display = (details && details.textContent.toLowerCase().includes(texto)) ? '' : 'none';
+                        });
+                    });
+
+                    cargarEventos();
+                } else {
+                    const scripts = doc.querySelectorAll('script');
+                    scripts.forEach(s => {
+                        const src = s.getAttribute('src');
+                        if (src && !src.includes('helpers.js') && !src.includes('common.js') && !src.includes('inactivity.js') && !src.includes('dashboard.js')) {
+                            if (s.type === 'module') {
+                                const newScript = document.createElement('script');
+                                newScript.type = 'module';
+                                newScript.src = src + '?t=' + Date.now();
+                                document.body.appendChild(newScript);
+                            } else {
+                                fetch(src)
+                                    .then(r => r.text())
+                                    .then(code => {
+                                        const script = document.createElement('script');
+                                        // Wrap normal scripts in IIFE to prevent variable redeclaration errors (e.g. const/let at top level)
+                                        script.textContent = `(async function() { \n${code}\n })();`;
+                                        document.body.appendChild(script);
+                                    });
+                            }
+                        }
+                    });
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Error cargando SPA:", err);
+            wrapper.innerHTML = '<div style="padding:40px; text-align:center; color:red;">Error al cargar la sección.</div>';
+        });
+}
+
+document.querySelectorAll('.sidebar-nav a.nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('http') && !href.includes('../index.html')) {
+            e.preventDefault();
+            loadPageSPA(href);
+            
+            // Cerrar menú en móviles al seleccionar una opción
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar && window.innerWidth <= 992) {
+                sidebar.classList.remove('open');
+            }
+        }
+    });
+});
+
+window.addEventListener('popstate', () => {
+    const url = window.location.pathname.split('/').pop() || 'dashboard.html';
+    loadPageSPA(url);
 });
 
 

@@ -2,15 +2,26 @@
    Admin Panel Styles - ExpoFeriasCR
    ============================================ */
 :root {
-    --admin-primary: #2c3e50;
-    --admin-secondary: #34495e;
-    --admin-success: #27ae60;
-    --admin-danger: #e74c3c;
-    --admin-warning: #f39c12;
-    --admin-info: #3498db;
-    --admin-light: #ecf0f1;
-    --admin-dark: #2c3e50;
-    --admin-border: #bdc3c7;
+    --admin-bg: #f4f6f9;
+    --admin-surface: #ffffff;
+    --admin-primary: #0056b3;
+    --admin-primary-hover: #004494;
+    --admin-secondary: #6c757d;
+    --admin-secondary-hover: #5a6268;
+    --admin-success: #198754;
+    --admin-danger: #dc3545;
+    --admin-warning: #ffc107;
+    --admin-info: #0dcaf0;
+    --admin-light: #f8f9fa;
+    --admin-dark: #212529;
+    --admin-border: #e2e8f0;
+    --admin-text: #334155;
+    --admin-text-muted: #64748b;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --radius-md: 8px;
+    --radius-lg: 12px;
 }
 
 * {
@@ -20,9 +31,10 @@
 }
 
 body.admin-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fa;
-    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--admin-bg);
+    color: var(--admin-text);
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Contenedor principal */
@@ -80,47 +92,61 @@ body.admin-body {
     margin-bottom: 2rem;
 }
 .btn {
-    padding: 8px 16px;
+    padding: 10px 18px;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.3s;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    box-shadow: var(--shadow-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.btn:active {
+    transform: translateY(0);
 }
 .btn-primary {
-    background-color: var(--admin-info);
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     color: white;
 }
 .btn-primary:hover {
-    background-color: #2980b9;
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
 }
 .btn-warning {
-    background-color: var(--admin-warning);
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     color: white;
 }
 .btn-warning:hover {
-    background-color: #e67e22;
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
 }
 .btn-danger {
-    background-color: var(--admin-danger);
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     color: white;
 }
 .btn-danger:hover {
-    background-color: #c0392b;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
 }
 .btn-success {
-    background-color: var(--admin-success);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
 }
 .btn-success:hover {
-    background-color: #2ecc71;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
 }
 .btn-secondary {
-    background-color: var(--admin-secondary);
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
     color: white;
 }
 .btn-secondary:hover {
-    background-color: #2c3e50;
+    background: linear-gradient(135deg, #475569 0%, #334155 100%);
 }
 
 /* Lista de eventos */

@@ -84,6 +84,11 @@ router.post('/usuarios', adminUsuario.crear.bind(adminUsuario));
 router.post('/usuarios/bulk-delete', adminUsuario.eliminarVarios.bind(adminUsuario));
 router.delete('/usuarios/:id', adminUsuario.eliminar.bind(adminUsuario));
 
+// ========== Rutas para Chat (Baneados) ==========
+const chatBansController = require('../controllers/admin/ChatBansController');
+router.get('/chat-bans', chatBansController.listar.bind(chatBansController));
+router.delete('/chat-bans/:userId', chatBansController.desbanear.bind(chatBansController));
+
 // ========== Rutas para Estadísticas ==========
 router.get('/stats', statsController.getStats.bind(statsController));
 router.get('/stats/export', statsController.exportVisits.bind(statsController));

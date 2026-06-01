@@ -36,17 +36,27 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/streaming.css">
+    <link rel="stylesheet" href="css/modal-auth.css">
+    <link rel="stylesheet" href="css/confirm-modal.css">
+    <link rel="stylesheet" href="css/navbar-auth.css">
 </head>
 
 <body>
     <nav class="navbar" style="background-color: #C8102E;">
-        <div class="container">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div class="logo">
                 <a href="/" style="color: white; text-decoration: none; display: flex; align-items: center;">
                     <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="Logo"
                         style="height: 40px; margin-right: 10px;">
                     <span style="color: white;">ExpoFeriasCR</span>
                 </a>
+            </div>
+            <div class="nav-actions" style="display: flex; align-items: center; gap: 15px;">
+                <div class="nav-auth" id="nav-auth">
+                    <button id="btn-login-navbar" class="btn-navbar-auth btn-primary" style="background: white; color: #C8102E; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer;">
+                        <i class="fas fa-user"></i> Ingresar
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -98,26 +108,47 @@
             <div id="container-c083045c1441aa427e4f38dd4dc7fc88"></div>
 
 
-            <div class="video-wrapper">
-                <iframe src="https://iblups.com/embed/expoferiascrlive" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+            <div class="video-chat-container">
+                <div class="video-wrapper">
+                    <iframe src="https://iblups.com/embed/expoferiascrlive" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
 
-                <!-- Ad Overlay Offline -->
-                <div class="ad-overlay" id="playerAdOverlay">
-                    <a href="https://www.effectivecpmnetwork.com/yukb4smsai?key=689ad730e62a16ff1a7873bd2320480a"
-                        target="_blank"
-                        onclick="setTimeout(() => document.getElementById('playerAdOverlay').style.display='none', 100);"
-                        style="position: relative; display: block; width:100%; height:100%;">
-                        <img src="https://iblups.sfo3.cdn.digitaloceanspaces.com/app/iblups_player_offline.png"
-                            alt="OFFLINE" style="width:100%; height:100%; object-fit:contain;">
+                    <!-- Ad Overlay Offline -->
+                    <div class="ad-overlay" id="playerAdOverlay">
+                        <a href="https://www.effectivecpmnetwork.com/yukb4smsai?key=689ad730e62a16ff1a7873bd2320480a"
+                            target="_blank"
+                            onclick="setTimeout(() => document.getElementById('playerAdOverlay').style.display='none', 100);"
+                            style="position: relative; display: block; width:100%; height:100%;">
+                            <img src="https://iblups.sfo3.cdn.digitaloceanspaces.com/app/iblups_player_offline.png"
+                                alt="OFFLINE" style="width:100%; height:100%; object-fit:contain;">
 
-                        <!-- Botón de Play Falso -->
-                        <div
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; background: rgba(0, 0, 0, 0.7); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 4px solid rgba(255, 255, 255, 0.9); box-shadow: 0 0 20px rgba(0,0,0,0.5); transition: all 0.3s ease;">
-                            <i class="fas fa-play" style="color: white; font-size: 2.5rem; margin-left: 8px;"></i>
-                        </div>
-                    </a>
+                            <!-- Botón de Play Falso -->
+                            <div
+                                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; background: rgba(0, 0, 0, 0.7); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 4px solid rgba(255, 255, 255, 0.9); box-shadow: 0 0 20px rgba(0,0,0,0.5); transition: all 0.3s ease;">
+                                <i class="fas fa-play" style="color: white; font-size: 2.5rem; margin-left: 8px;"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Chat en Vivo -->
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <h3><i class="fas fa-comments"></i> Chat en Vivo</h3>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Mensajes cargados por JS -->
+                    </div>
+                    <div class="chat-input-area" id="chatInputArea">
+                        <p id="chatLoginPrompt" style="text-align: center; margin-bottom: 10px; color: #666; font-size: 0.9rem;">
+                            Debes <a href="javascript:void(0)" onclick="abrirModalAuth('login')" style="color:#C8102E; font-weight:bold; text-decoration:underline;">iniciar sesión</a> para comentar.
+                        </p>
+                        <form id="chatForm" style="display: none;">
+                            <input type="text" id="chatInput" placeholder="Escribe un mensaje..." autocomplete="off" required>
+                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -165,9 +196,17 @@
         </div>
     </footer>
 
+    <!-- Modal de Autenticación -->
+    <div id="modal-auth-container"></div>
+    <script src="js/helpers.js"></script>
+    <script src="js/publico/main-auth.js"></script>
+    <script src="js/publico/modal-auth.js"></script>
+
     <!-- Social Bar -->
     <script type="text/javascript"
         src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/streaming-chat.js"></script>
 </body>
 
 </html>

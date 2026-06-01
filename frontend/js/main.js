@@ -181,6 +181,13 @@ function createEventoCard(evento, isLive = false) {
             window.mostrarPopupAnuncio(`evento.html?slug=${evento.slug}`);
         }
     };
+    // Bloquear click de rueda (botón del medio) para forzar el popup
+    card.onauxclick = (e) => {
+        if (e.button === 1) {
+            e.preventDefault();
+            window.mostrarPopupAnuncio(`evento.html?slug=${evento.slug}`);
+        }
+    };
 
     if (isLive) {
         const badge = document.createElement('div');
@@ -209,7 +216,7 @@ function createEventoCard(evento, isLive = false) {
         })()}</p>
             <p class="card-location"><i class="fas fa-map-marker-alt"></i> ${ubicacionCorta}</p>
             ${evento.ubicacion && evento.ubicacion !== ubicacionCorta ? `<p class="card-address"><i class="fas fa-compass"></i> ${evento.ubicacion}</p>` : ''}
-            <a href="evento.html?slug=${evento.slug}" class="btn-ver" onclick="event.preventDefault(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}');">Ver detalles</a>
+            <a href="evento.html?slug=${evento.slug}" class="btn-ver" onclick="event.preventDefault(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}');" onauxclick="if(event.button === 1) { event.preventDefault(); event.stopPropagation(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}'); }">Ver detalles</a>
         </div>
     `;
     return card;

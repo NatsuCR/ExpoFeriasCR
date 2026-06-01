@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios Baneados - ExpoFeriasCR</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link rel="stylesheet" href="css/panel.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/confirm-modal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="../js/helpers.js"></script>
+    <style>
+        .table-baneados { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .table-baneados th, .table-baneados td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        .table-baneados th { background-color: #C8102E; color: white; }
+        .btn-desbanear { background-color: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-desbanear:hover { background-color: #219653; }
+        .empty-state { padding: 40px; text-align: center; color: #666; }
+    </style>
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <div class="dashboard-header">
+            <div class="header-main-row">
+                <h1>Usuarios Baneados del Chat</h1>
+            </div>
+            <div class="header-buttons">
+                <a href="dashboard.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver al Panel</a>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <table class="table-baneados" id="tablaBaneados">
+                <thead>
+                    <tr>
+                        <th>ID Usuario</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Fecha del Ban</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="listaBaneados">
+                    <tr><td colspan="5" class="empty-state">Cargando usuarios baneados...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../js/admin/baneados.js"></script>
+</body>
+</html>

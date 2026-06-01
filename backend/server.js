@@ -202,6 +202,9 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`- Red:     http://192.168.1.18:${PORT} (Si es tu IP local)`);
 });
 
+// Inicializar WebSockets para el Chat en Vivo
+require('./chatSocket')(server);
+
 server.on('error', (error) => {
   if (error.code === 'EADDRINUSE') {
     console.error(`❌ El puerto ${PORT} ya está siendo usado por otro programa.`);

@@ -141,6 +141,23 @@
 
             <!-- Centro y Derecha: Menú y Acciones -->
             <div class="nav-menu-wrapper" id="nav-menu-wrapper">
+                
+                <!-- Selector visible en móvil (dentro del menú) -->
+                <div class="custom-language-selector lang-selector-mobile">
+                    <i class="fas fa-globe"></i>
+                    <select class="lang-select-modern custom-lang-select">
+                        <option value="auto">Lenguage</option>
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                        <option value="pt">Português</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="it">Italiano</option>
+                        <option value="ja">日本語 (Japonés)</option>
+                        <option value="zh-CN">中文 (Chino)</option>
+                    </select>
+                </div>
+
                 <!-- Enlaces Centrales -->
                 <ul class="nav-links">
 
@@ -156,9 +173,9 @@
                         class="tutorial-btn">
                         <i class="fas fa-play"></i> Tutorial
                     </a>
-                    <div class="custom-language-selector">
+                    <div class="custom-language-selector lang-selector-desktop">
                         <i class="fas fa-globe"></i>
-                        <select id="custom-lang-select" class="lang-select-modern">
+                        <select class="lang-select-modern custom-lang-select">
                             <option value="auto">Lenguage</option>
                             <option value="es">Español</option>
                             <option value="en">English</option>
@@ -230,6 +247,7 @@
                         <i class="fas fa-tags"></i>
                         <select id="categoria-select" class="modern-select">
                             <option value="">🎭 Categoría</option>
+                            <option value="Deporte">Deporte</option>
                             <option value="Feria">Feria</option>
                             <option value="Concierto">Concierto</option>
                             <option value="Arte y Cultura">Arte y Cultura</option>
@@ -238,7 +256,6 @@
                             <option value="Gastronomía">Gastronomía</option>
                             <option value="Exposición">Exposición</option>
                             <option value="Talleres y Charlas">Talleres y Charlas</option>
-                            <option value="Deporte">Deporte</option>
                             <option value="Recreativa">Recreativa</option>
                             <option value="Gobierno / Cívico">Gobierno / Cívico</option>
                             <option value="Religioso">Religioso</option>
@@ -523,7 +540,7 @@
     <!-- Script para Custom Language Selector -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const customSelect = document.getElementById('custom-lang-select');
+            const customSelects = document.querySelectorAll('.custom-lang-select');
 
             // 1. Cargar idioma desde la cookie (si existe) para mostrarlo correcto en el select
             function getCookie(name) {
@@ -533,23 +550,29 @@
             }
 
             const googtrans = getCookie('googtrans');
-            if (googtrans) {
-                const lang = googtrans.split('/')[2];
-                if (lang && customSelect.querySelector(`option[value="${lang}"]`)) {
-                    customSelect.value = lang;
+            
+            customSelects.forEach(customSelect => {
+                if (googtrans) {
+                    const lang = googtrans.split('/')[2];
+                    if (lang && customSelect.querySelector(`option[value="${lang}"]`)) {
+                        customSelect.value = lang;
+                    }
                 }
-            }
 
-            // 2. Escuchar cambios en nuestro select
-            customSelect.addEventListener('change', function () {
-                const selectedLang = this.value;
-                const googleSelect = document.querySelector('.goog-te-combo');
+                // 2. Escuchar cambios en nuestro select
+                customSelect.addEventListener('change', function () {
+                    const selectedLang = this.value;
+                    const googleSelect = document.querySelector('.goog-te-combo');
 
-                if (googleSelect) {
-                    googleSelect.value = selectedLang;
-                    // Disparar el evento de cambio para que Google lo detecte
-                    googleSelect.dispatchEvent(new Event('change'));
-                }
+                    if (googleSelect) {
+                        googleSelect.value = selectedLang;
+                        // Disparar el evento de cambio para que Google lo detecte
+                        googleSelect.dispatchEvent(new Event('change'));
+                        
+                        // Sincronizar el otro select
+                        customSelects.forEach(s => s.value = selectedLang);
+                    }
+                });
             });
         });
     </script>
@@ -592,6 +615,9 @@
 
     <!-- Social Bar -->
     <script src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></script>
+
+
+
 
 
 

@@ -194,14 +194,14 @@
   }
 
   .user-dropdown-menu {
-    position: absolute;
-    top: calc(100% + 5px);
+    position: relative;
+    top: auto;
+    left: 0;
     right: 0;
-    left: auto;
-    margin: 0;
+    margin: 10px auto 0 auto;
     width: 250px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    border: none;
+    border: 1px solid #eee;
     background: #ffffff;
     border-radius: 12px;
     overflow: hidden;

@@ -35,19 +35,18 @@
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 .nav-links a {
     color: var(--color-menu-texto, #ffffff);
     background-color: var(--color-menu-fondo, rgba(255,255,255,0.1));
     text-decoration: none;
     font-weight: 600;
-    padding: 10px 20px;
+    padding: 8px 12px;
     border-radius: 30px;
     transition: all 0.3s ease;
     display: inline-block;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     border: 1px solid rgba(255,255,255,0.1);
 }
 .nav-links a:hover {
@@ -55,6 +54,29 @@
     color: var(--color-menu-texto-hover, #ffffff);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Selector de idioma blanco para evento.html */
+.navbar .custom-language-selector {
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: var(--color-menu-fondo, rgba(255,255,255,0.1));
+}
+.navbar .custom-language-selector.lang-selector-mobile {
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.navbar .custom-language-selector i,
+.navbar .lang-select-modern {
+    color: var(--color-menu-texto, #ffffff);
+}
+.navbar .custom-language-selector:hover {
+    background-color: var(--color-menu-fondo-hover, rgba(255, 255, 255, 0.2));
+}
+.navbar .custom-language-selector:hover i,
+.navbar .custom-language-selector:hover .lang-select-modern {
+    color: var(--color-menu-texto-hover, #ffffff);
+}
+.navbar .lang-select-modern option {
+    color: #333; /* Para que las opciones del dropdown sigan siendo legibles */
 }
 
 /* Hero con carrusel de fondo */

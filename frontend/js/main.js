@@ -317,6 +317,7 @@ window.cargarProximos = async function (filtros = {}) {
 
     // Definir orden de importancia
     const ORDEN_PRIORIDAD = [
+        'Deporte',
         'Feria',
         'Concierto',
         'Arte y Cultura',
@@ -325,7 +326,6 @@ window.cargarProximos = async function (filtros = {}) {
         'Gastronomía',
         'Exposición',
         'Talleres y Charlas',
-        'Deporte',
         'Recreativa',
         'Gobierno / Cívico',
         'Religioso',

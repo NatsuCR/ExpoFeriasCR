@@ -94,15 +94,33 @@
 
     <nav class="navbar">
         <div class="container">
-            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="logo">
+            <a href="/" class="logo" style="text-decoration: none;">
                 <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR"
                     loading="lazy">
                 <span>ExpoFeriasCR</span>
-            </div>
+            </a>
+
+            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="nav-menu-wrapper" id="nav-menu-wrapper">
+                
+                <!-- Selector visible en móvil (dentro del menú) -->
+                <div class="custom-language-selector lang-selector-mobile">
+                    <i class="fas fa-globe"></i>
+                    <select class="lang-select-modern custom-lang-select">
+                        <option value="auto">Lenguage</option>
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                        <option value="pt">Português</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="it">Italiano</option>
+                        <option value="ja">日本語 (Japonés)</option>
+                        <option value="zh-CN">中文 (Chino)</option>
+                    </select>
+                </div>
+
                 <ul class="nav-links">
 
                     <li><a href="/">Inicio</a></li>
@@ -112,6 +130,22 @@
                     <li><a href="#expositores">Expositores</a></li>
                     <li><a href="#ubicacion">Ubicación</a></li>
                 </ul>
+                <div class="nav-actions">
+                    <div class="custom-language-selector lang-selector-desktop">
+                        <i class="fas fa-globe"></i>
+                        <select class="lang-select-modern custom-lang-select">
+                            <option value="auto">Lenguage</option>
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                            <option value="pt">Português</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                            <option value="it">Italiano</option>
+                            <option value="ja">日本語 (Japonés)</option>
+                            <option value="zh-CN">中文 (Chino)</option>
+                        </select>
+                    </div>
+                </div>
                 <!-- El widget estÃ¡ oculto, pero el script sigue activo para leer la cookie y traducir automÃ¡ticamente -->
                 <div id="google_translate_element" style="display: none;"></div>
             </div>
@@ -383,6 +417,46 @@
     </script>
     <script type="text/javascript"
         src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- Script para Custom Language Selector -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const customSelects = document.querySelectorAll('.custom-lang-select');
+
+            // 1. Cargar idioma desde la cookie (si existe) para mostrarlo correcto en el select
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                if (match) return match[2];
+                return null;
+            }
+
+            const googtrans = getCookie('googtrans');
+            
+            customSelects.forEach(customSelect => {
+                if (googtrans) {
+                    const lang = googtrans.split('/')[2];
+                    if (lang && customSelect.querySelector(`option[value="${lang}"]`)) {
+                        customSelect.value = lang;
+                    }
+                }
+
+                // 2. Escuchar cambios en nuestro select
+                customSelect.addEventListener('change', function () {
+                    const selectedLang = this.value;
+                    const googleSelect = document.querySelector('.goog-te-combo');
+
+                    if (googleSelect) {
+                        googleSelect.value = selectedLang;
+                        // Disparar el evento de cambio para que Google lo detecte
+                        googleSelect.dispatchEvent(new Event('change'));
+                        
+                        // Sincronizar el otro select
+                        customSelects.forEach(s => s.value = selectedLang);
+                    }
+                });
+            });
+        });
+    </script>
 
 
     <!-- Social Bar -->

@@ -97,9 +97,12 @@ window.mostrarPopupAnuncio = function (targetUrl) {
         adContainerBottom.appendChild(adScriptBottom);
     }
 
-    const socialScript2 = document.createElement('script');
-    socialScript2.src = 'https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js';
-    document.body.appendChild(socialScript2);
+    const isApple = /iPad|iPhone|iPod/i.test(navigator.userAgent) || (navigator.userAgent.includes("Safari") && !navigator.userAgent.includes("Chrome") && !navigator.userAgent.includes("Chromium"));
+    if (!isApple) {
+        const socialScript2 = document.createElement('script');
+        socialScript2.src = 'https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js';
+        document.body.appendChild(socialScript2);
+    }
 
     // Animación de entrada
     setTimeout(() => {

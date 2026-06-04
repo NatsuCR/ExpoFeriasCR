@@ -63,8 +63,9 @@ function renderRecientes(eventos) {
     const contenedor = document.getElementById('listaRecientes');
     const badge      = document.getElementById('badgeRecientes');
 
-    // Los más recientes = los últimos creados → ordenar por id desc y tomar 5
-    const recientes = [...eventos]
+    // Filtrar eventos que NO estén pendientes y que NO estén finalizados, luego ordenar por id desc y tomar 5
+    const recientes = eventos
+        .filter(e => e.estado !== 'pendiente' && e.estado !== 'edicion_pendiente' && estadoEvento(e).cls !== 'estado-pasado')
         .sort((a, b) => b.id - a.id)
         .slice(0, 5);
 
@@ -91,12 +92,48 @@ function renderRecientes(eventos) {
     }).join('');
 }
 
+function renderPendientes(eventos) {
+    const contenedor = document.getElementById('listaPendientes');
+    const badge      = document.getElementById('badgePendientes');
+
+    // Filtrar solo los eventos que están pendientes de revisión o edición
+    const pendientes = eventos.filter(e => e.estado === 'pendiente' || e.estado === 'edicion_pendiente');
+
+    // Ordenar por id desc (los más recientes primero)
+    const ordenados = [...pendientes].sort((a, b) => b.id - a.id);
+
+    badge.textContent = ordenados.length;
+
+    if (ordenados.length === 0) {
+        contenedor.innerHTML = '<p class="section-empty">No hay eventos pendientes de revisión.</p>';
+        return;
+    }
+
+    contenedor.innerHTML = ordenados.map(e => {
+        const estado = estadoEvento(e);
+        return `
+        <div class="mini-evento">
+            <div class="reciente-dot" style="background:#f39c12;"></div>
+            <div class="mini-evento-info">
+                <strong title="${escapeHtml(e.nombre)}">${escapeHtml(e.nombre)}
+                    <span class="estado-tag ${estado.cls}">${estado.label}</span>
+                </strong>
+                <span>${formatFecha(e.fecha_inicio)} → ${formatFecha(e.fecha_fin)}</span>
+            </div>
+            <button class="mini-edit-btn" onclick="editarEvento(${e.id})">Revisar</button>
+        </div>`;
+    }).join('');
+}
+
 function renderCronologico(eventos) {
     const contenedor = document.getElementById('listaCronologico');
     const badge      = document.getElementById('badgeCronologico');
 
+    // Filtrar eventos aprobados y no finalizados
+    const activos = eventos.filter(e => e.estado === 'aprobado' && estadoEvento(e).cls !== 'estado-pasado');
+
     // Ordenar por fecha_inicio asc; si empatan, por fecha_fin asc
-    const ordenados = [...eventos].sort((a, b) => {
+    const ordenados = [...activos].sort((a, b) => {
         const diffIni = new Date(a.fecha_inicio) - new Date(b.fecha_inicio);
         if (diffIni !== 0) return diffIni;
         return new Date(a.fecha_fin) - new Date(b.fecha_fin);
@@ -105,7 +142,7 @@ function renderCronologico(eventos) {
     badge.textContent = ordenados.length;
 
     if (ordenados.length === 0) {
-        contenedor.innerHTML = '<p class="section-empty">Sin eventos registrados.</p>';
+        contenedor.innerHTML = '<p class="section-empty">Sin eventos activos registrados.</p>';
         return;
     }
 
@@ -125,6 +162,43 @@ function renderCronologico(eventos) {
     }).join('');
 }
 
+function renderFinalizados(eventos) {
+    const contenedor = document.getElementById('listaFinalizados');
+    const badge      = document.getElementById('badgeFinalizados');
+
+    // Filtrar solo eventos finalizados
+    const finalizados = eventos.filter(e => estadoEvento(e).cls === 'estado-pasado');
+
+    // Ordenar por fecha_inicio asc; si empatan, por fecha_fin asc
+    const ordenados = [...finalizados].sort((a, b) => {
+        const diffIni = new Date(a.fecha_inicio) - new Date(b.fecha_inicio);
+        if (diffIni !== 0) return diffIni;
+        return new Date(a.fecha_fin) - new Date(b.fecha_fin);
+    });
+
+    badge.textContent = ordenados.length;
+
+    if (ordenados.length === 0) {
+        contenedor.innerHTML = '<p class="section-empty">No hay eventos finalizados.</p>';
+        return;
+    }
+
+    contenedor.innerHTML = ordenados.map((e, i) => {
+        const estado = estadoEvento(e);
+        return `
+        <div class="mini-evento">
+            <div class="orden-badge" style="background:#7f8c8d;">${i + 1}</div>
+            <div class="mini-evento-info">
+                <strong title="${escapeHtml(e.nombre)}">${escapeHtml(e.nombre)}
+                    <span class="estado-tag ${estado.cls}">${estado.label}</span>
+                </strong>
+                <span>${formatFecha(e.fecha_inicio)} → ${formatFecha(e.fecha_fin)}</span>
+            </div>
+            <button class="mini-edit-btn" onclick="editarEvento(${e.id})">Editar</button>
+        </div>`;
+    }).join('');
+}
+
 // ── Lista completa ────────────────────────────────────────────────────────────
 
 async function cargarEventos() {
@@ -133,7 +207,9 @@ async function cargarEventos() {
 
     // Render de secciones de resumen
     renderRecientes(eventos);
+    renderPendientes(eventos);
     renderCronologico(eventos);
+    renderFinalizados(eventos);
 
     // Render de lista completa
     if (eventos.length === 0) {

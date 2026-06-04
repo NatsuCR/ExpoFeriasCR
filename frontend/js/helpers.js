@@ -299,6 +299,11 @@ window.cerrarStickyAd = function() {
 
 // Sticky Ad para todas las pantallas
 window.initStickyAd = function (force = false) {
+    // No mostrar anuncios en el apartado de administración
+    if (window.location.pathname.includes('/admin/')) {
+        return;
+    }
+
     // Evitar duplicados
     if (document.getElementById('global-sticky-ad')) {
         if (!force) return;

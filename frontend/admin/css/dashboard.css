@@ -262,10 +262,12 @@
     text-align: center;
 }
 .section-header.recientes .badge   { background: #27ae60; }
+.section-header.pendientes .badge  { background: #f39c12; }
 .section-header.cronologico .badge { background: #8e44ad; }
+.section-header.finalizados .badge { background: #7f8c8d; }
 .section-body {
     padding: 0.5rem 0;
-    max-height: 340px;
+    max-height: 275px;
     overflow-y: auto;
 }
 .mini-evento {

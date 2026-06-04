@@ -275,9 +275,16 @@ window.cargarSeccion = async function (endpoint, trackId, controlsId, isLive, fi
     
     // Inject in-feed ads
     const cardsWithAds = [];
+    const isAd = (() => {
+        try {
+            const u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            return u && u.rol && String(u.rol).toLowerCase() === 'admin';
+        } catch(e) { return false; }
+    })();
+
     cards.forEach((c, index) => {
         cardsWithAds.push(c);
-        if ((index + 1) % 4 === 0) {
+        if (!isAd && (index + 1) % 4 === 0) {
             cardsWithAds.push(createAdCard());
         }
     });
@@ -383,10 +390,21 @@ window.cargarProximos = async function (filtros = {}) {
         const trackId = `track-${sectionId}`;
         const controlsId = `controls-${sectionId}`;
 
-        const sectionHtml = `
+        const isAd = (() => {
+            try {
+                const u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                return u && u.rol && String(u.rol).toLowerCase() === 'admin';
+            } catch(e) { return false; }
+        })();
+
+        const adHtml = isAd ? '' : `
             <div style="text-align: center; margin: 20px 0;">
                 <img border="0" alt="" src="https://cdn.storageimagedisplay.com/cti/6f/8f/ef/6f8fefa6447554571085566ee4c3443e/1779116078.jpg" width="728" height="90" style="max-width: 100%; height: auto;">
             </div>
+        `;
+
+        const sectionHtml = `
+            ${adHtml}
             <section class="section-carousel reveal active" id="${sectionId}">
                 <div class="container">
                     <div class="section-header">

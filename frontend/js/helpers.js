@@ -306,7 +306,7 @@ window.initStickyAd = function (force = false) {
 
     // No mostrar anuncios si el usuario logueado es admin
     const user = typeof window.getUsuarioStorage === 'function' ? window.getUsuarioStorage() : JSON.parse(localStorage.getItem('usuario') || 'null');
-    if (user && user.rol === 'admin') {
+    if (user && user.rol && String(user.rol).toLowerCase() === 'admin') {
         return;
     }
 

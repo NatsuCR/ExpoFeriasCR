@@ -133,7 +133,9 @@
         <script>
             (function() {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
+                var isApple = /iPad|iPhone|iPod/i.test(navigator.userAgent) || (navigator.userAgent.includes("Safari") && !navigator.userAgent.includes("Chrome") && !navigator.userAgent.includes("Chromium"));
+                if (!isAdmin && !isApple) {
                     document.write(`
                     <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" style="display:inline-block; position:relative; z-index:100000; margin-bottom: 20px;">
                         <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">

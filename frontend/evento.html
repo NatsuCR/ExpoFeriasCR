@@ -168,7 +168,9 @@
     <script>
         (function() {
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            if (!u || u.rol !== 'admin') {
+            var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
+            var isApple = /iPad|iPhone|iPod/i.test(navigator.userAgent) || (navigator.userAgent.includes("Safari") && !navigator.userAgent.includes("Chrome") && !navigator.userAgent.includes("Chromium"));
+            if (!isAdmin && !isApple) {
                 document.write('<scr' + 'ipt async="async" data-cfasync="false" src="https://pl29512241.effectivecpmnetwork.com/c083045c1441aa427e4f38dd4dc7fc88/invoke.js"></scr' + 'ipt>');
                 document.write('<div id="container-c083045c1441aa427e4f38dd4dc7fc88"></div>');
             }

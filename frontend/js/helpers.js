@@ -342,14 +342,19 @@ window.initStickyAd = function (force = false) {
     const adKey = isMobile ? 'db5fab4e621232d201d1e41f58321ace' : 'd24a04b077cc5a19d8ab72ae7e33176e';
     const paddingBottom = isMobile ? '60px' : '100px';
 
+    const isApple = /iPad|iPhone|iPod/i.test(navigator.userAgent) || (navigator.userAgent.includes("Safari") && !navigator.userAgent.includes("Chrome") && !navigator.userAgent.includes("Chromium"));
+    
+    const fakeX = isApple ? '' : `<a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" onclick="window.cerrarStickyAd()" style="position: absolute; top: -16px; right: 5px; background: #ff4444; border: 2px solid #fff; border-radius: 50%; width: 28px; height: 28px; font-size: 18px; font-weight: bold; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 11; color: #fff; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">&times;</a>`;
+    const realX = isApple 
+        ? `<button onclick="window.cerrarStickyAd()" style="position: absolute; top: -16px; right: 5px; background: #ff4444; border: 2px solid #fff; border-radius: 50%; width: 28px; height: 28px; font-size: 18px; font-weight: bold; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 11; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">&times;</button>`
+        : `<button onclick="window.cerrarStickyAd()" style="position: absolute; top: -10px; right: 40px; background: transparent; border: none; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; color: #aaa;">cerrar</button>`;
+
     const stickyContainer = document.createElement('div');
     stickyContainer.id = 'global-sticky-ad';
     stickyContainer.innerHTML = `
         <div style="position: relative; width: 100%; display: flex; justify-content: center; align-items: center;">
-            <!-- Falsa X (Smartlink) -->
-            <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" onclick="window.cerrarStickyAd()" style="position: absolute; top: -16px; right: 5px; background: #ff4444; border: 2px solid #fff; border-radius: 50%; width: 28px; height: 28px; font-size: 18px; font-weight: bold; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 11; color: #fff; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">&times;</a>
-            <!-- Verdadera X (Pequeña y oculta) -->
-            <button onclick="window.cerrarStickyAd()" style="position: absolute; top: -10px; right: 40px; background: transparent; border: none; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; color: #aaa;">cerrar</button>
+            ${fakeX}
+            ${realX}
             <iframe srcdoc="<!DOCTYPE html><html><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;'><script>atOptions={'key':'${adKey}','format':'iframe','height':${adHeight},'width':${adWidth},'params':{}};</script><script src='https://www.highperformanceformat.com/${adKey}/invoke.js'></script></body></html>" width="${adWidth}" height="${adHeight}" frameborder="0" scrolling="no"></iframe>
         </div>
     `;

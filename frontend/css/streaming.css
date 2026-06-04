@@ -70,6 +70,156 @@
     border: 0;
 }
 
+/* Reset padding when in fullscreen so children aren't pushed off-screen */
+#video-fullscreen-wrap:fullscreen {
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#video-fullscreen-wrap:-webkit-full-screen {
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#video-fullscreen-wrap:-moz-full-screen {
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#video-fullscreen-wrap:fullscreen .video-wrapper {
+    padding-bottom: 0 !important;
+    height: 100%;
+    width: 100%;
+    max-width: 177.78vh;
+    /* 16:9 Aspect Ratio bounds */
+    max-height: 56.25vw;
+    margin: auto;
+}
+
+#video-fullscreen-wrap:-webkit-full-screen .video-wrapper {
+    padding-bottom: 0 !important;
+    height: 100%;
+    width: 100%;
+    max-width: 177.78vh;
+    max-height: 56.25vw;
+    margin: auto;
+}
+
+#video-fullscreen-wrap:-moz-full-screen .video-wrapper {
+    padding-bottom: 0 !important;
+    height: 100%;
+    width: 100%;
+    max-width: 177.78vh;
+    max-height: 56.25vw;
+    margin: auto;
+}
+
+#video-fullscreen-wrap:fullscreen iframe {
+    height: 100%;
+}
+
+#video-fullscreen-wrap:-webkit-full-screen iframe {
+    height: 100%;
+}
+
+#video-fullscreen-wrap:-moz-full-screen iframe {
+    height: 100%;
+}
+
+/* Comportamiento de Overlay Ad para el video SOLO en Fullscreen */
+#video-fullscreen-wrap:fullscreen #global-sticky-ad {
+    position: absolute !important;
+    bottom: -30px !important;
+    /* Ligeramente más abajo para eliminar la separación negra */
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 9999 !important;
+    background: #fff !important;
+    /* MANTENER EL FONDO BLANCO */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+    padding: 0 !important;
+    /* Altura total de 90px (Altura exacta del banner) */
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#video-fullscreen-wrap:-webkit-full-screen #global-sticky-ad {
+    position: absolute !important;
+    bottom: -80px !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 9999 !important;
+    background: #fff !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+    padding: 0 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Corrección del anclaje Fullscreen específicamente para móviles */
+@media (max-width: 768px) {
+    #video-fullscreen-wrap:fullscreen #global-sticky-ad,
+    #video-fullscreen-wrap:-webkit-full-screen #global-sticky-ad,
+    #video-fullscreen-wrap:-moz-full-screen #global-sticky-ad {
+        bottom: 0 !important; /* En celular no empujamos hacia abajo porque el anuncio es más pequeño */
+    }
+}
+
+#video-fullscreen-wrap:-moz-full-screen #global-sticky-ad {
+    position: absolute !important;
+    bottom: -20px !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 9999 !important;
+    background: #fff !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+    padding: 0 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Reubicar los botones hacia adentro para que no estiren el contenedor blanco */
+#video-fullscreen-wrap:fullscreen #global-sticky-ad>div>a {
+    top: 5px !important;
+}
+
+#video-fullscreen-wrap:-webkit-full-screen #global-sticky-ad>div>a {
+    top: 5px !important;
+}
+
+#video-fullscreen-wrap:-moz-full-screen #global-sticky-ad>div>a {
+    top: 5px !important;
+}
+
+#video-fullscreen-wrap:fullscreen #global-sticky-ad>div>button {
+    top: 12px !important;
+}
+
+#video-fullscreen-wrap:-webkit-full-screen #global-sticky-ad>div>button {
+    top: 12px !important;
+}
+
+#video-fullscreen-wrap:-moz-full-screen #global-sticky-ad>div>button {
+    top: 12px !important;
+}
+
+
+
 .ad-overlay {
     position: absolute;
     top: 0;
@@ -139,6 +289,28 @@
         width: 100%;
     }
 
+    .navbar .logo span {
+        display: none !important;
+    }
+
+    .navbar .nav-actions {
+        width: auto !important;
+        flex-direction: row !important;
+        margin-top: 0 !important;
+    }
+
+    .navbar .nav-auth {
+        width: auto !important;
+        flex-direction: row !important;
+    }
+
+    #btn-login-navbar {
+        width: auto !important;
+        padding: 6px 15px !important;
+        font-size: 0.9rem !important;
+        white-space: nowrap;
+    }
+
     .streaming-content h1 {
         font-size: 1.8rem;
     }
@@ -161,11 +333,35 @@
 
 @media (max-width: 480px) {
     .streaming-layout {
-        padding: 20px 5px 15px;
+        padding: 80px 5px 15px;
+        /* Aumentado para que el navbar no tape el video */
     }
 
     .streaming-content h1 {
         font-size: 1.5rem;
+    }
+
+    /* Arreglar el navbar en streaming para móviles */
+    .navbar .logo span {
+        display: none !important;
+    }
+
+    .navbar .nav-actions {
+        width: auto !important;
+        flex-direction: row !important;
+        margin-top: 0 !important;
+    }
+
+    .navbar .nav-auth {
+        width: auto !important;
+        flex-direction: row !important;
+    }
+
+    #btn-login-navbar {
+        width: auto !important;
+        padding: 6px 15px !important;
+        font-size: 0.9rem !important;
+        white-space: nowrap;
     }
 }
 
@@ -192,8 +388,8 @@
     /* El video toma más espacio */
     position: relative;
     width: 100%;
-    padding-bottom: 42.25%;
-    /* Ajuste de aspect ratio para que empate mejor con el chat alto */
+    padding-bottom: 56.25%;
+    /* Ajuste de aspect ratio a 16:9 estandar para evitar cortes y scrollbars */
     background: #000;
     border-radius: 12px;
     overflow: hidden;

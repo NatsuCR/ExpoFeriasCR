@@ -344,6 +344,28 @@
     box-shadow: 0 0 20px rgba(255, 62, 62, 0.4);
 }
 
+/* Modificadores cuando está dentro del Navbar */
+.nav-actions .patch-btn {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    margin-right: 15px; /* Espacio antes del botón de tutorial */
+}
+.nav-actions .patch-btn:hover {
+    transform: scale(1.1) rotate(10deg);
+}
+.nav-actions .patch-badge {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    top: -4px;
+    right: -4px;
+}
+
 .patch-badge {
     position: absolute;
     top: -2px;

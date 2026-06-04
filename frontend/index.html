@@ -141,7 +141,7 @@
 
             <!-- Centro y Derecha: Menú y Acciones -->
             <div class="nav-menu-wrapper" id="nav-menu-wrapper">
-                
+
                 <!-- Selector visible en móvil (dentro del menú) -->
                 <div class="custom-language-selector lang-selector-mobile">
                     <i class="fas fa-globe"></i>
@@ -169,6 +169,10 @@
 
                 <!-- Acciones (Derecha) -->
                 <div class="nav-actions">
+                    <div id="patch-notes-btn" class="patch-btn" title="Ver novedades y parches">
+                        <i class="fas fa-bell"></i>
+                        <span class="patch-badge">!</span>
+                    </div>
                     <a href="https://youtu.be/Yzug6erDzsk" target="_blank" rel="noopener noreferrer" id="btnTutorial"
                         class="tutorial-btn">
                         <i class="fas fa-play"></i> Tutorial
@@ -448,12 +452,6 @@
     <script src="js/publico/modal-auth.js?v=8.9"></script>
     <script src="js/publico/main-auth.js?v=8.9"></script>
     <script src="js/main.js?v=8.9"></script>
-    <!-- Botón Flotante de Notificaciones (Parches) -->
-    <div id="patch-notes-btn" class="patch-btn" title="Ver novedades y parches">
-        <i class="fas fa-bell"></i>
-        <span class="patch-badge">!</span>
-    </div>
-
     <!-- Panel de Novedades (Modal) -->
     <div id="patch-notes-overlay" class="patch-overlay">
         <div class="patch-content">
@@ -550,7 +548,7 @@
             }
 
             const googtrans = getCookie('googtrans');
-            
+
             customSelects.forEach(customSelect => {
                 if (googtrans) {
                     const lang = googtrans.split('/')[2];
@@ -568,7 +566,7 @@
                         googleSelect.value = selectedLang;
                         // Disparar el evento de cambio para que Google lo detecte
                         googleSelect.dispatchEvent(new Event('change'));
-                        
+
                         // Sincronizar el otro select
                         customSelects.forEach(s => s.value = selectedLang);
                     }

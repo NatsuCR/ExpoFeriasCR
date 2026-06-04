@@ -17,10 +17,6 @@ window.mostrarPopupAnuncio = function (targetUrl) {
     overlay.innerHTML = `
         <div id="ad-popup-card" style="position: relative;">
             <button id="ad-popup-close" style="display:none; position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; font-weight:bold; color:#555;">&times;</button>
-            <div id="ad-popup-ad-top" style="display:flex; justify-content:center; overflow:hidden; min-height:90px; margin-bottom: 10px;">
-                <div id="adsterra-container-top"></div>
-            </div>
-
             <div id="ad-popup-header">
                 <img 
                     src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" 
@@ -84,15 +80,6 @@ window.mostrarPopupAnuncio = function (targetUrl) {
         width: 728,
         params: {}
     };
-
-    const adScriptTop = document.createElement('script');
-    adScriptTop.src = 'https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js';
-    adScriptTop.async = true;
-
-    const adContainerTop = document.getElementById('adsterra-container-top');
-    if (adContainerTop) {
-        adContainerTop.appendChild(adScriptTop);
-    }
 
     const adScriptBottom = document.createElement('script');
     adScriptBottom.src = 'https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js';
@@ -168,6 +155,18 @@ async function fetchData(url) {
         console.error(`Error fetching ${url}:`, error);
         return [];
     }
+}
+
+function createAdCard() {
+    const card = document.createElement('div');
+    card.className = 'evento-card carousel-slide ad-card';
+    card.innerHTML = `
+        <div style="display:flex; justify-content:center; align-items:center; height:100%; background:#f8f9fa; border-radius:12px; padding:20px; flex-direction:column; text-align:center;">
+            <p style="font-size:12px; color:#999; margin-bottom:10px;">Publicidad</p>
+            <iframe srcdoc="<!DOCTYPE html><html><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;'><script>atOptions={'key':'db5fab4e621232d201d1e41f58321ace','format':'iframe','height':50,'width':320,'params':{}};</script><script src='https://www.highperformanceformat.com/db5fab4e621232d201d1e41f58321ace/invoke.js'></script></body></html>" width="320" height="50" frameborder="0" scrolling="no"></iframe>
+        </div>
+    `;
+    return card;
 }
 
 function createEventoCard(evento, isLive = false) {
@@ -263,12 +262,21 @@ window.cargarSeccion = async function (endpoint, trackId, controlsId, isLive, fi
     }
     sectionElement.style.display = 'block';
     const cards = eventos.map(e => createEventoCard(e, isLive));
+    
+    // Inject in-feed ads
+    const cardsWithAds = [];
+    cards.forEach((c, index) => {
+        cardsWithAds.push(c);
+        if ((index + 1) % 4 === 0) {
+            cardsWithAds.push(createAdCard());
+        }
+    });
 
     if (window.initCarousel) {
-        window.initCarousel(trackId, cards, controlsId, 4);
+        window.initCarousel(trackId, cardsWithAds, controlsId, 4);
     } else {
         track.innerHTML = '';
-        cards.forEach(c => track.appendChild(c));
+        cardsWithAds.forEach(c => track.appendChild(c));
     }
 }
 
@@ -388,11 +396,20 @@ window.cargarProximos = async function (filtros = {}) {
 
         const track = document.getElementById(trackId);
         const cards = grupos[tipo].map(e => createEventoCard(e, false));
+        
+        // Inject in-feed ads
+        const cardsWithAds = [];
+        cards.forEach((c, index) => {
+            cardsWithAds.push(c);
+            if ((index + 1) % 4 === 0) {
+                cardsWithAds.push(createAdCard());
+            }
+        });
 
         if (window.initCarousel) {
-            window.initCarousel(trackId, cards, controlsId, 4);
+            window.initCarousel(trackId, cardsWithAds, controlsId, 4);
         } else {
-            cards.forEach(c => track.appendChild(c));
+            cardsWithAds.forEach(c => track.appendChild(c));
         }
     });
 }

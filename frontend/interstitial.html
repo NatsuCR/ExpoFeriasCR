@@ -104,37 +104,50 @@
     <!-- Anuncio Vertical Izquierdo -->
     <div class="ad-vertical-left">
         <script>
-            atOptions = {
-                'key': '6e65addb785e209f532431dd48906da2',
-                'format': 'iframe',
-                'height': 600,
-                'width': 160,
-                'params': {}
-            };
+            (function() {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                if (!u || u.rol !== 'admin') {
+                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                }
+            })();
         </script>
-        <script src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></script>
     </div>
 
     <!-- Anuncio Vertical Derecho -->
     <div class="ad-vertical-right">
         <script>
-            atOptions = {
-                'key': '6e65addb785e209f532431dd48906da2',
-                'format': 'iframe',
-                'height': 600,
-                'width': 160,
-                'params': {}
-            };
+            (function() {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                if (!u || u.rol !== 'admin') {
+                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                }
+            })();
         </script>
-        <script src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></script>
     </div>
 
     <div class="container">
         <button id="ad-popup-close"
             style="display:none; position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; font-weight:bold; color:#555;">&times;</button>
-        <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" style="display:inline-block; position:relative; z-index:100000; margin-bottom: 20px;">
-            <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
-        </a>
+        <script>
+            (function() {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                if (!u || u.rol !== 'admin') {
+                    document.write(`
+                    <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" style="display:inline-block; position:relative; z-index:100000; margin-bottom: 20px;">
+                        <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
+                    </a>
+                    `);
+                } else {
+                    document.write(`
+                    <div style="display:inline-block; position:relative; margin-bottom: 20px;">
+                        <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
+                    </div>
+                    `);
+                }
+            })();
+        </script>
         <h2>Apoya a ExpoFeriasCR</h2>
         <p>Serás redirigido a tu destino en unos segundos...</p>
 
@@ -143,15 +156,14 @@
         <!-- Anuncio Horizontal -->
         <div class="ad-container">
             <script>
-                atOptions = {
-                    'key': 'd24a04b077cc5a19d8ab72ae7e33176e',
-                    'format': 'iframe',
-                    'height': 90,
-                    'width': 728,
-                    'params': {}
-                };
+                (function() {
+                    var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                    if (!u || u.rol !== 'admin') {
+                        document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
+                        document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
+                    }
+                })();
             </script>
-            <script src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></script>
         </div>
 
         <a href="#" id="skip-btn" class="btn-skip">Ir al enlace ahora</a>
@@ -161,16 +173,28 @@
     <a href="#" id="popunder-overlay" target="_blank" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; cursor:pointer;"></a>
 
     <!-- Social Bar -->
-    <script src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></script>
-
-    <!-- Popunder -->
-    <script src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></script>
+    <script>
+        (function() {
+            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            if (!u || u.rol !== 'admin') {
+                document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
+                document.write('<scr' + 'ipt src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></scr' + 'ipt>');
+            }
+        })();
+    </script>
 
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const targetUrl = urlParams.get('url');
+            
+            const u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            if (u && u.rol === 'admin' && targetUrl) {
+                window.location.replace(targetUrl);
+                return;
+            }
+            
             const countdownEl = document.getElementById('countdown');
             const skipBtn = document.getElementById('skip-btn');
             const popunderOverlay = document.getElementById('popunder-overlay');

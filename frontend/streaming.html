@@ -68,16 +68,14 @@
         <!-- Banner Izquierdo -->
         <div class="ad-banner ad-left">
             <script type="text/javascript">
-                atOptions = {
-                    'key': '6e65addb785e209f532431dd48906da2',
-                    'format': 'iframe',
-                    'height': 600,
-                    'width': 160,
-                    'params': {}
-                };
+                (function() {
+                    var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                    if (!u || u.rol !== 'admin') {
+                        document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
+                        document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                    }
+                })();
             </script>
-            <script type="text/javascript"
-                src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></script>
         </div>
 
 
@@ -91,22 +89,26 @@
             <!-- Banner Horizontal Superior -->
             <div class="ad-banner-horizontal top-banner">
                 <script type="text/javascript">
-                    atOptions = {
-                        'key': 'd24a04b077cc5a19d8ab72ae7e33176e',
-                        'format': 'iframe',
-                        'height': 90,
-                        'width': 728,
-                        'params': {}
-                    };
+                    (function() {
+                        var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                        if (!u || u.rol !== 'admin') {
+                            document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
+                            document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
+                        }
+                    })();
                 </script>
-                <script type="text/javascript"
-                    src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></script>
             </div>
 
 
-            <script async="async" data-cfasync="false"
-                src="https://pl29512241.effectivecpmnetwork.com/c083045c1441aa427e4f38dd4dc7fc88/invoke.js"></script>
-            <div id="container-c083045c1441aa427e4f38dd4dc7fc88"></div>
+            <script>
+                (function() {
+                    var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                    if (!u || u.rol !== 'admin') {
+                        document.write('<scr' + 'ipt async="async" data-cfasync="false" src="https://pl29512241.effectivecpmnetwork.com/c083045c1441aa427e4f38dd4dc7fc88/invoke.js"></scr' + 'ipt>');
+                        document.write('<div id="container-c083045c1441aa427e4f38dd4dc7fc88"></div>');
+                    }
+                })();
+            </script>
 
             <div class="video-chat-container">
                 <!-- Wrapper para Fullscreen que contiene el video y el anuncio -->
@@ -122,26 +124,33 @@
                         </button>
 
                         <!-- Capa Falsa de Anuncio (Play Button Falso) -->
-                        <div id="playerAdOverlay" class="ad-overlay">
-                            <a href="https://www.effectivecpmnetwork.com/yukb4smsai?key=689ad730e62a16ff1a7873bd2320480a"
-                                target="_blank"
-                                onclick="
-                                    document.getElementById('iblups-iframe').src = 'https://iblups.com/embed/expoferiascrlive?autoplay=true&muted=true'; 
-                                    setTimeout(() => document.getElementById('playerAdOverlay').style.display='none', 100);
-                                    localStorage.removeItem('stickyAdClosedTime');
-                                    if(!document.getElementById('global-sticky-ad') && window.initStickyAd) window.initStickyAd();
-                                "
-                                style="position: relative; display: block; width:100%; height:100%;">
-                                <img src="https://iblups.sfo3.cdn.digitaloceanspaces.com/app/iblups_player_offline.png"
-                                    alt="OFFLINE" style="width:100%; height:100%; object-fit:contain;">
+                        <script>
+                            (function() {
+                                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                                if (!u || u.rol !== 'admin') {
+                                    document.write(`
+                                    <div id="playerAdOverlay" class="ad-overlay">
+                                        <a href="https://www.effectivecpmnetwork.com/yukb4smsai?key=689ad730e62a16ff1a7873bd2320480a"
+                                            target="_blank"
+                                            onclick="
+                                                document.getElementById('iblups-iframe').src = 'https://iblups.com/embed/expoferiascrlive?autoplay=true&muted=true'; 
+                                                setTimeout(() => document.getElementById('playerAdOverlay').style.display='none', 100);
+                                                localStorage.removeItem('stickyAdClosedTime');
+                                                if(!document.getElementById('global-sticky-ad') && window.initStickyAd) window.initStickyAd();
+                                            "
+                                            style="position: relative; display: block; width:100%; height:100%;">
+                                            <img src="https://iblups.sfo3.cdn.digitaloceanspaces.com/app/iblups_player_offline.png"
+                                                alt="OFFLINE" style="width:100%; height:100%; object-fit:contain;">
 
-                                <!-- Botón de Play Falso -->
-                                <div
-                                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; background: rgba(200, 16, 46, 0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); border: 3px solid white;">
-                                    <i class="fas fa-play" style="color: white; font-size: 2.5rem; margin-left: 8px;"></i>
-                                </div>
-                            </a>
-                        </div>
+                                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; background: rgba(200, 16, 46, 0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); border: 3px solid white;">
+                                                <i class="fas fa-play" style="color: white; font-size: 2.5rem; margin-left: 8px;"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    `);
+                                }
+                            })();
+                        </script>
                     </div>
                 </div>
 
@@ -172,16 +181,14 @@
             <!-- Banner Horizontal Inferior -->
             <div class="ad-banner-horizontal bottom-banner">
                 <script type="text/javascript">
-                    atOptions = {
-                        'key': 'd24a04b077cc5a19d8ab72ae7e33176e',
-                        'format': 'iframe',
-                        'height': 90,
-                        'width': 728,
-                        'params': {}
-                    };
+                    (function() {
+                        var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                        if (!u || u.rol !== 'admin') {
+                            document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
+                            document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
+                        }
+                    })();
                 </script>
-                <script type="text/javascript"
-                    src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></script>
             </div>
 
             <p style="text-align: center; margin-top: 40px;">
@@ -194,16 +201,14 @@
         <!-- Banner Derecho -->
         <div class="ad-banner ad-right">
             <script type="text/javascript">
-                atOptions = {
-                    'key': '6e65addb785e209f532431dd48906da2',
-                    'format': 'iframe',
-                    'height': 600,
-                    'width': 160,
-                    'params': {}
-                };
+                (function() {
+                    var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                    if (!u || u.rol !== 'admin') {
+                        document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
+                        document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                    }
+                })();
             </script>
-            <script type="text/javascript"
-                src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></script>
         </div>
     </div>
 
@@ -220,8 +225,14 @@
     <script src="js/publico/modal-auth.js"></script>
 
     <!-- Social Bar -->
-    <script type="text/javascript"
-        src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></script>
+    <script>
+        (function() {
+            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            if (!u || u.rol !== 'admin') {
+                document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
+            }
+        })();
+    </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/streaming-chat.js"></script>
     <script src="js/fullscreen.js"></script>

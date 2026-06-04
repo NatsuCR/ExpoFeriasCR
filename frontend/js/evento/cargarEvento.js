@@ -3,6 +3,13 @@ import { abrirLightbox } from './lightbox.js';
 
 // ──── POPUP DE ANUNCIO (3 seg) ANTES DE IR A COMPRAR ENTRADAS ────
 window.mostrarPopupCompra = function (targetUrl) {
+    // Si el usuario es administrador, saltar el popup y abrir directamente
+    const user = typeof window.getUsuarioStorage === 'function' ? window.getUsuarioStorage() : JSON.parse(localStorage.getItem('usuario') || 'null');
+    if (user && user.rol === 'admin') {
+        window.open(targetUrl, '_blank');
+        return;
+    }
+
     const existing = document.getElementById('ad-popup-overlay');
     if (existing) existing.remove();
 

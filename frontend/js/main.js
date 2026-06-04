@@ -7,6 +7,13 @@ window.busquedaActual = '';
 
 // ──── POPUP DE ANUNCIO (3 seg) ANTES DE VER EVENTO ────
 window.mostrarPopupAnuncio = function (targetUrl) {
+    // Si el usuario es administrador, saltar el popup y redirigir directamente
+    const user = typeof window.getUsuarioStorage === 'function' ? window.getUsuarioStorage() : JSON.parse(localStorage.getItem('usuario') || 'null');
+    if (user && user.rol === 'admin') {
+        window.location.href = targetUrl;
+        return;
+    }
+
     // Evitar duplicados
     const existing = document.getElementById('ad-popup-overlay');
     if (existing) existing.remove();

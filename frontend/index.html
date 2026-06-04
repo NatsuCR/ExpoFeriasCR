@@ -113,15 +113,14 @@
     <!-- Anuncio Lateral Izquierdo (160x600) -->
     <div class="ad-side-container ad-side-left">
         <script>
-            atOptions = {
-                'key': '6e65addb785e209f532431dd48906da2',
-                'format': 'iframe',
-                'height': 600,
-                'width': 160,
-                'params': {}
-            };
+            (function() {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                if (!u || u.rol !== 'admin') {
+                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                }
+            })();
         </script>
-        <script src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></script>
     </div>
 
 
@@ -297,15 +296,14 @@
     <!-- Anuncio Horizontal (728x90) -->
     <div class="container ad-horizontal-container">
         <script>
-            atOptions = {
-                'key': 'd24a04b077cc5a19d8ab72ae7e33176e',
-                'format': 'iframe',
-                'height': 90,
-                'width': 728,
-                'params': {}
-            };
+            (function() {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                if (!u || u.rol !== 'admin') {
+                    document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
+                }
+            })();
         </script>
-        <script src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></script>
     </div>
 
     <!-- Sección Eventos que comienzan hoy (carrusel si >4) -->
@@ -612,7 +610,14 @@
 
 
     <!-- Social Bar -->
-    <script src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></script>
+    <script>
+        (function() {
+            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            if (!u || u.rol !== 'admin') {
+                document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
+            }
+        })();
+    </script>
 
 
 

@@ -304,6 +304,12 @@ window.initStickyAd = function (force = false) {
         return;
     }
 
+    // No mostrar anuncios si el usuario logueado es admin
+    const user = typeof window.getUsuarioStorage === 'function' ? window.getUsuarioStorage() : JSON.parse(localStorage.getItem('usuario') || 'null');
+    if (user && user.rol === 'admin') {
+        return;
+    }
+
     // Evitar duplicados
     if (document.getElementById('global-sticky-ad')) {
         if (!force) return;

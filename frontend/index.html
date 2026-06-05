@@ -27,21 +27,21 @@
         crossorigin="anonymous"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExpoFeriasCR | Guía de Turismo, Tours y Eventos en Costa Rica</title>
+    <title>ExpoFeriasCR | Guia Internacional de Turismo, Tours, Deportes y Eventos</title>
     <meta name="description"
-        content="Descubre los mejores tours, eventos culturales, ferias tradicionales y gastronomía local con la guía turística más completa de Costa Rica. Planea tu próximo viaje nacional aquí.">
+        content="Descubre los mejores tours, deportes, eventos culturales, ferias tradicionales y gastronomía con la guía turística más completa a nivel mundial. Planea tu próximo viaje internacional aquí.">
     <meta name="keywords"
-        content="turismo costa rica, tours costa rica, qué hacer en costa rica, guía de turismo nacional, eventos culturales cr, ferias tradicionales, gastronomía costarricense, arte y cultura cr, fiestas típicas, paseos de un día, experiencias turísticas, destinos costa rica">
+        content="turismo mundial, tours internacionales, deportes internacionales, qué hacer en el mundo, guía de turismo global, eventos culturales mundiales, ferias tradicionales, gastronomía internacional, arte y cultura global, experiencias turísticas, destinos turísticos internacionales, eventos mundiales, turismo en latinomérica, europa, asia, norteamerica">
     <link rel="canonical" href="https://expoferiascr.site">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://expoferiascr.site">
     <meta property="og:site_name" content="ExpoFeriasCR">
-    <meta property="og:locale" content="es_CR">
-    <meta property="og:title" content="ExpoFeriasCR | Guía de Turismo, Tours y Eventos en Costa Rica">
+    <meta property="og:locale" content="es">
+    <meta property="og:title" content="ExpoFeriasCR | Guia Internacional de Turismo, Tours, Deportes y Eventos">
     <meta property="og:description"
-        content="Descubre los mejores tours, eventos culturales y tradiciones nacionales. Tu guía definitiva para conocer Costa Rica.">
+        content="Descubre los mejores tours, deportes, eventos culturales y tradiciones. Tu guía definitiva para explorar el mundo.">
     <meta property="og:image"
         content="https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png">
     <meta property="og:image:alt" content="Logo oficial de ExpoFeriasCR">
@@ -49,14 +49,45 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://expoferiascr.site">
-    <meta property="twitter:title" content="ExpoFeriasCR | Guía de Turismo, Tradiciones y Eventos en Costa Rica">
+    <meta property="twitter:title" content="ExpoFeriasCR | Guia Internacional de Turismo, Tours, Deportes y Eventos">
     <meta property="twitter:description"
-        content="La guía de turismo nacional para descubrir los mejores eventos, ferias del agricultor, topes y fiestas patronales en Costa Rica.">
+        content="La guía de turismo global para descubrir los mejores eventos deportivos, ferias, convenciones y fiestas tradicionales en todo el mundo.">
     <meta property="twitter:image"
         content="https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png">
     <meta property="twitter:image:alt" content="Logo oficial de ExpoFeriasCR">
 
     <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    
+    <!-- SEO: JSON-LD Estructurado -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://expoferiascr.site/#website",
+          "url": "https://expoferiascr.site",
+          "name": "ExpoFeriasCR",
+          "description": "Guía Internacional de Turismo, Tours, Deportes y Eventos",
+          "publisher": {
+            "@id": "https://expoferiascr.site/#organization"
+          },
+          "inLanguage": "es"
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://expoferiascr.site/#organization",
+          "name": "ExpoFeriasCR",
+          "url": "https://expoferiascr.site",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png"
+          }
+        }
+      ]
+    }
+    </script>
+    
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap"
         rel="stylesheet">
@@ -113,7 +144,7 @@
     <!-- Anuncio Lateral Izquierdo (160x600) -->
     <div class="ad-side-container ad-side-left">
         <script>
-            (function() {
+            (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || u.rol !== 'admin') {
                     document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
@@ -296,11 +327,15 @@
     <!-- Anuncio Horizontal (728x90) -->
     <div class="container ad-horizontal-container">
         <script>
-            (function() {
+            (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || u.rol !== 'admin') {
-                    document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
+                    var isMobile = window.innerWidth <= 768;
+                    var adKey = isMobile ? 'db5fab4e621232d201d1e41f58321ace' : 'd24a04b077cc5a19d8ab72ae7e33176e';
+                    var adWidth = isMobile ? 320 : 728;
+                    var adHeight = isMobile ? 50 : 90;
+                    document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
                 }
             })();
         </script>
@@ -611,7 +646,7 @@
 
     <!-- Social Bar -->
     <script>
-        (function() {
+        (function () {
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
             var isApple = /iPad|iPhone|iPod/i.test(navigator.userAgent) || (navigator.userAgent.includes("Safari") && !navigator.userAgent.includes("Chrome") && !navigator.userAgent.includes("Chromium"));
             if ((!u || u.rol !== 'admin') && !isApple) {
@@ -619,9 +654,6 @@
             }
         })();
     </script>
-
-
-
 
 
 

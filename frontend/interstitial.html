@@ -75,32 +75,82 @@
             background: #002277;
         }
 
+        /* Responsive Ads */
+        .mobile-banner {
+            display: none; /* Oculto en PC */
+        }
+        
         .ad-vertical-left,
         .ad-vertical-right {
             position: fixed;
             top: 50%;
             transform: translateY(-50%);
-            display: none;
+            display: none; /* Oculto por defecto (móviles) */
             z-index: 10;
         }
 
-        .ad-vertical-left {
-            left: 20px;
-        }
+        .ad-vertical-left { left: 20px; }
+        .ad-vertical-right { right: 20px; }
 
-        .ad-vertical-right {
-            right: 20px;
-        }
-
-        /* Mostrar solo en pantallas grandes donde haya espacio a los lados */
+        /* Pantallas grandes: Mostrar laterales, ocultar móvil */
         @media (min-width: 1200px) {
-
             .ad-vertical-left,
             .ad-vertical-right {
-                display: block;
+                display: flex;
+                flex-direction: row;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .mobile-banner {
+                display: none;
             }
         }
+
+        /* Pantallas pequeñas (Móviles): Ocultar laterales, mostrar sticky */
+        @media (max-width: 1199px) {
+            .mobile-banner {
+                display: block;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                z-index: 9999;
+                background: #fff;
+                text-align: center;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            }
+        }
+
+        @keyframes play-pulse {
+            0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0.5); }
+            50% { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 0 20px rgba(0,0,0,0); }
+            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+        }
+        .fake-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.75);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            pointer-events: none;
+            animation: play-pulse 2s infinite ease-in-out;
+        }
     </style>
+    <script>
+        (function () {
+            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            if (!u || u.rol !== 'admin') {
+                document.write('<scr' + 'ipt src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></scr' + 'ipt>');
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -110,6 +160,9 @@
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || u.rol !== 'admin') {
+                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                    document.write('<div><img border="0" alt="ad" src="https://cdn.storageimagedisplay.com/cti/af/36/82/af3682a4ae4b16d82dcc0235c0fb013d/1779963454.png" width="160" height="600"></div>');
                     document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
                 }
@@ -123,6 +176,9 @@
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || u.rol !== 'admin') {
+                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                    document.write('<div><a href="https://beta.publishers.adsterra.com/referral/Gqhy13aZjQ" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/gif/160x600_adsterra_reff.gif" /></a></div>');
                     document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
                 }
@@ -139,8 +195,16 @@
                 var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
                 if (!isAdmin) {
                     document.write(`
+                    <div style="margin-bottom: 15px;">
+                        <img border="0" alt="" src="https://cdn.storageimagedisplay.com/cti/6f/8f/ef/6f8fefa6447554571085566ee4c3443e/1779116078.jpg" width="728" height="90" style="max-width: 100%; height: auto;">
+                    </div>
                     <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" style="display:inline-block; position:relative; z-index:100000; margin-bottom: 20px;">
                         <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
+                        <div class="fake-play-btn">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" style="margin-left:5px;">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
                     </a>
                     `);
                 } else {
@@ -154,6 +218,9 @@
         </script>
         <h2>Apoya a ExpoFeriasCR</h2>
         <p>Serás redirigido a tu destino en unos segundos...</p>
+        <p style="color: #ff4444; font-size: 0.9em; margin-top: -10px; font-weight: bold;">
+            Nota: El primer click en este apartado abrirá una nueva pestaña para apoyarnos, ciérrala y vuelve para que seas redirigido al en vivo.
+        </p>
 
         <div class="timer" id="countdown">3</div>
 
@@ -173,6 +240,19 @@
         <a href="#" id="skip-btn" class="btn-skip">Ir al enlace ahora</a>
     </div>
 
+    <!-- Sticky Banner para Móviles (320x50) -->
+    <div class="mobile-banner">
+        <script>
+            (function () {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                if (!u || u.rol !== 'admin') {
+                    document.write('<scr' + 'ipt>atOptions={"key":"db5fab4e621232d201d1e41f58321ace","format":"iframe","height":50,"width":320,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/db5fab4e621232d201d1e41f58321ace/invoke.js"></scr' + 'ipt>');
+                }
+            })();
+        </script>
+    </div>
+
     <!-- Capa invisible para simular Popunder a toda la pantalla -->
     <a href="#" id="popunder-overlay" target="_blank"
         style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; cursor:pointer;"></a>
@@ -183,7 +263,6 @@
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
             if (!u || u.rol !== 'admin') {
                 document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
-                document.write('<scr' + 'ipt src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></scr' + 'ipt>');
             }
         })();
     </script>

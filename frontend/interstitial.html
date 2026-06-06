@@ -77,23 +77,31 @@
 
         /* Responsive Ads */
         .mobile-banner {
-            display: none; /* Oculto en PC */
+            display: none;
+            /* Oculto en PC */
         }
-        
+
         .ad-vertical-left,
         .ad-vertical-right {
             position: fixed;
             top: 50%;
             transform: translateY(-50%);
-            display: none; /* Oculto por defecto (móviles) */
+            display: none;
+            /* Oculto por defecto (móviles) */
             z-index: 10;
         }
 
-        .ad-vertical-left { left: 20px; }
-        .ad-vertical-right { right: 20px; }
+        .ad-vertical-left {
+            left: 20px;
+        }
+
+        .ad-vertical-right {
+            right: 20px;
+        }
 
         /* Pantallas grandes: Mostrar laterales, ocultar móvil */
         @media (min-width: 1200px) {
+
             .ad-vertical-left,
             .ad-vertical-right {
                 display: flex;
@@ -101,6 +109,7 @@
                 gap: 15px;
                 align-items: flex-start;
             }
+
             .mobile-banner {
                 display: none;
             }
@@ -117,15 +126,27 @@
                 z-index: 9999;
                 background: #fff;
                 text-align: center;
-                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             }
         }
 
         @keyframes play-pulse {
-            0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0.5); }
-            50% { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 0 20px rgba(0,0,0,0); }
-            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.5);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.15);
+                box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+            }
         }
+
         .fake-play-btn {
             position: absolute;
             top: 50%;
@@ -220,6 +241,8 @@
         <p>Serás redirigido a tu destino en unos segundos...</p>
         <p style="color: #ff4444; font-size: 0.9em; margin-top: -10px; font-weight: bold;">
             Nota: El primer click en este apartado abrirá una nueva pestaña para apoyarnos, ciérrala y vuelve para que seas redirigido al en vivo.
+            <br><br>
+            Note: The first click in this section will open a new tab to support us, close it and return to be redirected to the live stream.
         </p>
 
         <div class="timer" id="countdown">10</div>

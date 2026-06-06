@@ -117,6 +117,9 @@
 
         /* Pantallas pequeñas (Móviles): Ocultar laterales, mostrar sticky */
         @media (max-width: 1199px) {
+            body {
+                padding-bottom: 70px; /* Evita que el banner tape contenido al fondo (como el botón) */
+            }
             .mobile-banner {
                 display: block;
                 position: fixed;

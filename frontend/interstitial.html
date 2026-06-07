@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirigiendo... | ExpoFeriasCR</title>
-    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link rel="icon" type="image/png" href="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -170,7 +170,7 @@
     <script>
         (function () {
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            if (!u || u.rol !== 'admin') {
+            if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                 // Popunder
                 document.write('<scr' + 'ipt src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></scr' + 'ipt>');
                 
@@ -190,7 +190,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
                     document.write('<div><img border="0" alt="ad" src="https://cdn.storageimagedisplay.com/cti/af/36/82/af3682a4ae4b16d82dcc0235c0fb013d/1779963454.png" width="160" height="600"></div>');
@@ -206,7 +206,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
                     document.write('<div><a href="https://beta.publishers.adsterra.com/referral/Gqhy13aZjQ" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/gif/160x600_adsterra_reff.gif" /></a></div>');
@@ -223,14 +223,15 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
-                if (!isAdmin) {
+                var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
+            var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
+            if (!isAdmin && !isPremium) {
                     document.write(`
                     <div style="margin-bottom: 15px;">
                         <img border="0" alt="" src="https://cdn.storageimagedisplay.com/cti/6f/8f/ef/6f8fefa6447554571085566ee4c3443e/1779116078.jpg" width="728" height="90" style="max-width: 100%; height: auto;">
                     </div>
                     <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" style="display:inline-block; position:relative; z-index:100000; margin-bottom: 20px;">
-                        <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
+                        <img src="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
                         <div class="fake-play-btn">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" style="margin-left:5px;">
                                 <path d="M8 5v14l11-7z"/>
@@ -241,7 +242,7 @@
                 } else {
                     document.write(`
                     <div style="display:inline-block; position:relative; margin-bottom: 20px;">
-                        <img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
+                        <img src="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
                     </div>
                     `);
                 }
@@ -267,7 +268,7 @@
             <script>
                 (function () {
                     var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                    if (!u || u.rol !== 'admin') {
+                    if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                         document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
                         document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
                     }
@@ -283,7 +284,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"db5fab4e621232d201d1e41f58321ace","format":"iframe","height":50,"width":320,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/db5fab4e621232d201d1e41f58321ace/invoke.js"></scr' + 'ipt>');
                 }
@@ -304,7 +305,8 @@
             const targetUrl = urlParams.get('url');
 
             const u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            if (u && u.rol === 'admin' && targetUrl) {
+            const isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
+            if (u && (u.rol === 'admin' || isPremium) && targetUrl) {
                 window.location.replace(targetUrl);
                 return;
             }

@@ -177,7 +177,7 @@ function buildCardPreview(evento, isLive) {
 
     // Limpieza de imágenes
     const imagenes = parseImagenes(evento.imagen_portada);
-    let img = (imagenes && imagenes.length > 0) ? imagenes[0] : '/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
+    let img = (imagenes && imagenes.length > 0) ? imagenes[0] : '/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png';
 
     if (img && !img.startsWith('http') && !img.startsWith('/')) {
         img = '/' + img;

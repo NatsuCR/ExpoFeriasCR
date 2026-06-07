@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-adsense-account" content="ca-pub-9004819107277432">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios Premium y Normales - Admin</title>
+    <link rel="icon" type="image/png" href="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
+    <link rel="stylesheet" href="css/panel.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/usuarios.css">
+    <link rel="stylesheet" href="../css/confirm-modal.css">
+    <script src="../js/helpers.js?v=3"></script>
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <div class="dashboard-header">
+            <h1>Usuarios Premium y Normales</h1>
+        <a href="dashboard.html" class="btn btn-volver">← Volver al Dashboard</a>
+        </div>
+
+        <div id="globalMessage" class="message"></div>
+
+        <div class="form-usuario">
+            <h3>Registrar Nuevo Usuario</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="nombre" placeholder="Ej: Carlos Rodríguez">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="usuario@ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="password" placeholder="******">
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Cuenta (Rol)</label>
+                    <select id="rol">
+                        <option value="user" selected>Cuenta de Usuario (Estándar)</option>
+                        <option value="admin">Cuenta de Administrador</option>
+                    </select>
+                </div>
+            </div>
+            <button id="btnCrearUsuario" class="btn btn-success">Crear Usuario</button>
+        </div>
+
+
+        <div class="toolbar">
+            <button id="btnEliminarSeleccionados" class="btn btn-danger" disabled>🗑️ Eliminar seleccionados</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3>Usuarios Premium</h3>
+        </div>
+        <div id="listaPremium">Cargando...</div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:40px; margin-bottom:10px;">
+            <h3>Usuarios Normales</h3>
+        </div>
+        <div id="listaNormales">Cargando...</div>
+    </div>
+
+    <script src="js/usuarios-premium.js"></script>
+    <script src="js/inactivity.js"></script>
+</body>
+</html>

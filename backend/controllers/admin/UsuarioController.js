@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 class AdminUsuarioController {
   async listar(req, res) {
     try {
-      const [rows] = await pool.query('SELECT id, nombre, email, rol, activo, created_at FROM usuarios ORDER BY id');
+      const [rows] = await pool.query('SELECT id, nombre, email, rol, activo, created_at, premium_hasta FROM usuarios ORDER BY id');
       res.json(rows);
     } catch (error) {
       console.error('[AdminUsuarioController.listar]', error.stack);

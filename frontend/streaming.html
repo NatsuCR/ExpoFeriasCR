@@ -19,7 +19,7 @@
     <meta property="og:description"
         content="Disfruta de las mejores transmisiones en vivo de ferias, conciertos y eventos exclusivos en ExpoFeriasCR. ¡Conéctate ahora!">
     <meta property="og:image"
-        content="https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png">
+        content="https://expoferiascr.site/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
     <meta property="og:url" content="https://expoferiascr.site/streaming.html">
     <meta property="og:type" content="website">
 
@@ -29,7 +29,7 @@
     <meta name="twitter:description"
         content="Disfruta de las mejores transmisiones en vivo de ferias y eventos exclusivos en ExpoFeriasCR. ¡Conéctate ahora!">
     <meta name="twitter:image"
-        content="https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png">
+        content="https://expoferiascr.site/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -46,7 +46,7 @@
         <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div class="logo">
                 <a href="/" style="color: white; text-decoration: none; display: flex; align-items: center;">
-                    <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="Logo"
+                    <img src="assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" alt="Logo"
                         style="height: 40px; margin-right: 10px;">
                     <span style="color: white;">ExpoFeriasCR</span>
                 </a>
@@ -70,7 +70,7 @@
             <script type="text/javascript">
                 (function () {
                     var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                    if (!u || u.rol !== 'admin') {
+                    if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                         document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
                         document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
                     }
@@ -91,7 +91,7 @@
                 <script type="text/javascript">
                     (function () {
                         var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                        if (!u || u.rol !== 'admin') {
+                        if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                             document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
                             document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
                         }
@@ -104,7 +104,8 @@
                 (function () {
                     var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                     var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
-                    if (!isAdmin) {
+                    var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
+                    if (!isAdmin && !isPremium) {
                         document.write('<scr' + 'ipt async="async" data-cfasync="false" src="https://pl29512241.effectivecpmnetwork.com/c083045c1441aa427e4f38dd4dc7fc88/invoke.js"></scr' + 'ipt>');
                         document.write('<div id="container-c083045c1441aa427e4f38dd4dc7fc88"></div>');
                     }
@@ -130,8 +131,9 @@
                                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                                 var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
                                 var adClicked = sessionStorage.getItem('streamingAdClicked') === 'true';
+                                var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
 
-                                if (!isAdmin && !adClicked) {
+                                if (!isAdmin && !isPremium && !adClicked) {
                                     document.write(`
                                     <div id="playerAdOverlay" class="ad-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:10; background:black;">
                                         
@@ -196,31 +198,226 @@
             </div>
 
             <!-- Sección de Donaciones PayPal -->
-            <div class="donation-section"
-                style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 25px; margin-bottom: 25px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                <h3
-                    style="color: #003087; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;">
-                    <i class="fab fa-paypal" style="font-size: 1.5rem;"></i> Apoya Nuestra Transmisión
-                </h3>
-                <p style="color: #4a5568; margin-bottom: 15px; font-size: 0.95rem;">
-                    Si disfrutas del contenido y quieres ayudarnos a mantener los servidores y traer más eventos
-                    exclusivos, considera hacer una donación voluntaria. ¡Cualquier aporte suma!
-
-                    If you enjoy the content and want to help us maintain the servers and bring you more exclusive
-                    events, please consider making a voluntary donation. Every little bit helps!
-                </p>
-                <a href="https://paypal.me/natsu506" target="_blank"
-                    style="display: inline-block; background: #0070ba; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; text-decoration: none; transition: background 0.3s ease; box-shadow: 0 2px 4px rgba(0, 112, 186, 0.3);">
-                    Donar con PayPal
-                </a>
+            <div class="donation-section" id="donation-section-container" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 25px; margin-bottom: 25px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <!-- Contenido dinámico (Premium o Donación) -->
             </div>
+
+            <!-- Inicializar PayPal -->
+            <script src="https://www.paypal.com/sdk/js?client-id=AS0KDrCSBbjFoUjpSbNuaC9bjkev3d1ZrJdCJTK88oKv-ih-a4rV9BSR9VEW85mu0uAIxLH9mleb2Z3W&currency=USD"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                    var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
+                    
+                    const container = document.getElementById('donation-section-container');
+                    
+                    if (isPremium) {
+                        // UI para Donación Libre
+                        container.innerHTML = `
+                            <h3 style="color: #003087; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+                                <i class="fab fa-paypal" style="font-size: 1.5rem;"></i> Apoya nuestra transmisión / Support us / Apoie-nos
+                            </h3>
+                            <p style="color: #4a5568; margin-bottom: 15px; font-size: 0.95rem;">
+                                <strong>ES:</strong> Eres Premium, ¡gracias! Puedes hacer una donación voluntaria del monto que desees para apoyarnos.<br>
+                                <strong>EN:</strong> You're Premium, thanks! You can make a voluntary donation of any amount to support us.<br>
+                                <strong>PT:</strong> Você é Premium, obrigado! Você pode fazer uma doação voluntária de qualquer valor para nos apoiar.
+                            </p>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px;">
+                                <span style="font-size: 1.2rem; font-weight: bold; color: #003087;">$</span>
+                                <input type="number" id="custom-donation-amount" value="5.00" min="1.00" step="1.00" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 100px; text-align: center; font-size: 1.1rem;">
+                                <a href="javascript:void(0)" id="btnMostrarDonacion"
+                                    style="display: inline-block; background: #0070ba; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; text-decoration: none; transition: background 0.3s ease; box-shadow: 0 2px 4px rgba(0, 112, 186, 0.3);">
+                                    <i class="fas fa-heart"></i> Donar / Donate
+                                </a>
+                            </div>
+                            <div id="premium-checkout-container" style="display: none; margin-top: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                                <div id="paypal-button-container"></div>
+                            </div>
+                        `;
+                    } else {
+                        // UI para Comprar Premium
+                        container.innerHTML = `
+                            <h3 style="color: #003087; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+                                <i class="fab fa-paypal" style="font-size: 1.5rem;"></i> Hazte Premium / Go Premium / Torne-se Premium
+                            </h3>
+                            <p style="color: #4a5568; margin-bottom: 15px; font-size: 0.95rem;">
+                                <strong>ES:</strong> Por solo $2.00 obtén 15 días de acceso Premium y disfruta de la transmisión en vivo completamente sin anuncios.<br>
+                                <strong>EN:</strong> For only $2.00 get 15 days of Premium access and enjoy the live stream completely ad-free.<br>
+                                <strong>PT:</strong> Por apenas $2,00 obtenha 15 dias de acesso Premium e aproveite a transmissão ao vivo totalmente sem anúncios.
+                            </p>
+                            <a href="javascript:void(0)" id="btnMostrarDonacion"
+                                style="display: inline-block; background: #0070ba; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; text-decoration: none; transition: background 0.3s ease; box-shadow: 0 2px 4px rgba(0, 112, 186, 0.3);">
+                                <i class="fas fa-crown"></i> Convertirme en Premium ($2.00)
+                            </a>
+                            <div id="premium-checkout-container" style="display: none; margin-top: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                                <div id="paypal-button-container"></div>
+                            </div>
+                        `;
+                    }
+
+                    const btn = document.getElementById('btnMostrarDonacion');
+                    if (btn) {
+                        btn.addEventListener('click', function() {
+                            const token = localStorage.getItem('token');
+                            if (!token) {
+                                if (typeof abrirModalAuth === 'function') {
+                                    abrirModalAuth('login');
+                                } else {
+                                    alert("Debes iniciar sesión para realizar el pago.");
+                                }
+                                return;
+                            }
+                            
+                            this.style.display = 'none';
+                            document.getElementById('premium-checkout-container').style.display = 'block';
+
+                            paypal.Buttons({
+                                createOrder: function(data, actions) {
+                                    let currentAmount = "2.00";
+                                    let currentDesc = 'Suscripción Premium 15 Días - ExpoFeriasCR';
+
+                                    if (isPremium) {
+                                        const inputAmt = document.getElementById('custom-donation-amount');
+                                        if(inputAmt && parseFloat(inputAmt.value) > 0) {
+                                            currentAmount = parseFloat(inputAmt.value).toFixed(2);
+                                            currentDesc = 'Donación Voluntaria - ExpoFeriasCR';
+                                        } else {
+                                            alert("Por favor ingresa un monto válido.");
+                                            return actions.reject();
+                                        }
+                                    }
+
+                                    return actions.order.create({
+                                        purchase_units: [{
+                                            amount: { value: currentAmount },
+                                            description: currentDesc
+                                        }]
+                                    });
+                                },
+                                onApprove: function(data, actions) {
+                                    return fetch('/api/pagos/capture', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                        },
+                                        body: JSON.stringify({ orderID: data.orderID })
+                                    }).then(function(res) {
+                                        return res.json();
+                                    }).then(function(details) {
+                                        if (details.success) {
+                                            if (typeof window.mostrarAlertaPremium === 'function') {
+                                                window.mostrarAlertaPremium('¡Gracias por tu apoyo!', details.message, 'Genial', 'success');
+                                            } else {
+                                                alert('¡Pago completado! ' + details.message);
+                                            }
+                                            
+                                            // Actualizar usuario local si se dio premium (tiene nuevoVencimiento)
+                                            if(details.nuevoVencimiento) {
+                                                var u = JSON.parse(localStorage.getItem('usuario'));
+                                                if(u) {
+                                                    u.es_premium = 1;
+                                                    u.premium_hasta = details.nuevoVencimiento;
+                                                    localStorage.setItem('usuario', JSON.stringify(u));
+                                                }
+                                            }
+                                            
+                                            setTimeout(() => window.location.reload(), 2500);
+                                        } else {
+                                            if (typeof window.mostrarAlertaPremium === 'function') {
+                                                window.mostrarAlertaPremium('Hubo un problema', details.error || 'Intenta nuevamente.', 'Cerrar', 'error');
+                                            } else {
+                                                alert('Hubo un problema con tu pago: ' + (details.error || 'Intenta nuevamente.'));
+                                            }
+                                        }
+                                    }).catch(err => {
+                                        console.error('Error procesando pago', err);
+                                        if (typeof window.mostrarAlertaPremium === 'function') {
+                                            window.mostrarAlertaPremium('Error de conexión', 'No se pudo verificar el pago en el servidor. Intenta recargar la página.', 'Cerrar', 'error');
+                                        } else {
+                                            alert('Error de conexión al procesar el pago.');
+                                        }
+                                    });
+                                }
+                            }).render('#paypal-button-container');
+                        });
+                    }
+                });
+            </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const btn = document.getElementById('btnMostrarOpcionesPremium');
+                    if (btn) {
+                        btn.addEventListener('click', function() {
+                            const token = localStorage.getItem('token');
+                            if (!token) {
+                                if (typeof abrirModalAuth === 'function') {
+                                    abrirModalAuth('login');
+                                } else {
+                                    alert("Debes iniciar sesión para comprar Premium.");
+                                }
+                                return;
+                            }
+                            this.style.display = 'none';
+                            document.getElementById('premium-checkout-container').style.display = 'block';
+
+                            paypal.Buttons({
+                                createOrder: function(data, actions) {
+                                    return actions.order.create({
+                                        purchase_units: [{
+                                            amount: { value: '2.00' },
+                                            description: 'Suscripción Premium 15 Días - ExpoFeriasCR'
+                                        }]
+                                    });
+                                },
+                                onApprove: function(data, actions) {
+                                    return fetch('/api/pagos/capture', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                        },
+                                        body: JSON.stringify({ orderID: data.orderID })
+                                    }).then(function(res) {
+                                        return res.json();
+                                    }).then(function(details) {
+                                        if (details.success) {
+                                            if (typeof window.mostrarAlertaPremium === 'function') {
+                                                window.mostrarAlertaPremium('¡Gracias por tu compra!', 'Tu cuenta ahora es Premium. Disfruta de la transmisión sin anuncios.', 'Genial', 'success');
+                                            } else {
+                                                alert('¡Pago completado! Disfruta de tu cuenta Premium.');
+                                            }
+                                            
+                                            // Actualizar usuario local
+                                            var u = JSON.parse(localStorage.getItem('usuario'));
+                                            if(u) {
+                                                var d = new Date();
+                                                d.setDate(d.getDate() + 15);
+                                                u.premium_hasta = d.toISOString();
+                                                localStorage.setItem('usuario', JSON.stringify(u));
+                                            }
+                                            
+                                            setTimeout(() => window.location.reload(), 2500);
+                                        } else {
+                                            alert('Hubo un problema con tu pago: ' + (details.error || 'Intenta nuevamente.'));
+                                        }
+                                    }).catch(err => {
+                                        console.error('Error procesando pago', err);
+                                        alert('Error de conexión al procesar el pago.');
+                                    });
+                                }
+                            }).render('#paypal-button-container');
+                        });
+                    }
+                });
+            </script>
 
             <!-- Banner Horizontal Inferior -->
             <div class="ad-banner-horizontal bottom-banner">
                 <script type="text/javascript">
                     (function () {
                         var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                        if (!u || u.rol !== 'admin') {
+                        if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                             document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
                             document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
                         }
@@ -240,7 +437,7 @@
             <script type="text/javascript">
                 (function () {
                     var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                    if (!u || u.rol !== 'admin') {
+                    if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                         document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
                         document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
                     }
@@ -265,7 +462,7 @@
     <script>
         (function () {
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            if (!u || u.rol !== 'admin') {
+            if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                 document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
             }
         })();

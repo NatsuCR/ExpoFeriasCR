@@ -421,7 +421,7 @@ function loadPageSPA(url) {
                     content = cw.outerHTML;
                     doc.querySelectorAll('.modal-overlay').forEach(m => content += m.outerHTML);
                 }
-            } else if (url.includes('usuarios.html') || url.includes('baneados.html') || url.includes('stats.html')) {
+            } else if (url.includes('usuarios.html') || url.includes('usuarios-premium.html') || url.includes('baneados.html') || url.includes('stats.html')) {
                 const cw = doc.querySelector('.admin-container');
                 if (cw) {
                     const btnVolver = cw.querySelector('.btn-volver');

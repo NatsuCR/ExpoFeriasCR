@@ -81,9 +81,37 @@ function actualizarNavbarAuth() {
   const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
 
   if (usuario) {
-    // Usuario autenticado: mostrar dropdown con Mi Cuenta y Crear Evento
+    let premiumInfoHtml = '';
+    const isPremium = usuario.premium_hasta && new Date(usuario.premium_hasta) > new Date();
+
+    if (isPremium) {
+      const msFaltantes = new Date(usuario.premium_hasta) - new Date();
+      const diasFaltantes = Math.ceil(msFaltantes / (1000 * 60 * 60 * 24));
+      premiumInfoHtml = `
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #666; font-size: 0.85rem; display: none;">Te quedan: <strong>${diasFaltantes} días</strong></span>
+          <a href="javascript:void(0)" onclick="abrirModalPremium()" style="display: flex; align-items: center; color: white; background: #ffc107; font-weight: bold; padding: 5px 12px; border-radius: 20px; text-decoration: none; font-size: 0.9rem; transition: background 0.3s; box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px; white-space: nowrap;" onmouseover="this.style.background='#ffb300'" onmouseout="this.style.background='#ffc107'">
+            <i class="fas fa-heart" style="margin-right: 5px;"></i> Donaciones
+          </a>
+        </div>
+      `;
+    } else {
+      premiumInfoHtml = `
+        <div class="premium-tooltip-wrapper">
+          <a href="javascript:void(0)" onclick="abrirModalPremium()" style="display: flex; align-items: center; color: white; background: #ffc107; font-weight: bold; padding: 5px 12px; border-radius: 20px; text-decoration: none; font-size: 0.9rem; transition: background 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap;" onmouseover="this.style.background='#ffb300'" onmouseout="this.style.background='#ffc107'">
+            <i class="fas fa-star" style="margin-right: 5px;"></i> Ser Premium
+          </a>
+          <div class="premium-tooltip-text">Si eres Premium se desactivarán todos los anuncios por 15 días.</div>
+        </div>
+      `;
+    }
+
     const navAuth = document.getElementById('nav-auth');
+    navAuth.style.display = 'flex';
+    navAuth.style.alignItems = 'center';
+
     const nuevoHtml = `
+      ${premiumInfoHtml}
       <div class="nav-user-menu">
         <button id="btn-user-dropdown" class="btn-user-dropdown">
           <i class="fas fa-user-circle"></i>
@@ -129,10 +157,32 @@ function actualizarNavbarAuth() {
       e.preventDefault();
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
-      location.reload();
+      window.location.href = '/index.html';
     });
   }
 }
+
+// Global Premium Modal Logic
+window.abrirModalPremium = function() {
+  if (document.getElementById('globalPremiumModal')) {
+    document.getElementById('globalPremiumModal').style.display = 'flex';
+    return;
+  }
+
+  // Inject the script dynamically to avoid loading it on every page load unless clicked
+  const existingScript = document.getElementById('script-premium-modal');
+  if (!existingScript) {
+    const script = document.createElement('script');
+    script.id = 'script-premium-modal';
+    script.src = '/js/premium-modal.js';
+    script.onload = () => {
+      if (typeof window.renderizarYAbrirModalPremium === 'function') {
+        window.renderizarYAbrirModalPremium();
+      }
+    };
+    document.body.appendChild(script);
+  }
+};
 
 async function sincronizarPerfilNavbar() {
   const token = localStorage.getItem('token');

@@ -221,6 +221,43 @@ const emailService = {
       console.error('Error al notificar rechazo:', error);
       return { success: false, error: error.message };
     }
+  },
+
+  /**
+   * Notificar activación de suscripción Premium (English)
+   */
+  notificarPremiumActivo: async (email, nombre) => {
+    try {
+      const result = await transporter.sendMail({
+        from: process.env.MAIL_FROM,
+        to: email,
+        subject: 'Payment Successful - Premium Access Granted!',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #003087;">Congratulations, you are now Premium!</h2>
+            <p>Hello <strong>${nombre}</strong>,</p>
+            <p>Your payment was processed successfully. You now have 15 days of Premium access to ExpoFeriasCR.</p>
+
+            <div style="background-color: #e6f2ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #003087;">
+              <p style="margin: 10px 0;"><strong>Active benefits:</strong></p>
+              <p style="margin: 5px 0;">✓ Uninterrupted live streams</p>
+              <p style="margin: 5px 0;">✓ Completely ad-free access</p>
+            </div>
+
+            <p>Thank you for supporting ExpoFeriasCR!</p>
+
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+            <p style="color: #666; font-size: 12px;">
+              © ExpoFeriasCR ${new Date().getFullYear()} - All rights reserved
+            </p>
+          </div>
+        `
+      });
+      return { success: true, messageId: result.messageId };
+    } catch (error) {
+      console.error('Error al notificar premium:', error);
+      return { success: false, error: error.message };
+    }
   }
 };
 

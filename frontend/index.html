@@ -43,7 +43,7 @@
     <meta property="og:description"
         content="Descubre los mejores tours, deportes, eventos culturales y tradiciones. Tu guía definitiva para explorar el mundo.">
     <meta property="og:image"
-        content="https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png">
+        content="https://expoferiascr.site/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
     <meta property="og:image:alt" content="Logo oficial de ExpoFeriasCR">
 
     <!-- Twitter -->
@@ -53,10 +53,10 @@
     <meta property="twitter:description"
         content="La guía de turismo global para descubrir los mejores eventos deportivos, ferias, convenciones y fiestas tradicionales en todo el mundo.">
     <meta property="twitter:image"
-        content="https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png">
+        content="https://expoferiascr.site/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
     <meta property="twitter:image:alt" content="Logo oficial de ExpoFeriasCR">
 
-    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link rel="icon" type="image/png" href="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
 
     <!-- SEO: JSON-LD Estructurado -->
     <script type="application/ld+json">
@@ -81,7 +81,7 @@
           "url": "https://expoferiascr.site",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png"
+            "url": "https://expoferiascr.site/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png"
           }
         }
       ]
@@ -100,7 +100,7 @@
       "@type": "Organization",
       "name": "ExpoFeriasCR",
       "url": "https://expoferiascr.site",
-      "logo": "https://expoferiascr.site/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png",
+      "logo": "https://expoferiascr.site/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png",
       "description": "La guía principal de turismo y eventos para descubrir ferias, tradiciones y exposiciones en Costa Rica.",
       "address": {
         "@type": "PostalAddress",
@@ -146,7 +146,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
                 }
@@ -159,7 +159,7 @@
         <div class="container">
             <!-- Izquierda: Logo -->
             <a href="/" class="logo">
-                <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="Logo ExpoFeriasCR"
+                <img src="assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" alt="Logo ExpoFeriasCR"
                     loading="lazy">
                 <span>ExpoFeriasCR</span>
             </a>
@@ -329,7 +329,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     var isMobile = window.innerWidth <= 768;
                     var adKey = isMobile ? 'db5fab4e621232d201d1e41f58321ace' : 'd24a04b077cc5a19d8ab72ae7e33176e';
                     var adWidth = isMobile ? 320 : 728;
@@ -648,7 +648,7 @@
     <script>
         (function () {
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            if (!u || u.rol !== 'admin') {
+            if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                 document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
             }
         })();

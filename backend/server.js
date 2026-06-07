@@ -69,6 +69,7 @@ const actividadRoutes = require('./routes/actividadRoutes');
 const precioRoutes = require('./routes/precioRoutes');
 const expositorRoutes = require('./routes/expositorRoutes');
 const galeriaRoutes = require('./routes/galeriaRoutes');
+const pagosRoutes = require('./routes/pagosRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/eventos', eventoRoutes);
@@ -77,6 +78,7 @@ app.use('/api/actividades', actividadRoutes);
 app.use('/api/precios', precioRoutes);
 app.use('/api/expositores', expositorRoutes);
 app.use('/api/galeria', galeriaRoutes);
+app.use('/api/pagos', pagosRoutes);
 
 // =======================
 // 📁 ARCHIVOS ESTÁTICOS

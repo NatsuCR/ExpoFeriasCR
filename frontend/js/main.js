@@ -59,7 +59,7 @@ function createEventoCard(evento, isLive = false) {
         card.appendChild(badge);
     }
 
-    const imgUrl = evento.imagen_portada || 'assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png';
+    const imgUrl = evento.imagen_portada || 'assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png';
 
     // Ubicación resumida (Provincia o Cantón si existe)
     const ubicacionCorta = evento.canton ? `${evento.canton}, ${evento.provincia}` : (evento.provincia || evento.ubicacion);
@@ -130,10 +130,11 @@ window.cargarSeccion = async function (endpoint, trackId, controlsId, isLive, fi
     // Inject in-feed ads
     const cardsWithAds = [];
     const isAd = (() => {
-        try {
-            const u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            return u && u.rol && String(u.rol).toLowerCase() === 'admin';
-        } catch(e) { return false; }
+            try {
+                const u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                const isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
+                return u && (String(u.rol).toLowerCase() === 'admin' || isPremium);
+            } catch(e) { return false; }
     })();
 
     cards.forEach((c, index) => {
@@ -247,7 +248,8 @@ window.cargarProximos = async function (filtros = {}) {
         const isAd = (() => {
             try {
                 const u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                return u && u.rol && String(u.rol).toLowerCase() === 'admin';
+                const isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
+                return u && (String(u.rol).toLowerCase() === 'admin' || isPremium);
             } catch(e) { return false; }
         })();
 

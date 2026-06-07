@@ -45,7 +45,8 @@ class AuthController {
           id: user.id,
           nombre: user.nombre,
           email: user.email,
-          rol: user.rol
+          rol: user.rol,
+          premium_hasta: user.premium_hasta
         }
       });
 
@@ -90,7 +91,7 @@ class AuthController {
     try {
       const usuarioId = req.user.id;
       const [users] = await pool.query(
-        'SELECT id, nombre, email, rol FROM usuarios WHERE id = ?',
+        'SELECT id, nombre, email, rol, premium_hasta FROM usuarios WHERE id = ?',
         [usuarioId]
       );
 

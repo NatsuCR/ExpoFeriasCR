@@ -304,9 +304,10 @@ window.initStickyAd = function (force = false) {
         return;
     }
 
-    // No mostrar anuncios si el usuario logueado es admin
+    // No mostrar anuncios si el usuario logueado es admin o premium
     const user = typeof window.getUsuarioStorage === 'function' ? window.getUsuarioStorage() : JSON.parse(localStorage.getItem('usuario') || 'null');
-    if (user && user.rol && String(user.rol).toLowerCase() === 'admin') {
+    const isPremium = user && user.premium_hasta && new Date() < new Date(user.premium_hasta);
+    if (user && (String(user.rol).toLowerCase() === 'admin' || isPremium)) {
         return;
     }
 

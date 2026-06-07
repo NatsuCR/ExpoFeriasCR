@@ -100,7 +100,7 @@ export function cargarEventoDesdePreview(datos) {
                 window.initHeroCarousel();
             }
         } else {
-            track.innerHTML = '<div class="hero-carrusel-slide activa"><img src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" style="width:100%; height:100%; object-fit:contain; background:#eee;"></div>';
+            track.innerHTML = '<div class="hero-carrusel-slide activa"><img src="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" style="width:100%; height:100%; object-fit:contain; background:#eee;"></div>';
         }
     }
 

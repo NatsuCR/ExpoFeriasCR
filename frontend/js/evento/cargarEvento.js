@@ -21,7 +21,7 @@ window.mostrarPopupCompra = function (targetUrl) {
             <button id="ad-popup-close" style="display:none; position:absolute; top:10px; right:15px; background:transparent; border:none; font-size:24px; cursor:pointer; font-weight:bold; color:#555;">&times;</button>
             <div id="ad-popup-header">
                 <img 
-                    src="/assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" 
+                    src="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" 
                     alt="ExpoFeriasCR" 
                     id="ad-popup-logo"
                 >

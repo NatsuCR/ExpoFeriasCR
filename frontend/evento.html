@@ -49,7 +49,7 @@
     <meta property="twitter:description" content="{{EVENT_DESC}}">
     <meta property="twitter:image" content="{{EVENT_IMAGE}}">
 
-    <link rel="icon" type="image/x-icon" href="/assets/images/IconoOficialExpoFeriasCR/LogoExpoFeriasCR1.ico">
+    <link rel="icon" type="image/png" href="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap"
         rel="stylesheet">
@@ -82,7 +82,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
                 }
@@ -94,7 +94,7 @@
     <nav class="navbar">
         <div class="container">
             <a href="/" class="logo" style="text-decoration: none;">
-                <img src="assets/images/LogoOficialExpoFeriasCR/LogoExpoFeriasCR1.png" alt="ExpoFeriasCR"
+                <img src="assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" alt="ExpoFeriasCR"
                     loading="lazy">
                 <span>ExpoFeriasCR</span>
             </a>
@@ -168,8 +168,9 @@
     <script>
         (function () {
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
             var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
-            if (!isAdmin) {
+            if (!isAdmin && !isPremium) {
                 document.write('<scr' + 'ipt async="async" data-cfasync="false" src="https://pl29512241.effectivecpmnetwork.com/c083045c1441aa427e4f38dd4dc7fc88/invoke.js"></scr' + 'ipt>');
                 document.write('<div id="container-c083045c1441aa427e4f38dd4dc7fc88"></div>');
             }
@@ -229,7 +230,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
                 }
@@ -249,7 +250,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
                 }
@@ -286,7 +287,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
                 }
@@ -325,7 +326,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
                 }
@@ -347,7 +348,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
                 }
@@ -375,7 +376,7 @@
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || u.rol !== 'admin') {
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
                 }
@@ -463,7 +464,7 @@
     <script>
         (function () {
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            if (!u || u.rol !== 'admin') {
+            if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                 document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
             }
         })();

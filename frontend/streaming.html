@@ -39,6 +39,18 @@
     <link rel="stylesheet" href="css/modal-auth.css">
     <link rel="stylesheet" href="css/confirm-modal.css">
     <link rel="stylesheet" href="css/navbar-auth.css">
+    <style>
+        /* Corrección para que el menú de usuario no expanda el navbar rojo en móviles */
+        @media (max-width: 900px) {
+            .navbar .user-dropdown-menu {
+                position: absolute !important;
+                top: 100% !important;
+                right: 0 !important;
+                left: auto !important;
+                margin-top: 10px !important;
+            }
+        }
+    </style>
 </head>
 
 <body>

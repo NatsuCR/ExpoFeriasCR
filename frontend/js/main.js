@@ -39,7 +39,7 @@ function createEventoCard(evento, isLive = false) {
 
     // Hacer que toda la tarjeta sea clickable (con popup de anuncio)
     card.onclick = (e) => {
-        if (e.target.tagName !== 'A' && !e.target.closest('a')) {
+        if (e.target.tagName !== 'A' && !e.target.closest('a') && e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
             e.preventDefault();
             window.mostrarPopupAnuncio(`evento.html?slug=${evento.slug}`);
         }
@@ -79,7 +79,12 @@ function createEventoCard(evento, isLive = false) {
         })()}</p>
             <p class="card-location"><i class="fas fa-map-marker-alt"></i> ${ubicacionCorta}</p>
             ${evento.ubicacion && evento.ubicacion !== ubicacionCorta ? `<p class="card-address"><i class="fas fa-compass"></i> ${evento.ubicacion}</p>` : ''}
-            <a href="evento.html?slug=${evento.slug}" class="btn-ver" onclick="event.preventDefault(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}');" onauxclick="if(event.button === 1) { event.preventDefault(); event.stopPropagation(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}'); }">Ver detalles</a>
+            <div style="display: flex; gap: 10px; margin-top: 1.2rem;">
+                <a href="evento.html?slug=${evento.slug}" class="btn-ver" style="margin-top: 0; flex-grow: 1;" onclick="event.preventDefault(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}');" onauxclick="if(event.button === 1) { event.preventDefault(); event.stopPropagation(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}'); }">Ver detalles</a>
+                <button class="btn-copy-link" style="margin-top: 0; background: var(--color-midnight); color: white; border: none; border-radius: var(--radius-premium); width: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;" title="Copiar enlace" onmouseover="this.style.background='var(--color-accent)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='var(--color-midnight)'; this.style.transform='none';" onclick="event.stopPropagation(); navigator.clipboard.writeText(window.location.origin + '/evento.html?slug=${evento.slug}').then(() => { const i = this.querySelector('i'); i.className='fas fa-check'; setTimeout(()=>i.className='fas fa-share-alt', 2000); }).catch(()=>alert('No se pudo copiar el enlace'));">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+            </div>
         </div>
     `;
     return card;

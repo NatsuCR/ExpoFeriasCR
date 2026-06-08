@@ -1,4 +1,4 @@
-window.renderizarYAbrirModalPremium = function() {
+window.renderizarYAbrirModalPremium = function () {
     let modal = document.getElementById('globalPremiumModal');
     if (!modal) {
         // Create modal
@@ -120,20 +120,20 @@ function inicializarContenidoModal(container) {
 
     const btn = document.getElementById('btnMostrarDonacionModal');
     if (btn) {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             this.style.display = 'none';
             const ppContainer = document.getElementById('modal-paypal-button-container');
             ppContainer.style.display = 'block';
             ppContainer.innerHTML = ''; // clear previous buttons if any
 
             paypal.Buttons({
-                createOrder: function(data, actions) {
+                createOrder: function (data, actions) {
                     let currentAmount = "2.00";
                     let currentDesc = 'Suscripción Premium 15 Días - ExpoFeriasCR';
 
                     if (isPremium) {
                         const inputAmt = document.getElementById('modal-donation-amount');
-                        if(inputAmt && parseFloat(inputAmt.value) > 0) {
+                        if (inputAmt && parseFloat(inputAmt.value) > 0) {
                             currentAmount = parseFloat(inputAmt.value).toFixed(2);
                             currentDesc = 'Donación Voluntaria - ExpoFeriasCR';
                         } else {
@@ -149,7 +149,7 @@ function inicializarContenidoModal(container) {
                         }]
                     });
                 },
-                onApprove: function(data, actions) {
+                onApprove: function (data, actions) {
                     return fetch('/api/pagos/capture', {
                         method: 'POST',
                         headers: {
@@ -169,10 +169,10 @@ function inicializarContenidoModal(container) {
                                 user.premium_hasta = result.nuevoVencimiento;
                             }
                             localStorage.setItem('usuario', JSON.stringify(user));
-                            
+
                             // Close modal
                             document.getElementById('globalPremiumModal').style.display = 'none';
-                            
+
                             // Forzar un F5 (recarga de página) automático después de 2 segundos
                             // para que el usuario pueda ver la notificación de éxito antes de que se refresque
                             setTimeout(() => {

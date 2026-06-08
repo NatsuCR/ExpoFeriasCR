@@ -110,6 +110,38 @@ export function initCarousel(trackId, items, controlsId, itemsPerView = 4) {
         newNext.addEventListener('click', goNext);
     }
 
+    // --- Soporte para arrastrar con el dedo (Swipe) ---
+    let startX = 0;
+    let endX = 0;
+
+    track.addEventListener('touchstart', e => {
+        startX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    track.addEventListener('touchend', e => {
+        endX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, {passive: true});
+
+    track.addEventListener('mousedown', e => {
+        startX = e.screenX;
+    });
+
+    track.addEventListener('mouseup', e => {
+        endX = e.screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        const diff = startX - endX;
+        const threshold = 40; // píxeles mínimos para detectar el swipe
+        if (diff > threshold) {
+            goNext(); // Arrastró hacia la izquierda
+        } else if (diff < -threshold) {
+            goPrev(); // Arrastró hacia la derecha
+        }
+    }
+
     window.addEventListener('resize', updateDimensions);
     updateDimensions();
 }
@@ -187,6 +219,42 @@ export function initResponsiveCarousel(wrapperId, trackId, prevBtnId, nextBtnId,
 
     if (prevBtn) prevBtn.addEventListener('click', goPrev);
     if (nextBtn) nextBtn.addEventListener('click', goNext);
+
+    // --- Soporte para arrastrar con el dedo (Swipe) ---
+    let startX = 0;
+    let endX = 0;
+
+    track.addEventListener('touchstart', e => {
+        startX = e.changedTouches[0].screenX;
+        detenerAutoplay();
+    }, {passive: true});
+
+    track.addEventListener('touchend', e => {
+        endX = e.changedTouches[0].screenX;
+        handleSwipe();
+        reanudarAutoplay();
+    }, {passive: true});
+
+    track.addEventListener('mousedown', e => {
+        startX = e.screenX;
+        detenerAutoplay();
+    });
+
+    track.addEventListener('mouseup', e => {
+        endX = e.screenX;
+        handleSwipe();
+        reanudarAutoplay();
+    });
+
+    function handleSwipe() {
+        const diff = startX - endX;
+        const threshold = 40; // píxeles mínimos para detectar el swipe
+        if (diff > threshold) {
+            goNext(); // Arrastró hacia la izquierda
+        } else if (diff < -threshold) {
+            goPrev(); // Arrastró hacia la derecha
+        }
+    }
 
     window.addEventListener('resize', updateDimensions);
     

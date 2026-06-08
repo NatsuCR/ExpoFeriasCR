@@ -76,14 +76,58 @@ window.initCarousel = function(trackId, items, controlsId, itemsPerView = 4) {
         }
     }
 
+    function goPrev() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateTransform();
+        }
+    }
+
+    function goNext() {
+        const maxIndex = isMobile ? totalItems - 1 : Math.max(0, totalItems - itemsPerView);
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateTransform();
+        }
+    }
+
     const prevBtn = controls?.querySelector('.carousel-prev');
     const nextBtn = controls?.querySelector('.carousel-next');
 
-    if (prevBtn) prevBtn.onclick = () => { if (currentIndex > 0) { currentIndex--; updateTransform(); } };
-    if (nextBtn) nextBtn.onclick = () => {
-        const maxIndex = isMobile ? totalItems - 1 : Math.max(0, totalItems - itemsPerView);
-        if (currentIndex < maxIndex) { currentIndex++; updateTransform(); }
-    };
+    if (prevBtn) prevBtn.onclick = goPrev;
+    if (nextBtn) nextBtn.onclick = goNext;
+
+    // --- Soporte para arrastrar con el dedo (Swipe) ---
+    let startX = 0;
+    let endX = 0;
+
+    track.addEventListener('touchstart', e => {
+        startX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    track.addEventListener('touchend', e => {
+        endX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, {passive: true});
+
+    track.addEventListener('mousedown', e => {
+        startX = e.screenX;
+    });
+
+    track.addEventListener('mouseup', e => {
+        endX = e.screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        const diff = startX - endX;
+        const threshold = 40; // píxeles mínimos para detectar el swipe
+        if (diff > threshold) {
+            goNext(); // Arrastró hacia la izquierda
+        } else if (diff < -threshold) {
+            goPrev(); // Arrastró hacia la derecha
+        }
+    }
 
     window.addEventListener('resize', updateDimensions);
     updateDimensions();

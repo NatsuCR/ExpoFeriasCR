@@ -51,6 +51,29 @@
                 margin-top: 10px !important;
             }
         }
+
+        /* Flechas hacia abajo para móviles en el título */
+        .mobile-down-arrow {
+            display: none;
+            color: #C8102E;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        @media (max-width: 768px) {
+            .mobile-down-arrow {
+                display: inline-block;
+            }
+        }
     </style>
 </head>
 
@@ -94,7 +117,11 @@
 
 
         <div class="streaming-content">
-            <h1>Transmisión en Vivo</h1>
+            <h1>
+                <i class="fas fa-arrow-down mobile-down-arrow"></i>
+                Transmisión en Vivo
+                <i class="fas fa-arrow-down mobile-down-arrow"></i>
+            </h1>
             <p class="subtitle"><i class="fas fa-circle live-icon"></i> Estamos en vivo. ¡Disfruta del evento!</p>
 
 
@@ -163,7 +190,7 @@
                                             Nota: O primeiro clique neste apartado abrirá uma nova aba para nos apoiar, feche-a e retorne para ser redirecionado para a transmissão ao vivo.
                                         </div>
 
-                                        <a href="https://www.effectivecpmnetwork.com/yukb4smsai?key=689ad730e62a16ff1a7873bd2320480a"
+                                        <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288"
                                             target="_blank"
                                             onclick="
                                                 sessionStorage.setItem('streamingAdClicked', 'true');

@@ -330,9 +330,9 @@
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     var isMobile = window.innerWidth <= 768;
-                    var adKey = isMobile ? 'db5fab4e621232d201d1e41f58321ace' : 'd24a04b077cc5a19d8ab72ae7e33176e';
-                    var adWidth = isMobile ? 320 : 728;
-                    var adHeight = isMobile ? 50 : 90;
+                    var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
+                    var adWidth = isMobile ? 468 : 728;
+                    var adHeight = isMobile ? 60 : 90;
                     document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
                 }

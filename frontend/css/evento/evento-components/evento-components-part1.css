@@ -170,7 +170,7 @@
     border-bottom: none;
 }
 
-.tabla-precios-estilo tr:hover {
+.tabla-precios-estilo tbody tr:hover {
     background-color: #fcfcfc;
 }
 

@@ -331,7 +331,31 @@
         </div>
     </section>
 
-
+    <!-- Custom Banner Eventos -->
+    <div class="container ad-horizontal-container" style="margin-top: 30px; margin-bottom: 30px;">
+        <script>
+            (function () {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
+                    document.write('<div class="animated-dashed-border" style="text-align: center; margin: 15px auto; max-width: 800px; font-size: 1rem; color: #333; padding: 15px; background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;"><span>🎁 <strong id="ad-dinamico-evento" style="margin-right: 2px;">Este evento</strong> te trae estos regalos, completa los pasos y disfruta.</span> <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" rel="noopener noreferrer" style="color: #ffffff; background: #C8102E; padding: 8px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; transition: transform 0.2s ease; display: inline-block; white-space: nowrap;" onclick="this.innerText=\'¡Saber más!\';">¡Saber más!</a> <img src="assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" style="width: 25px; height: 25px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>');
+                    setTimeout(function() {
+                        var evtNameEl = document.getElementById('eventoNombre');
+                        var adEvtNameEl = document.getElementById('ad-dinamico-evento');
+                        if (evtNameEl && adEvtNameEl) {
+                            var updateName = function() {
+                                if (evtNameEl.innerText && evtNameEl.innerText !== 'Cargando...') {
+                                    adEvtNameEl.innerText = evtNameEl.innerText;
+                                }
+                            };
+                            updateName();
+                            var observer = new MutationObserver(updateName);
+                            observer.observe(evtNameEl, { childList: true, characterData: true, subtree: true });
+                        }
+                    }, 100);
+                }
+            })();
+        </script>
+    </div>
 
     <section id="precios" class="precios">
         <div class="container">
@@ -401,18 +425,7 @@
             <div class="mapa" id="mapaIframe"></div>
         </div>
     </section>
-    <!-- Anuncio Horizontal -->
-    <div class="container ad-horizontal-container">
-        <script>
-            (function () {
-                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
-                }
-            })();
-        </script>
-    </div>
+
     <section id="contacto" class="contacto">
         <div class="container">
             <h2>Contacto</h2>
@@ -429,18 +442,7 @@
             <p style="font-size: 0.9em; opacity: 0.8;">Síguenos en redes sociales (proximamente)</p>
         </div>
     </section>
-    <!-- Anuncio Horizontal -->
-    <div class="container ad-horizontal-container">
-        <script>
-            (function () {
-                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
-                }
-            })();
-        </script>
-    </div>
+
 
 
     <!-- Modal de Autenticación -->

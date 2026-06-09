@@ -35,10 +35,11 @@ class StreamAvisoController {
 
   // Admin: Update config
   updateAdminConfig = (req, res) => {
-    const { activo, eventoId } = req.body;
+    const { activo, eventoId, actividadId } = req.body;
     const config = {
       activo: Boolean(activo),
-      eventoId: eventoId || null
+      eventoId: eventoId || null,
+      actividadId: actividadId || null
     };
     this._writeConfig(config);
     res.json({ success: true, message: 'Configuración actualizada', config });
@@ -57,9 +58,18 @@ class StreamAvisoController {
         return res.json({ activo: false });
       }
 
+      let actividad = null;
+      if (config.actividadId) {
+        const [actRows] = await pool.query('SELECT id, titulo FROM actividades WHERE id = ?', [config.actividadId]);
+        if (actRows.length > 0) {
+          actividad = actRows[0];
+        }
+      }
+
       res.json({
         activo: true,
-        evento: rows[0]
+        evento: rows[0],
+        actividad: actividad
       });
     } catch (error) {
       console.error('Error en getPublicStatus:', error);

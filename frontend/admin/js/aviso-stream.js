@@ -2,6 +2,8 @@ const toggleActivo = document.getElementById('toggleActivo');
 const selectsContainer = document.getElementById('selectsContainer');
 const btnGuardar = document.getElementById('btnGuardar');
 const mensajeStatus = document.getElementById('mensajeStatus');
+const actividadesContainer = document.getElementById('actividadesContainer');
+const actividadSelect = document.getElementById('actividadSelect');
 
 let selectsCreados = []; // Almacenar las referencias a los selects
 
@@ -91,13 +93,25 @@ async function cargarEventosAS() {
                 });
 
                 // Cuando se selecciona un evento en esta categoría, reiniciar los demás selects
-                select.addEventListener('change', function() {
+                select.addEventListener('change', async function() {
                     if (this.value !== "") {
+                        // Ocultar los demás selects
                         selectsCreados.forEach(otherSelect => {
                             if (otherSelect !== this) {
                                 otherSelect.value = "";
+                                otherSelect.parentElement.style.display = 'none';
                             }
                         });
+                        // Cargar las actividades para este evento
+                        await cargarActividades(this.value);
+                    } else {
+                        // Si selecciona -- Ninguno --, volver a mostrar todos
+                        selectsCreados.forEach(otherSelect => {
+                            otherSelect.parentElement.style.display = 'block';
+                        });
+                        // Ocultar select de actividades
+                        actividadesContainer.style.display = 'none';
+                        actividadSelect.innerHTML = '<option value="">-- Ninguna (Solo mostrar el Evento) --</option>';
                     }
                 });
 
@@ -113,6 +127,34 @@ async function cargarEventosAS() {
     } catch (error) {
         console.error(error);
         if (selectsContainer) selectsContainer.innerHTML = '<p>Error al cargar eventos</p>';
+    }
+}
+
+// Cargar actividades para un evento
+async function cargarActividades(eventoId) {
+    try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`/api/admin/eventos/${eventoId}/actividades`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Error al obtener actividades');
+        const actividades = await res.json();
+        
+        actividadSelect.innerHTML = '<option value="">-- Ninguna (Solo mostrar el Evento) --</option>';
+        if (actividades && actividades.length > 0) {
+            actividades.forEach(act => {
+                const option = document.createElement('option');
+                option.value = act.id;
+                option.textContent = act.titulo || act.nombre || 'Actividad';
+                actividadSelect.appendChild(option);
+            });
+            actividadesContainer.style.display = 'block';
+        } else {
+            actividadesContainer.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error cargando actividades:', error);
+        actividadesContainer.style.display = 'none';
     }
 }
 
@@ -135,10 +177,25 @@ async function cargarConfigAS() {
                 const hasOption = options.some(opt => opt.value == config.eventoId);
                 if (hasOption) {
                     select.value = config.eventoId;
+                    // Trigger the change visually (hide others)
+                    selectsCreados.forEach(otherSelect => {
+                        if (otherSelect !== select) {
+                            otherSelect.value = "";
+                            otherSelect.parentElement.style.display = 'none';
+                        }
+                    });
                 } else {
                     select.value = "";
                 }
             });
+
+            // Si hay eventoId, cargamos sus actividades
+            await cargarActividades(config.eventoId);
+            
+            // Si hay actividadId en la config, seleccionarlo
+            if (config.actividadId) {
+                actividadSelect.value = config.actividadId;
+            }
         }
     } catch (error) {
         console.error('Error cargando configuración:', error);
@@ -159,11 +216,17 @@ if (btnGuardar) {
             }
         });
         
+        let actividadSeleccionadaId = null;
+        if (eventoSeleccionadoId && actividadSelect.value !== "") {
+            actividadSeleccionadaId = actividadSelect.value;
+        }
+        
         try {
             const token = localStorage.getItem('token');
             const data = {
                 activo: toggleActivo.checked,
-                eventoId: eventoSeleccionadoId
+                eventoId: eventoSeleccionadoId,
+                actividadId: actividadSeleccionadaId
             };
 
             const res = await fetch('/api/admin/stream-aviso', {

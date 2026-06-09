@@ -29,12 +29,9 @@ async function verificarReinicioServidor() {
     if (!data.bootTime) return;
 
     if (lastBoot && lastBoot !== data.bootTime) {
-      // El servidor se reinició, limpiar sesión
-      localStorage.removeItem('token');
-      localStorage.removeItem('usuario');
+      // El servidor se reinició, pero como usamos JWT, no necesitamos limpiar la sesión.
       localStorage.setItem('serverBootTime', data.bootTime);
-      window.location.reload();
-    } else if (!lastBoot || lastBoot !== data.bootTime) {
+    } else if (!lastBoot) {
       localStorage.setItem('serverBootTime', data.bootTime);
     }
   } catch (error) {

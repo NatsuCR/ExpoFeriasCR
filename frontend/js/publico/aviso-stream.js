@@ -35,9 +35,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (data.activo && data.evento) {
             const eventoId = data.evento.id;
-            const imgPath = data.evento.imagen_portada ? `/uploads/${data.evento.imagen_portada}` : '/assets/images/placeholder.jpg';
-            img.src = imgPath;
-            textEl.innerHTML = `<span style="font-weight:bold; font-size:1.1em; display:block; margin-bottom:4px;">${data.evento.nombre}</span> 🔴 ¡ExpoferiasCR está EN VIVO ahora mismo!`;
+            let imgUrl = '/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png';
+            if (data.evento.imagen_portada) {
+                let imgRaw = data.evento.imagen_portada;
+                if (imgRaw.startsWith('[')) {
+                    try {
+                        const parsed = JSON.parse(imgRaw);
+                        if (parsed && parsed.length > 0) imgRaw = parsed[0];
+                    } catch(e) {}
+                }
+                
+                if (imgRaw.startsWith('http') || imgRaw.startsWith('/')) {
+                    imgUrl = imgRaw;
+                } else {
+                    imgUrl = `/uploads/${imgRaw}`;
+                }
+            }
+            img.src = imgUrl;
+
+            let contentHTML = `<span style="font-weight:bold; font-size:1.1em; display:block; margin-bottom:4px; color: #1a237e;">${data.evento.nombre}</span>`;
+            if (data.actividad) {
+                contentHTML += `🔴 ¡${data.actividad.titulo} EN VIVO ahora mismo!`;
+            } else {
+                contentHTML += `🔴 ¡EN VIVO ahora mismo!`;
+            }
+            textEl.innerHTML = contentHTML;
 
             // Verificar preferencia del usuario
             const isHidden = sessionStorage.getItem(`streamAvisoHidden_${eventoId}`);

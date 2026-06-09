@@ -289,8 +289,12 @@
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
+                    var isMobile = window.innerWidth <= 768;
+                    var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
+                    var adWidth = isMobile ? 468 : 728;
+                    var adHeight = isMobile ? 60 : 90;
+                    document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
                 }
             })();
         </script>
@@ -309,8 +313,12 @@
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
+                    var isMobile = window.innerWidth <= 768;
+                    var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
+                    var adWidth = isMobile ? 468 : 728;
+                    var adHeight = isMobile ? 60 : 90;
+                    document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
                 }
             })();
         </script>
@@ -365,13 +373,17 @@
     </section>
 
     <!-- Anuncio Horizontal -->
-    <div class="container ad-horizontal-container">
+    <div id="ad-precios" class="container ad-horizontal-container">
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
+                    var isMobile = window.innerWidth <= 768;
+                    var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
+                    var adWidth = isMobile ? 468 : 728;
+                    var adHeight = isMobile ? 60 : 90;
+                    document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
                 }
             })();
         </script>
@@ -404,13 +416,17 @@
     </section>
 
     <!-- Anuncio Horizontal -->
-    <div class="container ad-horizontal-container">
+    <div id="ad-expositores" class="container ad-horizontal-container">
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    document.write('<scr' + 'ipt>atOptions={"key":"d24a04b077cc5a19d8ab72ae7e33176e","format":"iframe","height":90,"width":728,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/d24a04b077cc5a19d8ab72ae7e33176e/invoke.js"></scr' + 'ipt>');
+                    var isMobile = window.innerWidth <= 768;
+                    var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
+                    var adWidth = isMobile ? 468 : 728;
+                    var adHeight = isMobile ? 60 : 90;
+                    document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
                 }
             })();
         </script>
@@ -443,8 +459,6 @@
         </div>
     </section>
 
-
-
     <!-- Modal de Autenticación -->
     <div id="modal-auth-container"></div>
 
@@ -464,6 +478,7 @@
 
     <script src="js/publico/modal-auth.js?v=9.0"></script>
     <script src="js/publico/main-auth.js?v=9.0"></script>
+    <script type="module" src="js/evento/cargarEvento.js?v=3"></script>
     <script type="module" src="js/evento/evento-main.js?v=9.0"></script>
 
     <!-- Google Translate Script -->

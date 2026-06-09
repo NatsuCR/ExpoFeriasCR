@@ -125,7 +125,6 @@ export async function cargarEvento(slug) {
         const mapa_embed = (evento.mapa_embed || '').trim();
         const mapa_waze_embed = (evento.mapa_waze_embed || '').trim();
 
-        // Manejo de tiene_expositores
         const tiene_expositores = (evento.tiene_expositores !== undefined && evento.tiene_expositores !== null)
             ? parseInt(evento.tiene_expositores)
             : 1;
@@ -355,8 +354,12 @@ export async function cargarEvento(slug) {
         const sectionPrecios = document.getElementById('precios');
         const linkPrecios = document.querySelector('.nav-links a[href="#precios"]');
         const linkUbicacion = document.querySelector('.nav-links a[href="#ubicacion"]');
+        const adPrecios = document.getElementById('ad-precios');
 
-        if (tipo_venta === 'gratis' || tipo_venta === 'en vivo online') {
+        const tieneExpositores = (tiene_expositores === 1);
+        const tienePrecios = !(tipo_venta === 'gratis' || tipo_venta === 'en vivo online');
+
+        if (!tienePrecios) {
             if (sectionPrecios) sectionPrecios.style.display = 'none';
             if (linkPrecios) linkPrecios.closest('li').style.display = 'none';
         } else {
@@ -365,16 +368,24 @@ export async function cargarEvento(slug) {
             if (linkUbicacion) linkUbicacion.closest('li').style.display = 'block';
         }
 
+        // El anuncio sobre expositores (adPrecios) se oculta SOLO si NO hay Expositores
+        if (!tieneExpositores) {
+            if (adPrecios) adPrecios.style.display = 'none';
+        }
+
         // Expositores
         const sectionExpositores = document.getElementById('expositores');
         const linkExpositores = document.querySelector('.nav-links a[href="#expositores"]');
+        const adExpositores = document.getElementById('ad-expositores');
 
-        if (tiene_expositores == 1) { // 1 = NO tiene expositores
+        if (!tieneExpositores) {
             if (sectionExpositores) sectionExpositores.style.display = 'none';
             if (linkExpositores) linkExpositores.closest('li').style.display = 'none';
+            // No tocamos adExpositores aquí porque siempre queda encima de Ubicación
         } else {
             if (sectionExpositores) sectionExpositores.style.display = 'block';
             if (linkExpositores) linkExpositores.closest('li').style.display = 'block';
+            // No tocamos adExpositores aquí para preservar su estilo por defecto
         }
 
         // Estilos Dinámicos (SIEMPRE snake_case)

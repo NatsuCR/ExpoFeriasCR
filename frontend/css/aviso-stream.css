@@ -120,42 +120,46 @@
 /* Responsividad para Celulares */
 @media (max-width: 600px) {
     .stream-aviso-widget {
-        top: auto;
-        bottom: 20px;
-        left: 15px;
-        right: 15px;
-        max-width: none;
+        top: 68px; /* Exactamente debajo del navbar */
+        bottom: auto;
+        left: 10px;
+        right: 10px;
         width: auto;
-        padding: 12px;
-        transform: translateY(150%); /* Oculto hacia abajo por defecto */
+        max-width: none;
+        padding: 8px 12px; /* Un poco más de espacio */
+        transform: translateX(-150%);
+        border-radius: 8px;
+        border-left: 4px solid #ff0000;
     }
 
     .stream-aviso-widget.show {
-        transform: translateY(0); /* Sube desde abajo */
+        transform: translateX(0);
     }
 
     .stream-aviso-img {
-        width: 55px;
-        height: 55px;
-        margin-right: 12px;
+        width: 45px;
+        height: 45px;
+        margin-right: 10px;
+        border-radius: 6px;
     }
 
     .stream-aviso-text {
-        font-size: 13px;
-        margin-bottom: 8px;
+        font-size: 11.5px;
+        margin-bottom: 5px;
+        line-height: 1.2;
     }
 
     .stream-btn {
-        padding: 8px 12px;
-        font-size: 12px;
+        padding: 6px 10px;
+        font-size: 11px;
     }
 
     .stream-aviso-floating-icon {
-        top: auto;
-        bottom: 20px;
-        left: 20px;
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+        top: 70px;
+        bottom: auto;
+        left: 10px;
+        width: 42px;
+        height: 42px;
+        font-size: 17px;
     }
 }

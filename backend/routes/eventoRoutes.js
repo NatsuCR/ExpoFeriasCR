@@ -31,6 +31,10 @@ router.delete('/:id', authMiddleware, (req, res) => usuarioEventsController.elim
 // Ruta pública
 router.get('/', eventoController.obtenerTodos.bind(eventoController));
 
+// Ruta pública para Aviso Stream
+const StreamAvisoController = require('../controllers/admin/StreamAvisoController');
+router.get('/stream-aviso/estado', StreamAvisoController.getPublicStatus);
+
 // Ruta paramétrica al final
 router.get('/:slug', eventoController.obtenerPorSlug.bind(eventoController));
 

@@ -479,6 +479,29 @@
             }
         })();
     </script>
+
+    <!-- Popunder Ad (Reset 1 minuto) -->
+    <script>
+        (function () {
+            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            var showAd = !u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)));
+            
+            if (showAd) {
+                var lastTime = localStorage.getItem('lastPopunderStream');
+                var now = new Date().getTime();
+                
+                // 60000 ms = 1 minuto
+                if (!lastTime || (now - parseInt(lastTime)) > 60000) {
+                    localStorage.setItem('lastPopunderStream', now.toString());
+                    var s = document.createElement('script');
+                    s.type = "text/javascript";
+                    s.src = "https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js";
+                    document.head.appendChild(s);
+                }
+            }
+        })();
+    </script>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/streaming-chat.js"></script>
     <script src="js/fullscreen.js"></script>

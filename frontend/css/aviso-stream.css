@@ -1,0 +1,161 @@
+/* Widget de Aviso Stream */
+.stream-aviso-widget {
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    z-index: 1000;
+    max-width: 320px;
+    border-left: 5px solid #ff0000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateX(-150%); /* Oculto por defecto */
+    opacity: 0;
+}
+
+.stream-aviso-widget.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.stream-aviso-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.stream-aviso-content {
+    flex: 1;
+}
+
+.stream-aviso-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 10px 0;
+    line-height: 1.2;
+}
+
+.stream-aviso-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.stream-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+}
+
+.stream-btn-entrar {
+    background: #ff0000;
+    color: #fff;
+    flex: 1;
+}
+
+.stream-btn-entrar:hover {
+    background: #cc0000;
+}
+
+.stream-btn-esconder {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.stream-btn-esconder:hover {
+    background: #e0e0e0;
+}
+
+/* Floating Icon when hidden */
+.stream-aviso-floating-icon {
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background: #ff0000;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: scale(0);
+    opacity: 0;
+    animation: pulse-stream 2s infinite;
+}
+
+.stream-aviso-floating-icon.show {
+    transform: scale(1);
+    opacity: 1;
+}
+
+@keyframes pulse-stream {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+}
+
+/* Responsividad para Celulares */
+@media (max-width: 600px) {
+    .stream-aviso-widget {
+        top: auto;
+        bottom: 20px;
+        left: 15px;
+        right: 15px;
+        max-width: none;
+        width: auto;
+        padding: 12px;
+        transform: translateY(150%); /* Oculto hacia abajo por defecto */
+    }
+
+    .stream-aviso-widget.show {
+        transform: translateY(0); /* Sube desde abajo */
+    }
+
+    .stream-aviso-img {
+        width: 55px;
+        height: 55px;
+        margin-right: 12px;
+    }
+
+    .stream-aviso-text {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .stream-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .stream-aviso-floating-icon {
+        top: auto;
+        bottom: 20px;
+        left: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}

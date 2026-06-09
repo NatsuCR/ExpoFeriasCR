@@ -95,6 +95,11 @@ router.get('/stats/export', statsController.exportVisits.bind(statsController));
 router.get('/stats/summary', statsController.exportSummary.bind(statsController));
 router.get('/stats/zip', statsController.exportZip.bind(statsController));
 
+// ========== Rutas para Aviso Stream ==========
+const StreamAvisoController = require('../controllers/admin/StreamAvisoController');
+router.get('/stream-aviso', StreamAvisoController.getAdminConfig);
+router.post('/stream-aviso', StreamAvisoController.updateAdminConfig);
+
 module.exports = router;
 
 

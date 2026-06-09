@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurar Aviso Stream - ExpoFeriasCR</title>
+    <link rel="icon" type="image/png" href="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/panel.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <style>
+        .stream-config-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .toggle-switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <div class="header-top">
+            <h1>Configurar Aviso Stream</h1>
+            <a href="dashboard.html" class="btn btn-volver">← Volver al Dashboard</a>
+        </div>
+
+        <div class="stream-config-container">
+            <div class="form-group">
+                <label>Habilitar Aviso Stream Global</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggleActivo">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Seleccionar Evento EN VIVO</label>
+                <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Selecciona el evento que deseas poner en vivo. (Elegir un evento desmarcará automáticamente los demás)</p>
+                <div id="selectsContainer">
+                    <p>Cargando eventos...</p>
+                </div>
+            </div>
+
+            <button id="btnGuardar" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 16px;">
+                Guardar Configuración
+            </button>
+            <div id="mensajeStatus" style="margin-top: 15px; text-align: center; font-weight: 600;"></div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/aviso-stream.js"></script>
+</body>
+</html>

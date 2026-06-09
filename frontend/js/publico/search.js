@@ -17,6 +17,9 @@ window.realizarBusqueda = async function() {
         termino: input ? input.value.trim() : ''
     };
 
+    // Si todos los filtros están vacíos, no forzamos el scroll (o podríamos dejarlo opcional)
+    const tieneFiltros = filtros.provincia || filtros.canton || filtros.distrito || filtros.categoria || filtros.termino;
+
     // Guardar globales si existen para persistencia mínima
     if (typeof provinciaActual !== 'undefined') provinciaActual = filtros.provincia;
     if (typeof busquedaActual !== 'undefined') busquedaActual = filtros.termino;
@@ -26,6 +29,26 @@ window.realizarBusqueda = async function() {
     if (window.cargarSeccion) await window.cargarSeccion('/api/eventos/en-progreso', 'carousel-vivo-track', 'controls-vivo', true, filtros);
     if (window.cargarProximos) await window.cargarProximos(filtros);
     if (window.cargarFinalizados) await window.cargarFinalizados(filtros);
+
+    // Hacer scroll a los resultados solo si se aplicó algún filtro
+    if (tieneFiltros) {
+        // Encontrar el primer contenedor de eventos activo
+        const eventosHoy = document.getElementById('eventos-hoy');
+        const eventosVivo = document.getElementById('eventos-vivo');
+        const eventosProximos = document.getElementById('categorias-proximos-container');
+        
+        let target = null;
+        // Queremos bajar a la sección que está visible y tiene contenido
+        if (eventosHoy && eventosHoy.style.display !== 'none') target = eventosHoy;
+        else if (eventosVivo && eventosVivo.style.display !== 'none') target = eventosVivo;
+        else target = eventosProximos;
+        
+        if (target) {
+            setTimeout(() => {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    }
 };
 
 window.configurarBuscadores = function() {

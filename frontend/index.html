@@ -132,6 +132,7 @@
     <link rel="stylesheet" href="css/components.css?v=9.0">
     <link rel="stylesheet" href="css/navbar-auth.css?v=9.0">
     <link rel="stylesheet" href="css/modal-auth.css?v=9.0">
+    <link rel="stylesheet" href="css/aviso-stream.css">
 
 </head>
 
@@ -253,6 +254,7 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <select id="provincia-select" class="modern-select">
                             <option value="">📍 Provincia</option>
+                            <option value="Internacional">Internacional</option>
                             <option value="San José">San José</option>
                             <option value="Alajuela">Alajuela</option>
                             <option value="Cartago">Cartago</option>
@@ -490,27 +492,27 @@
         <div class="patch-content">
             <button class="patch-close" id="patch-close-btn">&times;</button>
             <div class="patch-header">
-                <h2>🗞️ Notas de la Versión 10.14</h2>
-                <p>Descubre las últimas mejoras en ExpoFeriasCR</p>
+                <h2>🗞️ Notas de la Versión 10.15</h2>
+                <p>Nuevas mejoras en transmisiones y experiencia móvil</p>
             </div>
             <div class="patch-body">
                 <section>
-                    <h3>📱 Mejoras en Navegación Móvil</h3>
+                    <h3>🔴 Aviso Inteligente de En Vivo</h3>
                     <ul>
-                        <li><strong>Menú Principal:</strong> Se corrigió el ancho del menú desplegable en celulares para que cubra la pantalla por completo sin dejar espacios a los lados.</li>
-                        <li><strong>Menú de Usuario:</strong> Se ajustó el panel de "Mi Cuenta" en las transmisiones en vivo para que flote correctamente sin empujar la barra superior.</li>
+                        <li><strong>Nombre del Evento:</strong> El aviso de transmisión ahora muestra de forma destacada el nombre exacto del evento que está activo en ese momento.</li>
+                        <li><strong>Memoria Inteligente:</strong> Si decides esconder el aviso, se ocultará en el pequeño ícono rojo para no interrumpirte mientras navegas, pero volverá a aparecer automáticamente la próxima vez que visites la página.</li>
                     </ul>
                 </section>
                 <section>
-                    <h3>🖱️ Interacción Táctil (Swipe)</h3>
+                    <h3>📱 Optimización para Celulares</h3>
                     <ul>
-                        <li><strong>Carruseles más fluidos:</strong> ¡Ahora puedes deslizar con el dedo (swipe) hacia la izquierda o derecha en todos los carruseles de eventos, actividades y expositores desde tu celular! También funciona arrastrando con el ratón en la computadora.</li>
+                        <li><strong>Diseño menos intrusivo:</strong> En la versión móvil, el aviso de transmisión ahora se desliza elegantemente desde la parte inferior de la pantalla en lugar de estorbar el menú superior, con botones ajustados para mayor comodidad.</li>
                     </ul>
                 </section>
                 <section>
-                    <h3>🔗 Compartir Eventos</h3>
+                    <h3>🛠️ Correcciones y Mejoras</h3>
                     <ul>
-                        <li><strong>Copiar Enlace Directo:</strong> Se agregó un nuevo botón junto a "Ver detalles" en las tarjetas de eventos. ¡Con un solo clic copiarás el enlace del evento para compartirlo fácilmente por WhatsApp o redes sociales!</li>
+                        <li><strong>Código Limpio:</strong> Se solucionó un problema técnico en la página de eventos donde aparecía un fragmento de código SEO como texto en la parte superior de la pantalla.</li>
                     </ul>
                 </section>
             </div>
@@ -619,7 +621,7 @@
         })();
     </script>
 
-
+    <script src="js/publico/aviso-stream.js"></script>
 </body>
 
 </html>

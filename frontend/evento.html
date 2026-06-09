@@ -54,22 +54,80 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!DOCTYPE html>
+    <html lang="es">
 
-    <!-- SEO: JSON-LD Dinámico -->
-    {{{EVENT_JSON_LD}}}
+    <head>
+        <!-- Google Tag Manager -->
+        <script>(function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-546QJZHL');</script>
+        <!-- End Google Tag Manager -->
+        <!-- Google tag (gtag.js) - Google Analytics 4 -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KV2LHH75N"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
 
-    <link rel="stylesheet" href="css/base.css?v=9.0">
-    <link rel="stylesheet" href="css/layout.css?v=9.0">
-    <link rel="stylesheet" href="css/components.css?v=9.0">
-    <link rel="stylesheet" href="css/evento/evento-base.css?v=9.0">
-    <link rel="stylesheet" href="css/evento/evento-layout.css?v=9.0">
-    <link rel="stylesheet" href="css/evento/evento-components.css?v=9.0">
-    <link rel="stylesheet" href="css/evento/map-tabs.css?v=9.0">
-    <link rel="stylesheet" href="css/evento/evento-responsive.css?v=9.0">
-    <link rel="stylesheet" href="css/navbar-auth.css?v=9.0">
-    <link rel="stylesheet" href="css/modal-auth.css?v=9.0">
-    <script src="js/helpers.js?v=9.0"></script>
-</head>
+            gtag('config', 'G-0KV2LHH75N');
+        </script>
+        <meta charset="UTF-8">
+        <meta name="google-adsense-account" content="ca-pub-9004819107277432">
+        <script async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9004819107277432"
+            crossorigin="anonymous"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{EVENT_NAME}} | ExpoFeriasCR</title>
+        <meta name="description" content="{{EVENT_DESC}}">
+        <meta name="keywords"
+            content="turismo mundial, qué hacer en el mundo, guía de eventos internacionales, próximos eventos, próximas ferias, próximas expos, fiestas globales, festivales internacionales, fiestas patronales, exposiciones mundiales, cultura global, conciertos, {{EVENT_NAME}}">
+        <link rel="canonical" href="https://expoferiascr.site/evento.html?slug={{EVENT_SLUG}}">
+
+        <!-- SEO: Open Graph / Facebook -->
+        <meta property="og:type" content="event">
+        <meta property="og:url" content="https://expoferiascr.site/evento.html?slug={{EVENT_SLUG}}">
+        <meta property="og:site_name" content="ExpoFeriasCR">
+        <meta property="og:title" content="{{EVENT_NAME}} | ExpoFeriasCR">
+        <meta property="og:description" content="{{EVENT_DESC}}">
+        <meta property="og:image" content="{{EVENT_IMAGE}}">
+        <meta property="og:type" content="article">
+
+        <!-- SEO: Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="https://expoferiascr.site/evento.html?slug={{EVENT_SLUG}}">
+        <meta property="twitter:title" content="{{EVENT_NAME}} | ExpoFeriasCR">
+        <meta property="twitter:description" content="{{EVENT_DESC}}">
+        <meta property="twitter:image" content="{{EVENT_IMAGE}}">
+
+        <link rel="icon" type="image/png" href="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+        <!-- SEO: JSON-LD Dinámico -->
+        {{{EVENT_JSON_LD}}}
+
+        <link rel="stylesheet" href="css/base.css?v=9.0">
+        <link rel="stylesheet" href="css/layout.css?v=9.0">
+        <link rel="stylesheet" href="css/components.css?v=9.0">
+        <link rel="stylesheet" href="css/evento/evento-base.css?v=9.0">
+        <link rel="stylesheet" href="css/evento/evento-layout.css?v=9.0">
+        <link rel="stylesheet" href="css/evento/evento-components.css?v=9.0">
+        <link rel="stylesheet" href="css/evento/map-tabs.css?v=9.0">
+        <link rel="stylesheet" href="css/evento/evento-responsive.css?v=9.0">
+        <link rel="stylesheet" href="css/navbar-auth.css?v=9.0">
+        <link rel="stylesheet" href="css/modal-auth.css?v=9.0">
+        <link rel="stylesheet" href="css/aviso-stream.css">
+        <script src="js/helpers.js?v=9.0"></script>
+    </head>
 
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -469,6 +527,7 @@
             }
         })();
     </script>
+    <script src="js/publico/aviso-stream.js"></script>
 </body>
 
 </html>

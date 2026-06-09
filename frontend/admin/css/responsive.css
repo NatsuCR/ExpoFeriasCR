@@ -112,7 +112,8 @@
     }
 
     .section-body {
-        max-height: none !important; /* Permitir ver más en móvil si se desea */
+        max-height: 275px !important; /* Límite para mostrar scroll tras ~4 eventos en móvil */
+        overflow-y: auto !important;
     }
 
     .mini-evento {

@@ -3,14 +3,28 @@
   <!-- Página principal -->
   <url>
     <loc>https://expoferiascr.site/</loc>
-    <lastmod>2024-06-05</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <!-- Página principal explícita -->
   <url>
     <loc>https://expoferiascr.site/index.html</loc>
-    <lastmod>2024-06-05</lastmod>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- Evento -->
+  <url>
+    <loc>https://expoferiascr.site/evento.html</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Streaming -->
+  <url>
+    <loc>https://expoferiascr.site/streaming.html</loc>
+    <lastmod>2026-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>

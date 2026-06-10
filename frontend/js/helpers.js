@@ -378,3 +378,23 @@ if (typeof window !== 'undefined') {
         }, 3000);
     });
 }
+
+// Agregar keywords dinámicas al SEO
+window.agregarKeywordsSEO = function(nuevosKeywords) {
+    if (!nuevosKeywords || nuevosKeywords.length === 0) return;
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) {
+        let currentContent = metaKeywords.getAttribute('content') || '';
+        let keywordsToAdd = Array.isArray(nuevosKeywords) ? nuevosKeywords : [nuevosKeywords];
+        keywordsToAdd = keywordsToAdd.filter(k => k && k.trim());
+        if (keywordsToAdd.length === 0) return;
+        
+        let currentArray = currentContent.split(',').map(s => s.trim().toLowerCase());
+        let toAppend = keywordsToAdd.filter(k => !currentArray.includes(k.trim().toLowerCase()));
+        
+        if (toAppend.length > 0) {
+            metaKeywords.setAttribute('content', currentContent + ', ' + toAppend.join(', '));
+            console.log('[SEO] Keywords dinámicas actualizadas:', toAppend.join(', '));
+        }
+    }
+};

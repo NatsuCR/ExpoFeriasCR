@@ -321,6 +321,11 @@ export async function cargarExpositores(slug) {
         const res = await fetch(`/api/expositores/${slug}`);
         allExpositores = await res.json();
 
+        if (typeof window.agregarKeywordsSEO === 'function' && Array.isArray(allExpositores)) {
+            const expositoresKeywords = allExpositores.map(exp => exp.nombre).filter(Boolean);
+            window.agregarKeywordsSEO(expositoresKeywords);
+        }
+
         // El buscador ahora se gestiona dentro de renderExpositores(lista)
 
         renderExpositores(allExpositores);

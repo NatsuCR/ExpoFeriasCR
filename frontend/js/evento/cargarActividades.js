@@ -70,7 +70,9 @@ export async function cargarActividades(slug) {
         }
 
         let html = '';
+        let actividadesKeywords = [];
         actividades.forEach(a => {
+            if (a.titulo) actividadesKeywords.push(a.titulo);
             const imagenes = parseImagenes(a.imagen);
             const imagenesLimpias = imagenes.map(u => u.replace(/\\/g, '/'));
 
@@ -152,6 +154,10 @@ export async function cargarActividades(slug) {
         ${gratisHtml}
     </div>`;
         });
+
+        if (typeof window.agregarKeywordsSEO === 'function') {
+            window.agregarKeywordsSEO(actividadesKeywords);
+        }
 
         container.innerHTML = html;
         initLightbox();

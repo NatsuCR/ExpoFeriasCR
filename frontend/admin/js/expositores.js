@@ -1,4 +1,6 @@
 // admin-expositores.js
+window.editedExpositores = window.editedExpositores || new Set();
+window.editedExpositoresByNombre = window.editedExpositoresByNombre || new Set();
 
 // ── Helpers de multi-imagen (compartidos con actividades) ──────────────────
 
@@ -78,8 +80,16 @@ async function guardarExpositorModal() {
     }
     if (id) {
         await fetchAPI(`/api/admin/expositores/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+        window.editedExpositores.add(id.toString());
     } else {
-        await fetchAPI('/api/admin/expositores', { method: 'POST', body: JSON.stringify(data) });
+        const response = await fetchAPI('/api/admin/expositores', { method: 'POST', body: JSON.stringify(data) });
+        if (response && response.id) {
+            window.editedExpositores.add(response.id.toString());
+        } else if (response && response.insertId) {
+            window.editedExpositores.add(response.insertId.toString());
+        } else {
+            window.editedExpositoresByNombre.add(data.nombre);
+        }
     }
     cerrarModalExpositor();
     cargarExpositores();
@@ -100,7 +110,9 @@ async function cargarExpositores() {
     expositores.forEach(e => {
         const imgs = parseImagenes(e.imagen_logo);
         const imgBadge = imgs.length > 1 ? `${imgs.length} imgs` : (imgs.length === 1 ? '✓' : '—');
-        html += `<tr>
+        const isEdited = window.editedExpositores.has(e.id.toString()) || window.editedExpositoresByNombre.has(e.nombre);
+        const bgStyle = isEdited ? 'style="background-color: #d4edda !important; transition: background-color 0.3s;"' : '';
+        html += `<tr ${bgStyle}>
             <td>${e.nombre}</td>
             <td>${e.rubro || '—'}</td>
             <td>${e.descripcion || '—'}</td>

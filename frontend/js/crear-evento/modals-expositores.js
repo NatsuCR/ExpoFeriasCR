@@ -52,6 +52,11 @@ export function agregarExpositorDelModal(notificar) {
         cells[3].innerHTML = imgBadge;
         cells[4].innerHTML = videoBadge;
     }
+    
+    // Marcar como editada
+    filaEnEdicion.style.setProperty('background-color', '#d4edda', 'important');
+    const inputs = filaEnEdicion.querySelectorAll('input');
+    inputs.forEach(inp => inp.style.setProperty('background-color', '#d4edda', 'important'));
   } else {
     crearFilaExpositor(nombre, rubro, ubicacion, descripcion, imagenesJSON, video);
   }

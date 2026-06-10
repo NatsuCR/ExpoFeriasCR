@@ -41,6 +41,11 @@ export function agregarPrecioDelModal(notificar) {
     filaEnEdicion.querySelector('.precio-monto').value = monto;
     filaEnEdicion.querySelector('.precio-promocion').value = promocion;
     filaEnEdicion.querySelector('.precio-descripcion').value = descripcion;
+    
+    // Marcar como editada
+    filaEnEdicion.style.setProperty('background-color', '#d4edda', 'important');
+    const inputs = filaEnEdicion.querySelectorAll('input');
+    inputs.forEach(inp => inp.style.setProperty('background-color', '#d4edda', 'important'));
   } else {
     crearFilaPrecio(fecha, monto, promocion, descripcion);
   }

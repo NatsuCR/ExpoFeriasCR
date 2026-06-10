@@ -70,6 +70,11 @@ export function agregarActividadDelModal(notificar) {
         cells[6].innerHTML = videoBadge;
         cells[7].innerHTML = onlineBadge;
     }
+    
+    // Marcar como editada
+    filaEnEdicion.style.setProperty('background-color', '#d4edda', 'important');
+    const inputs = filaEnEdicion.querySelectorAll('input');
+    inputs.forEach(inp => inp.style.setProperty('background-color', '#d4edda', 'important'));
   } else {
     crearFilaActividad(titulo, tipo, fecha, hora, lugar, esGratis, descripcion, imagenes, reqOnline, enlace, soloOnline, video, enVivo);
   }

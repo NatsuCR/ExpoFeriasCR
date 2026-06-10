@@ -1,4 +1,6 @@
 // admin-actividades.js
+window.editedActividades = window.editedActividades || new Set();
+window.editedActividadesByTitle = window.editedActividadesByTitle || new Set();
 
 // ── Helpers de multi-imagen ────────────────────────────────────────────────
 
@@ -86,8 +88,16 @@ async function guardarActividadModal() {
     }
     if (id) {
         await fetchAPI(`/api/admin/actividades/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+        window.editedActividades.add(id.toString());
     } else {
-        await fetchAPI('/api/admin/actividades', { method: 'POST', body: JSON.stringify(data) });
+        const response = await fetchAPI('/api/admin/actividades', { method: 'POST', body: JSON.stringify(data) });
+        if (response && response.id) {
+            window.editedActividades.add(response.id.toString());
+        } else if (response && response.insertId) {
+            window.editedActividades.add(response.insertId.toString());
+        } else {
+            window.editedActividadesByTitle.add(data.titulo);
+        }
     }
     cerrarModalActividad();
     cargarActividades();
@@ -107,7 +117,9 @@ async function cargarActividades() {
     acts.forEach(a => {
         const imgs = parseImagenes(a.imagen);
         const imgBadge = imgs.length > 1 ? `${imgs.length} imgs` : (imgs.length === 1 ? '✓' : '—');
-        html += `<tr>
+        const isEdited = window.editedActividades.has(a.id.toString()) || window.editedActividadesByTitle.has(a.titulo);
+        const bgStyle = isEdited ? 'style="background-color: #d4edda !important; transition: background-color 0.3s;"' : '';
+        html += `<tr ${bgStyle}>
             <td>${a.titulo}</td>
             <td>${a.tipo || '—'}</td>
             <td>${new Date(a.fecha).toLocaleDateString()}</td>

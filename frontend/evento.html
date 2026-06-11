@@ -341,8 +341,9 @@
     <div class="container ad-horizontal-container" style="margin-top: 30px; margin-bottom: 30px;">
         <script>
             (function () {
+                var isMobile = window.innerWidth <= 768;
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
+                if (!isMobile && (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta))))) {
                     document.write('<div class="animated-dashed-border" style="text-align: center; margin: 15px auto; max-width: 800px; font-size: 1rem; color: #333; padding: 15px; background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;"><span>🎁 <strong id="ad-dinamico-evento" style="margin-right: 2px;">Este evento</strong> te trae estos regalos, completa los pasos y disfruta.</span> <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" rel="noopener noreferrer" style="color: #ffffff; background: #C8102E; padding: 8px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; transition: transform 0.2s ease; display: inline-block; white-space: nowrap;" onclick="this.innerText=\'¡Saber más!\';">¡Saber más!</a> <img src="assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" style="width: 25px; height: 25px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>');
                     setTimeout(function() {
                         var evtNameEl = document.getElementById('eventoNombre');

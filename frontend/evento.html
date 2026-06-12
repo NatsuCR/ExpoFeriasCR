@@ -539,8 +539,9 @@
     <!-- Social Bar -->
     <script>
         (function () {
+            var isMobile = window.innerWidth <= 768;
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
+            if (!isMobile && (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta))))) {
                 document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
             }
         })();

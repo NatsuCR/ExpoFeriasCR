@@ -1,3 +1,29 @@
+.css-fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+    background: #000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.css-fullscreen .video-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    padding-bottom: 0 !important;
+}
+
+.css-fullscreen iframe {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
 .streaming-layout {
     display: flex;
     justify-content: center;

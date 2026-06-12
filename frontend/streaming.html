@@ -164,7 +164,7 @@
                 <div id="video-fullscreen-wrap" style="width: 100%; background: transparent;">
                     <div class="video-wrapper" id="live-video-wrapper">
                         <iframe id="iblups-iframe" src="https://iblups.com/embed/expoferiascrlive" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
 
                         <!-- Botón Fullscreen Personalizado -->
                         <button id="custom-fullscreen-btn" onclick="toggleFullScreen()" title="Pantalla Completa"
@@ -515,28 +515,6 @@
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
             if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                 document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
-            }
-        })();
-    </script>
-
-    <!-- Popunder Ad (Reset 1 minuto) -->
-    <script>
-        (function () {
-            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            var showAd = !u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)));
-            
-            if (showAd) {
-                var lastTime = localStorage.getItem('lastPopunderStream');
-                var now = new Date().getTime();
-                
-                // 60000 ms = 1 minuto
-                if (!lastTime || (now - parseInt(lastTime)) > 60000) {
-                    localStorage.setItem('lastPopunderStream', now.toString());
-                    var s = document.createElement('script');
-                    s.type = "text/javascript";
-                    s.src = "https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js";
-                    document.head.appendChild(s);
-                }
             }
         })();
     </script>

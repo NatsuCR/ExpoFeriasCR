@@ -277,14 +277,14 @@ window.cerrarStickyAd = function() {
     if (ad) ad.remove();
     document.body.style.paddingBottom = '0';
     
-    // El cooldown es de 5 minutos en streaming, 2 minutos en las demás
+    // El cooldown es de 8 minutos en streaming, 4 minutos en las demás
     const isStreaming = window.location.pathname.includes('streaming.html');
     
     let cooldown;
     if (isStreaming) {
-        cooldown = 300000; // 5 minutos siempre en streaming.html
+        cooldown = 480000; // 8 minutos siempre en streaming.html
     } else {
-        cooldown = 120000; // 2 minutos en las demás
+        cooldown = 240000; // 4 minutos en las demás
     }
     
     // Guardar el momento en que se cerró y el cooldown aplicado

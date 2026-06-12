@@ -7,7 +7,7 @@ window.busquedaActual = '';
 
 // ──── REDIRECCIÓN DIRECTA (Popup Eliminado) ────
 window.mostrarPopupAnuncio = function (targetUrl) {
-    window.location.href = targetUrl;
+    window.open(targetUrl, '_blank');
 }
 
 async function fetchData(url) {
@@ -80,7 +80,7 @@ function createEventoCard(evento, isLive = false) {
             <p class="card-location"><i class="fas fa-map-marker-alt"></i> ${ubicacionCorta}</p>
             ${evento.ubicacion && evento.ubicacion !== ubicacionCorta ? `<p class="card-address"><i class="fas fa-compass"></i> ${evento.ubicacion}</p>` : ''}
             <div style="display: flex; gap: 10px; margin-top: 1.2rem;">
-                <a href="evento.html?slug=${evento.slug}" class="btn-ver" style="margin-top: 0; flex-grow: 1;" onclick="event.preventDefault(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}');" onauxclick="if(event.button === 1) { event.preventDefault(); event.stopPropagation(); window.mostrarPopupAnuncio('evento.html?slug=${evento.slug}'); }">Ver detalles</a>
+                <a href="evento.html?slug=${evento.slug}" target="_blank" class="btn-ver" style="margin-top: 0; flex-grow: 1;">Ver detalles</a>
                 <button class="btn-copy-link" style="margin-top: 0; background: var(--color-midnight); color: white; border: none; border-radius: var(--radius-premium); width: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;" title="Copiar enlace" onmouseover="this.style.background='var(--color-accent)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='var(--color-midnight)'; this.style.transform='none';" onclick="event.stopPropagation(); navigator.clipboard.writeText(window.location.origin + '/evento.html?slug=${evento.slug}').then(() => { const i = this.querySelector('i'); i.className='fas fa-check'; setTimeout(()=>i.className='fas fa-share-alt', 2000); }).catch(()=>alert('No se pudo copiar el enlace'));">
                     <i class="fas fa-share-alt"></i>
                 </button>

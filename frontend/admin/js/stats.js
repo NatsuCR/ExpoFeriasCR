@@ -6,6 +6,16 @@ let pagesChart = null;
 let trendChart = null; // Antes llamado dailyChart
 let currentFilterDate = null;
 
+// Helper: Convertir código de país (ISO) a emoji de bandera
+function getFlagEmoji(countryCode) {
+    if (countryCode === 'XX' || !countryCode) return '🌍';
+    const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt());
+    return String.fromCodePoint(...codePoints);
+}
+
 // Referencias a elementos
 const filterDateInput = document.getElementById('filterDate');
 const btnClearFilter = document.getElementById('btnClearFilter');
@@ -144,6 +154,31 @@ function updateUI(data, filteredDate) {
                 }
             }
         });
+    }
+
+    // --- Renderizar lista de países ---
+    const countriesList = document.getElementById('countriesList');
+    if (countriesList && data.byCountry) {
+        countriesList.innerHTML = '';
+        if (data.byCountry.length === 0) {
+            countriesList.innerHTML = '<p style="text-align:center; padding: 10px; color: #6b7280;">No hay datos de países disponibles.</p>';
+        } else {
+            data.byCountry.forEach(c => {
+                const flag = getFlagEmoji(c.country);
+                const countryName = c.country === 'XX' ? 'Desconocido' : c.country;
+                
+                const item = document.createElement('div');
+                item.className = 'country-item';
+                item.innerHTML = `
+                    <div class="country-item-info">
+                        <span class="country-item-flag">${flag}</span>
+                        <span>${countryName}</span>
+                    </div>
+                    <span class="country-item-total">${c.total}</span>
+                `;
+                countriesList.appendChild(item);
+            });
+        }
     }
 }
 

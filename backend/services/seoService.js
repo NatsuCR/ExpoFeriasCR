@@ -101,6 +101,7 @@ class SEOService {
         .replace(/{{EVENT_NAME}}/g, 'Detalle de Evento')
         .replace(/{{EVENT_DESC}}/g, defaultDesc)
         .replace(/{{EVENT_IMAGE}}/g, defaultImg)
+        .replace(/\?slug={{EVENT_SLUG}}/g, '') // Fix para evitar href=".../evento.html?slug="
         .replace(/{{EVENT_SLUG}}/g, '')
         .replace('{{{EVENT_JSON_LD}}}', '');
     }

@@ -1,6 +1,7 @@
 // backend/controllers/StatsController.js
 const pool = require('../../db');
 const AdmZip = require('adm-zip');
+const geoip = require('geoip-lite');
 
 class StatsController {
     // 🛡️ Filtro estricto para los informes del dashboard
@@ -101,6 +102,21 @@ class StatsController {
                 chartType = "daily";
             }
 
+            // Visitas por país usando geoip-lite
+            const [ipResult] = await pool.query(`SELECT ip_address, COUNT(*) as total FROM visitas WHERE ${filter} ${dateCondition} GROUP BY ip_address`);
+            const countryStats = {};
+            ipResult.forEach(row => {
+                const geo = geoip.lookup(row.ip_address);
+                const country = geo ? geo.country : 'XX'; // XX for Unknown
+                if (!countryStats[country]) countryStats[country] = 0;
+                countryStats[country] += row.total;
+            });
+
+            const visitsByCountry = Object.keys(countryStats).map(c => ({
+                country: c,
+                total: countryStats[c]
+            })).sort((a, b) => b.total - a.total);
+
             res.json({
                 success: true,
                 total: totalVisitas,
@@ -110,6 +126,7 @@ class StatsController {
                 todayVisits: visitasHoy,
                 todayUnique: visitantesUnicosHoy,
                 byPage: visitsByPage,
+                byCountry: visitsByCountry,
                 chartData: chartData,
                 chartType: chartType
             });

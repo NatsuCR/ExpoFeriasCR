@@ -91,22 +91,39 @@ const eventoService = new EventoService();
 
 // Ruta dinámica para inyectar SEO en eventos
 app.get('/evento.html', async (req, res) => {
-  const { slug } = req.query;
+  const { slug, preview } = req.query;
   const filePath = path.join(process.cwd(), 'frontend', 'evento.html');
 
   try {
     let html = fs.readFileSync(filePath, 'utf8');
 
-    // Si hay slug, buscamos el evento. Si no, pasamos null para que el servicio limpie los tags.
-    const evento = slug ? await eventoService.obtenerEventoPorSlug(slug) : null;
+    // Modo preview para el administrador (ignorar SEO y enviar 200)
+    if (preview === '1') {
+      html = seoService.inyectarMetadatos(html, null);
+      return res.send(html);
+    }
 
-    // Inyectar metadatos (o limpiar placeholders)
+    // Si no hay slug, no tiene sentido estar en evento.html, redirigir al inicio
+    if (!slug) {
+      return res.redirect(301, '/');
+    }
+
+    // Buscar el evento en la BD
+    const evento = await eventoService.obtenerEventoPorSlug(slug);
+
+    // Si hay slug pero el evento no existe, retornar status 404 (evita "Soft 404" en Google)
+    if (!evento) {
+      html = seoService.inyectarMetadatos(html, null);
+      return res.status(404).send(html);
+    }
+
+    // Inyectar metadatos
     html = seoService.inyectarMetadatos(html, evento);
 
     res.send(html);
   } catch (error) {
     console.error('[SEO] Error inyectando metadatos:', error);
-    res.sendFile(filePath);
+    res.status(500).sendFile(filePath);
   }
 });
 
@@ -192,6 +209,32 @@ app.use((err, req, res, next) => {
     path: req.path
   });
 });
+
+// =======================
+// 🧹 TAREAS EN SEGUNDO PLANO
+// =======================
+const pool = require('./db');
+
+const limpiarVisitasEventosBorrados = async () => {
+  try {
+    const query = `
+      DELETE v FROM visitas v
+      LEFT JOIN eventos e ON v.page_url = CONCAT('/evento.html?slug=', e.slug)
+      WHERE v.page_url LIKE '/evento.html?slug=%' AND e.id IS NULL;
+    `;
+    const [result] = await pool.query(query);
+    if (result.affectedRows > 0) {
+      console.log(`🧹 Limpieza de estadísticas: ${result.affectedRows} visitas de eventos eliminados fueron borradas.`);
+    }
+  } catch (error) {
+    console.error('❌ Error en tarea de limpieza de estadísticas:', error);
+  }
+};
+
+// Ejecutar limpieza al iniciar el servidor
+limpiarVisitasEventosBorrados();
+// Y luego cada 24 horas (24 * 60 * 60 * 1000 ms)
+setInterval(limpiarVisitasEventosBorrados, 24 * 60 * 60 * 1000);
 
 // =======================
 // 🚀 SERVIDOR

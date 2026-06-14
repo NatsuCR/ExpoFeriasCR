@@ -84,12 +84,16 @@ function enableCssFullscreen(elem) {
     elem.classList.add('css-fullscreen');
     document.body.style.overflow = 'hidden'; // Evitar scroll
     updateIconToCompress();
+    const stickyAd = document.getElementById('global-sticky-ad');
+    if (stickyAd) stickyAd.style.display = 'none';
 }
 
 function disableCssFullscreen(elem) {
     elem.classList.remove('css-fullscreen');
     document.body.style.overflow = '';
     updateIconToExpand();
+    const stickyAd = document.getElementById('global-sticky-ad');
+    if (stickyAd) stickyAd.style.display = 'block';
 }
 
 function updateIconToCompress() {
@@ -116,10 +120,16 @@ document.addEventListener('MSFullscreenChange', window.exitHandler);
 
 window.exitHandler = function() {
     const elem = document.getElementById("video-fullscreen-wrap");
-    // Si no hay elemento nativo y tampoco tiene la clase CSS
-    if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+    const isNativeFullscreen = document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement;
+    
+    if (!isNativeFullscreen) {
         if (elem && !elem.classList.contains('css-fullscreen')) {
             updateIconToExpand();
+            const stickyAd = document.getElementById('global-sticky-ad');
+            if (stickyAd) stickyAd.style.display = 'block';
         }
+    } else {
+        const stickyAd = document.getElementById('global-sticky-ad');
+        if (stickyAd) stickyAd.style.display = 'none';
     }
 }

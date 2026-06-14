@@ -6,14 +6,11 @@ let pagesChart = null;
 let trendChart = null; // Antes llamado dailyChart
 let currentFilterDate = null;
 
-// Helper: Convertir código de país (ISO) a emoji de bandera
-function getFlagEmoji(countryCode) {
-    if (countryCode === 'XX' || !countryCode) return '🌍';
-    const codePoints = countryCode
-        .toUpperCase()
-        .split('')
-        .map(char => 127397 + char.charCodeAt());
-    return String.fromCodePoint(...codePoints);
+// Helper: Generar imagen de bandera desde FlagCDN
+function getFlagHtml(countryCode) {
+    if (countryCode === 'XX' || !countryCode) return '<span style="font-size: 1.5rem;">🌍</span>';
+    const code = countryCode.toLowerCase();
+    return `<img src="https://flagcdn.com/w40/${code}.png" alt="${countryCode}" class="country-item-flag">`;
 }
 
 // Referencias a elementos
@@ -164,14 +161,14 @@ function updateUI(data, filteredDate) {
             countriesList.innerHTML = '<p style="text-align:center; padding: 10px; color: #6b7280;">No hay datos de países disponibles.</p>';
         } else {
             data.byCountry.forEach(c => {
-                const flag = getFlagEmoji(c.country);
+                const flagHtml = getFlagHtml(c.country);
                 const countryName = c.country === 'XX' ? 'Desconocido' : c.country;
                 
                 const item = document.createElement('div');
                 item.className = 'country-item';
                 item.innerHTML = `
                     <div class="country-item-info">
-                        <span class="country-item-flag">${flag}</span>
+                        ${flagHtml}
                         <span>${countryName}</span>
                     </div>
                     <span class="country-item-total">${c.total}</span>

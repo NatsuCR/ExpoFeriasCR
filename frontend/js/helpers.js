@@ -300,7 +300,8 @@ window.cerrarStickyAd = function() {
 // Sticky Ad para todas las pantallas
 window.initStickyAd = function (force = false) {
     // No mostrar anuncios en el apartado de administración
-    if (window.location.pathname.includes('/admin/')) {
+    const path = window.location.pathname;
+    if (path.includes('/admin/')) {
         return;
     }
 
@@ -338,33 +339,28 @@ window.initStickyAd = function (force = false) {
     }
 
     const isMobile = window.innerWidth <= 768;
-    const adWidth = isMobile ? 320 : 728;
-    const adHeight = isMobile ? 50 : 90;
-    const adKey = isMobile ? 'db5fab4e621232d201d1e41f58321ace' : 'd24a04b077cc5a19d8ab72ae7e33176e';
-    const paddingBottom = isMobile ? '60px' : '100px';
+    const adWidth = isMobile ? 468 : 728;
+    const adHeight = isMobile ? 60 : 90;
+    const adKey = isMobile ? 'b9fd5ff2438b3260d96faae5cefcd634' : 'd24a04b077cc5a19d8ab72ae7e33176e';
+    const paddingBottom = isMobile ? '70px' : '100px';
 
     const fakeX = `<a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" onclick="window.cerrarStickyAd()" style="position: absolute; top: -16px; right: 5px; background: #ff4444; border: 2px solid #fff; border-radius: 50%; width: 28px; height: 28px; font-size: 18px; font-weight: bold; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 11; color: #fff; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">&times;</a>`;
     const realX = `<button onclick="window.cerrarStickyAd()" style="position: absolute; top: -10px; right: 40px; background: transparent; border: none; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; color: #aaa;">cerrar</button>`;
 
     const stickyContainer = document.createElement('div');
     stickyContainer.id = 'global-sticky-ad';
+    // Colocamos el overflow: hidden solo al contenedor del iframe para no cortar la X
     stickyContainer.innerHTML = `
-        <div style="position: relative; width: 100%; display: flex; justify-content: center; align-items: center;">
+        <div style="position: relative; width: 100%; max-width: 100vw; display: flex; justify-content: center; align-items: center;">
             ${fakeX}
             ${realX}
-            <iframe srcdoc="<!DOCTYPE html><html><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;'><script>atOptions={'key':'${adKey}','format':'iframe','height':${adHeight},'width':${adWidth},'params':{}};</script><script src='https://www.highperformanceformat.com/${adKey}/invoke.js'></script></body></html>" width="${adWidth}" height="${adHeight}" frameborder="0" scrolling="no"></iframe>
+            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                <iframe srcdoc="<!DOCTYPE html><html><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;'><script>atOptions={'key':'${adKey}','format':'iframe','height':${adHeight},'width':${adWidth},'params':{}};</script><script src='https://www.highperformanceformat.com/${adKey}/invoke.js'></script></body></html>" width="${adWidth}" height="${adHeight}" frameborder="0" scrolling="no" style="max-width: 100%; object-fit: contain;"></iframe>
+            </div>
         </div>
     `;
     let targetContainer = document.body;
-    const isStreaming = window.location.pathname.includes('streaming.html');
-    
-    if (isStreaming) {
-        const videoWrapper = document.getElementById('video-fullscreen-wrap');
-        if (videoWrapper) {
-            targetContainer = videoWrapper;
-        }
-    }
-    
+
     document.body.style.paddingBottom = paddingBottom; // Espacio para el sticky ad
     targetContainer.appendChild(stickyContainer);
 };

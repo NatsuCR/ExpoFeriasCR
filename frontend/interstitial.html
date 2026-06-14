@@ -192,11 +192,13 @@
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
-                    document.write('<div><img border="0" alt="ad" src="https://cdn.storageimagedisplay.com/cti/af/36/82/af3682a4ae4b16d82dcc0235c0fb013d/1779963454.png" width="160" height="600"></div>');
-                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                    var isMobile = window.innerWidth <= 768;
+                    if (isMobile) {
+                        document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
+                        document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                    }
+                    // Ad de Adsterra Referral (mantenido por petición)
+                    document.write('<div><a href="https://beta.publishers.adsterra.com/referral/Gqhy13aZjQ" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/gif/160x600_adsterra_reff.gif" /></a></div>');
                 }
             })();
         </script>
@@ -208,11 +210,18 @@
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
-                    document.write('<div><a href="https://beta.publishers.adsterra.com/referral/Gqhy13aZjQ" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/gif/160x600_adsterra_reff.gif" /></a></div>');
-                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                    var isMobile = window.innerWidth <= 768;
+                    if (isMobile) {
+                        // Banners solo para celular
+                        document.write('<scr' + 'ipt>atOptions={"key":"c1adc89464d45409e841608d9e468426","format":"iframe","height":300,"width":160,"params":{}};</scr' + 'ipt>');
+                        document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/c1adc89464d45409e841608d9e468426/invoke.js"></scr' + 'ipt>');
+                        document.write('<div style="margin-bottom: 20px;"></div>');
+                        document.write('<scr' + 'ipt>atOptions={"key":"cc152c981c00cbf94e13ad7fcf01510d","format":"iframe","height":250,"width":300,"params":{}};</scr' + 'ipt>');
+                        document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/cc152c981c00cbf94e13ad7fcf01510d/invoke.js"></scr' + 'ipt>');
+                    } else {
+                        // Banner nativo en PC
+                        document.write('<a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank"><img border="0" alt="" src="https://cdn.storageimagedisplay.com/cti/ad/7f/13/ad7f1304b45dec7e1bf4bd6fbd9d7c36/1779116051.jpg" width="300" height="250"></a>');
+                    }
                 }
             })();
         </script>
@@ -227,10 +236,15 @@
                 var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
             var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
             if (!isAdmin && !isPremium) {
+                    var isMobile = window.innerWidth <= 768;
+                    if (isMobile) {
+                        document.write(`
+                        <div style="margin-bottom: 15px;">
+                            <img border="0" alt="" src="https://cdn.storageimagedisplay.com/cti/6f/8f/ef/6f8fefa6447554571085566ee4c3443e/1779116078.jpg" width="728" height="90" style="max-width: 100%; height: auto;">
+                        </div>
+                        `);
+                    }
                     document.write(`
-                    <div style="margin-bottom: 15px;">
-                        <img border="0" alt="" src="https://cdn.storageimagedisplay.com/cti/6f/8f/ef/6f8fefa6447554571085566ee4c3443e/1779116078.jpg" width="728" height="90" style="max-width: 100%; height: auto;">
-                    </div>
                     <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" target="_blank" style="display:inline-block; position:relative; z-index:100000; margin-bottom: 20px;">
                         <img src="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png" alt="ExpoFeriasCR" class="logo" id="dynamic-img">
                         <div class="fake-play-btn">
@@ -261,8 +275,7 @@
             Nota: O primeiro clique nesta seção abrirá uma nova aba para nos apoiar; feche-a e retorne para ser
             redirecionado para a transmissão ao vivo.
         </p>
-
-        <div class="timer" id="countdown">10</div>
+        <div class="timer" id="countdown">6</div>
 
         <!-- Anuncio Horizontal -->
         <div class="ad-container">
@@ -271,9 +284,10 @@
                     var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                     if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                         var isMobile = window.innerWidth <= 768;
-                        var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
-                        var adWidth = isMobile ? 468 : 728;
-                        var adHeight = isMobile ? 60 : 90;
+                        if (!isMobile) return;
+                        var adKey = "b9fd5ff2438b3260d96faae5cefcd634";
+                        var adWidth = 468;
+                        var adHeight = 60;
                         document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
                         document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
                     }
@@ -284,21 +298,8 @@
         <a href="#" id="skip-btn" class="btn-skip">Ir al enlace ahora</a>
     </div>
 
-    <!-- Sticky Banner para Móviles (320x50) -->
-    <div class="mobile-banner">
-        <script>
-            (function () {
-                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    document.write('<scr' + 'ipt>atOptions={"key":"b9fd5ff2438b3260d96faae5cefcd634","format":"iframe","height":60,"width":468,"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/b9fd5ff2438b3260d96faae5cefcd634/invoke.js"></scr' + 'ipt>');
-                }
-            })();
-        </script>
-    </div>
-
     <!-- Capa invisible para simular Popunder a toda la pantalla -->
-    <a href="#" id="popunder-overlay" target="_blank"
+    <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" id="popunder-overlay" target="_blank"
         style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; cursor:pointer;"></a>
 
 
@@ -332,7 +333,7 @@
                 dynamicImg.style.borderRadius = '10px';
             }
 
-            let timeLeft = 10;
+            let timeLeft = 6;
 
             if (!targetUrl) {
                 window.location.href = '/';
@@ -341,7 +342,6 @@
 
             skipBtn.href = targetUrl;
             skipBtn.target = '_blank';
-            popunderOverlay.href = targetUrl;
 
             const closeBtn = document.getElementById('ad-popup-close');
 
@@ -354,19 +354,19 @@
                     countdownEl.closest('#countdown').style.display = 'none';
                     // Solo mostrar el botón - el usuario DEBE hacer clic para continuar
                     skipBtn.style.display = 'inline-block';
-                    // Hacer toda la pantalla clickeable
-                    popunderOverlay.style.display = 'block';
                 }
             }, 1000);
 
-            skipBtn.addEventListener('click', () => {
-                if (closeBtn) closeBtn.style.display = 'block';
-                popunderOverlay.style.display = 'none'; // Desactivar overlay si da clic al botón
-            });
+            skipBtn.addEventListener('click', (e) => {
+                e.preventDefault();
 
-            popunderOverlay.addEventListener('click', () => {
-                if (closeBtn) closeBtn.style.display = 'block';
-                popunderOverlay.style.display = 'none'; // Desactivar para que el usuario pueda usar la página
+                // 1. Abrimos el anuncio (Smartlink) en una nueva pestaña
+                // (Esto asegura que el navegador enfoque la nueva pestaña con el anuncio)
+                window.open("https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288", '_blank');
+                
+                // 2. La pestaña actual redirige silenciosamente al streaming
+                // Así cuando el usuario cierre el anuncio, ya tendrá su video cargado atrás.
+                window.location.href = targetUrl;
             });
 
             if (closeBtn) {
@@ -375,6 +375,34 @@
                 });
             }
         });
+    </script>
+
+    <!-- Social Bar -->
+    <script>
+        (function () {
+            var isMobile = window.innerWidth <= 768;
+            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            var isPremium = u && (u.rol === 'admin' || (u.premium_hasta && new Date() < new Date(u.premium_hasta)));
+            
+            if (!isPremium) {
+                if (!isMobile) {
+                    // Desktop: Cargar normal
+                    document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
+                } else {
+                    // Celular: Inyectar solo cuando le dan click a ir al enlace
+                    var adInjected = false;
+                    document.addEventListener('click', function(e) {
+                        var isSkipClick = e.target.closest('#skip-btn') || e.target.closest('#popunder-overlay');
+                        if (!adInjected && isSkipClick) {
+                            adInjected = true;
+                            var script = document.createElement('script');
+                            script.src = "https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js";
+                            document.body.appendChild(script);
+                        }
+                    });
+                }
+            }
+        })();
     </script>
 </body>
 

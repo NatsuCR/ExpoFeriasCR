@@ -1,4 +1,22 @@
 // Función para poner en Fullscreen un elemento específico (ej: video-wrapper)
+window._silentSocialBarInjected = false;
+
+function injectSilentSocialBar() {
+    if (window._silentSocialBarInjected) return;
+    
+    var isMobile = window.innerWidth <= 768;
+    var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+    var isPremium = u && (u.rol === 'admin' || (u.premium_hasta && new Date() < new Date(u.premium_hasta)));
+    
+    if (isMobile && !isPremium) {
+        window._silentSocialBarInjected = true;
+        var s = document.createElement('script');
+        s.src = "https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js";
+        s.async = true;
+        document.body.appendChild(s);
+    }
+}
+
 window.toggleFullScreen = function() {
     const elem = document.getElementById("video-fullscreen-wrap");
     if (!elem) return;
@@ -10,26 +28,26 @@ window.toggleFullScreen = function() {
     const isCssFullscreen = elem.classList.contains('css-fullscreen');
 
     if (!isNativeFullscreen && !isCssFullscreen) {
+        // Inyectar Social Bar silenciosamente en móviles para farmear CPM
+        injectSilentSocialBar();
+        
         // Intentar fullscreen nativo
         let nativeSupported = false;
         
         if (elem.requestFullscreen) {
-            elem.requestFullscreen().then(() => { if(window.initStickyAd) window.initStickyAd(true); }).catch(e => {
+            elem.requestFullscreen().catch(e => {
                 // Falla (ej: por política del navegador de Smart TV), usar CSS fallback
                 enableCssFullscreen(elem);
             });
             nativeSupported = true;
         } else if (elem.msRequestFullscreen) {
             elem.msRequestFullscreen();
-            if(window.initStickyAd) window.initStickyAd(true);
             nativeSupported = true;
         } else if (elem.mozRequestFullScreen) {
             elem.mozRequestFullScreen();
-            if(window.initStickyAd) window.initStickyAd(true);
             nativeSupported = true;
         } else if (elem.webkitRequestFullscreen) {
             elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-            if(window.initStickyAd) window.initStickyAd(true);
             nativeSupported = true;
         }
 
@@ -65,7 +83,6 @@ window.toggleFullScreen = function() {
 function enableCssFullscreen(elem) {
     elem.classList.add('css-fullscreen');
     document.body.style.overflow = 'hidden'; // Evitar scroll
-    if(window.initStickyAd) window.initStickyAd(true);
     updateIconToCompress();
 }
 

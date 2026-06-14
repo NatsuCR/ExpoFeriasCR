@@ -74,6 +74,15 @@
             }
         }
     </style>
+    <script>
+        (function () {
+            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+            if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
+                // Popunder
+                document.write('<scr' + 'ipt src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></scr' + 'ipt>');
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -100,18 +109,7 @@
 
 
     <div class="streaming-layout">
-        <!-- Banner Izquierdo -->
-        <div class="ad-banner ad-left">
-            <script type="text/javascript">
-                (function () {
-                    var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                    if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                        document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
-                        document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
-                    }
-                })();
-            </script>
-        </div>
+        <!-- Anuncio Izquierdo Removido -->
 
 
 
@@ -125,22 +123,7 @@
 
 
 
-            <!-- Banner Horizontal Superior -->
-            <div class="ad-banner-horizontal top-banner">
-                <script type="text/javascript">
-                    (function () {
-                        var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                        if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                            var isMobile = window.innerWidth <= 768;
-                            var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
-                            var adWidth = isMobile ? 468 : 728;
-                            var adHeight = isMobile ? 60 : 90;
-                            document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
-                            document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
-                        }
-                    })();
-                </script>
-            </div>
+            <!-- Banner Horizontal Superior Removido -->
 
 
             <script>
@@ -184,13 +167,7 @@
                                     document.write(`
                                     <div id="playerAdOverlay" class="ad-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:10; background:black;">
                                         
-                                        <div id="streaming-ad-warning" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 12; color: #ff4444; font-size: 0.9em; font-weight: bold; text-align: center; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 5px; width: 90%; pointer-events: none;">
-                                            Nota: El primer click en el reproductor abrirá una nueva pestaña para apoyarnos, ciérrala y vuelve al en vivo.
-                                            <br><br>
-                                            Note: The first click on the player will open a new tab to support us, close it and return to the live stream.
-                                            <br><br>
-                                            Nota: O primeiro clique neste apartado abrirá uma nova aba para nos apoiar, feche-a e retorne para ser redirecionado para a transmissão ao vivo.
-                                        </div>
+                                        <!-- Nota removida por el usuario para mayor disimulo -->
 
                                         <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288"
                                             target="_blank"
@@ -459,42 +436,16 @@
                 });
             </script>
 
-            <!-- Banner Horizontal Inferior -->
-            <div class="ad-banner-horizontal bottom-banner">
-                <script type="text/javascript">
-                    (function () {
-                        var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                        if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                            var isMobile = window.innerWidth <= 768;
-                            var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
-                            var adWidth = isMobile ? 468 : 728;
-                            var adHeight = isMobile ? 60 : 90;
-                            document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
-                            document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
-                        }
-                    })();
-                </script>
-            </div>
+            <!-- Banner Horizontal Inferior Removido -->
 
             <p style="text-align: center; margin-top: 40px;">
-                <a href="/interstitial.html?url=%2F"
+                <a href="/"
                     style="display: inline-block; background-color: #0033A0; color: white; padding: 10px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: background-color 0.3s;"><i
                         class="fas fa-home"></i> Volver a Inicio</a>
             </p>
         </div>
 
-        <!-- Banner Derecho -->
-        <div class="ad-banner ad-right">
-            <script type="text/javascript">
-                (function () {
-                    var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                    if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                        document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
-                        document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
-                    }
-                })();
-            </script>
-        </div>
+        <!-- Banner Derecho Removido -->
     </div>
 
     <footer style="background-color: #C8102E; color: white; padding: 20px 0; text-align: center;">
@@ -509,16 +460,7 @@
     <script src="js/publico/main-auth.js"></script>
     <script src="js/publico/modal-auth.js"></script>
 
-    <!-- Social Bar -->
-    <script>
-        (function () {
-            var isMobile = window.innerWidth <= 768;
-            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            if (!isMobile && (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta))))) {
-                document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
-            }
-        })();
-    </script>
+    <!-- Social Bar Removido -->
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/streaming-chat.js"></script>

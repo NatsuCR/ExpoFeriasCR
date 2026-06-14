@@ -45,14 +45,14 @@
 }
 
 .ad-banner {
-    width: 160px;
-    height: 600px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     position: sticky;
     top: 100px;
     flex-shrink: 0;
+    gap: 20px;
 }
 
 

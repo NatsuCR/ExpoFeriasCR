@@ -70,7 +70,38 @@
         <link rel="stylesheet" href="css/modal-auth.css?v=9.0">
         <link rel="stylesheet" href="css/aviso-stream.css">
         <script src="js/helpers.js?v=9.0"></script>
-    </head>
+        <!-- Estilos para Banners Laterales -->
+    <style>
+        .ad-vertical-left,
+        .ad-vertical-right {
+            position: fixed;
+            top: 55%;
+            transform: translateY(-50%);
+            display: none;
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .ad-vertical-left {
+            left: 15px;
+        }
+
+        .ad-vertical-right {
+            right: 15px;
+        }
+
+        @media (min-width: 1350px) {
+            .ad-vertical-left,
+            .ad-vertical-right {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
 
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -78,14 +109,26 @@
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <!-- Anuncio Lateral Izquierdo (160x600) -->
-    <div class="ad-side-container ad-side-left">
+    <!-- Banners Laterales (Scroll) -->
+    <div class="ad-vertical-left scroll-ad">
         <script>
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
                     document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
                     document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                }
+            })();
+        </script>
+    </div>
+
+    <div class="ad-vertical-right scroll-ad">
+        <script>
+            (function () {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
+                    document.write('<scr' + 'ipt>atOptions={"key":"c1adc89464d45409e841608d9e468426","format":"iframe","height":300,"width":160,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/c1adc89464d45409e841608d9e468426/invoke.js"></scr' + 'ipt>');
                 }
             })();
         </script>
@@ -166,20 +209,7 @@
         <button class="hero-carrusel-btn next" id="heroNextBtn">&#10095;</button>
     </div>
 
-    <script>
-        (function () {
-            var isMobile = window.innerWidth <= 768;
-            var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
-            var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
-            if (!isAdmin && !isPremium) {
-                if (!isMobile) {
-                    document.write('<scr' + 'ipt async="async" data-cfasync="false" src="https://pl29512241.effectivecpmnetwork.com/c083045c1441aa427e4f38dd4dc7fc88/invoke.js"></scr' + 'ipt>');
-                    document.write('<div id="container-c083045c1441aa427e4f38dd4dc7fc88"></div>');
-                }
-            }
-        })();
-    </script>
+    <!-- Popunder Script Removido -->
 
 
     <section id="informacion" class="info">
@@ -229,22 +259,7 @@
         </div>
     </section>
 
-    <!-- Anuncio Horizontal -->
-    <div class="container ad-horizontal-container">
-        <script>
-            (function () {
-                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    var isMobile = window.innerWidth <= 768;
-                    var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
-                    var adWidth = isMobile ? 468 : 728;
-                    var adHeight = isMobile ? 60 : 90;
-                    document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
-                }
-            })();
-        </script>
-    </div>
+    <!-- Anuncio Horizontal Removido -->
 
     <section id="seccion-horario" class="horario">
         <div class="container">
@@ -253,26 +268,26 @@
         </div>
     </section>
 
-    <!-- Anuncio Horizontal -->
-    <div class="container ad-horizontal-container">
-        <script>
-            (function () {
-                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    var isMobile = window.innerWidth <= 768;
-                    var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
-                    var adWidth = isMobile ? 468 : 728;
-                    var adHeight = isMobile ? 60 : 90;
-                    document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
-                }
-            })();
-        </script>
-    </div>
-
     <section id="actividades" class="actividades">
         <div class="container">
             <h2>Actividades Destacadas</h2>
+
+            <!-- Anuncio Horizontal (movido abajo del título) -->
+            <div class="ad-horizontal-container" style="margin-top: 10px; margin-bottom: 30px; display: flex; justify-content: center; width: 100%;">
+                <script>
+                    (function () {
+                        var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                        if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
+                            var isMobile = window.innerWidth <= 768;
+                            var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
+                            var adWidth = isMobile ? 468 : 728;
+                            var adHeight = isMobile ? 60 : 90;
+                            document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
+                            document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
+                        }
+                    })();
+                </script>
+            </div>
             <div class="actividades-carrusel-wrapper" id="actividadesWrapper">
                 <button class="actividades-btn prev" id="actividadesPrev">&#10094;</button>
                 <div class="actividades-carrusel-viewport">
@@ -318,22 +333,7 @@
         </div>
     </section>
 
-    <!-- Anuncio Horizontal -->
-    <div id="ad-precios" class="container ad-horizontal-container">
-        <script>
-            (function () {
-                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    var isMobile = window.innerWidth <= 768;
-                    var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
-                    var adWidth = isMobile ? 468 : 728;
-                    var adHeight = isMobile ? 60 : 90;
-                    document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
-                }
-            })();
-        </script>
-    </div>
+    <!-- Anuncio Horizontal Removido -->
 
     <section id="expositores" class="expositores">
         <div class="container">
@@ -361,22 +361,7 @@
         </div>
     </section>
 
-    <!-- Anuncio Horizontal -->
-    <div id="ad-expositores" class="container ad-horizontal-container">
-        <script>
-            (function () {
-                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                    var isMobile = window.innerWidth <= 768;
-                    var adKey = isMobile ? "b9fd5ff2438b3260d96faae5cefcd634" : "d24a04b077cc5a19d8ab72ae7e33176e";
-                    var adWidth = isMobile ? 468 : 728;
-                    var adHeight = isMobile ? 60 : 90;
-                    document.write('<scr' + 'ipt>atOptions={"key":"' + adKey + '","format":"iframe","height":' + adHeight + ',"width":' + adWidth + ',"params":{}};</scr' + 'ipt>');
-                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/' + adKey + '/invoke.js"></scr' + 'ipt>');
-                }
-            })();
-        </script>
-    </div>
+    <!-- Anuncio Horizontal Removido -->
 
     <section id="ubicacion" class="ubicacion">
         <div class="container">
@@ -481,13 +466,55 @@
     </script>
 
 
+    <!-- Scroll Listener para Anuncios Laterales -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var scrollAds = document.querySelectorAll('.scroll-ad');
+            window.addEventListener('scroll', function() {
+                // Obtenemos la altura del hero. Si no está definido, asumimos 500px.
+                var heroSection = document.getElementById('heroCarrusel');
+                var heroHeight = heroSection ? heroSection.offsetHeight : 500;
+                
+                if (window.scrollY > heroHeight - 100) {
+                    scrollAds.forEach(function(ad) {
+                        ad.style.opacity = '1';
+                        ad.style.pointerEvents = 'auto';
+                    });
+                } else {
+                    scrollAds.forEach(function(ad) {
+                        ad.style.opacity = '0';
+                        ad.style.pointerEvents = 'none';
+                    });
+                }
+            });
+        });
+    </script>
+
     <!-- Social Bar -->
     <script>
         (function () {
             var isMobile = window.innerWidth <= 768;
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
-            if (!isMobile && (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta))))) {
-                document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
+            var isPremium = u && (u.rol === 'admin' || (u.premium_hasta && new Date() < new Date(u.premium_hasta)));
+            
+            if (!isPremium) {
+                if (!isMobile) {
+                    // Desktop: Cargar normal
+                    document.write('<scr' + 'ipt src="https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js"></scr' + 'ipt>');
+                } else {
+                    // Celular: Inyectar solo cuando le dan click a comprar o ver en vivo (interstitial en nueva pestaña)
+                    var adInjected = false;
+                    document.addEventListener('click', function(e) {
+                        var link = e.target.closest('a');
+                        // Si le da click a comprar entrada o ver en vivo
+                        if (!adInjected && link && link.href && link.href.includes('interstitial.html')) {
+                            adInjected = true;
+                            var script = document.createElement('script');
+                            script.src = "https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js";
+                            document.body.appendChild(script);
+                        }
+                    });
+                }
             }
         })();
     </script>

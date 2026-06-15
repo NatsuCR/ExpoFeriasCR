@@ -21,17 +21,7 @@ async function fetchData(url) {
     }
 }
 
-function createAdCard() {
-    const card = document.createElement('div');
-    card.className = 'evento-card carousel-slide ad-card';
-    card.innerHTML = `
-        <div style="display:flex; justify-content:center; align-items:center; height:100%; background:#f8f9fa; border-radius:12px; padding:20px; flex-direction:column; text-align:center;">
-            <p style="font-size:12px; color:#999; margin-bottom:10px;">Publicidad</p>
-            <iframe srcdoc="<!DOCTYPE html><html><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;'><script>atOptions={'key':'db5fab4e621232d201d1e41f58321ace','format':'iframe','height':50,'width':320,'params':{}};</script><script src='https://www.highperformanceformat.com/db5fab4e621232d201d1e41f58321ace/invoke.js'></script></body></html>" width="320" height="50" frameborder="0" scrolling="no"></iframe>
-        </div>
-    `;
-    return card;
-}
+
 
 function createEventoCard(evento, isLive = false) {
     const card = document.createElement('div');
@@ -131,29 +121,11 @@ window.cargarSeccion = async function (endpoint, trackId, controlsId, isLive, fi
     }
     sectionElement.style.display = 'block';
     const cards = eventos.map(e => createEventoCard(e, isLive));
-    
-    // Inject in-feed ads
-    const cardsWithAds = [];
-    const isAd = (() => {
-            try {
-                const u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                const isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
-                return u && (String(u.rol).toLowerCase() === 'admin' || isPremium);
-            } catch(e) { return false; }
-    })();
-
-    cards.forEach((c, index) => {
-        cardsWithAds.push(c);
-        if (!isAd && (index + 1) % 4 === 0) {
-            cardsWithAds.push(createAdCard());
-        }
-    });
-
     if (window.initCarousel) {
-        window.initCarousel(trackId, cardsWithAds, controlsId, 4);
+        window.initCarousel(trackId, cards, controlsId, 4);
     } else {
         track.innerHTML = '';
-        cardsWithAds.forEach(c => track.appendChild(c));
+        cards.forEach(c => track.appendChild(c));
     }
 }
 
@@ -270,20 +242,10 @@ window.cargarProximos = async function (filtros = {}) {
 
         const track = document.getElementById(trackId);
         const cards = grupos[tipo].map(e => createEventoCard(e, false));
-        
-        // Inject in-feed ads
-        const cardsWithAds = [];
-        cards.forEach((c, index) => {
-            cardsWithAds.push(c);
-            if ((index + 1) % 4 === 0) {
-                cardsWithAds.push(createAdCard());
-            }
-        });
-
         if (window.initCarousel) {
-            window.initCarousel(trackId, cardsWithAds, controlsId, 4);
+            window.initCarousel(trackId, cards, controlsId, 4);
         } else {
-            cardsWithAds.forEach(c => track.appendChild(c));
+            cards.forEach(c => track.appendChild(c));
         }
     });
 }

@@ -376,23 +376,23 @@
             skipBtn.href = "#";
 
             let isUnlocking = false;
+            let adWin = null;
 
             skipBtn.addEventListener('click', (e) => {
                 e.preventDefault();
 
                 if (isUnlocking) {
                     // Si ya está desbloqueando pero regresaron y le dan clic a "Mira el anuncio"
-                    // les volvemos a abrir el anuncio (Smartlink) para que puedan completar su tiempo
-                    if (document.hasFocus() || !document.hidden) {
-                        window.open("https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288", '_blank');
+                    if (document.hasFocus() || !document.hidden || (adWin && adWin.closed)) {
+                        adWin = window.open("https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288", '_blank');
                     }
                     return;
                 }
                 
                 isUnlocking = true;
 
-                // Abrimos el anuncio (Smartlink) en una nueva pestaña siempre, para que el sistema inteligente funcione
-                window.open("https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288", '_blank');
+                // Abrimos el anuncio guardando la referencia
+                adWin = window.open("https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288", '_blank');
 
                 // Iniciar cuenta regresiva inteligente en el botón
                 let timeLeft = 5;
@@ -401,20 +401,26 @@
                 skipBtn.innerHTML = `⏳ Verificando... (${timeLeft}s)`;
 
                 const timer = setInterval(() => {
-                    // El sistema inteligente: Solo descontar tiempo si el usuario NO está viendo esta pestaña
-                    if (!document.hasFocus() || document.hidden) {
-                        timeLeft--;
-                        skipBtn.style.background = "#666";
-                        skipBtn.innerHTML = `⏳ Verificando... (${timeLeft}s)`;
-                    } else {
+                    // El sistema inteligente evalúa 2 cosas:
+                    // 1. Que no hayan cerrado la pestaña del anuncio (adWin.closed)
+                    // 2. Que no hayan regresado el foco a la página original (document.hasFocus())
+                    if ((adWin && adWin.closed) || document.hasFocus()) {
                         // El usuario regresó muy rápido o cerró el anuncio
                         skipBtn.style.background = "#C8102E";
+                        skipBtn.style.cursor = "pointer";
                         skipBtn.innerHTML = `⚠️ Mira el anuncio (${timeLeft}s)`;
+                    } else {
+                        // El anuncio sigue abierto y nuestra pestaña no tiene el foco
+                        timeLeft--;
+                        skipBtn.style.background = "#666";
+                        skipBtn.style.cursor = "not-allowed";
+                        skipBtn.innerHTML = `⏳ Verificando... (${timeLeft}s)`;
                     }
 
                     if (timeLeft <= 0) {
                         clearInterval(timer);
                         skipBtn.style.background = "#28a745";
+                        skipBtn.style.cursor = "default";
                         skipBtn.innerHTML = '✅ Redirigiendo...';
                         window.location.href = targetUrl;
                     }

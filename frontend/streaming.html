@@ -180,9 +180,11 @@
                                 if (!isAdmin && !isPremium && !adClicked) {
                                     document.write(`
                                     <div id="playerAdOverlay" class="ad-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:10; background:black;">
-                                        
-                                        <!-- Nota removida por el usuario para mayor disimulo -->
-
+                                        <div style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 450px; text-align: center; color: rgba(255,255,255,0.9); font-size: clamp(11px, 3vw, 14px); line-height: 1.4; text-shadow: 1px 1px 4px black, 0px 0px 8px rgba(0,0,0,0.8); font-weight: bold; pointer-events: none; z-index: 20;">
+                                            ES: Haz clic para desbloquear el en vivo.<br>
+                                            EN: Click to unlock the live stream.<br>
+                                            PT: Clique para desbloquear a transmissão ao vivo.
+                                        </div>
                                         <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288"
                                             target="_blank"
                                             onclick="

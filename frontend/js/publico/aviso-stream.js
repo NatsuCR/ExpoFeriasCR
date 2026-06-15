@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <p class="stream-aviso-text" id="streamAvisoText"></p>
                 <div class="stream-aviso-actions">
                     <button id="btnEsconderStream" class="stream-btn stream-btn-esconder">Esconder</button>
-                    <a href="interstitial.html?url=streaming.html" class="stream-btn stream-btn-entrar">Entrar</a>
+                    <a href="interstitial.html?url=streaming.html" target="_blank" id="btnEntrarStream" class="stream-btn stream-btn-entrar">Entrar</a>
                 </div>
             </div>
         </div>
@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const img = document.getElementById('streamAvisoImg');
     const textEl = document.getElementById('streamAvisoText');
     const btnEsconder = document.getElementById('btnEsconderStream');
+    const btnEntrar = document.getElementById('btnEntrarStream');
 
     try {
         // 2. Consultar estado al backend
@@ -81,6 +82,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setTimeout(() => {
                     icon.classList.add('show');
                 }, 300);
+            });
+
+            let adInjected = false;
+            btnEntrar.addEventListener('click', () => {
+                const isMobile = window.innerWidth <= 768;
+                const u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                const isPremium = u && (u.rol === 'admin' || (u.premium_hasta && new Date() < new Date(u.premium_hasta)));
+                
+                if (isMobile && !isPremium && !adInjected) {
+                    adInjected = true;
+                    const script = document.createElement('script');
+                    script.src = "https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js";
+                    document.body.appendChild(script);
+                }
             });
 
             icon.addEventListener('click', () => {

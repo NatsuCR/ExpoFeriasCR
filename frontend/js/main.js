@@ -250,22 +250,7 @@ window.cargarProximos = async function (filtros = {}) {
         const trackId = `track-${sectionId}`;
         const controlsId = `controls-${sectionId}`;
 
-        const isAd = (() => {
-            try {
-                const u = JSON.parse(localStorage.getItem('usuario') || 'null');
-                const isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
-                return u && (String(u.rol).toLowerCase() === 'admin' || isPremium);
-            } catch(e) { return false; }
-        })();
-
-        const adHtml = isAd ? '' : `
-            <div style="text-align: center; margin: 20px 0;">
-                <img border="0" alt="" src="https://cdn.storageimagedisplay.com/cti/6f/8f/ef/6f8fefa6447554571085566ee4c3443e/1779116078.jpg" width="728" height="90" style="max-width: 100%; height: auto;">
-            </div>
-        `;
-
         const sectionHtml = `
-            ${adHtml}
             <section class="section-carousel reveal active" id="${sectionId}">
                 <div class="container">
                     <div class="section-header">

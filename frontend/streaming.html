@@ -109,7 +109,21 @@
 
 
     <div class="streaming-layout">
-        <!-- Anuncio Izquierdo Removido -->
+        <script>
+            (function () {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                var isMobile = window.innerWidth <= 1100;
+                var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
+                var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
+                if (!isAdmin && !isPremium && !isMobile) {
+                    document.write('<div class="ad-banner ad-vertical-left" style="width: 160px; text-align: center;">');
+                    document.write('<span style="font-size:10px;color:#999;display:block;margin-bottom:5px;">Publicidad</span>');
+                    document.write('<scr' + 'ipt>atOptions={"key":"6e65addb785e209f532431dd48906da2","format":"iframe","height":600,"width":160,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/6e65addb785e209f532431dd48906da2/invoke.js"></scr' + 'ipt>');
+                    document.write('</div>');
+                }
+            })();
+        </script>
 
 
 
@@ -445,7 +459,25 @@
             </p>
         </div>
 
-        <!-- Banner Derecho Removido -->
+        <script>
+            (function () {
+                var u = JSON.parse(localStorage.getItem('usuario') || 'null');
+                var isMobile = window.innerWidth <= 1100;
+                var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
+                var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
+                if (!isAdmin && !isPremium && !isMobile) {
+                    document.write('<div class="ad-banner ad-vertical-right" style="width: 300px; text-align: center;">');
+                    document.write('<span style="font-size:10px;color:#999;display:block;margin-bottom:5px;">Publicidad</span>');
+                    document.write('<scr' + 'ipt>atOptions={"key":"c1adc89464d45409e841608d9e468426","format":"iframe","height":300,"width":160,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/c1adc89464d45409e841608d9e468426/invoke.js"></scr' + 'ipt>');
+                    document.write('<div style="margin-bottom: 20px;"></div>');
+                    document.write('<span style="font-size:10px;color:#999;display:block;margin-bottom:5px;">Publicidad</span>');
+                    document.write('<scr' + 'ipt>atOptions={"key":"cc152c981c00cbf94e13ad7fcf01510d","format":"iframe","height":250,"width":300,"params":{}};</scr' + 'ipt>');
+                    document.write('<scr' + 'ipt src="https://www.highperformanceformat.com/cc152c981c00cbf94e13ad7fcf01510d/invoke.js"></scr' + 'ipt>');
+                    document.write('</div>');
+                }
+            })();
+        </script>
     </div>
 
     <footer style="background-color: #C8102E; color: white; padding: 20px 0; text-align: center;">

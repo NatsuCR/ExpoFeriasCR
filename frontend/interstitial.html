@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="expo, ferias, eventos nacionales, eventos internacionales, eventos globales, eventos europeos, eventos americanos, transmisiones en vivo, futbol, nba, deportes, eventos deportivos, conciertos, convenciones, exposiciones mundiales, entretenimiento en vivo, turismo, guía de eventos, turismo costa rica, eventos costa rica, eventos latinoamerica, actividades familiares, congresos, arte y cultura, gastronomia, fiestas tipicas, topes, talleres y charlas, recreativa, religioso, eventos civicos">
+    <meta name="keywords"
+        content="expo, ferias, eventos nacionales, eventos internacionales, eventos globales, eventos europeos, eventos americanos, transmisiones en vivo, futbol, nba, deportes, eventos deportivos, conciertos, convenciones, exposiciones mundiales, entretenimiento en vivo, turismo, guía de eventos, turismo costa rica, eventos costa rica, eventos latinoamerica, actividades familiares, congresos, arte y cultura, gastronomia, fiestas tipicas, topes, talleres y charlas, recreativa, religioso, eventos civicos">
     <title>Redirigiendo... | ExpoFeriasCR</title>
     <link rel="icon" type="image/png" href="/assets/images/IconoOficialExpoFeriasCR/expoferiascrLogoOficial.png?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
@@ -119,8 +120,10 @@
         /* Pantallas pequeñas (Móviles): Ocultar laterales, mostrar sticky */
         @media (max-width: 1199px) {
             body {
-                padding-bottom: 70px; /* Evita que el banner tape contenido al fondo (como el botón) */
+                padding-bottom: 70px;
+                /* Evita que el banner tape contenido al fondo (como el botón) */
             }
+
             .mobile-banner {
                 display: block;
                 position: fixed;
@@ -170,11 +173,15 @@
     </style>
     <script>
         (function () {
+            var targetUrl = new URLSearchParams(window.location.search).get('url') || '';
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
             if (!u || (u.rol !== 'admin' && (!u.premium_hasta || new Date() >= new Date(u.premium_hasta)))) {
-                // Popunder
-                document.write('<scr' + 'ipt src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></scr' + 'ipt>');
-                
+                // Solo inyectar Popunder si NO vamos a streaming.html
+                // (Para streaming solo usamos el Smartlink en el botón)
+                if (!targetUrl.includes('streaming.html')) {
+                    document.write('<scr' + 'ipt src="https://pl29512244.effectivecpmnetwork.com/73/50/6b/73506b498e198daf562d2b0f6cc733c6.js"></scr' + 'ipt>');
+                }
+
                 // Social Bar (agregado dinámicamente para evitar bloqueos)
                 var s = document.createElement('script');
                 s.src = "https://pl29512242.effectivecpmnetwork.com/2f/ea/c5/2feac537f8e60dd7004660d723aa9672.js";
@@ -234,8 +241,8 @@
             (function () {
                 var u = JSON.parse(localStorage.getItem('usuario') || 'null');
                 var isPremium = u && u.premium_hasta && new Date() < new Date(u.premium_hasta);
-            var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
-            if (!isAdmin && !isPremium) {
+                var isAdmin = u && u.rol && String(u.rol).toLowerCase() === 'admin';
+                if (!isAdmin && !isPremium) {
                     var isMobile = window.innerWidth <= 768;
                     if (isMobile) {
                         document.write(`
@@ -265,7 +272,7 @@
         </script>
         <h2>Apoya a ExpoFeriasCR</h2>
         <p>Serás redirigido a tu destino en unos segundos...</p>
-        <p style="color: #ff4444; font-size: 0.9em; margin-top: -10px; font-weight: bold;">
+        <p id="red-note" style="color: #ff4444; font-size: 0.9em; margin-top: -10px; font-weight: bold; text-align: center;">
             Nota: El primer click en este apartado abrirá una nueva pestaña para apoyarnos, ciérrala y vuelve para que
             seas redirigido al en vivo.
             <br><br>
@@ -299,7 +306,8 @@
     </div>
 
     <!-- Capa invisible para simular Popunder a toda la pantalla -->
-    <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" id="popunder-overlay" target="_blank"
+    <a href="https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288" id="popunder-overlay"
+        target="_blank"
         style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; cursor:pointer;"></a>
 
 
@@ -319,7 +327,6 @@
 
             const countdownEl = document.getElementById('countdown');
             const skipBtn = document.getElementById('skip-btn');
-            const popunderOverlay = document.getElementById('popunder-overlay');
             const dynamicImg = document.getElementById('dynamic-img');
             const imgUrl = urlParams.get('img');
 
@@ -333,42 +340,88 @@
                 dynamicImg.style.borderRadius = '10px';
             }
 
-            let timeLeft = 6;
-
             if (!targetUrl) {
                 window.location.href = '/';
                 return;
             }
 
-            skipBtn.href = targetUrl;
-            skipBtn.target = '_blank';
+            // Ocultar la nota roja si el destino es streaming
+            const redNote = document.getElementById('red-note');
+            if (redNote && targetUrl.includes('streaming.html')) {
+                redNote.style.display = 'none';
+            }
 
-            const closeBtn = document.getElementById('ad-popup-close');
+            // Ocultar div de countdown viejo
+            if (countdownEl) countdownEl.closest('#countdown').style.display = 'none';
 
-            const timer = setInterval(() => {
-                timeLeft--;
-                countdownEl.innerText = timeLeft;
+            // Insertar el texto multilingüe y preparar el botón
+            const containerBox = skipBtn.parentElement;
+            const supportText = document.createElement('div');
+            supportText.style.width = "100%";
+            supportText.style.display = "flex";
+            supportText.style.flexDirection = "column";
+            supportText.style.alignItems = "center";
+            supportText.innerHTML = `
+                <p style="color:#555; font-size:14px; margin-bottom:15px; font-weight:bold; text-align:center;">
+                    <strong>Español:</strong> Apóyanos por 5 segundos y obtendrás el link directo.<br>
+                    <strong>English:</strong> Support us for 5 seconds and you will get the direct link.<br>
+                    <strong>Português:</strong> Apoie-nos por 5 segundos e você obterá o link direto.
+                </p>
+            `;
+            containerBox.insertBefore(supportText, skipBtn);
 
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    countdownEl.closest('#countdown').style.display = 'none';
-                    // Solo mostrar el botón - el usuario DEBE hacer clic para continuar
-                    skipBtn.style.display = 'inline-block';
-                }
-            }, 1000);
+            skipBtn.style.display = 'inline-block';
+            skipBtn.style.margin = '0 auto';
+            skipBtn.innerHTML = '🔓 Desbloquear link';
+            skipBtn.href = "#";
+
+            let isUnlocking = false;
 
             skipBtn.addEventListener('click', (e) => {
                 e.preventDefault();
 
-                // 1. Abrimos el anuncio (Smartlink) en una nueva pestaña
-                // (Esto asegura que el navegador enfoque la nueva pestaña con el anuncio)
-                window.open("https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288", '_blank');
+                if (isUnlocking) {
+                    // Si ya está desbloqueando pero regresaron y le dan clic a "Mira el anuncio"
+                    // les volvemos a abrir el anuncio (Smartlink) para que puedan completar su tiempo
+                    if (document.hasFocus() || !document.hidden) {
+                        window.open("https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288", '_blank');
+                    }
+                    return;
+                }
                 
-                // 2. La pestaña actual redirige silenciosamente al streaming
-                // Así cuando el usuario cierre el anuncio, ya tendrá su video cargado atrás.
-                window.location.href = targetUrl;
+                isUnlocking = true;
+
+                // Abrimos el anuncio (Smartlink) en una nueva pestaña siempre, para que el sistema inteligente funcione
+                window.open("https://www.effectivecpmnetwork.com/rsehijzd0?key=f6df995c4e699b6b791f169ea0928288", '_blank');
+
+                // Iniciar cuenta regresiva inteligente en el botón
+                let timeLeft = 5;
+                skipBtn.style.background = "#666";
+                skipBtn.style.cursor = "not-allowed";
+                skipBtn.innerHTML = `⏳ Verificando... (${timeLeft}s)`;
+
+                const timer = setInterval(() => {
+                    // El sistema inteligente: Solo descontar tiempo si el usuario NO está viendo esta pestaña
+                    if (!document.hasFocus() || document.hidden) {
+                        timeLeft--;
+                        skipBtn.style.background = "#666";
+                        skipBtn.innerHTML = `⏳ Verificando... (${timeLeft}s)`;
+                    } else {
+                        // El usuario regresó muy rápido o cerró el anuncio
+                        skipBtn.style.background = "#C8102E";
+                        skipBtn.innerHTML = `⚠️ Mira el anuncio (${timeLeft}s)`;
+                    }
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        skipBtn.style.background = "#28a745";
+                        skipBtn.innerHTML = '✅ Redirigiendo...';
+                        window.location.href = targetUrl;
+                    }
+                }, 1000);
             });
 
+            const closeBtn = document.getElementById('ad-popup-close');
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => {
                     window.location.href = '/';
@@ -383,7 +436,7 @@
             var isMobile = window.innerWidth <= 768;
             var u = JSON.parse(localStorage.getItem('usuario') || 'null');
             var isPremium = u && (u.rol === 'admin' || (u.premium_hasta && new Date() < new Date(u.premium_hasta)));
-            
+
             if (!isPremium) {
                 if (!isMobile) {
                     // Desktop: Cargar normal
@@ -391,7 +444,7 @@
                 } else {
                     // Celular: Inyectar solo cuando le dan click a ir al enlace
                     var adInjected = false;
-                    document.addEventListener('click', function(e) {
+                    document.addEventListener('click', function (e) {
                         var isSkipClick = e.target.closest('#skip-btn') || e.target.closest('#popunder-overlay');
                         if (!adInjected && isSkipClick) {
                             adInjected = true;

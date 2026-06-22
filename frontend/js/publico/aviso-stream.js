@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <p class="stream-aviso-text" id="streamAvisoText"></p>
                 <div class="stream-aviso-actions">
                     <button id="btnEsconderStream" class="stream-btn stream-btn-esconder">Esconder</button>
-                    <a href="interstitial.html?url=streaming.html" target="_blank" id="btnEntrarStream" class="stream-btn stream-btn-entrar">Entrar</a>
+                    <a href="streaming.html" target="_blank" id="btnEntrarStream" class="stream-btn stream-btn-entrar">Entrar</a>
                 </div>
             </div>
         </div>
